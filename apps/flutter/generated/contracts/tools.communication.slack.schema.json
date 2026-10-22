@@ -1,0 +1,487 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/communication/slack.ts",
+  "contracts": {
+    "slackAddReactionContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/add-reaction",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "channel",
+          "timestamp",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "slackDeleteMessageContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/delete-message",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "channel",
+          "timestamp"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "slackDownloadContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/download",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "slackReadMessagesContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/read-messages",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 15
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "oldest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latest": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "slackRemoveReactionContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/remove-reaction",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "channel",
+          "timestamp",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "slackSendEphemeralContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/send-ephemeral",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "user": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "thread_ts": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "blocks": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "channel",
+          "user",
+          "text"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "slackSendMessageContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/send-message",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "thread_ts": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "blocks": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "files": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "uploadedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "context": {
+                      "type": "string"
+                    },
+                    "base64": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "size"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "text"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "slackUpdateMessageContract": {
+      "method": "POST",
+      "path": "/api/tools/slack/update-message",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "channel": {
+            "type": "string",
+            "minLength": 1
+          },
+          "timestamp": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          },
+          "blocks": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "channel",
+          "timestamp",
+          "text"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    }
+  }
+}

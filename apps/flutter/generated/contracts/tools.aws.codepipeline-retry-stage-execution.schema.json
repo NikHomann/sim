@@ -1,0 +1,87 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-retry-stage-execution.ts",
+  "contracts": {
+    "awsCodepipelineRetryStageExecutionContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/retry-stage-execution",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "stageName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "pipelineExecutionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "retryMode": {
+            "type": "string",
+            "enum": [
+              "FAILED_ACTIONS",
+              "ALL_ACTIONS"
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName",
+          "stageName",
+          "pipelineExecutionId",
+          "retryMode"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "pipelineExecutionId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "pipelineExecutionId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

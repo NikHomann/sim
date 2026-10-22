@@ -1,0 +1,130 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudwatch-describe-alarms.ts",
+  "contracts": {
+    "awsCloudwatchDescribeAlarmsContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudwatch/describe-alarms",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "alarmNamePrefix": {
+            "type": "string"
+          },
+          "stateValue": {
+            "type": "string",
+            "enum": [
+              "OK",
+              "ALARM",
+              "INSUFFICIENT_DATA"
+            ]
+          },
+          "alarmType": {
+            "type": "string",
+            "enum": [
+              "MetricAlarm",
+              "CompositeAlarm"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "stateValue",
+          "alarmType",
+          "limit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "alarms": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "alarmName": {
+                        "type": "string"
+                      },
+                      "alarmArn": {
+                        "type": "string"
+                      },
+                      "stateValue": {
+                        "type": "string"
+                      },
+                      "stateReason": {
+                        "type": "string"
+                      },
+                      "metricName": {
+                        "type": "string"
+                      },
+                      "namespace": {
+                        "type": "string"
+                      },
+                      "comparisonOperator": {
+                        "type": "string"
+                      },
+                      "threshold": {
+                        "type": "number"
+                      },
+                      "evaluationPeriods": {
+                        "type": "number"
+                      },
+                      "stateUpdatedTimestamp": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "alarmName",
+                      "alarmArn",
+                      "stateValue",
+                      "stateReason"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "alarms"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

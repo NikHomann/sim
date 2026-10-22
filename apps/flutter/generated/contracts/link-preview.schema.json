@@ -1,0 +1,95 @@
+{
+  "source": "apps/sim/lib/api/contracts/link-preview.ts",
+  "contracts": {
+    "getLinkPreviewContract": {
+      "method": "GET",
+      "path": "/api/link-preview",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "format": "uri"
+          }
+        },
+        "required": [
+          "url"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "preview": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "title": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "siteName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "image": {
+                      "type": "string",
+                      "maxLength": 180000,
+                      "pattern": "^data:image\\/webp;base64,[A-Za-z0-9+/=]+$"
+                    },
+                    "imageRetryable": {
+                      "type": "boolean",
+                      "const": true,
+                      "description": "The optional image was deferred or temporarily unavailable; retry on later intent."
+                    }
+                  },
+                  "required": [
+                    "title",
+                    "description",
+                    "siteName"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "preview"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

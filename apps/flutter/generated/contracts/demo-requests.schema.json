@@ -1,0 +1,81 @@
+{
+  "source": "apps/sim/lib/api/contracts/demo-requests.ts",
+  "contracts": {
+    "submitDemoRequestContract": {
+      "method": "POST",
+      "path": "/api/demo-requests",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[^\\r\\n]*$"
+          },
+          "lastName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[^\\r\\n]*$"
+          },
+          "companyEmail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 320
+          },
+          "phoneNumber": {
+            "type": "string",
+            "maxLength": 50
+          },
+          "companySize": {
+            "type": "string",
+            "enum": [
+              "1_10",
+              "11_50",
+              "51_200",
+              "201_500",
+              "501_1000",
+              "1001_10000",
+              "10000_plus"
+            ]
+          },
+          "details": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "firstName",
+          "lastName",
+          "companyEmail",
+          "companySize",
+          "details"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,125 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-describe-change-set.ts",
+  "contracts": {
+    "awsCloudformationDescribeChangeSetContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/describe-change-set",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "changeSetName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stackName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "changeSetName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "changeSetName": {
+                  "type": "string"
+                },
+                "changeSetId": {
+                  "type": "string"
+                },
+                "stackId": {
+                  "type": "string"
+                },
+                "stackName": {
+                  "type": "string"
+                },
+                "description": {
+                  "type": "string"
+                },
+                "executionStatus": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "statusReason": {
+                  "type": "string"
+                },
+                "creationTime": {
+                  "type": "number"
+                },
+                "capabilities": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "changes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "action": {
+                        "type": "string"
+                      },
+                      "logicalResourceId": {
+                        "type": "string"
+                      },
+                      "physicalResourceId": {
+                        "type": "string"
+                      },
+                      "resourceType": {
+                        "type": "string"
+                      },
+                      "replacement": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "capabilities",
+                "changes"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,62 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-put-suppressed-destination.ts",
+  "contracts": {
+    "awsSesPutSuppressedDestinationContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/put-suppressed-destination",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "emailAddress": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "reason": {
+            "type": "string",
+            "enum": [
+              "BOUNCE",
+              "COMPLAINT"
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "emailAddress",
+          "reason"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

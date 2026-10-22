@@ -1,0 +1,452 @@
+{
+  "source": "apps/sim/lib/api/contracts/knowledge/search-integrations.ts",
+  "contracts": {
+    "listSearchIntegrationsContract": {
+      "method": "GET",
+      "path": "/api/knowledge/sim-search/integrations",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "connectorType": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "approved": {
+                    "type": "boolean"
+                  },
+                  "policy": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "number",
+                        "const": 1
+                      },
+                      "accessMode": {
+                        "type": "string",
+                        "enum": [
+                          "member",
+                          "service_account"
+                        ]
+                      },
+                      "sourceId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "mode": {
+                        "type": "string",
+                        "enum": [
+                          "all",
+                          "selected"
+                        ]
+                      },
+                      "included": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      },
+                      "excluded": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      },
+                      "sites": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      },
+                      "includeSubfolders": {
+                        "type": "boolean"
+                      },
+                      "includeDirectMessages": {
+                        "type": "boolean"
+                      },
+                      "includeArchived": {
+                        "type": "boolean"
+                      },
+                      "includeAttendees": {
+                        "type": "boolean"
+                      },
+                      "excludePromotions": {
+                        "type": "boolean"
+                      },
+                      "excludeSocial": {
+                        "type": "boolean"
+                      },
+                      "fileTypes": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      },
+                      "pathPrefixes": {
+                        "maxItems": 100,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 500
+                        }
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "mode",
+                      "included",
+                      "excluded",
+                      "sites",
+                      "includeSubfolders",
+                      "includeDirectMessages",
+                      "includeArchived",
+                      "includeAttendees",
+                      "excludePromotions",
+                      "excludeSocial",
+                      "fileTypes",
+                      "pathPrefixes"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "available": {
+                    "type": "boolean"
+                  },
+                  "configuredServiceSource": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "connectorType",
+                  "approved"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateSearchIntegrationContract": {
+      "method": "PUT",
+      "path": "/api/knowledge/sim-search/integrations",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "connectorType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "approved": {
+            "type": "boolean"
+          },
+          "policy": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "number",
+                "const": 1
+              },
+              "accessMode": {
+                "type": "string",
+                "enum": [
+                  "member",
+                  "service_account"
+                ]
+              },
+              "sourceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "selected"
+                ]
+              },
+              "included": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                }
+              },
+              "excluded": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                }
+              },
+              "sites": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                }
+              },
+              "includeSubfolders": {
+                "type": "boolean"
+              },
+              "includeDirectMessages": {
+                "type": "boolean"
+              },
+              "includeArchived": {
+                "type": "boolean"
+              },
+              "includeAttendees": {
+                "type": "boolean"
+              },
+              "excludePromotions": {
+                "type": "boolean"
+              },
+              "excludeSocial": {
+                "type": "boolean"
+              },
+              "fileTypes": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                }
+              },
+              "pathPrefixes": {
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 500
+                }
+              }
+            },
+            "required": [
+              "version",
+              "mode",
+              "included",
+              "excluded",
+              "sites",
+              "includeSubfolders",
+              "includeDirectMessages",
+              "includeArchived",
+              "includeAttendees",
+              "excludePromotions",
+              "excludeSocial",
+              "fileTypes",
+              "pathPrefixes"
+            ],
+            "additionalProperties": false
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "connectorType",
+          "approved",
+          "organizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "connectorType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 100
+                },
+                "approved": {
+                  "type": "boolean"
+                },
+                "policy": {
+                  "type": "object",
+                  "properties": {
+                    "version": {
+                      "type": "number",
+                      "const": 1
+                    },
+                    "accessMode": {
+                      "type": "string",
+                      "enum": [
+                        "member",
+                        "service_account"
+                      ]
+                    },
+                    "sourceId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "mode": {
+                      "type": "string",
+                      "enum": [
+                        "all",
+                        "selected"
+                      ]
+                    },
+                    "included": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    },
+                    "excluded": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    },
+                    "sites": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    },
+                    "includeSubfolders": {
+                      "type": "boolean"
+                    },
+                    "includeDirectMessages": {
+                      "type": "boolean"
+                    },
+                    "includeArchived": {
+                      "type": "boolean"
+                    },
+                    "includeAttendees": {
+                      "type": "boolean"
+                    },
+                    "excludePromotions": {
+                      "type": "boolean"
+                    },
+                    "excludeSocial": {
+                      "type": "boolean"
+                    },
+                    "fileTypes": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    },
+                    "pathPrefixes": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 500
+                      }
+                    }
+                  },
+                  "required": [
+                    "version",
+                    "mode",
+                    "included",
+                    "excluded",
+                    "sites",
+                    "includeSubfolders",
+                    "includeDirectMessages",
+                    "includeArchived",
+                    "includeAttendees",
+                    "excludePromotions",
+                    "excludeSocial",
+                    "fileTypes",
+                    "pathPrefixes"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "connectorType",
+                "approved"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

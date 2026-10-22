@@ -1,0 +1,176 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/sqs-list-message-move-tasks.ts",
+  "contracts": {
+    "awsSqsListMessageMoveTasksContract": {
+      "method": "POST",
+      "path": "/api/tools/sqs/list-message-move-tasks",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceArn": {
+            "type": "string",
+            "pattern": "^arn:[a-z0-9-]+:sqs:[a-z0-9-]+:\\d{12}:[A-Za-z0-9_-]+(\\.fifo)?$"
+          },
+          "maxResults": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "sourceArn"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "results": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "taskHandle": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "sourceArn": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "destinationArn": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "maxNumberOfMessagesPerSecond": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "approximateNumberOfMessagesMoved": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "approximateNumberOfMessagesToMove": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "failureReason": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "startedTimestamp": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "taskHandle",
+                  "status",
+                  "sourceArn",
+                  "destinationArn",
+                  "maxNumberOfMessagesPerSecond",
+                  "approximateNumberOfMessagesMoved",
+                  "approximateNumberOfMessagesToMove",
+                  "failureReason",
+                  "startedTimestamp"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "count": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "results",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

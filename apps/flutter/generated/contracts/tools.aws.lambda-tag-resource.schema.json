@@ -1,0 +1,78 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/lambda-tag-resource.ts",
+  "contracts": {
+    "awsLambdaTagResourceContract": {
+      "method": "POST",
+      "path": "/api/tools/lambda/tag-resource",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resourceArn": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tags": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "resourceArn",
+          "tags"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

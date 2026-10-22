@@ -1,0 +1,685 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/project-file-folders.ts",
+  "contracts": {
+    "v2CreateProjectFileFolderContract": {
+      "method": "POST",
+      "path": "/api/v2/projects/[projectId]/files/folders",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          }
+        },
+        "required": [
+          "projectId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Name for the new folder."
+          },
+          "parentId": {
+            "description": "Parent folder identifier; omit or use null for the root.",
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Stable folder identifier."
+                },
+                "userId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Creator or successor identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Folder name."
+                },
+                "parentId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Parent folder identifier, or null at the root."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Display path with slash characters in folder names escaped."
+                },
+                "sortOrder": {
+                  "type": "number",
+                  "description": "Position within its parent folder."
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Archive time, or null for an active folder."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "Time the folder was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "Time the folder was last changed."
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "const": "project",
+                      "description": "The folder is owned by a Project."
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Identifier of the owning Project."
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Canonical Project owner of the folder."
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "name",
+                "parentId",
+                "path",
+                "sortOrder",
+                "deletedAt",
+                "createdAt",
+                "updatedAt",
+                "owner"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2ListProjectFileFoldersContract": {
+      "method": "GET",
+      "path": "/api/v2/projects/[projectId]/files/folders",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          }
+        },
+        "required": [
+          "projectId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "scope": {
+            "default": "active",
+            "description": "Folder lifecycle scope.",
+            "type": "string",
+            "enum": [
+              "active",
+              "archived",
+              "all"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Stable folder identifier."
+                  },
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Creator or successor identifier."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Folder name."
+                  },
+                  "parentId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Parent folder identifier, or null at the root."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Display path with slash characters in folder names escaped."
+                  },
+                  "sortOrder": {
+                    "type": "number",
+                    "description": "Position within its parent folder."
+                  },
+                  "deletedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Archive time, or null for an active folder."
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "Time the folder was created."
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "Time the folder was last changed."
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "const": "project",
+                        "description": "The folder is owned by a Project."
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Identifier of the owning Project."
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Canonical Project owner of the folder."
+                  }
+                },
+                "required": [
+                  "id",
+                  "userId",
+                  "name",
+                  "parentId",
+                  "path",
+                  "sortOrder",
+                  "deletedAt",
+                  "createdAt",
+                  "updatedAt",
+                  "owner"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Always `null`. This list has no `cursor` or `limit` parameters; see the operation for inventory limits."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2RestoreProjectFileFolderContract": {
+      "method": "POST",
+      "path": "/api/v2/projects/[projectId]/files/folders/[folderId]/restore",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          },
+          "folderId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Folder identifier within the Project."
+          }
+        },
+        "required": [
+          "projectId",
+          "folderId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "folder": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Stable folder identifier."
+                    },
+                    "userId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Creator or successor identifier."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Folder name."
+                    },
+                    "parentId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Parent folder identifier, or null at the root."
+                    },
+                    "path": {
+                      "type": "string",
+                      "description": "Display path with slash characters in folder names escaped."
+                    },
+                    "sortOrder": {
+                      "type": "number",
+                      "description": "Position within its parent folder."
+                    },
+                    "deletedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Archive time, or null for an active folder."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                      "description": "Time the folder was created."
+                    },
+                    "updatedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                      "description": "Time the folder was last changed."
+                    },
+                    "owner": {
+                      "type": "object",
+                      "properties": {
+                        "entityType": {
+                          "type": "string",
+                          "const": "project",
+                          "description": "The folder is owned by a Project."
+                        },
+                        "entityId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Identifier of the owning Project."
+                        }
+                      },
+                      "required": [
+                        "entityType",
+                        "entityId"
+                      ],
+                      "additionalProperties": false,
+                      "description": "Canonical Project owner of the folder."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "userId",
+                    "name",
+                    "parentId",
+                    "path",
+                    "sortOrder",
+                    "deletedAt",
+                    "createdAt",
+                    "updatedAt",
+                    "owner"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Restored Project folder."
+                },
+                "restoredItems": {
+                  "type": "object",
+                  "properties": {
+                    "files": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of affected files."
+                    },
+                    "folders": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of affected folders."
+                    }
+                  },
+                  "required": [
+                    "files",
+                    "folders"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Counts of affected file items."
+                }
+              },
+              "required": [
+                "folder",
+                "restoredItems"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2UpdateProjectFileFolderContract": {
+      "method": "PATCH",
+      "path": "/api/v2/projects/[projectId]/files/folders/[folderId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          },
+          "folderId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Folder identifier within the Project."
+          }
+        },
+        "required": [
+          "projectId",
+          "folderId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "New folder name; omit to leave unchanged.",
+            "type": "string",
+            "minLength": 1
+          },
+          "parentId": {
+            "description": "New parent folder identifier; null moves to the root, omission leaves the parent unchanged.",
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sortOrder": {
+            "description": "New manual position; omit to leave unchanged.",
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Stable folder identifier."
+                },
+                "userId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Creator or successor identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Folder name."
+                },
+                "parentId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Parent folder identifier, or null at the root."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Display path with slash characters in folder names escaped."
+                },
+                "sortOrder": {
+                  "type": "number",
+                  "description": "Position within its parent folder."
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Archive time, or null for an active folder."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "Time the folder was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "Time the folder was last changed."
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "const": "project",
+                      "description": "The folder is owned by a Project."
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Identifier of the owning Project."
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Canonical Project owner of the folder."
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "name",
+                "parentId",
+                "path",
+                "sortOrder",
+                "deletedAt",
+                "createdAt",
+                "updatedAt",
+                "owner"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

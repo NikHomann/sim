@@ -1,0 +1,143 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudwatch-get-metric-statistics.ts",
+  "contracts": {
+    "awsCloudwatchGetMetricStatisticsContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudwatch/get-metric-statistics",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "namespace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metricName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "startTime": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "endTime": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "period": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "statistics": {
+            "minItems": 1,
+            "maxItems": 5,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "Average",
+                "Sum",
+                "Minimum",
+                "Maximum",
+                "SampleCount"
+              ]
+            }
+          },
+          "dimensions": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "namespace",
+          "metricName",
+          "startTime",
+          "endTime",
+          "period",
+          "statistics"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string"
+                },
+                "datapoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "timestamp": {
+                        "type": "number"
+                      },
+                      "average": {
+                        "type": "number"
+                      },
+                      "sum": {
+                        "type": "number"
+                      },
+                      "minimum": {
+                        "type": "number"
+                      },
+                      "maximum": {
+                        "type": "number"
+                      },
+                      "sampleCount": {
+                        "type": "number"
+                      },
+                      "unit": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "timestamp"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "label",
+                "datapoints"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

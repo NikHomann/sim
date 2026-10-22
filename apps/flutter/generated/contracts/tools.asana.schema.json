@@ -1,0 +1,1374 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/asana.ts",
+  "contracts": {
+    "asanaAddCommentContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/add-comment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "taskGid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "taskGid",
+          "text"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "text": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "created_by": {
+              "type": "object",
+              "properties": {
+                "gid": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "gid",
+                "name"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "text"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaAddFollowersContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/add-followers",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "taskGid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "followers": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "accessToken",
+          "taskGid",
+          "followers"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "followers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "gid": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "gid",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "name",
+            "followers"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaCreateProjectContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/create-project",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "workspace",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "archived": {
+              "type": "boolean"
+            },
+            "color": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            },
+            "permalink_url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "name",
+            "notes"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaCreateSectionContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/create-section",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectGid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "projectGid",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "created_at": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaCreateSubtaskContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/create-subtask",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "taskGid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "due_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "taskGid",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "completed": {
+              "type": "boolean"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            },
+            "permalink_url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "name",
+            "notes",
+            "completed"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaCreateTaskContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/create-task",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "due_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "name",
+          "workspace"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "completed": {
+              "type": "boolean"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            },
+            "permalink_url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "name",
+            "notes",
+            "completed"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaDeleteTaskContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/delete-task",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "taskGid": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "taskGid"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "deleted": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "deleted"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaGetProjectContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/get-project",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectGid": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "projectGid"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "archived": {
+              "type": "boolean"
+            },
+            "color": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            },
+            "permalink_url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "name",
+            "notes"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaGetProjectsContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/get-projects",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspace": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "workspace"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "projects": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "gid": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resource_type": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "gid",
+                  "name",
+                  "resource_type"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "projects"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaGetTaskContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/get-task",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "taskGid": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workspace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "project": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "number"
+                  }
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "gid": {
+                  "type": "string"
+                },
+                "resource_type": {
+                  "type": "string"
+                },
+                "resource_subtype": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "notes": {
+                  "type": "string"
+                },
+                "completed": {
+                  "type": "boolean"
+                },
+                "assignee": {
+                  "type": "object",
+                  "properties": {
+                    "gid": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "gid",
+                    "name"
+                  ],
+                  "additionalProperties": false
+                },
+                "created_by": {
+                  "type": "object",
+                  "properties": {
+                    "gid": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "resource_type": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "gid",
+                    "name"
+                  ],
+                  "additionalProperties": false
+                },
+                "due_on": {
+                  "type": "string"
+                },
+                "created_at": {
+                  "type": "string"
+                },
+                "modified_at": {
+                  "type": "string"
+                },
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "ts": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "gid",
+                "name",
+                "notes",
+                "completed",
+                "success",
+                "ts"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "ts": {
+                  "type": "string"
+                },
+                "tasks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "gid": {
+                        "type": "string"
+                      },
+                      "resource_type": {
+                        "type": "string"
+                      },
+                      "resource_subtype": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "notes": {
+                        "type": "string"
+                      },
+                      "completed": {
+                        "type": "boolean"
+                      },
+                      "assignee": {
+                        "type": "object",
+                        "properties": {
+                          "gid": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "gid",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "created_by": {
+                        "type": "object",
+                        "properties": {
+                          "gid": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "resource_type": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "gid",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "due_on": {
+                        "type": "string"
+                      },
+                      "created_at": {
+                        "type": "string"
+                      },
+                      "modified_at": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "gid",
+                      "name",
+                      "notes",
+                      "completed"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "next_page": {}
+              },
+              "required": [
+                "success",
+                "ts",
+                "tasks"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "asanaListSectionsContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/list-sections",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "projectGid": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "projectGid"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "sections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "gid": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resource_type": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "gid",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "sections"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaListWorkspacesContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/list-workspaces",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "workspaces": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "gid": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "resource_type": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "gid",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "workspaces"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaSearchTasksContract": {
+      "method": "POST",
+      "path": "/api/tools/asana/search-tasks",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "projects": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "workspace"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "tasks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "gid": {
+                    "type": "string"
+                  },
+                  "resource_type": {
+                    "type": "string"
+                  },
+                  "resource_subtype": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "notes": {
+                    "type": "string"
+                  },
+                  "completed": {
+                    "type": "boolean"
+                  },
+                  "assignee": {
+                    "type": "object",
+                    "properties": {
+                      "gid": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "gid",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "created_by": {
+                    "type": "object",
+                    "properties": {
+                      "gid": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "resource_type": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "gid",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "due_on": {
+                    "type": "string"
+                  },
+                  "created_at": {
+                    "type": "string"
+                  },
+                  "modified_at": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "gid",
+                  "name",
+                  "notes",
+                  "completed"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "next_page": {}
+          },
+          "required": [
+            "success",
+            "ts",
+            "tasks"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "asanaUpdateTaskContract": {
+      "method": "PUT",
+      "path": "/api/tools/asana/update-task",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "taskGid": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "assignee": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "completed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "due_on": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "taskGid"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "ts": {
+              "type": "string"
+            },
+            "gid": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "notes": {
+              "type": "string"
+            },
+            "completed": {
+              "type": "boolean"
+            },
+            "created_at": {
+              "type": "string"
+            },
+            "modified_at": {
+              "type": "string"
+            },
+            "permalink_url": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "ts",
+            "gid",
+            "name",
+            "notes",
+            "completed"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

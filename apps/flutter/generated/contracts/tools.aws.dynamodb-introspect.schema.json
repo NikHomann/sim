@@ -1,0 +1,231 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/dynamodb-introspect.ts",
+  "contracts": {
+    "awsDynamodbIntrospectContract": {
+      "method": "POST",
+      "path": "/api/tools/dynamodb/introspect",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tableName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "tables": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "tableDetails": {
+              "type": "object",
+              "properties": {
+                "tableName": {
+                  "type": "string"
+                },
+                "tableStatus": {
+                  "type": "string"
+                },
+                "keySchema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "attributeName": {
+                        "type": "string"
+                      },
+                      "keyType": {
+                        "type": "string",
+                        "enum": [
+                          "HASH",
+                          "RANGE"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "attributeName",
+                      "keyType"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "attributeDefinitions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "attributeName": {
+                        "type": "string"
+                      },
+                      "attributeType": {
+                        "type": "string",
+                        "enum": [
+                          "S",
+                          "N",
+                          "B"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "attributeName",
+                      "attributeType"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "globalSecondaryIndexes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "indexName": {
+                        "type": "string"
+                      },
+                      "keySchema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "attributeName": {
+                              "type": "string"
+                            },
+                            "keyType": {
+                              "type": "string",
+                              "enum": [
+                                "HASH",
+                                "RANGE"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "attributeName",
+                            "keyType"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "projectionType": {
+                        "type": "string"
+                      },
+                      "indexStatus": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "indexName",
+                      "keySchema",
+                      "projectionType",
+                      "indexStatus"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "localSecondaryIndexes": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "indexName": {
+                        "type": "string"
+                      },
+                      "keySchema": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "attributeName": {
+                              "type": "string"
+                            },
+                            "keyType": {
+                              "type": "string",
+                              "enum": [
+                                "HASH",
+                                "RANGE"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "attributeName",
+                            "keyType"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "projectionType": {
+                        "type": "string"
+                      },
+                      "indexStatus": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "indexName",
+                      "keySchema",
+                      "projectionType",
+                      "indexStatus"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "itemCount": {
+                  "type": "number"
+                },
+                "tableSizeBytes": {
+                  "type": "number"
+                },
+                "billingMode": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "tableName",
+                "tableStatus",
+                "keySchema",
+                "attributeDefinitions",
+                "globalSecondaryIndexes",
+                "localSecondaryIndexes",
+                "itemCount",
+                "tableSizeBytes",
+                "billingMode"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "message",
+            "tables"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

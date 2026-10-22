@@ -1,0 +1,94 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-enable-stage-transition.ts",
+  "contracts": {
+    "awsCodepipelineEnableStageTransitionContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/enable-stage-transition",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "stageName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "transitionType": {
+            "type": "string",
+            "enum": [
+              "Inbound",
+              "Outbound"
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName",
+          "stageName",
+          "transitionType"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "pipelineName": {
+                  "type": "string"
+                },
+                "stageName": {
+                  "type": "string"
+                },
+                "transitionType": {
+                  "type": "string",
+                  "enum": [
+                    "Inbound",
+                    "Outbound"
+                  ]
+                }
+              },
+              "required": [
+                "pipelineName",
+                "stageName",
+                "transitionType"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

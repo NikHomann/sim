@@ -1,0 +1,108 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-list-templates.ts",
+  "contracts": {
+    "awsSesListTemplatesContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/list-templates",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pageSize": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nextToken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "templates": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "templateName": {
+                    "type": "string"
+                  },
+                  "createdTimestamp": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "templateName",
+                  "createdTimestamp"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextToken": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "count": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "templates",
+            "nextToken",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

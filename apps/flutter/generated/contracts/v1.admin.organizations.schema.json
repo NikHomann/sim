@@ -1,0 +1,2136 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/admin/organizations.ts",
+  "contracts": {
+    "adminV1AddOrganizationMemberContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/organizations/[id]/members",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "member"
+            ]
+          }
+        },
+        "required": [
+          "userId",
+          "role"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "userName": {
+                  "type": "string"
+                },
+                "userEmail": {
+                  "type": "string"
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "created",
+                    "updated",
+                    "already_member"
+                  ]
+                },
+                "billingActions": {
+                  "type": "object",
+                  "properties": {
+                    "proUsageSnapshotted": {
+                      "type": "boolean"
+                    },
+                    "proCancelledAtPeriodEnd": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "proUsageSnapshotted",
+                    "proCancelledAtPeriodEnd"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "organizationId",
+                "role",
+                "createdAt",
+                "userName",
+                "userEmail",
+                "action",
+                "billingActions"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1CreateOrganizationContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/organizations",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ownerId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "ownerId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "logo": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "orgUsageLimit": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "storageUsedBytes": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "memberId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "logo",
+                "orgUsageLimit",
+                "storageUsedBytes",
+                "createdAt",
+                "updatedAt",
+                "memberId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1DeleteOrganizationContract": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/organizations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "confirmSlug": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "confirmSlug"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "organizationId": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "membersRemoved": {
+                  "type": "number"
+                },
+                "workspacesDetached": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "success",
+                "organizationId",
+                "slug",
+                "membersRemoved",
+                "workspacesDetached"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1GetOrganizationBillingContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/organizations/[id]/billing",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "organizationId": {
+                  "type": "string"
+                },
+                "organizationName": {
+                  "type": "string"
+                },
+                "subscriptionPlan": {
+                  "type": "string"
+                },
+                "subscriptionStatus": {
+                  "type": "string"
+                },
+                "totalSeats": {
+                  "type": "number"
+                },
+                "usedSeats": {
+                  "type": "number"
+                },
+                "availableSeats": {
+                  "type": "number"
+                },
+                "totalCurrentUsage": {
+                  "type": "number"
+                },
+                "totalUsageLimit": {
+                  "type": "number"
+                },
+                "minimumBillingAmount": {
+                  "type": "number"
+                },
+                "averageUsagePerMember": {
+                  "type": "number"
+                },
+                "usagePercentage": {
+                  "type": "number"
+                },
+                "billingPeriodStart": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "billingPeriodEnd": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "membersOverLimit": {
+                  "type": "number"
+                },
+                "membersNearLimit": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "organizationId",
+                "organizationName",
+                "subscriptionPlan",
+                "subscriptionStatus",
+                "totalSeats",
+                "usedSeats",
+                "availableSeats",
+                "totalCurrentUsage",
+                "totalUsageLimit",
+                "minimumBillingAmount",
+                "averageUsagePerMember",
+                "usagePercentage",
+                "billingPeriodStart",
+                "billingPeriodEnd",
+                "membersOverLimit",
+                "membersNearLimit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1GetOrganizationContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/organizations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "logo": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "orgUsageLimit": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "storageUsedBytes": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "memberCount": {
+                  "type": "number"
+                },
+                "subscription": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "plan": {
+                          "type": "string"
+                        },
+                        "referenceId": {
+                          "type": "string"
+                        },
+                        "stripeCustomerId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "stripeSubscriptionId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "status": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "periodStart": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "periodEnd": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "cancelAtPeriodEnd": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "seats": {
+                          "anyOf": [
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "trialStart": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "trialEnd": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "metadata": {}
+                      },
+                      "required": [
+                        "id",
+                        "plan",
+                        "referenceId",
+                        "stripeCustomerId",
+                        "stripeSubscriptionId",
+                        "status",
+                        "periodStart",
+                        "periodEnd",
+                        "cancelAtPeriodEnd",
+                        "seats",
+                        "trialStart",
+                        "trialEnd",
+                        "metadata"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "logo",
+                "orgUsageLimit",
+                "storageUsedBytes",
+                "createdAt",
+                "updatedAt",
+                "memberCount",
+                "subscription"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1GetOrganizationMemberContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/organizations/[id]/members/[memberId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memberId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "memberId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "userName": {
+                  "type": "string"
+                },
+                "userEmail": {
+                  "type": "string"
+                },
+                "currentPeriodCost": {
+                  "type": "string"
+                },
+                "currentUsageLimit": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "billingBlocked": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "organizationId",
+                "role",
+                "createdAt",
+                "userName",
+                "userEmail",
+                "currentPeriodCost",
+                "currentUsageLimit",
+                "billingBlocked"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1GetOrganizationSeatsContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/organizations/[id]/seats",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "organizationId": {
+                  "type": "string"
+                },
+                "organizationName": {
+                  "type": "string"
+                },
+                "currentSeats": {
+                  "type": "number"
+                },
+                "maxSeats": {
+                  "type": "number"
+                },
+                "availableSeats": {
+                  "type": "number"
+                },
+                "subscriptionPlan": {
+                  "type": "string"
+                },
+                "canAddSeats": {
+                  "type": "boolean"
+                },
+                "utilizationRate": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "organizationId",
+                "organizationName",
+                "currentSeats",
+                "maxSeats",
+                "availableSeats",
+                "subscriptionPlan",
+                "canAddSeats",
+                "utilizationRate"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1ListOrganizationMembersContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/organizations/[id]/members",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "organizationId": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "userEmail": {
+                    "type": "string"
+                  },
+                  "currentPeriodCost": {
+                    "type": "string"
+                  },
+                  "currentUsageLimit": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "billingBlocked": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "userId",
+                  "organizationId",
+                  "role",
+                  "createdAt",
+                  "userName",
+                  "userEmail",
+                  "currentPeriodCost",
+                  "currentUsageLimit",
+                  "billingBlocked"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "number"
+                },
+                "limit": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "total",
+                "limit",
+                "offset",
+                "hasMore"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1ListOrganizationsContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/organizations",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "limit",
+          "offset"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "logo": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "orgUsageLimit": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "storageUsedBytes": {
+                    "type": "number"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "slug",
+                  "logo",
+                  "orgUsageLimit",
+                  "storageUsedBytes",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "number"
+                },
+                "limit": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "total",
+                "limit",
+                "offset",
+                "hasMore"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1RemoveOrganizationMemberContract": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/organizations/[id]/members/[memberId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memberId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "memberId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skipBillingLogic": {
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ]
+          }
+        },
+        "required": [
+          "skipBillingLogic"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "memberId": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "billingActions": {
+                  "type": "object",
+                  "properties": {
+                    "usageCaptured": {
+                      "type": "number"
+                    },
+                    "proRestored": {
+                      "type": "boolean"
+                    },
+                    "usageRestored": {
+                      "type": "boolean"
+                    },
+                    "skipBillingLogic": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "usageCaptured",
+                    "proRestored",
+                    "usageRestored",
+                    "skipBillingLogic"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "memberId",
+                "userId",
+                "billingActions"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1TransferOwnershipContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/organizations/[id]/transfer-ownership",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "newOwnerUserId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "currentOwnerUserId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "newOwnerUserId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "organizationId": {
+                  "type": "string"
+                },
+                "currentOwnerUserId": {
+                  "type": "string"
+                },
+                "newOwnerUserId": {
+                  "type": "string"
+                },
+                "workspacesReassigned": {
+                  "type": "number"
+                },
+                "billedAccountReassigned": {
+                  "type": "number"
+                },
+                "overageMigrated": {
+                  "type": "string"
+                },
+                "billingBlockInherited": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "organizationId",
+                "currentOwnerUserId",
+                "newOwnerUserId",
+                "workspacesReassigned",
+                "billedAccountReassigned",
+                "overageMigrated",
+                "billingBlockInherited"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1UpdateOrganizationBillingContract": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/organizations/[id]/billing",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "orgUsageLimit": {
+            "anyOf": [
+              {
+                "type": "number",
+                "minimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "orgUsageLimit": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "success",
+                "orgUsageLimit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1UpdateOrganizationContract": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/organizations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "logo": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "orgUsageLimit": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "storageUsedBytes": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "logo",
+                "orgUsageLimit",
+                "storageUsedBytes",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1UpdateOrganizationDataRetentionContract": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/organizations/[id]/data-retention",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "logRetentionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "softDeleteRetentionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "taskCleanupHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fileVersionRetentionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "piiRedaction": {
+            "type": "object",
+            "properties": {
+              "rules": {
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 100
+                    },
+                    "workspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "stages": {
+                      "type": "object",
+                      "properties": {
+                        "input": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "entityTypes": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "enum": [
+                                "en",
+                                "es",
+                                "it",
+                                "pl",
+                                "fi"
+                              ]
+                            },
+                            "customPatterns": {
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "regex": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 512
+                                  },
+                                  "replacement": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "regex",
+                                  "replacement"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "entityTypes"
+                          ]
+                        },
+                        "blockOutputs": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "entityTypes": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "enum": [
+                                "en",
+                                "es",
+                                "it",
+                                "pl",
+                                "fi"
+                              ]
+                            },
+                            "customPatterns": {
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "regex": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 512
+                                  },
+                                  "replacement": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "regex",
+                                  "replacement"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "entityTypes"
+                          ]
+                        },
+                        "logs": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "entityTypes": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "enum": [
+                                "en",
+                                "es",
+                                "it",
+                                "pl",
+                                "fi"
+                              ]
+                            },
+                            "customPatterns": {
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "regex": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 512
+                                  },
+                                  "replacement": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "regex",
+                                  "replacement"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "entityTypes"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "input",
+                        "blockOutputs",
+                        "logs"
+                      ]
+                    },
+                    "entityTypes": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "language": {
+                      "type": "string",
+                      "enum": [
+                        "en",
+                        "es",
+                        "it",
+                        "pl",
+                        "fi"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "workspaceId"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "rules"
+            ]
+          },
+          "retentionOverrides": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Unique workspace identifier."
+                },
+                "logRetentionHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "softDeleteRetentionHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "taskCleanupHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "fileVersionRetentionHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "workspaceId"
+              ]
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "organizationId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success",
+                "organizationId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1UpdateOrganizationMemberContract": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/organizations/[id]/members/[memberId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memberId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "memberId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "member"
+            ]
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "userName": {
+                  "type": "string"
+                },
+                "userEmail": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "organizationId",
+                "role",
+                "createdAt",
+                "userName",
+                "userEmail"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1UpdateOrganizationSessionPolicyContract": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/organizations/[id]/session-policy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "maxSessionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 8760
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "idleTimeoutHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 48,
+                "maximum": 8760
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "maxSessionHours",
+          "idleTimeoutHours"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "organizationId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success",
+                "organizationId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1UpdateOrganizationWhitelabelContract": {
+      "method": "PATCH",
+      "path": "/api/v1/admin/organizations/[id]/whitelabel",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "brandName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "logoUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "wordmarkUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "primaryColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "primaryHoverColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accentColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accentHoverColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "supportEmail": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email",
+                "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "documentationUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "termsUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "privacyUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hidePoweredBySim": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "organizationId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success",
+                "organizationId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

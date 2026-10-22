@@ -1,0 +1,109 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-list-identities.ts",
+  "contracts": {
+    "awsSesListIdentitiesContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/list-identities",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pageSize": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "nextToken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "identities": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "identityName": {
+                    "type": "string"
+                  },
+                  "identityType": {
+                    "type": "string"
+                  },
+                  "sendingEnabled": {
+                    "type": "boolean"
+                  },
+                  "verificationStatus": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "identityName",
+                  "identityType",
+                  "sendingEnabled",
+                  "verificationStatus"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextToken": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "count": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "identities",
+            "nextToken",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

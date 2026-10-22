@@ -1,0 +1,119 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/project-file-extraction.ts",
+  "contracts": {
+    "v2UnzipProjectFileContract": {
+      "method": "POST",
+      "path": "/api/v2/projects/[projectId]/files/[fileId]/unzip",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "File identifier within the Project."
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical path of the folder the archive was unpacked into. May differ from the archive name when a sibling folder already claimed it.",
+                  "maxLength": 4096
+                },
+                "extractedFileCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of files written into the destination folder."
+                },
+                "skippedFileCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of archive entries skipped as unsafe, empty, or noise."
+                }
+              },
+              "required": [
+                "folderPath",
+                "extractedFileCount",
+                "skippedFileCount"
+              ],
+              "additionalProperties": false,
+              "description": "Response data.",
+              "$ref": "#/$defs/V2ProjectFileUnzipResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2ProjectFileUnzipResult": {
+              "title": "Project unzip result",
+              "description": "Outcome of unzipping a Project archive into a sibling folder.",
+              "id": "V2ProjectFileUnzipResult",
+              "$ref": "#/$defs/V2FileUnzipResult"
+            },
+            "V2FileUnzipResult": {
+              "type": "object",
+              "properties": {
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical path of the folder the archive was unpacked into. May differ from the archive name when a sibling folder already claimed it.",
+                  "maxLength": 4096
+                },
+                "extractedFileCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of files written into the destination folder."
+                },
+                "skippedFileCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of archive entries skipped as unsafe, empty, or noise."
+                }
+              },
+              "required": [
+                "folderPath",
+                "extractedFileCount",
+                "skippedFileCount"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileUnzipResult",
+              "title": "Unzip result",
+              "description": "Outcome of unzipping a workspace archive into a folder."
+            }
+          }
+        }
+      }
+    }
+  }
+}

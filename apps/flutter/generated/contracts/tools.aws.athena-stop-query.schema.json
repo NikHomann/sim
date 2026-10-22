@@ -1,0 +1,68 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/athena-stop-query.ts",
+  "contracts": {
+    "awsAthenaStopQueryContract": {
+      "method": "POST",
+      "path": "/api/tools/athena/stop-query",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queryExecutionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "queryExecutionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                }
+              },
+              "required": [
+                "success"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

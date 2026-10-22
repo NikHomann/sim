@@ -1,0 +1,126 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/iam-get-user.ts",
+  "contracts": {
+    "awsIamGetUserContract": {
+      "method": "POST",
+      "path": "/api/tools/iam/get-user",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[\\w+=,.@-]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "userName": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "arn": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "createDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "passwordLastUsed": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "permissionsBoundaryArn": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "userName",
+            "userId",
+            "arn",
+            "path",
+            "createDate",
+            "passwordLastUsed",
+            "permissionsBoundaryArn",
+            "tags"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1526 @@
+{
+  "source": "apps/sim/lib/api/contracts/knowledge/chunks.ts",
+  "contracts": {
+    "bulkKnowledgeChunksContract": {
+      "method": "PATCH",
+      "path": "/api/knowledge/[id]/documents/[documentId]/chunks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "enable",
+              "disable",
+              "delete"
+            ]
+          },
+          "chunkIds": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "operation",
+          "chunkIds"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "operation": {
+                  "type": "string"
+                },
+                "successCount": {
+                  "type": "number"
+                },
+                "errorCount": {
+                  "type": "number"
+                },
+                "processed": {
+                  "type": "number"
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "operation",
+                "successCount",
+                "errorCount",
+                "processed",
+                "errors"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createKnowledgeChunkContract": {
+      "method": "POST",
+      "path": "/api/knowledge/[id]/documents/[documentId]/chunks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "enabled": {
+            "default": true,
+            "type": "boolean"
+          },
+          "__privateSecretProvenance": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "number",
+                "const": 1,
+                "description": "Private provenance bundle format version."
+              },
+              "complete": {
+                "type": "boolean",
+                "description": "Whether the private provenance bundle is complete."
+              },
+              "selections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096,
+                      "description": "Selection key carrying provenance."
+                    },
+                    "provenance": {
+                      "type": "object",
+                      "properties": {
+                        "version": {
+                          "type": "number",
+                          "const": 1,
+                          "description": "Secret provenance format version."
+                        },
+                        "complete": {
+                          "type": "boolean",
+                          "description": "Whether the provenance trace is complete."
+                        },
+                        "entries": {
+                          "maxItems": 10000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "encryptedValue": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 8388608,
+                                "description": "Encrypted secret value carried across the trusted execution boundary."
+                              },
+                              "name": {
+                                "description": "Optional source secret name.",
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1024
+                              }
+                            },
+                            "required": [
+                              "encryptedValue"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Encrypted secret provenance entries."
+                        },
+                        "scope": {
+                          "description": "Authorization scope bound to the encrypted provenance.",
+                          "type": "object",
+                          "properties": {
+                            "userId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "User scope for the encrypted provenance."
+                            },
+                            "workspaceId": {
+                              "description": "Optional workspace scope for the encrypted provenance.",
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024
+                            }
+                          },
+                          "required": [
+                            "userId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "complete",
+                        "entries"
+                      ],
+                      "additionalProperties": false,
+                      "description": "Encrypted provenance for this selection."
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "provenance"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Selections and their encrypted provenance."
+              }
+            },
+            "required": [
+              "version",
+              "complete",
+              "selections"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "chunkIndex": {
+                  "type": "number"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "contentLength": {
+                  "type": "number"
+                },
+                "tokenCount": {
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "startOffset": {
+                  "type": "number"
+                },
+                "endOffset": {
+                  "type": "number"
+                },
+                "tag1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag3": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag4": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag5": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag6": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag7": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number1": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number2": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number3": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number4": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number5": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean1": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean2": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean3": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "chunkIndex",
+                "content",
+                "contentLength",
+                "tokenCount",
+                "enabled",
+                "startOffset",
+                "endOffset",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteKnowledgeChunkContract": {
+      "method": "DELETE",
+      "path": "/api/knowledge/[id]/documents/[documentId]/chunks/[chunkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chunkId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "chunkId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getKnowledgeChunkContract": {
+      "method": "GET",
+      "path": "/api/knowledge/[id]/documents/[documentId]/chunks/[chunkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chunkId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "chunkId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "chunkIndex": {
+                  "type": "number"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "contentLength": {
+                  "type": "number"
+                },
+                "tokenCount": {
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "startOffset": {
+                  "type": "number"
+                },
+                "endOffset": {
+                  "type": "number"
+                },
+                "tag1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag3": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag4": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag5": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag6": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag7": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number1": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number2": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number3": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number4": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number5": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean1": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean2": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean3": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "chunkIndex",
+                "content",
+                "contentLength",
+                "tokenCount",
+                "enabled",
+                "startOffset",
+                "endOffset",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listKnowledgeChunksContract": {
+      "method": "GET",
+      "path": "/api/knowledge/[id]/documents/[documentId]/chunks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string"
+          },
+          "enabled": {
+            "default": "all",
+            "type": "string",
+            "enum": [
+              "true",
+              "false",
+              "all"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "type": "number",
+            "minimum": 0
+          },
+          "sortBy": {
+            "default": "chunkIndex",
+            "type": "string",
+            "enum": [
+              "chunkIndex",
+              "tokenCount",
+              "enabled"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "chunkIndex": {
+                    "type": "number"
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "contentLength": {
+                    "type": "number"
+                  },
+                  "tokenCount": {
+                    "type": "number"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "startOffset": {
+                    "type": "number"
+                  },
+                  "endOffset": {
+                    "type": "number"
+                  },
+                  "tag1": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tag2": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tag3": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tag4": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tag5": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tag6": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tag7": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "number1": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "number2": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "number3": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "number4": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "number5": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "date1": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "date2": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "boolean1": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "boolean2": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "boolean3": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "chunkIndex",
+                  "content",
+                  "contentLength",
+                  "tokenCount",
+                  "enabled",
+                  "startOffset",
+                  "endOffset",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": {}
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "number"
+                },
+                "limit": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "total",
+                "limit",
+                "offset",
+                "hasMore"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateKnowledgeChunkContract": {
+      "method": "PUT",
+      "path": "/api/knowledge/[id]/documents/[documentId]/chunks/[chunkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chunkId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId",
+          "chunkId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "enabled": {
+            "default": true,
+            "type": "boolean"
+          },
+          "__privateSecretProvenance": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "number",
+                "const": 1,
+                "description": "Private provenance bundle format version."
+              },
+              "complete": {
+                "type": "boolean",
+                "description": "Whether the private provenance bundle is complete."
+              },
+              "selections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096,
+                      "description": "Selection key carrying provenance."
+                    },
+                    "provenance": {
+                      "type": "object",
+                      "properties": {
+                        "version": {
+                          "type": "number",
+                          "const": 1,
+                          "description": "Secret provenance format version."
+                        },
+                        "complete": {
+                          "type": "boolean",
+                          "description": "Whether the provenance trace is complete."
+                        },
+                        "entries": {
+                          "maxItems": 10000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "encryptedValue": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 8388608,
+                                "description": "Encrypted secret value carried across the trusted execution boundary."
+                              },
+                              "name": {
+                                "description": "Optional source secret name.",
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1024
+                              }
+                            },
+                            "required": [
+                              "encryptedValue"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Encrypted secret provenance entries."
+                        },
+                        "scope": {
+                          "description": "Authorization scope bound to the encrypted provenance.",
+                          "type": "object",
+                          "properties": {
+                            "userId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "User scope for the encrypted provenance."
+                            },
+                            "workspaceId": {
+                              "description": "Optional workspace scope for the encrypted provenance.",
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024
+                            }
+                          },
+                          "required": [
+                            "userId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "complete",
+                        "entries"
+                      ],
+                      "additionalProperties": false,
+                      "description": "Encrypted provenance for this selection."
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "provenance"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Selections and their encrypted provenance."
+              }
+            },
+            "required": [
+              "version",
+              "complete",
+              "selections"
+            ],
+            "additionalProperties": false
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "chunkIndex": {
+                  "type": "number"
+                },
+                "content": {
+                  "type": "string"
+                },
+                "contentLength": {
+                  "type": "number"
+                },
+                "tokenCount": {
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "startOffset": {
+                  "type": "number"
+                },
+                "endOffset": {
+                  "type": "number"
+                },
+                "tag1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag3": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag4": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag5": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag6": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tag7": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number1": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number2": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number3": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number4": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "number5": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean1": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean2": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "boolean3": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "chunkIndex",
+                "content",
+                "contentLength",
+                "tokenCount",
+                "enabled",
+                "startOffset",
+                "endOffset",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

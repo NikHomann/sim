@@ -1,0 +1,892 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/project-files.ts",
+  "contracts": {
+    "v2CreateProjectFileContract": {
+      "method": "POST",
+      "path": "/api/v2/projects/[projectId]/files",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          }
+        },
+        "required": [
+          "projectId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "File name, including its extension. Path separators and dot segments are rejected."
+          },
+          "contentType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "MIME type. When omitted, it is inferred from the file extension."
+          },
+          "content": {
+            "default": "",
+            "description": "Initial file content. Omit or send an empty string for a zero-byte file. The complete JSON request is capped at 70 MiB, including UTF-8 encoding, escaping, base64, and the envelope. The decoded-file limit is 50 MiB. Use an upload session for larger payloads.",
+            "type": "string",
+            "maxLength": 70000000
+          },
+          "encoding": {
+            "default": "utf-8",
+            "description": "Encoding of the content field.",
+            "type": "string",
+            "enum": [
+              "utf-8",
+              "base64"
+            ]
+          },
+          "folderPath": {
+            "description": "Canonical containing-folder path. Omit for the Project root.",
+            "$ref": "#/$defs/FolderPathInput"
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "FolderPathInput": {
+            "id": "FolderPathInput",
+            "title": "Folder path input",
+            "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+            "maxLength": 4096,
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2ProjectFile"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2ProjectFile": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the Project root.",
+                  "maxLength": 4096
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "const": "project",
+                      "description": "The file owner is a Project."
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Identifier of the owning Project."
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Canonical owner of the shared file."
+                },
+                "uploadedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Creator or successor identifier."
+                },
+                "revision": {
+                  "description": "Opaque token for the content this write produced. Send it back as `expectedRevision` on the next write. Absent for a file with no recorded content version.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt",
+                "owner",
+                "uploadedBy"
+              ],
+              "additionalProperties": false,
+              "id": "V2ProjectFile",
+              "title": "Project file"
+            }
+          }
+        }
+      }
+    },
+    "v2GetProjectFileMetadataContract": {
+      "method": "GET",
+      "path": "/api/v2/projects/[projectId]/files/[fileId]/metadata",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "File identifier within the Project."
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2ProjectFile"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2ProjectFile": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the Project root.",
+                  "maxLength": 4096
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "const": "project",
+                      "description": "The file owner is a Project."
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Identifier of the owning Project."
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Canonical owner of the shared file."
+                },
+                "uploadedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Creator or successor identifier."
+                },
+                "revision": {
+                  "description": "Opaque token for the content this write produced. Send it back as `expectedRevision` on the next write. Absent for a file with no recorded content version.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt",
+                "owner",
+                "uploadedBy"
+              ],
+              "additionalProperties": false,
+              "id": "V2ProjectFile",
+              "title": "Project file"
+            }
+          }
+        }
+      }
+    },
+    "v2ListProjectFilesContract": {
+      "method": "GET",
+      "path": "/api/v2/projects/[projectId]/files",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          }
+        },
+        "required": [
+          "projectId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "folderPath": {
+            "description": "Restrict files to this folder, including subfolders when `recursive` is true. Unknown folder paths contribute no matches.",
+            "$ref": "#/$defs/FolderPathInput"
+          },
+          "recursive": {
+            "description": "Include subfolders in the folder filter. Defaults to true when searching and false otherwise. Ignored without a folder filter.",
+            "enum": [
+              "true",
+              "1",
+              "yes",
+              "on",
+              "y",
+              "enabled",
+              "false",
+              "0",
+              "no",
+              "off",
+              "n",
+              "disabled"
+            ],
+            "type": "string"
+          },
+          "scope": {
+            "default": "active",
+            "description": "Which lifecycle set to list: `active` (default) for live files, `archived` for files a delete soft-deleted. `folderPath` resolves against active folders only, so pairing it with `scope=archived` returns an empty page when the containing folder was archived too.",
+            "type": "string",
+            "enum": [
+              "active",
+              "archived"
+            ]
+          },
+          "search": {
+            "description": "Case-insensitive substring match against the file name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sortBy": {
+            "default": "uploadedAt",
+            "description": "Field used to sort the result. Do not rely on case-insensitive ordering when sorting by `name`.",
+            "type": "string",
+            "enum": [
+              "name",
+              "size",
+              "uploadedAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 100,
+            "description": "Maximum files per page. Must be a whole number from 1 to 1000. Defaults to 100.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false,
+        "$defs": {
+          "FolderPathInput": {
+            "id": "FolderPathInput",
+            "title": "Folder path input",
+            "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+            "maxLength": 4096,
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2ProjectFile"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2ProjectFile": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the Project root.",
+                  "maxLength": 4096
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "const": "project",
+                      "description": "The file owner is a Project."
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Identifier of the owning Project."
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Canonical owner of the shared file."
+                },
+                "uploadedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Creator or successor identifier."
+                },
+                "revision": {
+                  "description": "Opaque token for the content this write produced. Send it back as `expectedRevision` on the next write. Absent for a file with no recorded content version.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt",
+                "owner",
+                "uploadedBy"
+              ],
+              "additionalProperties": false,
+              "id": "V2ProjectFile",
+              "title": "Project file"
+            }
+          }
+        }
+      }
+    },
+    "v2ReadProjectFileContentContract": {
+      "method": "GET",
+      "path": "/api/v2/projects/[projectId]/files/[fileId]/content",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "File identifier within the Project."
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "v2UpdateProjectFileContentContract": {
+      "method": "PUT",
+      "path": "/api/v2/projects/[projectId]/files/[fileId]/content",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "File identifier within the Project."
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 70000000,
+            "description": "Complete replacement content for the file. The complete JSON request is capped at 70 MiB, including UTF-8 encoding, escaping, base64, and the envelope. The decoded-file limit is 50 MiB."
+          },
+          "encoding": {
+            "default": "utf-8",
+            "description": "Encoding of the content field.",
+            "type": "string",
+            "enum": [
+              "utf-8",
+              "base64"
+            ]
+          },
+          "expectedRevision": {
+            "description": "Revision from Get file metadata or an earlier write; the request is refused with `409` when the content moved on.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2ProjectFile"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2ProjectFile": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the Project root.",
+                  "maxLength": 4096
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "const": "project",
+                      "description": "The file owner is a Project."
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Identifier of the owning Project."
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Canonical owner of the shared file."
+                },
+                "uploadedBy": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Creator or successor identifier."
+                },
+                "revision": {
+                  "description": "Opaque token for the content this write produced. Send it back as `expectedRevision` on the next write. Absent for a file with no recorded content version.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt",
+                "owner",
+                "uploadedBy"
+              ],
+              "additionalProperties": false,
+              "id": "V2ProjectFile",
+              "title": "Project file"
+            }
+          }
+        }
+      }
+    }
+  }
+}

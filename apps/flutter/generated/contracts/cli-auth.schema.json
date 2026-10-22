@@ -1,0 +1,158 @@
+{
+  "source": "apps/sim/lib/api/contracts/cli-auth.ts",
+  "contracts": {
+    "approveCliAuthContract": {
+      "method": "POST",
+      "path": "/api/cli/auth/approve",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "request": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9\\-_]{43}$"
+          },
+          "challenge": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9\\-_]{43}$"
+          },
+          "scope": {
+            "default": "copilot",
+            "type": "string",
+            "enum": [
+              "copilot",
+              "platform"
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "bindKeyToWorkspace": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "request",
+          "challenge"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "ok": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "ok"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "pollCliAuthContract": {
+      "method": "POST",
+      "path": "/api/cli/auth/poll",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "request": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9\\-_]{43}$"
+          },
+          "verifier": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9\\-_]{43}$"
+          }
+        },
+        "required": [
+          "request",
+          "verifier"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "pending"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "complete"
+                },
+                "key": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "apiKey": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "apiKey"
+                  ],
+                  "additionalProperties": false
+                },
+                "scope": {
+                  "type": "string",
+                  "enum": [
+                    "copilot",
+                    "platform"
+                  ]
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceBound": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "status",
+                "key",
+                "scope",
+                "workspaceId",
+                "workspaceBound"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}

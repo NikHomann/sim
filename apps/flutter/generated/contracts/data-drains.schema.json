@@ -1,0 +1,2739 @@
+{
+  "source": "apps/sim/lib/api/contracts/data-drains.ts",
+  "contracts": {
+    "createDataDrainContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/data-drains",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 120
+              },
+              "source": {
+                "type": "string",
+                "enum": [
+                  "workflow_logs",
+                  "job_logs",
+                  "audit_logs",
+                  "copilot_chats",
+                  "copilot_runs"
+                ]
+              },
+              "scheduleCadence": {
+                "type": "string",
+                "enum": [
+                  "hourly",
+                  "daily"
+                ]
+              },
+              "enabled": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "name",
+              "source",
+              "scheduleCadence"
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "sentinel"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "endpoint": {
+                        "type": "string",
+                        "maxLength": 2048,
+                        "format": "uri"
+                      },
+                      "ruleId": {
+                        "type": "string",
+                        "pattern": "^dcr-[0-9a-f]{32}$"
+                      },
+                      "streamName": {
+                        "type": "string",
+                        "minLength": 8,
+                        "maxLength": 256,
+                        "pattern": "^Custom-[A-Za-z0-9_-]+$"
+                      },
+                      "tenantId": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                      },
+                      "clientId": {
+                        "type": "string",
+                        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                      }
+                    },
+                    "required": [
+                      "endpoint",
+                      "ruleId",
+                      "streamName",
+                      "tenantId",
+                      "clientId"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "clientSecret": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "required": [
+                      "clientSecret"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "s3"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "bucket": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 63
+                      },
+                      "region": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 32
+                      },
+                      "prefix": {
+                        "type": "string",
+                        "maxLength": 512
+                      },
+                      "endpoint": {
+                        "type": "string",
+                        "format": "uri"
+                      },
+                      "forcePathStyle": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "bucket",
+                      "region"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "accessKeyId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "secretAccessKey": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "accessKeyId",
+                      "secretAccessKey"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "gcs"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "bucket": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 222
+                      },
+                      "prefix": {
+                        "type": "string",
+                        "maxLength": 512
+                      }
+                    },
+                    "required": [
+                      "bucket"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "serviceAccountJson": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "serviceAccountJson"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "azure_blob"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "accountName": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "containerName": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 63
+                      },
+                      "prefix": {
+                        "type": "string",
+                        "maxLength": 512
+                      },
+                      "endpointSuffix": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "accountName",
+                      "containerName"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "accountKey": {
+                        "type": "string",
+                        "minLength": 88,
+                        "maxLength": 88,
+                        "pattern": "^[A-Za-z0-9+/]+={0,2}$"
+                      }
+                    },
+                    "required": [
+                      "accountKey"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "datadog"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "site": {
+                        "type": "string",
+                        "enum": [
+                          "us1",
+                          "us3",
+                          "us5",
+                          "eu1",
+                          "ap1",
+                          "ap2",
+                          "gov"
+                        ]
+                      },
+                      "service": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "tags": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "site"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "apiKey": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "apiKey"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "bigquery"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "projectId": {
+                        "type": "string",
+                        "minLength": 6,
+                        "maxLength": 94
+                      },
+                      "datasetId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "tableId": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "projectId",
+                      "datasetId",
+                      "tableId"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "serviceAccountJson": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "serviceAccountJson"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "snowflake"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "account": {
+                        "type": "string",
+                        "minLength": 3,
+                        "maxLength": 256
+                      },
+                      "user": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                      },
+                      "warehouse": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                      },
+                      "database": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                      },
+                      "schema": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                      },
+                      "table": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                      },
+                      "column": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                      },
+                      "role": {
+                        "type": "string",
+                        "minLength": 1,
+                        "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                      }
+                    },
+                    "required": [
+                      "account",
+                      "user",
+                      "warehouse",
+                      "database",
+                      "schema",
+                      "table"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "privateKey": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "privateKey"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "destinationType": {
+                    "type": "string",
+                    "const": "webhook"
+                  },
+                  "destinationConfig": {
+                    "type": "object",
+                    "properties": {
+                      "url": {
+                        "type": "string",
+                        "maxLength": 2048,
+                        "format": "uri"
+                      },
+                      "signatureHeader": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                      }
+                    },
+                    "required": [
+                      "url"
+                    ]
+                  },
+                  "destinationCredentials": {
+                    "type": "object",
+                    "properties": {
+                      "signingSecret": {
+                        "type": "string",
+                        "minLength": 32,
+                        "maxLength": 512
+                      },
+                      "bearerToken": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4096
+                      }
+                    },
+                    "required": [
+                      "signingSecret"
+                    ]
+                  }
+                },
+                "required": [
+                  "destinationType",
+                  "destinationConfig"
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "drain": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "workflow_logs",
+                        "job_logs",
+                        "audit_logs",
+                        "copilot_chats",
+                        "copilot_runs"
+                      ]
+                    },
+                    "scheduleCadence": {
+                      "type": "string",
+                      "enum": [
+                        "hourly",
+                        "daily"
+                      ]
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "cursor": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastRunAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastSuccessAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdBy": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "organizationId",
+                    "name",
+                    "source",
+                    "scheduleCadence",
+                    "enabled",
+                    "cursor",
+                    "lastRunAt",
+                    "lastSuccessAt",
+                    "createdBy",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "sentinel"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "endpoint": {
+                              "type": "string",
+                              "maxLength": 2048,
+                              "format": "uri"
+                            },
+                            "ruleId": {
+                              "type": "string",
+                              "pattern": "^dcr-[0-9a-f]{32}$"
+                            },
+                            "streamName": {
+                              "type": "string",
+                              "minLength": 8,
+                              "maxLength": 256,
+                              "pattern": "^Custom-[A-Za-z0-9_-]+$"
+                            },
+                            "tenantId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            },
+                            "clientId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            }
+                          },
+                          "required": [
+                            "endpoint",
+                            "ruleId",
+                            "streamName",
+                            "tenantId",
+                            "clientId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "s3"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "bucket": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 63
+                            },
+                            "region": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 32
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            },
+                            "endpoint": {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "forcePathStyle": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "bucket",
+                            "region"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "gcs"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "bucket": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 222
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            }
+                          },
+                          "required": [
+                            "bucket"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "azure_blob"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "accountName": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "containerName": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 63
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            },
+                            "endpointSuffix": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "accountName",
+                            "containerName"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "datadog"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "site": {
+                              "type": "string",
+                              "enum": [
+                                "us1",
+                                "us3",
+                                "us5",
+                                "eu1",
+                                "ap1",
+                                "ap2",
+                                "gov"
+                              ]
+                            },
+                            "service": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "tags": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024
+                            }
+                          },
+                          "required": [
+                            "site"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "bigquery"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "projectId": {
+                              "type": "string",
+                              "minLength": 6,
+                              "maxLength": 94
+                            },
+                            "datasetId": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "tableId": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "projectId",
+                            "datasetId",
+                            "tableId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "snowflake"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "account": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 256
+                            },
+                            "user": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "warehouse": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "database": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "schema": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "table": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "column": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "role": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            }
+                          },
+                          "required": [
+                            "account",
+                            "user",
+                            "warehouse",
+                            "database",
+                            "schema",
+                            "table"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "webhook"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string",
+                              "maxLength": 2048,
+                              "format": "uri"
+                            },
+                            "signatureHeader": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128
+                            }
+                          },
+                          "required": [
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "drain"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteDataDrainContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/data-drains/[drainId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "drainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "drainId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getDataDrainContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/data-drains/[drainId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "drainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "drainId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "drain": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "workflow_logs",
+                        "job_logs",
+                        "audit_logs",
+                        "copilot_chats",
+                        "copilot_runs"
+                      ]
+                    },
+                    "scheduleCadence": {
+                      "type": "string",
+                      "enum": [
+                        "hourly",
+                        "daily"
+                      ]
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "cursor": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastRunAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastSuccessAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdBy": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "organizationId",
+                    "name",
+                    "source",
+                    "scheduleCadence",
+                    "enabled",
+                    "cursor",
+                    "lastRunAt",
+                    "lastSuccessAt",
+                    "createdBy",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "sentinel"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "endpoint": {
+                              "type": "string",
+                              "maxLength": 2048,
+                              "format": "uri"
+                            },
+                            "ruleId": {
+                              "type": "string",
+                              "pattern": "^dcr-[0-9a-f]{32}$"
+                            },
+                            "streamName": {
+                              "type": "string",
+                              "minLength": 8,
+                              "maxLength": 256,
+                              "pattern": "^Custom-[A-Za-z0-9_-]+$"
+                            },
+                            "tenantId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            },
+                            "clientId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            }
+                          },
+                          "required": [
+                            "endpoint",
+                            "ruleId",
+                            "streamName",
+                            "tenantId",
+                            "clientId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "s3"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "bucket": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 63
+                            },
+                            "region": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 32
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            },
+                            "endpoint": {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "forcePathStyle": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "bucket",
+                            "region"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "gcs"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "bucket": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 222
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            }
+                          },
+                          "required": [
+                            "bucket"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "azure_blob"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "accountName": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "containerName": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 63
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            },
+                            "endpointSuffix": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "accountName",
+                            "containerName"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "datadog"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "site": {
+                              "type": "string",
+                              "enum": [
+                                "us1",
+                                "us3",
+                                "us5",
+                                "eu1",
+                                "ap1",
+                                "ap2",
+                                "gov"
+                              ]
+                            },
+                            "service": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "tags": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024
+                            }
+                          },
+                          "required": [
+                            "site"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "bigquery"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "projectId": {
+                              "type": "string",
+                              "minLength": 6,
+                              "maxLength": 94
+                            },
+                            "datasetId": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "tableId": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "projectId",
+                            "datasetId",
+                            "tableId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "snowflake"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "account": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 256
+                            },
+                            "user": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "warehouse": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "database": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "schema": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "table": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "column": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "role": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            }
+                          },
+                          "required": [
+                            "account",
+                            "user",
+                            "warehouse",
+                            "database",
+                            "schema",
+                            "table"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "webhook"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string",
+                              "maxLength": 2048,
+                              "format": "uri"
+                            },
+                            "signatureHeader": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128
+                            }
+                          },
+                          "required": [
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "drain"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listDataDrainRunsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/data-drains/[drainId]/runs",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "drainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "drainId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "runs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "drainId": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "running",
+                      "success",
+                      "failed"
+                    ]
+                  },
+                  "trigger": {
+                    "type": "string",
+                    "enum": [
+                      "cron",
+                      "manual"
+                    ]
+                  },
+                  "startedAt": {
+                    "type": "string"
+                  },
+                  "finishedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "rowsExported": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "bytesWritten": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "cursorBefore": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "cursorAfter": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "locators": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "drainId",
+                  "status",
+                  "trigger",
+                  "startedAt",
+                  "finishedAt",
+                  "rowsExported",
+                  "bytesWritten",
+                  "cursorBefore",
+                  "cursorAfter",
+                  "error",
+                  "locators"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "runs"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listDataDrainsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/data-drains",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "drains": {
+              "type": "array",
+              "items": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "organizationId": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "source": {
+                        "type": "string",
+                        "enum": [
+                          "workflow_logs",
+                          "job_logs",
+                          "audit_logs",
+                          "copilot_chats",
+                          "copilot_runs"
+                        ]
+                      },
+                      "scheduleCadence": {
+                        "type": "string",
+                        "enum": [
+                          "hourly",
+                          "daily"
+                        ]
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "cursor": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "lastRunAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "lastSuccessAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "createdBy": {
+                        "type": "string"
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "updatedAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "organizationId",
+                      "name",
+                      "source",
+                      "scheduleCadence",
+                      "enabled",
+                      "cursor",
+                      "lastRunAt",
+                      "lastSuccessAt",
+                      "createdBy",
+                      "createdAt",
+                      "updatedAt"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "sentinel"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "endpoint": {
+                                "type": "string",
+                                "maxLength": 2048,
+                                "format": "uri"
+                              },
+                              "ruleId": {
+                                "type": "string",
+                                "pattern": "^dcr-[0-9a-f]{32}$"
+                              },
+                              "streamName": {
+                                "type": "string",
+                                "minLength": 8,
+                                "maxLength": 256,
+                                "pattern": "^Custom-[A-Za-z0-9_-]+$"
+                              },
+                              "tenantId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                              },
+                              "clientId": {
+                                "type": "string",
+                                "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                              }
+                            },
+                            "required": [
+                              "endpoint",
+                              "ruleId",
+                              "streamName",
+                              "tenantId",
+                              "clientId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "s3"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "bucket": {
+                                "type": "string",
+                                "minLength": 3,
+                                "maxLength": 63
+                              },
+                              "region": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 32
+                              },
+                              "prefix": {
+                                "type": "string",
+                                "maxLength": 512
+                              },
+                              "endpoint": {
+                                "type": "string",
+                                "format": "uri"
+                              },
+                              "forcePathStyle": {
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "bucket",
+                              "region"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "gcs"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "bucket": {
+                                "type": "string",
+                                "minLength": 3,
+                                "maxLength": 222
+                              },
+                              "prefix": {
+                                "type": "string",
+                                "maxLength": 512
+                              }
+                            },
+                            "required": [
+                              "bucket"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "azure_blob"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "accountName": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "containerName": {
+                                "type": "string",
+                                "minLength": 3,
+                                "maxLength": 63
+                              },
+                              "prefix": {
+                                "type": "string",
+                                "maxLength": 512
+                              },
+                              "endpointSuffix": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "accountName",
+                              "containerName"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "datadog"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "site": {
+                                "type": "string",
+                                "enum": [
+                                  "us1",
+                                  "us3",
+                                  "us5",
+                                  "eu1",
+                                  "ap1",
+                                  "ap2",
+                                  "gov"
+                                ]
+                              },
+                              "service": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "tags": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1024
+                              }
+                            },
+                            "required": [
+                              "site"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "bigquery"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "projectId": {
+                                "type": "string",
+                                "minLength": 6,
+                                "maxLength": 94
+                              },
+                              "datasetId": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "tableId": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "required": [
+                              "projectId",
+                              "datasetId",
+                              "tableId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "snowflake"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "account": {
+                                "type": "string",
+                                "minLength": 3,
+                                "maxLength": 256
+                              },
+                              "user": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                              },
+                              "warehouse": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                              },
+                              "database": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                              },
+                              "schema": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                              },
+                              "table": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                              },
+                              "column": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                              },
+                              "role": {
+                                "type": "string",
+                                "minLength": 1,
+                                "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                              }
+                            },
+                            "required": [
+                              "account",
+                              "user",
+                              "warehouse",
+                              "database",
+                              "schema",
+                              "table"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "destinationType": {
+                            "type": "string",
+                            "const": "webhook"
+                          },
+                          "destinationConfig": {
+                            "type": "object",
+                            "properties": {
+                              "url": {
+                                "type": "string",
+                                "maxLength": 2048,
+                                "format": "uri"
+                              },
+                              "signatureHeader": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128
+                              }
+                            },
+                            "required": [
+                              "url"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "destinationType",
+                          "destinationConfig"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                ]
+              }
+            }
+          },
+          "required": [
+            "drains"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "runDataDrainContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/data-drains/[drainId]/run",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "drainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "drainId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "jobId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "jobId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "testDataDrainContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/data-drains/[drainId]/test",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "drainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "drainId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "ok": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "ok"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateDataDrainContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/data-drains/[drainId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "drainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "drainId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "workflow_logs",
+              "job_logs",
+              "audit_logs",
+              "copilot_chats",
+              "copilot_runs"
+            ]
+          },
+          "scheduleCadence": {
+            "type": "string",
+            "enum": [
+              "hourly",
+              "daily"
+            ]
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "destinationType": {
+            "type": "string",
+            "enum": [
+              "s3",
+              "gcs",
+              "azure_blob",
+              "sentinel",
+              "datadog",
+              "bigquery",
+              "snowflake",
+              "webhook"
+            ]
+          },
+          "destinationConfig": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "destinationCredentials": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "drain": {
+              "allOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "workflow_logs",
+                        "job_logs",
+                        "audit_logs",
+                        "copilot_chats",
+                        "copilot_runs"
+                      ]
+                    },
+                    "scheduleCadence": {
+                      "type": "string",
+                      "enum": [
+                        "hourly",
+                        "daily"
+                      ]
+                    },
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "cursor": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastRunAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastSuccessAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdBy": {
+                      "type": "string"
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "organizationId",
+                    "name",
+                    "source",
+                    "scheduleCadence",
+                    "enabled",
+                    "cursor",
+                    "lastRunAt",
+                    "lastSuccessAt",
+                    "createdBy",
+                    "createdAt",
+                    "updatedAt"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "sentinel"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "endpoint": {
+                              "type": "string",
+                              "maxLength": 2048,
+                              "format": "uri"
+                            },
+                            "ruleId": {
+                              "type": "string",
+                              "pattern": "^dcr-[0-9a-f]{32}$"
+                            },
+                            "streamName": {
+                              "type": "string",
+                              "minLength": 8,
+                              "maxLength": 256,
+                              "pattern": "^Custom-[A-Za-z0-9_-]+$"
+                            },
+                            "tenantId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            },
+                            "clientId": {
+                              "type": "string",
+                              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+                            }
+                          },
+                          "required": [
+                            "endpoint",
+                            "ruleId",
+                            "streamName",
+                            "tenantId",
+                            "clientId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "s3"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "bucket": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 63
+                            },
+                            "region": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 32
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            },
+                            "endpoint": {
+                              "type": "string",
+                              "format": "uri"
+                            },
+                            "forcePathStyle": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "bucket",
+                            "region"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "gcs"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "bucket": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 222
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            }
+                          },
+                          "required": [
+                            "bucket"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "azure_blob"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "accountName": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "containerName": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 63
+                            },
+                            "prefix": {
+                              "type": "string",
+                              "maxLength": 512
+                            },
+                            "endpointSuffix": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "accountName",
+                            "containerName"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "datadog"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "site": {
+                              "type": "string",
+                              "enum": [
+                                "us1",
+                                "us3",
+                                "us5",
+                                "eu1",
+                                "ap1",
+                                "ap2",
+                                "gov"
+                              ]
+                            },
+                            "service": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 100
+                            },
+                            "tags": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024
+                            }
+                          },
+                          "required": [
+                            "site"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "bigquery"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "projectId": {
+                              "type": "string",
+                              "minLength": 6,
+                              "maxLength": 94
+                            },
+                            "datasetId": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "tableId": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "projectId",
+                            "datasetId",
+                            "tableId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "snowflake"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "account": {
+                              "type": "string",
+                              "minLength": 3,
+                              "maxLength": 256
+                            },
+                            "user": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "warehouse": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "database": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "schema": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "table": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "column": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            },
+                            "role": {
+                              "type": "string",
+                              "minLength": 1,
+                              "pattern": "^[A-Za-z_][A-Za-z0-9_$]{0,254}$"
+                            }
+                          },
+                          "required": [
+                            "account",
+                            "user",
+                            "warehouse",
+                            "database",
+                            "schema",
+                            "table"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "destinationType": {
+                          "type": "string",
+                          "const": "webhook"
+                        },
+                        "destinationConfig": {
+                          "type": "object",
+                          "properties": {
+                            "url": {
+                              "type": "string",
+                              "maxLength": 2048,
+                              "format": "uri"
+                            },
+                            "signatureHeader": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128
+                            }
+                          },
+                          "required": [
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "destinationType",
+                        "destinationConfig"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "required": [
+            "drain"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

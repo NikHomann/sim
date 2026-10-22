@@ -1,0 +1,3070 @@
+{
+  "source": "apps/sim/lib/api/contracts/knowledge/connectors.ts",
+  "contracts": {
+    "createKnowledgeConnectorContract": {
+      "method": "POST",
+      "path": "/api/knowledge/[id]/connectors",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "connectorType": {
+            "type": "string",
+            "minLength": 1
+          },
+          "credentialId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "apiKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "permissionConfig": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "gitlab"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "administrator",
+                      "csv"
+                    ]
+                  },
+                  "expectedRevision": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "userMapping": {
+                    "type": "object",
+                    "properties": {
+                      "filename": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "content": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4194304
+                      }
+                    },
+                    "required": [
+                      "filename",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "projectPermissions": {
+                    "type": "object",
+                    "properties": {
+                      "filename": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "content": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4194304
+                      }
+                    },
+                    "required": [
+                      "filename",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "provider",
+                  "mode"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "sourceConfig": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "syncIntervalMinutes": {
+            "default": 1440,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "accessMode": {
+            "default": "workspace",
+            "type": "string",
+            "enum": [
+              "workspace",
+              "members",
+              "admin"
+            ]
+          }
+        },
+        "required": [
+          "connectorType",
+          "sourceConfig"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "knowledgeBaseId": {
+                  "type": "string"
+                },
+                "connectorType": {
+                  "type": "string"
+                },
+                "permissionConfig": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "provider": {
+                          "type": "string",
+                          "const": "gitlab"
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "administrator",
+                            "csv"
+                          ]
+                        },
+                        "revision": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "userMapping": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "projectPermissions": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "mode",
+                        "revision",
+                        "userMapping",
+                        "projectPermissions"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "credentialId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceConfig": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "syncMode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "syncIntervalMinutes": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "paused",
+                    "pending",
+                    "syncing",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncDocCount": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "consecutiveFailures": {
+                  "type": "number"
+                },
+                "accessMode": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "members",
+                    "admin"
+                  ]
+                },
+                "viewerMembership": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "connected",
+                        "needs_reauth",
+                        "invited",
+                        "not_enrolled",
+                        "revoked",
+                        "unverified_email"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupOptionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncStatus": {
+                  "type": "string",
+                  "enum": [
+                    "idle",
+                    "pending",
+                    "running",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastMemberSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncConsecutiveFailures": {
+                  "type": "number"
+                },
+                "accessRewritePending": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "knowledgeBaseId",
+                "connectorType",
+                "credentialId",
+                "sourceConfig",
+                "syncMode",
+                "syncIntervalMinutes",
+                "status",
+                "lastSyncAt",
+                "lastSyncError",
+                "lastSyncDocCount",
+                "nextSyncAt",
+                "consecutiveFailures",
+                "accessMode",
+                "viewerMembership",
+                "credentialGroupId",
+                "credentialGroupOptionId",
+                "memberSyncStatus",
+                "lastMemberSyncAt",
+                "nextMemberSyncAt",
+                "lastMemberSyncError",
+                "memberSyncConsecutiveFailures",
+                "accessRewritePending",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteKnowledgeConnectorContract": {
+      "method": "DELETE",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "deleteDocuments": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getKnowledgeConnectorContract": {
+      "method": "GET",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "knowledgeBaseId": {
+                  "type": "string"
+                },
+                "connectorType": {
+                  "type": "string"
+                },
+                "permissionConfig": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "provider": {
+                          "type": "string",
+                          "const": "gitlab"
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "administrator",
+                            "csv"
+                          ]
+                        },
+                        "revision": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "userMapping": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "projectPermissions": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "mode",
+                        "revision",
+                        "userMapping",
+                        "projectPermissions"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "credentialId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceConfig": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "syncMode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "syncIntervalMinutes": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "paused",
+                    "pending",
+                    "syncing",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncDocCount": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "consecutiveFailures": {
+                  "type": "number"
+                },
+                "accessMode": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "members",
+                    "admin"
+                  ]
+                },
+                "viewerMembership": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "connected",
+                        "needs_reauth",
+                        "invited",
+                        "not_enrolled",
+                        "revoked",
+                        "unverified_email"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupOptionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncStatus": {
+                  "type": "string",
+                  "enum": [
+                    "idle",
+                    "pending",
+                    "running",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastMemberSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncConsecutiveFailures": {
+                  "type": "number"
+                },
+                "accessRewritePending": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "syncLogs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "connectorId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "started",
+                          "completed",
+                          "partial",
+                          "failed"
+                        ]
+                      },
+                      "startedAt": {
+                        "type": "string"
+                      },
+                      "completedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "docsAdded": {
+                        "type": "number"
+                      },
+                      "docsUpdated": {
+                        "type": "number"
+                      },
+                      "docsDeleted": {
+                        "type": "number"
+                      },
+                      "docsUnchanged": {
+                        "type": "number"
+                      },
+                      "docsSkipped": {
+                        "default": 0,
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "docsFailed": {
+                        "type": "number"
+                      },
+                      "listedCount": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "errorMessage": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "connectorId",
+                      "status",
+                      "startedAt",
+                      "completedAt",
+                      "docsAdded",
+                      "docsUpdated",
+                      "docsDeleted",
+                      "docsUnchanged",
+                      "docsSkipped",
+                      "docsFailed",
+                      "errorMessage"
+                    ],
+                    "additionalProperties": {}
+                  }
+                },
+                "memberSyncLogs": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "connectorId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "started",
+                          "completed",
+                          "partial",
+                          "failed"
+                        ]
+                      },
+                      "startedAt": {
+                        "type": "string"
+                      },
+                      "completedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "membersClaimed": {
+                        "type": "number"
+                      },
+                      "membersCompleted": {
+                        "type": "number"
+                      },
+                      "membersIncomplete": {
+                        "type": "number"
+                      },
+                      "membersFailed": {
+                        "type": "number"
+                      },
+                      "docsFailed": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "processingDispatchFailed": {
+                        "anyOf": [
+                          {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "docsListed": {
+                        "type": "number"
+                      },
+                      "docsAdded": {
+                        "type": "number"
+                      },
+                      "docsUpdated": {
+                        "type": "number"
+                      },
+                      "docsUnchanged": {
+                        "type": "number"
+                      },
+                      "docsHydratedOnce": {
+                        "type": "number"
+                      },
+                      "observationsAdded": {
+                        "type": "number"
+                      },
+                      "observationsRenewed": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      "observationsRemoved": {
+                        "type": "number"
+                      },
+                      "docsTombstoned": {
+                        "type": "number"
+                      },
+                      "docsResurrected": {
+                        "type": "number"
+                      },
+                      "docsPurged": {
+                        "type": "number"
+                      },
+                      "credentialsAudited": {
+                        "type": "number"
+                      },
+                      "errorMessage": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "connectorId",
+                      "status",
+                      "startedAt",
+                      "completedAt",
+                      "membersClaimed",
+                      "membersCompleted",
+                      "membersIncomplete",
+                      "membersFailed",
+                      "docsListed",
+                      "docsAdded",
+                      "docsUpdated",
+                      "docsUnchanged",
+                      "docsHydratedOnce",
+                      "observationsAdded",
+                      "observationsRemoved",
+                      "docsTombstoned",
+                      "docsResurrected",
+                      "docsPurged",
+                      "credentialsAudited",
+                      "errorMessage"
+                    ],
+                    "additionalProperties": {}
+                  }
+                },
+                "members": {
+                  "type": "object",
+                  "properties": {
+                    "active": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "suspended": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "stale": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "active",
+                    "suspended",
+                    "stale"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "knowledgeBaseId",
+                "connectorType",
+                "credentialId",
+                "sourceConfig",
+                "syncMode",
+                "syncIntervalMinutes",
+                "status",
+                "lastSyncAt",
+                "lastSyncError",
+                "lastSyncDocCount",
+                "nextSyncAt",
+                "consecutiveFailures",
+                "accessMode",
+                "viewerMembership",
+                "credentialGroupId",
+                "credentialGroupOptionId",
+                "memberSyncStatus",
+                "lastMemberSyncAt",
+                "nextMemberSyncAt",
+                "lastMemberSyncError",
+                "memberSyncConsecutiveFailures",
+                "accessRewritePending",
+                "createdAt",
+                "updatedAt",
+                "syncLogs",
+                "memberSyncLogs",
+                "members"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listKnowledgeConnectorDocumentsContract": {
+      "method": "GET",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]/documents",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "filter": {
+            "type": "string",
+            "enum": [
+              "active",
+              "excluded",
+              "failed",
+              "skipped"
+            ]
+          },
+          "search": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "failedOnly": {
+            "type": "boolean"
+          },
+          "includeExcluded": {
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 100,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "documents": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "filename": {
+                        "type": "string"
+                      },
+                      "externalId": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "sourceUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "deletedAt": {
+                        "default": null,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "userExcluded": {
+                        "type": "boolean"
+                      },
+                      "uploadedAt": {
+                        "type": "string"
+                      },
+                      "processingStatus": {
+                        "type": "string"
+                      },
+                      "processingOutcome": {
+                        "default": null,
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "const": "skipped"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "processingError": {
+                        "default": null,
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "filename",
+                      "externalId",
+                      "sourceUrl",
+                      "enabled",
+                      "deletedAt",
+                      "userExcluded",
+                      "uploadedAt",
+                      "processingStatus",
+                      "processingOutcome",
+                      "processingError"
+                    ],
+                    "additionalProperties": {}
+                  }
+                },
+                "counts": {
+                  "type": "object",
+                  "properties": {
+                    "active": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "excluded": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "failed": {
+                      "default": 0,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "skipped": {
+                      "default": 0,
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "active",
+                    "excluded",
+                    "failed",
+                    "skipped"
+                  ],
+                  "additionalProperties": false
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "documents",
+                "counts"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listKnowledgeConnectorsContract": {
+      "method": "GET",
+      "path": "/api/knowledge/[id]/connectors",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "knowledgeBaseId": {
+                    "type": "string"
+                  },
+                  "connectorType": {
+                    "type": "string"
+                  },
+                  "permissionConfig": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "const": "gitlab"
+                          },
+                          "mode": {
+                            "type": "string",
+                            "enum": [
+                              "administrator",
+                              "csv"
+                            ]
+                          },
+                          "revision": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "userMapping": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "filename": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 255
+                                  },
+                                  "uploadedAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                  },
+                                  "rowCount": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 100000
+                                  }
+                                },
+                                "required": [
+                                  "filename",
+                                  "uploadedAt",
+                                  "rowCount"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "projectPermissions": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "filename": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 255
+                                  },
+                                  "uploadedAt": {
+                                    "type": "string",
+                                    "format": "date-time",
+                                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                  },
+                                  "rowCount": {
+                                    "type": "integer",
+                                    "minimum": 0,
+                                    "maximum": 100000
+                                  }
+                                },
+                                "required": [
+                                  "filename",
+                                  "uploadedAt",
+                                  "rowCount"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "mode",
+                          "revision",
+                          "userMapping",
+                          "projectPermissions"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  },
+                  "credentialId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "sourceConfig": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "syncMode": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "syncIntervalMinutes": {
+                    "type": "number"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "paused",
+                      "pending",
+                      "syncing",
+                      "error",
+                      "disabled"
+                    ]
+                  },
+                  "lastSyncAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastSyncError": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastSyncDocCount": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "nextSyncAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "consecutiveFailures": {
+                    "type": "number"
+                  },
+                  "accessMode": {
+                    "type": "string",
+                    "enum": [
+                      "workspace",
+                      "members",
+                      "admin"
+                    ]
+                  },
+                  "viewerMembership": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "connected",
+                          "needs_reauth",
+                          "invited",
+                          "not_enrolled",
+                          "revoked",
+                          "unverified_email"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "credentialGroupId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "credentialGroupOptionId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "memberSyncStatus": {
+                    "type": "string",
+                    "enum": [
+                      "idle",
+                      "pending",
+                      "running",
+                      "error",
+                      "disabled"
+                    ]
+                  },
+                  "lastMemberSyncAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "nextMemberSyncAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastMemberSyncError": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "memberSyncConsecutiveFailures": {
+                    "type": "number"
+                  },
+                  "accessRewritePending": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "knowledgeBaseId",
+                  "connectorType",
+                  "credentialId",
+                  "sourceConfig",
+                  "syncMode",
+                  "syncIntervalMinutes",
+                  "status",
+                  "lastSyncAt",
+                  "lastSyncError",
+                  "lastSyncDocCount",
+                  "nextSyncAt",
+                  "consecutiveFailures",
+                  "accessMode",
+                  "viewerMembership",
+                  "credentialGroupId",
+                  "credentialGroupOptionId",
+                  "memberSyncStatus",
+                  "lastMemberSyncAt",
+                  "nextMemberSyncAt",
+                  "lastMemberSyncError",
+                  "memberSyncConsecutiveFailures",
+                  "accessRewritePending",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listSearchSourcesContract": {
+      "method": "GET",
+      "path": "/api/knowledge/sim-search/sources",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "connectorType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "excludeConnectorType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "search": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "sources": {
+                  "maxItems": 25,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "knowledgeBaseId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "connectorId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "connectorType": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "sourceDescription": {
+                        "type": "string",
+                        "maxLength": 240
+                      },
+                      "accessMode": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "members"
+                        ]
+                      },
+                      "isGitHubInstallation": {
+                        "default": false,
+                        "type": "boolean"
+                      },
+                      "availability": {
+                        "type": "string",
+                        "enum": [
+                          "available",
+                          "unavailable"
+                        ]
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "approved": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "knowledgeBaseId",
+                      "connectorId",
+                      "connectorType",
+                      "sourceDescription",
+                      "accessMode",
+                      "isGitHubInstallation",
+                      "availability",
+                      "enabled"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "nextCursor": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 1024
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "sources",
+                "nextCursor"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "patchKnowledgeConnectorDocumentsContract": {
+      "method": "PATCH",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]/documents",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "restore",
+              "exclude"
+            ]
+          },
+          "documentIds": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "operation",
+          "documentIds"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "excludedCount": {
+                  "type": "number"
+                },
+                "restoredCount": {
+                  "type": "number"
+                },
+                "documentIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "prepareSearchSourceContract": {
+      "method": "POST",
+      "path": "/api/knowledge/sim-search/prepare",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "accessMode": {
+            "default": "admin",
+            "type": "string",
+            "enum": [
+              "admin",
+              "members"
+            ]
+          }
+        },
+        "required": [
+          "connectorType"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "knowledgeBaseId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "credentialGroupId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                }
+              },
+              "required": [
+                "knowledgeBaseId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "readSearchIndexContract": {
+      "method": "GET",
+      "path": "/api/knowledge/sim-search/index",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "knowledgeBaseId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "knowledgeBaseId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "startKnowledgeConnectorMemberEnrollmentContract": {
+      "method": "POST",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]/enroll",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "oauthCompletionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "triggerKnowledgeConnectorSyncContract": {
+      "method": "POST",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]/sync",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "rehydrate": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateKnowledgeConnectorAccessContract": {
+      "method": "PATCH",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]/access",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessMode": {
+            "type": "string",
+            "enum": [
+              "workspace",
+              "members",
+              "admin"
+            ]
+          },
+          "credentialId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sourceConfig": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "syncIntervalMinutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "accessMode"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "knowledgeBaseId": {
+                  "type": "string"
+                },
+                "connectorType": {
+                  "type": "string"
+                },
+                "permissionConfig": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "provider": {
+                          "type": "string",
+                          "const": "gitlab"
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "administrator",
+                            "csv"
+                          ]
+                        },
+                        "revision": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "userMapping": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "projectPermissions": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "mode",
+                        "revision",
+                        "userMapping",
+                        "projectPermissions"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "credentialId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceConfig": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "syncMode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "syncIntervalMinutes": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "paused",
+                    "pending",
+                    "syncing",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncDocCount": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "consecutiveFailures": {
+                  "type": "number"
+                },
+                "accessMode": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "members",
+                    "admin"
+                  ]
+                },
+                "viewerMembership": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "connected",
+                        "needs_reauth",
+                        "invited",
+                        "not_enrolled",
+                        "revoked",
+                        "unverified_email"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupOptionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncStatus": {
+                  "type": "string",
+                  "enum": [
+                    "idle",
+                    "pending",
+                    "running",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastMemberSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncConsecutiveFailures": {
+                  "type": "number"
+                },
+                "accessRewritePending": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "knowledgeBaseId",
+                "connectorType",
+                "credentialId",
+                "sourceConfig",
+                "syncMode",
+                "syncIntervalMinutes",
+                "status",
+                "lastSyncAt",
+                "lastSyncError",
+                "lastSyncDocCount",
+                "nextSyncAt",
+                "consecutiveFailures",
+                "accessMode",
+                "viewerMembership",
+                "credentialGroupId",
+                "credentialGroupOptionId",
+                "memberSyncStatus",
+                "lastMemberSyncAt",
+                "nextMemberSyncAt",
+                "lastMemberSyncError",
+                "memberSyncConsecutiveFailures",
+                "accessRewritePending",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateKnowledgeConnectorContract": {
+      "method": "PATCH",
+      "path": "/api/knowledge/[id]/connectors/[connectorId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "apiKey": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "permissionConfig": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "gitlab"
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "administrator",
+                      "csv"
+                    ]
+                  },
+                  "expectedRevision": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "userMapping": {
+                    "type": "object",
+                    "properties": {
+                      "filename": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "content": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4194304
+                      }
+                    },
+                    "required": [
+                      "filename",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "projectPermissions": {
+                    "type": "object",
+                    "properties": {
+                      "filename": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "content": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 4194304
+                      }
+                    },
+                    "required": [
+                      "filename",
+                      "content"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "provider",
+                  "mode"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "sourceConfig": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "syncIntervalMinutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "paused"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "knowledgeBaseId": {
+                  "type": "string"
+                },
+                "connectorType": {
+                  "type": "string"
+                },
+                "permissionConfig": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "provider": {
+                          "type": "string",
+                          "const": "gitlab"
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "administrator",
+                            "csv"
+                          ]
+                        },
+                        "revision": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "userMapping": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "projectPermissions": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "filename": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                },
+                                "uploadedAt": {
+                                  "type": "string",
+                                  "format": "date-time",
+                                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                                },
+                                "rowCount": {
+                                  "type": "integer",
+                                  "minimum": 0,
+                                  "maximum": 100000
+                                }
+                              },
+                              "required": [
+                                "filename",
+                                "uploadedAt",
+                                "rowCount"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "mode",
+                        "revision",
+                        "userMapping",
+                        "projectPermissions"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "credentialId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceConfig": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "syncMode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "syncIntervalMinutes": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "paused",
+                    "pending",
+                    "syncing",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSyncDocCount": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "consecutiveFailures": {
+                  "type": "number"
+                },
+                "accessMode": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "members",
+                    "admin"
+                  ]
+                },
+                "viewerMembership": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "connected",
+                        "needs_reauth",
+                        "invited",
+                        "not_enrolled",
+                        "revoked",
+                        "unverified_email"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "credentialGroupOptionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncStatus": {
+                  "type": "string",
+                  "enum": [
+                    "idle",
+                    "pending",
+                    "running",
+                    "error",
+                    "disabled"
+                  ]
+                },
+                "lastMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "nextMemberSyncAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastMemberSyncError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "memberSyncConsecutiveFailures": {
+                  "type": "number"
+                },
+                "accessRewritePending": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "knowledgeBaseId",
+                "connectorType",
+                "credentialId",
+                "sourceConfig",
+                "syncMode",
+                "syncIntervalMinutes",
+                "status",
+                "lastSyncAt",
+                "lastSyncError",
+                "lastSyncDocCount",
+                "nextSyncAt",
+                "consecutiveFailures",
+                "accessMode",
+                "viewerMembership",
+                "credentialGroupId",
+                "credentialGroupOptionId",
+                "memberSyncStatus",
+                "lastMemberSyncAt",
+                "nextMemberSyncAt",
+                "lastMemberSyncError",
+                "memberSyncConsecutiveFailures",
+                "accessRewritePending",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

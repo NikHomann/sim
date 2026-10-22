@@ -1,0 +1,71 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ssm-stop-automation-execution.ts",
+  "contracts": {
+    "awsSsmStopAutomationExecutionContract": {
+      "method": "POST",
+      "path": "/api/tools/ssm/stop-automation-execution",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "automationExecutionId": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+          },
+          "stopType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Complete",
+                  "Cancel"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "automationExecutionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "automationExecutionId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message",
+            "automationExecutionId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

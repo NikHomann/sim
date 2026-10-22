@@ -1,0 +1,69 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-send-custom-verification-email.ts",
+  "contracts": {
+    "awsSesSendCustomVerificationEmailContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/send-custom-verification-email",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "emailAddress": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "templateName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "configurationSetName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "emailAddress",
+          "templateName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "messageId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "messageId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

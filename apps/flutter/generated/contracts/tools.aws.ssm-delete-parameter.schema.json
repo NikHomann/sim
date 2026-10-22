@@ -1,0 +1,58 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ssm-delete-parameter.ts",
+  "contracts": {
+    "awsSsmDeleteParameterContract": {
+      "method": "POST",
+      "path": "/api/tools/ssm/delete-parameter",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message",
+            "name"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

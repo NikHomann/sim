@@ -1,0 +1,83 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/lambda-remove-permission.ts",
+  "contracts": {
+    "awsLambdaRemovePermissionContract": {
+      "method": "POST",
+      "path": "/api/tools/lambda/remove-permission",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "functionName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "statementId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9-_.]+$"
+          },
+          "qualifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "revisionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "functionName",
+          "statementId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

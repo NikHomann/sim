@@ -1,0 +1,221 @@
+{
+  "source": "apps/sim/lib/api/contracts/project-file-doc.ts",
+  "contracts": {
+    "projectFileDocAccessContract": {
+      "method": "POST",
+      "path": "/api/internal/project-file-doc/[projectId]/[fileId]/access",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "projectId": {
+              "type": "string"
+            },
+            "fileId": {
+              "type": "string"
+            },
+            "canRead": {
+              "type": "boolean",
+              "const": true
+            },
+            "canWrite": {
+              "type": "boolean"
+            },
+            "docId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "projectId",
+            "fileId",
+            "canRead",
+            "canWrite",
+            "docId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "projectFileDocPersistContract": {
+      "method": "POST",
+      "path": "/api/internal/project-file-doc/[projectId]/[fileId]/persist",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "docState": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16777216
+          },
+          "expectedVersion": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "docState"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "persisted"
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "status",
+                "version"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "missing"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "deferred"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "conflict"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "projectFileDocSeedContract": {
+      "method": "POST",
+      "path": "/api/internal/project-file-doc/[projectId]/[fileId]/seed",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "update": {
+              "type": "string"
+            },
+            "version": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "update",
+            "version"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

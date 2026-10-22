@@ -1,0 +1,5577 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/crowdstrike.ts",
+  "contracts": {
+    "crowdstrikeQueryContract": {
+      "method": "POST",
+      "path": "/api/tools/crowdstrike/query",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_query_sensors"
+              },
+              "filter": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 200
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sort": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_sensor_details"
+              },
+              "ids": {
+                "minItems": 1,
+                "maxItems": 5000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "ids"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_sensor_aggregates"
+              },
+              "aggregateQuery": {
+                "$ref": "#/$defs/__schema0"
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "aggregateQuery"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_query_alerts"
+              },
+              "filter": {
+                "type": "string",
+                "minLength": 1
+              },
+              "q": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sort": {
+                "type": "string",
+                "minLength": 1
+              },
+              "includeHidden": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_alert_details"
+              },
+              "compositeIds": {
+                "minItems": 1,
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "includeHidden": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "compositeIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_update_alerts"
+              },
+              "compositeIds": {
+                "minItems": 1,
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "updateStatus": {
+                "type": "string",
+                "enum": [
+                  "new",
+                  "in_progress",
+                  "reopened",
+                  "closed"
+                ]
+              },
+              "assignToUuid": {
+                "type": "string",
+                "minLength": 1
+              },
+              "assignToUserId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "assignToName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "unassign": {
+                "type": "boolean"
+              },
+              "appendComment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "addTag": {
+                "type": "string",
+                "minLength": 1
+              },
+              "removeTag": {
+                "type": "string",
+                "minLength": 1
+              },
+              "removeTagsByPrefix": {
+                "type": "string",
+                "minLength": 1
+              },
+              "showInUi": {
+                "type": "boolean"
+              },
+              "actionParameters": {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "value": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "value"
+                  ]
+                }
+              },
+              "includeHidden": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "compositeIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_perform_host_action"
+              },
+              "actionName": {
+                "type": "string",
+                "enum": [
+                  "contain",
+                  "lift_containment",
+                  "hide_host",
+                  "unhide_host",
+                  "detection_suppress",
+                  "detection_unsuppress"
+                ]
+              },
+              "deviceIds": {
+                "minItems": 1,
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-fA-F]{32}$"
+                }
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "actionName",
+              "deviceIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_query_host_groups"
+              },
+              "filter": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5000
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sort": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_host_group_details"
+              },
+              "hostGroupIds": {
+                "minItems": 1,
+                "maxItems": 500,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "hostGroupIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_perform_host_group_action"
+              },
+              "actionName": {
+                "type": "string",
+                "enum": [
+                  "add-hosts",
+                  "remove-hosts"
+                ]
+              },
+              "hostGroupId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "deviceIds": {
+                "minItems": 1,
+                "maxItems": 500,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[0-9a-fA-F]{32}$"
+                }
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "actionName",
+              "hostGroupId",
+              "deviceIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_query_indicators"
+              },
+              "filter": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 500
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "after": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sort": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_indicator_details"
+              },
+              "indicatorIds": {
+                "minItems": 1,
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "indicatorIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_create_indicators"
+              },
+              "indicators": {
+                "minItems": 1,
+                "maxItems": 200,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "type": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "value": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "action": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "mobile_action": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "severity": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "source": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "expiration": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "applied_globally": {
+                      "type": "boolean"
+                    },
+                    "platforms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "host_groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "value",
+                    "applied_globally"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "comment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "retrodetects": {
+                "type": "boolean"
+              },
+              "ignoreWarnings": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "indicators"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_update_indicators"
+              },
+              "indicators": {
+                "minItems": 1,
+                "maxItems": 200,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "type": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "value": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "action": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "mobile_action": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "severity": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "description": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "source": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "expiration": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "applied_globally": {
+                      "type": "boolean"
+                    },
+                    "platforms": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "host_groups": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "tags": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "id"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "comment": {
+                "type": "string",
+                "minLength": 1
+              },
+              "retrodetects": {
+                "type": "boolean"
+              },
+              "ignoreWarnings": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "indicators"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_delete_indicators"
+              },
+              "indicatorIds": {
+                "minItems": 1,
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "filter": {
+                "type": "string",
+                "minLength": 1
+              },
+              "comment": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_query_vulnerabilities"
+              },
+              "filter": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 400
+              },
+              "after": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sort": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "filter"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_vulnerability_details"
+              },
+              "vulnerabilityIds": {
+                "minItems": 1,
+                "maxItems": 400,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "vulnerabilityIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_init_rtr_session"
+              },
+              "deviceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "queueOffline": {
+                "type": "boolean"
+              },
+              "origin": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "deviceId"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_execute_rtr_command"
+              },
+              "sessionId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "baseCommand": {
+                "type": "string",
+                "enum": [
+                  "cat",
+                  "cd",
+                  "clear",
+                  "csrutil",
+                  "env",
+                  "eventlog",
+                  "filehash",
+                  "getsid",
+                  "help",
+                  "history",
+                  "ifconfig",
+                  "ipconfig",
+                  "ls",
+                  "mount",
+                  "netstat",
+                  "ps",
+                  "reg",
+                  "users"
+                ]
+              },
+              "commandString": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "sessionId",
+              "baseCommand",
+              "commandString"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_rtr_command_status"
+              },
+              "cloudRequestId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "sequenceId": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "cloudRequestId"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_delete_rtr_session"
+              },
+              "sessionId": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "sessionId"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_query_cases"
+              },
+              "filter": {
+                "type": "string",
+                "minLength": 1
+              },
+              "q": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 10000
+              },
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sort": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloud": {
+                "type": "string",
+                "enum": [
+                  "us-1",
+                  "us-2",
+                  "us-3",
+                  "eu-1",
+                  "us-gov-1",
+                  "us-gov-2"
+                ]
+              },
+              "operation": {
+                "type": "string",
+                "const": "crowdstrike_get_case_details"
+              },
+              "caseIds": {
+                "minItems": 1,
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "clientId",
+              "clientSecret",
+              "cloud",
+              "operation",
+              "caseIds"
+            ]
+          }
+        ],
+        "$defs": {
+          "__schema0": {
+            "type": "object",
+            "properties": {
+              "date_ranges": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "from": {
+                      "type": "string"
+                    },
+                    "to": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "from",
+                    "to"
+                  ]
+                }
+              },
+              "exclude": {
+                "type": "string"
+              },
+              "extended_bounds": {
+                "type": "object",
+                "properties": {
+                  "max": {
+                    "type": "string"
+                  },
+                  "min": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "max",
+                  "min"
+                ]
+              },
+              "field": {
+                "type": "string"
+              },
+              "filter": {
+                "type": "string"
+              },
+              "filters_spec": {
+                "type": "object",
+                "properties": {
+                  "filters": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  },
+                  "other_bucket": {
+                    "type": "boolean"
+                  },
+                  "other_bucket_key": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "filters"
+                ]
+              },
+              "from": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "include": {
+                "type": "string"
+              },
+              "interval": {
+                "type": "string"
+              },
+              "max_doc_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "min_doc_count": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "missing": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "percents": {
+                "type": "array",
+                "items": {
+                  "type": "number"
+                }
+              },
+              "q": {
+                "type": "string"
+              },
+              "ranges": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "From": {
+                      "type": "number"
+                    },
+                    "To": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "From",
+                    "To"
+                  ]
+                }
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "sort": {
+                "type": "string"
+              },
+              "sub_aggregates": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              },
+              "time_zone": {
+                "type": "string"
+              },
+              "type": {
+                "type": "string"
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "pagination": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "limit": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "offset": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "total": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "limit",
+                            "offset",
+                            "total"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "sensors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "agentVersion": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "cid": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "deviceId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "heartbeatTime": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "hostname": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "idpPolicyId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "idpPolicyName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "ipAddress": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "kerberosConfig": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "ldapConfig": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "ldapsConfig": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "machineDomain": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "ntlmConfig": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "osVersion": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "rdpToDcConfig": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "smbToDcConfig": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "statusCauses": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tiEnabled": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "agentVersion",
+                          "cid",
+                          "deviceId",
+                          "heartbeatTime",
+                          "hostname",
+                          "idpPolicyId",
+                          "idpPolicyName",
+                          "ipAddress",
+                          "kerberosConfig",
+                          "ldapConfig",
+                          "ldapsConfig",
+                          "machineDomain",
+                          "ntlmConfig",
+                          "osVersion",
+                          "rdpToDcConfig",
+                          "smbToDcConfig",
+                          "status",
+                          "statusCauses",
+                          "tiEnabled"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "count",
+                    "errors",
+                    "pagination",
+                    "sensors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "aggregates": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/__schema0"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "aggregates",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "alertIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "pagination": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "limit": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "offset": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "total": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "limit",
+                            "offset",
+                            "total"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "alertIds",
+                    "count",
+                    "pagination"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "alerts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "compositeId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "cid": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "aggregateId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "agentId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "deviceId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "hostname": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "displayName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "type": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "product": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "platform": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "severity": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "severityName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "confidence": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "assignedToName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "assignedToUid": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "assignedToUuid": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "tactic": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "tacticId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "technique": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "techniqueId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "scenario": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "objective": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "resolution": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "showInUi": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "filename": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "filepath": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "cmdline": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "sha256": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "sha1": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "md5": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "userName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "userId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "patternId": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "falconHostLink": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "controlGraphId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "external": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "emailSent": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "isAggregated": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "isFalconPlatformIoa": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "dataDomains": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "iocValues": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "linkedCaseIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "linkedBehavioralDetections": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "timestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "updatedTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "crawledTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "contextTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "compositeId",
+                          "id",
+                          "cid",
+                          "aggregateId",
+                          "agentId",
+                          "deviceId",
+                          "hostname",
+                          "name",
+                          "displayName",
+                          "description",
+                          "type",
+                          "product",
+                          "platform",
+                          "severity",
+                          "severityName",
+                          "confidence",
+                          "status",
+                          "assignedToName",
+                          "assignedToUid",
+                          "assignedToUuid",
+                          "tactic",
+                          "tacticId",
+                          "technique",
+                          "techniqueId",
+                          "scenario",
+                          "objective",
+                          "resolution",
+                          "showInUi",
+                          "tags",
+                          "filename",
+                          "filepath",
+                          "cmdline",
+                          "sha256",
+                          "sha1",
+                          "md5",
+                          "userName",
+                          "userId",
+                          "patternId",
+                          "falconHostLink",
+                          "controlGraphId",
+                          "external",
+                          "emailSent",
+                          "isAggregated",
+                          "isFalconPlatformIoa",
+                          "dataDomains",
+                          "iocValues",
+                          "linkedCaseIds",
+                          "linkedBehavioralDetections",
+                          "timestamp",
+                          "createdTimestamp",
+                          "updatedTimestamp",
+                          "crawledTimestamp",
+                          "contextTimestamp"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "alerts",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "updatedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "updatedIds",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "affected": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "path": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "path"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "affected",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "hostGroupIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "pagination": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "limit": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "offset": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "total": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "limit",
+                            "offset",
+                            "total"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "hostGroupIds",
+                    "count",
+                    "pagination"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "hostGroups": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "groupType": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "assignmentRule": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdBy": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "modifiedBy": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "modifiedTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "description",
+                          "groupType",
+                          "assignmentRule",
+                          "createdBy",
+                          "createdTimestamp",
+                          "modifiedBy",
+                          "modifiedTimestamp"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "hostGroups",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "indicatorIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "pagination": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "after": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "limit": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "offset": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "total": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "after",
+                            "limit",
+                            "offset",
+                            "total"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "indicatorIds",
+                    "count",
+                    "pagination"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "indicators": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "type": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "value": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "action": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "mobileAction": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "severity": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "source": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "appliedGlobally": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "platforms": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "hostGroups": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "expiration": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "expired": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "deleted": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "fromParent": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "parentCidName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdBy": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdOn": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "modifiedBy": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "modifiedOn": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "metadata": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "avHits": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "companyName": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "fileDescription": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "fileVersion": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "filename": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "originalFilename": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "productName": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "productVersion": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "signed": {
+                                    "anyOf": [
+                                      {
+                                        "type": "boolean"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "avHits",
+                                  "companyName",
+                                  "fileDescription",
+                                  "fileVersion",
+                                  "filename",
+                                  "originalFilename",
+                                  "productName",
+                                  "productVersion",
+                                  "signed"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "value",
+                          "action",
+                          "mobileAction",
+                          "severity",
+                          "description",
+                          "source",
+                          "appliedGlobally",
+                          "platforms",
+                          "hostGroups",
+                          "tags",
+                          "expiration",
+                          "expired",
+                          "deleted",
+                          "fromParent",
+                          "parentCidName",
+                          "createdBy",
+                          "createdOn",
+                          "modifiedBy",
+                          "modifiedOn",
+                          "metadata"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "indicators",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "deletedIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "deletedIds",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "vulnerabilityIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "pagination": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "after": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "limit": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "total": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "after",
+                            "limit",
+                            "total"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "vulnerabilityIds",
+                    "count",
+                    "pagination"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "vulnerabilities": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "aid": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "cid": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "confidence": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "vulnerabilityId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "updatedTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "closedTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "cve": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "baseScore": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "severity": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "exprtRating": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "exploitStatus": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "exploitabilityScore": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "impactScore": {
+                                    "anyOf": [
+                                      {
+                                        "type": "number"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "remediationLevel": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "description": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "publishedDate": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "vector": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "types": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "isCisaKev": {
+                                    "anyOf": [
+                                      {
+                                        "type": "boolean"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "cisaDueDate": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "baseScore",
+                                  "severity",
+                                  "exprtRating",
+                                  "exploitStatus",
+                                  "exploitabilityScore",
+                                  "impactScore",
+                                  "remediationLevel",
+                                  "description",
+                                  "publishedDate",
+                                  "vector",
+                                  "types",
+                                  "isCisaKev",
+                                  "cisaDueDate"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "app": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "productNameNormalized": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "productNameVersion": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "vendorNormalized": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "productNameNormalized",
+                                  "productNameVersion",
+                                  "vendorNormalized"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "hostInfo": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "hostname": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "localIp": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "machineDomain": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "osVersion": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "platform": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "productTypeDesc": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "assetCriticality": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "internetExposure": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "tags": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "groups": {
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string"
+                                    }
+                                  }
+                                },
+                                "required": [
+                                  "hostname",
+                                  "localIp",
+                                  "machineDomain",
+                                  "osVersion",
+                                  "platform",
+                                  "productTypeDesc",
+                                  "assetCriticality",
+                                  "internetExposure",
+                                  "tags",
+                                  "groups"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "remediationIds": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "remediations": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "title": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "action": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "type": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "link": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "reference": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                },
+                                "vendorUrl": {
+                                  "anyOf": [
+                                    {
+                                      "type": "string"
+                                    },
+                                    {
+                                      "type": "null"
+                                    }
+                                  ]
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "title",
+                                "action",
+                                "type",
+                                "link",
+                                "reference",
+                                "vendorUrl"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "suppressionInfo": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "isSuppressed": {
+                                    "anyOf": [
+                                      {
+                                        "type": "boolean"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "reason": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "isSuppressed",
+                                  "reason"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "aid",
+                          "cid",
+                          "status",
+                          "confidence",
+                          "vulnerabilityId",
+                          "createdTimestamp",
+                          "updatedTimestamp",
+                          "closedTimestamp",
+                          "cve",
+                          "app",
+                          "hostInfo",
+                          "remediationIds",
+                          "remediations",
+                          "suppressionInfo"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "vulnerabilities",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "deviceId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "platform": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "pwd": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "offlineQueued": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "existingAidSessions": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "deviceId",
+                    "platform",
+                    "pwd",
+                    "offlineQueued",
+                    "existingAidSessions",
+                    "createdAt",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "cloudRequestId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "sessionId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "queuedCommandOffline": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "cloudRequestId",
+                    "sessionId",
+                    "queuedCommandOffline",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "complete": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "stdout": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "stderr": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "baseCommand": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "sessionId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "sequenceId": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "complete",
+                    "stdout",
+                    "stderr",
+                    "baseCommand",
+                    "sessionId",
+                    "taskId",
+                    "sequenceId",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "sessionId": {
+                      "type": "string"
+                    },
+                    "deleted": {
+                      "type": "boolean"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "sessionId",
+                    "deleted",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "caseIds": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "pagination": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "limit": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "offset": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "total": {
+                              "anyOf": [
+                                {
+                                  "type": "number"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "limit",
+                            "offset",
+                            "total"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "caseIds",
+                    "count",
+                    "pagination"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "cases": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "cid": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "name": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "descriptionFormat": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "status": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "severity": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "severityLevel": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "referenceId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "version": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "tags": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "assignedTo": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "uuid": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "email": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "fullName": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "uuid",
+                                  "email",
+                                  "fullName"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdBy": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "uuid": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "email": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "fullName": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "uuid",
+                                  "email",
+                                  "fullName"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "lastUpdatedBy": {
+                            "anyOf": [
+                              {
+                                "type": "object",
+                                "properties": {
+                                  "uuid": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "email": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "fullName": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string"
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "uuid",
+                                  "email",
+                                  "fullName"
+                                ],
+                                "additionalProperties": false
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "updatedTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "startTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "endTimestamp": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "templateId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "templateName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "slaId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "slaName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "isReadOnly": {
+                            "anyOf": [
+                              {
+                                "type": "boolean"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "cid",
+                          "name",
+                          "description",
+                          "descriptionFormat",
+                          "status",
+                          "severity",
+                          "severityLevel",
+                          "referenceId",
+                          "version",
+                          "tags",
+                          "assignedTo",
+                          "createdBy",
+                          "lastUpdatedBy",
+                          "createdTimestamp",
+                          "updatedTimestamp",
+                          "startTimestamp",
+                          "endTimestamp",
+                          "templateId",
+                          "templateName",
+                          "slaId",
+                          "slaName",
+                          "isReadOnly"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "count": {
+                      "type": "number"
+                    },
+                    "errors": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "code": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "id": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "message": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "code",
+                          "id",
+                          "message"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "cases",
+                    "count",
+                    "errors"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            }
+          ],
+          "$defs": {
+            "__schema0": {
+              "type": "object",
+              "properties": {
+                "buckets": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "count": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "from": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "keyAsString": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "label": {},
+                      "stringFrom": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "stringTo": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "subAggregates": {
+                        "type": "array",
+                        "items": {
+                          "$ref": "#/$defs/__schema0"
+                        }
+                      },
+                      "to": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "value": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "valueAsString": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "count",
+                      "from",
+                      "keyAsString",
+                      "label",
+                      "stringFrom",
+                      "stringTo",
+                      "subAggregates",
+                      "to",
+                      "value",
+                      "valueAsString"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "docCountErrorUpperBound": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sumOtherDocCount": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "buckets",
+                "docCountErrorUpperBound",
+                "name",
+                "sumOtherDocCount"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      }
+    }
+  }
+}

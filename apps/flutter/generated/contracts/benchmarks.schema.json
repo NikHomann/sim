@@ -1,0 +1,3311 @@
+{
+  "source": "apps/sim/lib/api/contracts/benchmarks.ts",
+  "contracts": {
+    "benchmarkAvailabilityContract": {
+      "method": "GET",
+      "path": "/api/benchmarks/availability",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "available": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "available"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "benchmarkOrganizationsContract": {
+      "method": "GET",
+      "path": "/api/benchmarks/organizations",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "search": {
+            "default": "",
+            "type": "string",
+            "maxLength": 200
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "selectedId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "organizations": {
+              "maxItems": 50,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "selected": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 1000
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "organizations",
+            "selected",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "benchmarkUsersContract": {
+      "method": "GET",
+      "path": "/api/benchmarks/organizations/[id]/users",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "search": {
+            "default": "",
+            "type": "string",
+            "maxLength": 200
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "selectedId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "users": {
+              "maxItems": 50,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  "email": {
+                    "type": "string",
+                    "maxLength": 320
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "email"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "selected": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    "email": {
+                      "type": "string",
+                      "maxLength": 320
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "users",
+            "selected",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "benchmarkWorkspacesContract": {
+      "method": "GET",
+      "path": "/api/benchmarks/organizations/[id]/workspaces",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "search": {
+            "default": "",
+            "type": "string",
+            "maxLength": 200
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "runAsUserId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "runAsUserId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspaces": {
+              "maxItems": 50,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 1000
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 128
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "canPlan": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "workspaces",
+            "nextCursor",
+            "canPlan"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createBenchmarkContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/benchmarks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "runAsUserId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "sourceWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "taskBrief": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "runAsUserId",
+          "sourceWorkspaceId",
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "benchmark": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "userId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "runAsUserId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "runningStage": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "distill",
+                        "redact",
+                        "plan",
+                        "reconstruct",
+                        "grade"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "attemptId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "leaseExpiresAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "plannerChatId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "artifacts": {
+                  "type": "object",
+                  "properties": {
+                    "taskBrief": {
+                      "type": "string"
+                    },
+                    "referenceSpec": {
+                      "type": "string"
+                    },
+                    "redactedSpec": {
+                      "type": "string"
+                    },
+                    "blanks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "answer": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "answer"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "generatedSpec": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "reconstruction": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                              },
+                              "answer": {
+                                "type": "string"
+                              },
+                              "support": {
+                                "type": "string"
+                              },
+                              "sources": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "citationId": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "quote": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "citationId",
+                                    "quote"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "evidenceError": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "answer",
+                              "support"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                              },
+                              "correct": {
+                                "type": "boolean"
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "basis": {
+                                "type": "string",
+                                "enum": [
+                                  "spec",
+                                  "reference",
+                                  "missing"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "correct",
+                              "reason"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "recoveryMode": {
+                      "type": "string",
+                      "const": "references"
+                    },
+                    "modelRuns": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "enum": [
+                          "distill",
+                          "redact",
+                          "plan",
+                          "reconstruct",
+                          "grade"
+                        ]
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "config": {
+                            "type": "object",
+                            "properties": {
+                              "modelSelection": {
+                                "type": "object",
+                                "properties": {
+                                  "model": {
+                                    "type": "string",
+                                    "enum": [
+                                      "gpt-6-astra",
+                                      "gpt-6-sol",
+                                      "claude-opus-5-5",
+                                      "claude-opus-5"
+                                    ]
+                                  },
+                                  "fastMode": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "model",
+                                  "fastMode"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "effort": {
+                                "type": "string",
+                                "enum": [
+                                  "low",
+                                  "medium",
+                                  "high",
+                                  "xhigh",
+                                  "max"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "modelSelection",
+                              "effort"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "durationMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "config",
+                          "durationMs"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "taskBrief",
+                    "referenceSpec",
+                    "redactedSpec",
+                    "blanks",
+                    "generatedSpec",
+                    "reconstruction",
+                    "grade"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "userId",
+                "runAsUserId",
+                "sourceWorkspaceId",
+                "name",
+                "version",
+                "runningStage",
+                "attemptId",
+                "leaseExpiresAt",
+                "plannerChatId",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "artifacts"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "benchmark"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteBenchmarkContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getBenchmarkContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "benchmark": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "userId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "runAsUserId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "runningStage": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "distill",
+                        "redact",
+                        "plan",
+                        "reconstruct",
+                        "grade"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "attemptId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "leaseExpiresAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "plannerChatId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "artifacts": {
+                  "type": "object",
+                  "properties": {
+                    "taskBrief": {
+                      "type": "string"
+                    },
+                    "referenceSpec": {
+                      "type": "string"
+                    },
+                    "redactedSpec": {
+                      "type": "string"
+                    },
+                    "blanks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "answer": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "answer"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "generatedSpec": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "reconstruction": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                              },
+                              "answer": {
+                                "type": "string"
+                              },
+                              "support": {
+                                "type": "string"
+                              },
+                              "sources": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "citationId": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "quote": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "citationId",
+                                    "quote"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "evidenceError": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "answer",
+                              "support"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                              },
+                              "correct": {
+                                "type": "boolean"
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "basis": {
+                                "type": "string",
+                                "enum": [
+                                  "spec",
+                                  "reference",
+                                  "missing"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "correct",
+                              "reason"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "recoveryMode": {
+                      "type": "string",
+                      "const": "references"
+                    },
+                    "modelRuns": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "enum": [
+                          "distill",
+                          "redact",
+                          "plan",
+                          "reconstruct",
+                          "grade"
+                        ]
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "config": {
+                            "type": "object",
+                            "properties": {
+                              "modelSelection": {
+                                "type": "object",
+                                "properties": {
+                                  "model": {
+                                    "type": "string",
+                                    "enum": [
+                                      "gpt-6-astra",
+                                      "gpt-6-sol",
+                                      "claude-opus-5-5",
+                                      "claude-opus-5"
+                                    ]
+                                  },
+                                  "fastMode": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "model",
+                                  "fastMode"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "effort": {
+                                "type": "string",
+                                "enum": [
+                                  "low",
+                                  "medium",
+                                  "high",
+                                  "xhigh",
+                                  "max"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "modelSelection",
+                              "effort"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "durationMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "config",
+                          "durationMs"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "taskBrief",
+                    "referenceSpec",
+                    "redactedSpec",
+                    "blanks",
+                    "generatedSpec",
+                    "reconstruction",
+                    "grade"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "userId",
+                "runAsUserId",
+                "sourceWorkspaceId",
+                "name",
+                "version",
+                "runningStage",
+                "attemptId",
+                "leaseExpiresAt",
+                "plannerChatId",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "artifacts"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "benchmark"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getBenchmarkRunContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]/runs/[runId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "runId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId",
+          "runId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "run": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "benchmarkId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "evaluationKey": {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64
+                },
+                "modelRuns": {
+                  "default": {},
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "enum": [
+                      "distill",
+                      "redact",
+                      "plan",
+                      "reconstruct",
+                      "grade"
+                    ]
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "config": {
+                        "type": "object",
+                        "properties": {
+                          "modelSelection": {
+                            "type": "object",
+                            "properties": {
+                              "model": {
+                                "type": "string",
+                                "enum": [
+                                  "gpt-6-astra",
+                                  "gpt-6-sol",
+                                  "claude-opus-5-5",
+                                  "claude-opus-5"
+                                ]
+                              },
+                              "fastMode": {
+                                "default": false,
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "model",
+                              "fastMode"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "effort": {
+                            "type": "string",
+                            "enum": [
+                              "low",
+                              "medium",
+                              "high",
+                              "xhigh",
+                              "max"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "modelSelection",
+                          "effort"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "durationMs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "config",
+                      "durationMs"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "correct": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "automaticCorrect": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "total": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "reviewedCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "reviewedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "execution": {
+                  "type": "object",
+                  "properties": {
+                    "organizationId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "sourceWorkspaceId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "operatorUserId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "runAsUserId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  },
+                  "required": [
+                    "organizationId",
+                    "sourceWorkspaceId",
+                    "operatorUserId",
+                    "runAsUserId"
+                  ],
+                  "additionalProperties": false
+                },
+                "reviews": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                      },
+                      "correct": {
+                        "type": "boolean"
+                      },
+                      "note": {
+                        "type": "string",
+                        "maxLength": 2000
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "correct",
+                      "note"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "artifacts": {
+                  "type": "object",
+                  "properties": {
+                    "taskBrief": {
+                      "type": "string"
+                    },
+                    "referenceSpec": {
+                      "type": "string"
+                    },
+                    "redactedSpec": {
+                      "type": "string"
+                    },
+                    "blanks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "answer": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "answer"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "generatedSpec": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reconstruction": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "answer": {
+                            "type": "string"
+                          },
+                          "support": {
+                            "type": "string"
+                          },
+                          "sources": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "citationId": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "quote": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "title": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "citationId",
+                                "quote"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "evidenceError": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "answer",
+                          "support"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "grade": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "correct": {
+                            "type": "boolean"
+                          },
+                          "reason": {
+                            "type": "string"
+                          },
+                          "basis": {
+                            "type": "string",
+                            "enum": [
+                              "spec",
+                              "reference",
+                              "missing"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "correct",
+                          "reason"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "recoveryMode": {
+                      "type": "string",
+                      "const": "references"
+                    },
+                    "modelRuns": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "enum": [
+                          "distill",
+                          "redact",
+                          "plan",
+                          "reconstruct",
+                          "grade"
+                        ]
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "config": {
+                            "type": "object",
+                            "properties": {
+                              "modelSelection": {
+                                "type": "object",
+                                "properties": {
+                                  "model": {
+                                    "type": "string",
+                                    "enum": [
+                                      "gpt-6-astra",
+                                      "gpt-6-sol",
+                                      "claude-opus-5-5",
+                                      "claude-opus-5"
+                                    ]
+                                  },
+                                  "fastMode": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "model",
+                                  "fastMode"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "effort": {
+                                "type": "string",
+                                "enum": [
+                                  "low",
+                                  "medium",
+                                  "high",
+                                  "xhigh",
+                                  "max"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "modelSelection",
+                              "effort"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "durationMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "config",
+                          "durationMs"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "taskBrief",
+                    "referenceSpec",
+                    "redactedSpec",
+                    "blanks",
+                    "generatedSpec",
+                    "reconstruction",
+                    "grade"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "benchmarkId",
+                "label",
+                "evaluationKey",
+                "modelRuns",
+                "correct",
+                "automaticCorrect",
+                "total",
+                "version",
+                "reviewedCount",
+                "reviewedAt",
+                "createdAt",
+                "execution",
+                "reviews",
+                "artifacts"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "run"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listBenchmarkRunsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]/runs",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "runAsUserId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "limit": {
+            "default": 20,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "runs": {
+              "maxItems": 50,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "benchmarkId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "label": {
+                    "type": "string",
+                    "maxLength": 100
+                  },
+                  "evaluationKey": {
+                    "type": "string",
+                    "minLength": 64,
+                    "maxLength": 64
+                  },
+                  "modelRuns": {
+                    "default": {},
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string",
+                      "enum": [
+                        "distill",
+                        "redact",
+                        "plan",
+                        "reconstruct",
+                        "grade"
+                      ]
+                    },
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "config": {
+                          "type": "object",
+                          "properties": {
+                            "modelSelection": {
+                              "type": "object",
+                              "properties": {
+                                "model": {
+                                  "type": "string",
+                                  "enum": [
+                                    "gpt-6-astra",
+                                    "gpt-6-sol",
+                                    "claude-opus-5-5",
+                                    "claude-opus-5"
+                                  ]
+                                },
+                                "fastMode": {
+                                  "default": false,
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "model",
+                                "fastMode"
+                              ],
+                              "additionalProperties": false
+                            },
+                            "effort": {
+                              "type": "string",
+                              "enum": [
+                                "low",
+                                "medium",
+                                "high",
+                                "xhigh",
+                                "max"
+                              ]
+                            }
+                          },
+                          "required": [
+                            "modelSelection",
+                            "effort"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "durationMs": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "config",
+                        "durationMs"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "correct": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "automaticCorrect": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "total": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "reviewedCount": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "reviewedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "benchmarkId",
+                  "label",
+                  "evaluationKey",
+                  "modelRuns",
+                  "correct",
+                  "automaticCorrect",
+                  "total",
+                  "version",
+                  "reviewedCount",
+                  "reviewedAt",
+                  "createdAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 512
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "runs",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listBenchmarksContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/benchmarks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "runAsUserId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "limit": {
+            "default": 20,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "benchmarks": {
+              "maxItems": 50,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "runAsUserId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "sourceWorkspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "version": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "runningStage": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "distill",
+                          "redact",
+                          "plan",
+                          "reconstruct",
+                          "grade"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "attemptId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 128
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "leaseExpiresAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "plannerChatId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 128
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  }
+                },
+                "required": [
+                  "id",
+                  "organizationId",
+                  "userId",
+                  "runAsUserId",
+                  "sourceWorkspaceId",
+                  "name",
+                  "version",
+                  "runningStage",
+                  "attemptId",
+                  "leaseExpiresAt",
+                  "plannerChatId",
+                  "error",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 512
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "benchmarks",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reviewBenchmarkRunContract": {
+      "method": "PATCH",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]/runs/[runId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "runId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId",
+          "runId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "blankId": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+          },
+          "correct": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "version",
+          "blankId",
+          "correct"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "run": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "benchmarkId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "evaluationKey": {
+                  "type": "string",
+                  "minLength": 64,
+                  "maxLength": 64
+                },
+                "modelRuns": {
+                  "default": {},
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "enum": [
+                      "distill",
+                      "redact",
+                      "plan",
+                      "reconstruct",
+                      "grade"
+                    ]
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "config": {
+                        "type": "object",
+                        "properties": {
+                          "modelSelection": {
+                            "type": "object",
+                            "properties": {
+                              "model": {
+                                "type": "string",
+                                "enum": [
+                                  "gpt-6-astra",
+                                  "gpt-6-sol",
+                                  "claude-opus-5-5",
+                                  "claude-opus-5"
+                                ]
+                              },
+                              "fastMode": {
+                                "default": false,
+                                "type": "boolean"
+                              }
+                            },
+                            "required": [
+                              "model",
+                              "fastMode"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "effort": {
+                            "type": "string",
+                            "enum": [
+                              "low",
+                              "medium",
+                              "high",
+                              "xhigh",
+                              "max"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "modelSelection",
+                          "effort"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "durationMs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "config",
+                      "durationMs"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "correct": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "automaticCorrect": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "total": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "reviewedCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "reviewedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "execution": {
+                  "type": "object",
+                  "properties": {
+                    "organizationId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "sourceWorkspaceId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "operatorUserId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "runAsUserId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  },
+                  "required": [
+                    "organizationId",
+                    "sourceWorkspaceId",
+                    "operatorUserId",
+                    "runAsUserId"
+                  ],
+                  "additionalProperties": false
+                },
+                "reviews": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                      },
+                      "correct": {
+                        "type": "boolean"
+                      },
+                      "note": {
+                        "type": "string",
+                        "maxLength": 2000
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "correct",
+                      "note"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "artifacts": {
+                  "type": "object",
+                  "properties": {
+                    "taskBrief": {
+                      "type": "string"
+                    },
+                    "referenceSpec": {
+                      "type": "string"
+                    },
+                    "redactedSpec": {
+                      "type": "string"
+                    },
+                    "blanks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "answer": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "answer"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "generatedSpec": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "reconstruction": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "answer": {
+                            "type": "string"
+                          },
+                          "support": {
+                            "type": "string"
+                          },
+                          "sources": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "citationId": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "quote": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "format": "uri"
+                                },
+                                "title": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "citationId",
+                                "quote"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "evidenceError": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "answer",
+                          "support"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "grade": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "correct": {
+                            "type": "boolean"
+                          },
+                          "reason": {
+                            "type": "string"
+                          },
+                          "basis": {
+                            "type": "string",
+                            "enum": [
+                              "spec",
+                              "reference",
+                              "missing"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "correct",
+                          "reason"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "recoveryMode": {
+                      "type": "string",
+                      "const": "references"
+                    },
+                    "modelRuns": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "enum": [
+                          "distill",
+                          "redact",
+                          "plan",
+                          "reconstruct",
+                          "grade"
+                        ]
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "config": {
+                            "type": "object",
+                            "properties": {
+                              "modelSelection": {
+                                "type": "object",
+                                "properties": {
+                                  "model": {
+                                    "type": "string",
+                                    "enum": [
+                                      "gpt-6-astra",
+                                      "gpt-6-sol",
+                                      "claude-opus-5-5",
+                                      "claude-opus-5"
+                                    ]
+                                  },
+                                  "fastMode": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "model",
+                                  "fastMode"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "effort": {
+                                "type": "string",
+                                "enum": [
+                                  "low",
+                                  "medium",
+                                  "high",
+                                  "xhigh",
+                                  "max"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "modelSelection",
+                              "effort"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "durationMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "config",
+                          "durationMs"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "taskBrief",
+                    "referenceSpec",
+                    "redactedSpec",
+                    "blanks",
+                    "generatedSpec",
+                    "reconstruction",
+                    "grade"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "benchmarkId",
+                "label",
+                "evaluationKey",
+                "modelRuns",
+                "correct",
+                "automaticCorrect",
+                "total",
+                "version",
+                "reviewedCount",
+                "reviewedAt",
+                "createdAt",
+                "execution",
+                "reviews",
+                "artifacts"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "run"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "runBenchmarkComparisonContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]/compare",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "planners": {
+            "minItems": 1,
+            "maxItems": 6,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "modelSelection": {
+                  "type": "object",
+                  "properties": {
+                    "model": {
+                      "type": "string",
+                      "enum": [
+                        "gpt-6-astra",
+                        "gpt-6-sol",
+                        "claude-opus-5-5",
+                        "claude-opus-5"
+                      ]
+                    },
+                    "fastMode": {
+                      "default": false,
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "model"
+                  ]
+                },
+                "effort": {
+                  "type": "string",
+                  "enum": [
+                    "low",
+                    "medium",
+                    "high",
+                    "xhigh",
+                    "max"
+                  ]
+                }
+              },
+              "required": [
+                "modelSelection",
+                "effort"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "evaluator": {
+            "type": "object",
+            "properties": {
+              "modelSelection": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "gpt-6-astra",
+                      "gpt-6-sol",
+                      "claude-opus-5-5",
+                      "claude-opus-5"
+                    ]
+                  },
+                  "fastMode": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "model"
+                ]
+              },
+              "effort": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              }
+            },
+            "required": [
+              "modelSelection",
+              "effort"
+            ],
+            "additionalProperties": false
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "runLabel": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "planners",
+          "evaluator",
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "stream"
+      }
+    },
+    "runBenchmarkStageContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]/run",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "stage": {
+            "type": "string",
+            "enum": [
+              "distill",
+              "redact",
+              "plan",
+              "reconstruct",
+              "grade"
+            ]
+          },
+          "runLabel": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "model": {
+            "type": "object",
+            "properties": {
+              "modelSelection": {
+                "type": "object",
+                "properties": {
+                  "model": {
+                    "type": "string",
+                    "enum": [
+                      "gpt-6-astra",
+                      "gpt-6-sol",
+                      "claude-opus-5-5",
+                      "claude-opus-5"
+                    ]
+                  },
+                  "fastMode": {
+                    "default": false,
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "model"
+                ]
+              },
+              "effort": {
+                "type": "string",
+                "enum": [
+                  "low",
+                  "medium",
+                  "high",
+                  "xhigh",
+                  "max"
+                ]
+              }
+            },
+            "required": [
+              "modelSelection",
+              "effort"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "version",
+          "stage"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "stream"
+      }
+    },
+    "updateBenchmarkContract": {
+      "method": "PATCH",
+      "path": "/api/organizations/[id]/benchmarks/[benchmarkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "benchmarkId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "benchmarkId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "taskBrief": {
+            "type": "string"
+          },
+          "referenceSpec": {
+            "type": "string"
+          },
+          "redactedSpec": {
+            "type": "string"
+          },
+          "blanks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                },
+                "answer": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "answer"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "version"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "benchmark": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "userId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "runAsUserId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sourceWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991
+                },
+                "runningStage": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "distill",
+                        "redact",
+                        "plan",
+                        "reconstruct",
+                        "grade"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "attemptId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "leaseExpiresAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "plannerChatId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 128
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "artifacts": {
+                  "type": "object",
+                  "properties": {
+                    "taskBrief": {
+                      "type": "string"
+                    },
+                    "referenceSpec": {
+                      "type": "string"
+                    },
+                    "redactedSpec": {
+                      "type": "string"
+                    },
+                    "blanks": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                          },
+                          "answer": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "answer"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "generatedSpec": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "reconstruction": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                              },
+                              "answer": {
+                                "type": "string"
+                              },
+                              "support": {
+                                "type": "string"
+                              },
+                              "sources": {
+                                "type": "array",
+                                "items": {
+                                  "type": "object",
+                                  "properties": {
+                                    "citationId": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "quote": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    },
+                                    "url": {
+                                      "type": "string",
+                                      "format": "uri"
+                                    },
+                                    "title": {
+                                      "type": "string"
+                                    }
+                                  },
+                                  "required": [
+                                    "citationId",
+                                    "quote"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "evidenceError": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "answer",
+                              "support"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "grade": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string",
+                                "pattern": "^[A-Za-z0-9_-]{1,64}$"
+                              },
+                              "correct": {
+                                "type": "boolean"
+                              },
+                              "reason": {
+                                "type": "string"
+                              },
+                              "basis": {
+                                "type": "string",
+                                "enum": [
+                                  "spec",
+                                  "reference",
+                                  "missing"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "id",
+                              "correct",
+                              "reason"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "recoveryMode": {
+                      "type": "string",
+                      "const": "references"
+                    },
+                    "modelRuns": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string",
+                        "enum": [
+                          "distill",
+                          "redact",
+                          "plan",
+                          "reconstruct",
+                          "grade"
+                        ]
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "config": {
+                            "type": "object",
+                            "properties": {
+                              "modelSelection": {
+                                "type": "object",
+                                "properties": {
+                                  "model": {
+                                    "type": "string",
+                                    "enum": [
+                                      "gpt-6-astra",
+                                      "gpt-6-sol",
+                                      "claude-opus-5-5",
+                                      "claude-opus-5"
+                                    ]
+                                  },
+                                  "fastMode": {
+                                    "default": false,
+                                    "type": "boolean"
+                                  }
+                                },
+                                "required": [
+                                  "model",
+                                  "fastMode"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "effort": {
+                                "type": "string",
+                                "enum": [
+                                  "low",
+                                  "medium",
+                                  "high",
+                                  "xhigh",
+                                  "max"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "modelSelection",
+                              "effort"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "durationMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "required": [
+                          "config",
+                          "durationMs"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "taskBrief",
+                    "referenceSpec",
+                    "redactedSpec",
+                    "blanks",
+                    "generatedSpec",
+                    "reconstruction",
+                    "grade"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "userId",
+                "runAsUserId",
+                "sourceWorkspaceId",
+                "name",
+                "version",
+                "runningStage",
+                "attemptId",
+                "leaseExpiresAt",
+                "plannerChatId",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "artifacts"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "benchmark"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

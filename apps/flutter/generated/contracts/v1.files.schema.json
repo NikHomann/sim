@@ -1,0 +1,113 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/files.ts",
+  "contracts": {
+    "v1DeleteFileContract": {
+      "method": "DELETE",
+      "path": "/api/v1/files/[fileId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1DownloadFileContract": {
+      "method": "GET",
+      "path": "/api/v1/files/[fileId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "v1ListFilesContract": {
+      "method": "GET",
+      "path": "/api/v1/files",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

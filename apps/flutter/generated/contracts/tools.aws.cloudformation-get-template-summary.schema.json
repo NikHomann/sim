@@ -1,0 +1,119 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-get-template-summary.ts",
+  "contracts": {
+    "awsCloudformationGetTemplateSummaryContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/get-template-summary",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateBody": {
+            "type": "string"
+          },
+          "stackName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "description": {
+                  "type": "string"
+                },
+                "parameters": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "parameterKey": {
+                        "type": "string"
+                      },
+                      "defaultValue": {
+                        "type": "string"
+                      },
+                      "parameterType": {
+                        "type": "string"
+                      },
+                      "noEcho": {
+                        "type": "boolean"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "capabilities": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "capabilitiesReason": {
+                  "type": "string"
+                },
+                "resourceTypes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "version": {
+                  "type": "string"
+                },
+                "declaredTransforms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "parameters",
+                "capabilities",
+                "resourceTypes",
+                "declaredTransforms"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

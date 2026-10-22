@@ -1,0 +1,1383 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/workflows.ts",
+  "contracts": {
+    "v1DeployWorkflowContract": {
+      "method": "POST",
+      "path": "/api/v1/workflows/[id]/deploy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "isDeployed": {
+                  "type": "boolean"
+                },
+                "deployedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "warnings": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "activeDeployment": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/ActiveDeploymentSummary"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "latestDeploymentAttempt": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationSummary"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "version": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "isDeployed",
+                "deployedAt",
+                "warnings",
+                "activeDeployment",
+                "latestDeploymentAttempt"
+              ],
+              "additionalProperties": false
+            },
+            "limits": {}
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ActiveDeploymentSummary": {
+              "type": "object",
+              "properties": {
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Identifier of the active deployment version."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric active deployment version."
+                },
+                "deployedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this version became active.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "deploymentVersionId",
+                "version",
+                "deployedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ActiveDeploymentSummary",
+              "title": "Active deployment",
+              "description": "Summary of the workflow version currently serving API executions."
+            },
+            "DeploymentOperationSummary": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique deployment operation identifier."
+                },
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Deployment version targeted by this operation."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric deployment version."
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "deploy",
+                    "activate"
+                  ],
+                  "description": "Operation being performed on the deployment version."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "preparing",
+                    "activating",
+                    "active",
+                    "failed",
+                    "superseded"
+                  ],
+                  "description": "Current deployment lifecycle status."
+                },
+                "isCurrent": {
+                  "default": true,
+                  "description": "Whether this operation still describes the current deployment attempt.",
+                  "type": "boolean"
+                },
+                "readiness": {
+                  "$ref": "#/$defs/DeploymentReadiness"
+                },
+                "requestedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment operation was requested.",
+                  "format": "date-time"
+                },
+                "activatedAt": {
+                  "description": "ISO 8601 activation timestamp, or null before activation completes.",
+                  "format": "date-time",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "description": "Deployment failure details, or null when no failure occurred.",
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationError"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "deploymentVersionId",
+                "version",
+                "action",
+                "status",
+                "isCurrent",
+                "readiness",
+                "requestedAt"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationSummary",
+              "title": "Deployment operation",
+              "description": "Lifecycle state of a deployment or version-activation attempt."
+            },
+            "DeploymentReadiness": {
+              "type": "object",
+              "properties": {
+                "webhooks": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Webhook synchronization readiness."
+                },
+                "schedules": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Schedule synchronization readiness."
+                },
+                "mcp": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "MCP synchronization readiness."
+                }
+              },
+              "required": [
+                "webhooks",
+                "schedules",
+                "mcp"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentReadiness",
+              "title": "Deployment readiness",
+              "description": "Readiness of the side effects required to activate a deployment."
+            },
+            "DeploymentOperationError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Stable deployment failure code."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Human-readable deployment failure message."
+                },
+                "retryable": {
+                  "type": "boolean",
+                  "description": "Whether retrying the deployment may succeed."
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationError",
+              "title": "Deployment operation error",
+              "description": "Failure details for a deployment lifecycle operation."
+            }
+          }
+        }
+      }
+    },
+    "v1ExportWorkflowContract": {
+      "method": "GET",
+      "path": "/api/v1/workflows/[id]/export",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "version": {
+                  "type": "string",
+                  "const": "1.0"
+                },
+                "exportedAt": {
+                  "type": "string"
+                },
+                "workflow": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "workspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "folderId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "workspaceId",
+                    "folderId"
+                  ],
+                  "additionalProperties": false
+                },
+                "state": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number"
+                              },
+                              "y": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "subBlocks": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "value": {}
+                              },
+                              "required": [
+                                "id",
+                                "type",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "outputs": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "horizontalHandles": {
+                            "type": "boolean"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "advancedMode": {
+                            "type": "boolean"
+                          },
+                          "errorEnabled": {
+                            "type": "boolean"
+                          },
+                          "retry": {
+                            "type": "object",
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "maxTries": {
+                                "type": "integer",
+                                "minimum": 2,
+                                "maximum": 5
+                              },
+                              "waitBetweenTriesMs": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 5000
+                              }
+                            },
+                            "required": [
+                              "enabled",
+                              "maxTries",
+                              "waitBetweenTriesMs"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "triggerMode": {
+                            "type": "boolean"
+                          },
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "parentId": {
+                                "type": "string"
+                              },
+                              "extent": {
+                                "type": "string",
+                                "const": "parent"
+                              },
+                              "width": {
+                                "type": "number"
+                              },
+                              "height": {
+                                "type": "number"
+                              },
+                              "collection": {},
+                              "count": {
+                                "type": "number"
+                              },
+                              "loopType": {
+                                "type": "string",
+                                "enum": [
+                                  "for",
+                                  "forEach",
+                                  "while",
+                                  "doWhile"
+                                ]
+                              },
+                              "whileCondition": {
+                                "type": "string"
+                              },
+                              "doWhileCondition": {
+                                "type": "string"
+                              },
+                              "parallelType": {
+                                "type": "string",
+                                "enum": [
+                                  "collection",
+                                  "count"
+                                ]
+                              },
+                              "batchSize": {
+                                "type": "number"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "canonicalModes": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic",
+                                    "advanced"
+                                  ]
+                                }
+                              }
+                            },
+                            "additionalProperties": false
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "position",
+                          "subBlocks",
+                          "outputs",
+                          "enabled"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "edges": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "source": {
+                            "type": "string"
+                          },
+                          "target": {
+                            "type": "string"
+                          },
+                          "sourceHandle": {},
+                          "targetHandle": {},
+                          "type": {
+                            "type": "string"
+                          },
+                          "animated": {
+                            "type": "boolean"
+                          },
+                          "style": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "data": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "labelStyle": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "labelShowBg": {
+                            "type": "boolean"
+                          },
+                          "labelBgStyle": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "labelBgPadding": {
+                            "type": "array",
+                            "prefixItems": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          "labelBgBorderRadius": {
+                            "type": "number"
+                          },
+                          "markerStart": {
+                            "type": "string"
+                          },
+                          "markerEnd": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "source",
+                          "target",
+                          "sourceHandle",
+                          "targetHandle"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "loops": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "nodes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "iterations": {
+                            "type": "number"
+                          },
+                          "loopType": {
+                            "type": "string",
+                            "enum": [
+                              "for",
+                              "forEach",
+                              "while",
+                              "doWhile"
+                            ]
+                          },
+                          "forEachItems": {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {}
+                              },
+                              {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "whileCondition": {
+                            "type": "string"
+                          },
+                          "doWhileCondition": {
+                            "type": "string"
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "nodes",
+                          "iterations",
+                          "loopType"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "parallels": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "nodes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "distribution": {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {}
+                              },
+                              {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "count": {
+                            "type": "number"
+                          },
+                          "parallelType": {
+                            "type": "string",
+                            "enum": [
+                              "count",
+                              "collection"
+                            ]
+                          },
+                          "batchSize": {
+                            "type": "number"
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "nodes"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "variables": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "string",
+                              "number",
+                              "boolean",
+                              "object",
+                              "array",
+                              "plain"
+                            ]
+                          },
+                          "value": {}
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "type",
+                          "value"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "sortOrder": {
+                          "type": "number"
+                        },
+                        "exportedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "blocks",
+                    "edges"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "version",
+                "exportedAt",
+                "workflow",
+                "state"
+              ],
+              "additionalProperties": false
+            },
+            "limits": {}
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v1GetWorkflowContract": {
+      "method": "GET",
+      "path": "/api/v1/workflows/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {},
+            "limits": {}
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1ImportWorkflowContract": {
+      "method": "POST",
+      "path": "/api/v1/workflows/import",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "folderId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 2000
+          },
+          "workflow": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "workflow"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceId": {
+                  "type": "string"
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "workspaceId",
+                "folderId",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            },
+            "limits": {}
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v1ListWorkflowsContract": {
+      "method": "GET",
+      "path": "/api/v1/workflows",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "folderId": {
+            "type": "string"
+          },
+          "deployedOnly": {
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 50,
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {},
+            "limits": {}
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1RollbackWorkflowContract": {
+      "method": "POST",
+      "path": "/api/v1/workflows/[id]/rollback",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "isDeployed": {
+                  "type": "boolean"
+                },
+                "deployedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "warnings": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "activeDeployment": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/ActiveDeploymentSummary"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "latestDeploymentAttempt": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationSummary"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "version": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "id",
+                "isDeployed",
+                "deployedAt",
+                "warnings",
+                "activeDeployment",
+                "latestDeploymentAttempt",
+                "version"
+              ],
+              "additionalProperties": false
+            },
+            "limits": {}
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ActiveDeploymentSummary": {
+              "type": "object",
+              "properties": {
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Identifier of the active deployment version."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric active deployment version."
+                },
+                "deployedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this version became active.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "deploymentVersionId",
+                "version",
+                "deployedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ActiveDeploymentSummary",
+              "title": "Active deployment",
+              "description": "Summary of the workflow version currently serving API executions."
+            },
+            "DeploymentOperationSummary": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique deployment operation identifier."
+                },
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Deployment version targeted by this operation."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric deployment version."
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "deploy",
+                    "activate"
+                  ],
+                  "description": "Operation being performed on the deployment version."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "preparing",
+                    "activating",
+                    "active",
+                    "failed",
+                    "superseded"
+                  ],
+                  "description": "Current deployment lifecycle status."
+                },
+                "isCurrent": {
+                  "default": true,
+                  "description": "Whether this operation still describes the current deployment attempt.",
+                  "type": "boolean"
+                },
+                "readiness": {
+                  "$ref": "#/$defs/DeploymentReadiness"
+                },
+                "requestedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment operation was requested.",
+                  "format": "date-time"
+                },
+                "activatedAt": {
+                  "description": "ISO 8601 activation timestamp, or null before activation completes.",
+                  "format": "date-time",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "description": "Deployment failure details, or null when no failure occurred.",
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationError"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "deploymentVersionId",
+                "version",
+                "action",
+                "status",
+                "isCurrent",
+                "readiness",
+                "requestedAt"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationSummary",
+              "title": "Deployment operation",
+              "description": "Lifecycle state of a deployment or version-activation attempt."
+            },
+            "DeploymentReadiness": {
+              "type": "object",
+              "properties": {
+                "webhooks": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Webhook synchronization readiness."
+                },
+                "schedules": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Schedule synchronization readiness."
+                },
+                "mcp": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "MCP synchronization readiness."
+                }
+              },
+              "required": [
+                "webhooks",
+                "schedules",
+                "mcp"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentReadiness",
+              "title": "Deployment readiness",
+              "description": "Readiness of the side effects required to activate a deployment."
+            },
+            "DeploymentOperationError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Stable deployment failure code."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Human-readable deployment failure message."
+                },
+                "retryable": {
+                  "type": "boolean",
+                  "description": "Whether retrying the deployment may succeed."
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationError",
+              "title": "Deployment operation error",
+              "description": "Failure details for a deployment lifecycle operation."
+            }
+          }
+        }
+      }
+    },
+    "v1UndeployWorkflowContract": {
+      "method": "DELETE",
+      "path": "/api/v1/workflows/[id]/deploy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "isDeployed": {
+                  "type": "boolean"
+                },
+                "deployedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "warnings": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "isDeployed",
+                "deployedAt",
+                "warnings"
+              ],
+              "additionalProperties": false
+            },
+            "limits": {}
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

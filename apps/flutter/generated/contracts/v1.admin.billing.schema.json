@@ -1,0 +1,525 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/admin/billing.ts",
+  "contracts": {
+    "adminV1CancelSubscriptionContract": {
+      "method": "DELETE",
+      "path": "/api/v1/admin/subscriptions/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "atPeriodEnd": {},
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "atPeriodEnd"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "message": {
+                  "type": "string"
+                },
+                "subscriptionId": {
+                  "type": "string"
+                },
+                "stripeSubscriptionId": {
+                  "type": "string"
+                },
+                "atPeriodEnd": {
+                  "type": "boolean"
+                },
+                "periodEnd": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "success",
+                "message",
+                "subscriptionId",
+                "stripeSubscriptionId",
+                "atPeriodEnd"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1GetSubscriptionContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/subscriptions/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "plan": {
+                  "type": "string"
+                },
+                "referenceId": {
+                  "type": "string"
+                },
+                "stripeCustomerId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "stripeSubscriptionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "periodStart": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "periodEnd": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "cancelAtPeriodEnd": {
+                  "anyOf": [
+                    {
+                      "type": "boolean"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "seats": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "trialStart": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "trialEnd": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "metadata": {}
+              },
+              "required": [
+                "id",
+                "plan",
+                "referenceId",
+                "stripeCustomerId",
+                "stripeSubscriptionId",
+                "status",
+                "periodStart",
+                "periodEnd",
+                "cancelAtPeriodEnd",
+                "seats",
+                "trialStart",
+                "trialEnd",
+                "metadata"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1IssueCreditsContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/credits",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "amount": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "reason": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "amount"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "userEmail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "entityType": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "organization"
+                  ]
+                },
+                "entityId": {
+                  "type": "string"
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "newCreditBalance": {
+                  "type": "number"
+                },
+                "newUsageLimit": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "success",
+                "userId",
+                "userEmail",
+                "entityType",
+                "entityId",
+                "amount",
+                "newCreditBalance",
+                "newUsageLimit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1ListSubscriptionsContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/subscriptions",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "plan": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "limit",
+          "offset",
+          "plan",
+          "status"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "plan": {
+                    "type": "string"
+                  },
+                  "referenceId": {
+                    "type": "string"
+                  },
+                  "stripeCustomerId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "stripeSubscriptionId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "periodStart": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "periodEnd": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "cancelAtPeriodEnd": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "seats": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "trialStart": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "trialEnd": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "metadata": {}
+                },
+                "required": [
+                  "id",
+                  "plan",
+                  "referenceId",
+                  "stripeCustomerId",
+                  "stripeSubscriptionId",
+                  "status",
+                  "periodStart",
+                  "periodEnd",
+                  "cancelAtPeriodEnd",
+                  "seats",
+                  "trialStart",
+                  "trialEnd",
+                  "metadata"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "number"
+                },
+                "limit": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "total",
+                "limit",
+                "offset",
+                "hasMore"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

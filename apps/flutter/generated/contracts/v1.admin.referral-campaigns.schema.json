@@ -1,0 +1,346 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/admin/referral-campaigns.ts",
+  "contracts": {
+    "adminV1CreateReferralCampaignContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/referral-campaigns",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "percentOff": {
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "code": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 6
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "duration": {
+            "default": "once",
+            "type": "string",
+            "enum": [
+              "once",
+              "repeating",
+              "forever"
+            ]
+          },
+          "durationInMonths": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          },
+          "maxRedemptions": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "expiresAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "appliesTo": {
+            "anyOf": [
+              {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "pro",
+                    "team",
+                    "pro_6000",
+                    "pro_25000",
+                    "team_6000",
+                    "team_25000"
+                  ]
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "percentOff"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "code": {
+                  "type": "string"
+                },
+                "couponId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "percentOff": {
+                  "type": "number"
+                },
+                "duration": {
+                  "type": "string"
+                },
+                "durationInMonths": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "appliesToProductIds": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "maxRedemptions": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "expiresAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "active": {
+                  "type": "boolean"
+                },
+                "timesRedeemed": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "code",
+                "couponId",
+                "name",
+                "percentOff",
+                "duration",
+                "durationInMonths",
+                "appliesToProductIds",
+                "maxRedemptions",
+                "expiresAt",
+                "active",
+                "timesRedeemed",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1ListReferralCampaignsContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/referral-campaigns",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "starting_after": {
+            "type": "string"
+          },
+          "active": {
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ]
+          }
+        },
+        "required": [
+          "limit",
+          "starting_after",
+          "active"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "code": {
+                    "type": "string"
+                  },
+                  "couponId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "percentOff": {
+                    "type": "number"
+                  },
+                  "duration": {
+                    "type": "string"
+                  },
+                  "durationInMonths": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "appliesToProductIds": {
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "maxRedemptions": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "expiresAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "timesRedeemed": {
+                    "type": "number"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "code",
+                  "couponId",
+                  "name",
+                  "percentOff",
+                  "duration",
+                  "durationInMonths",
+                  "appliesToProductIds",
+                  "maxRedemptions",
+                  "expiresAt",
+                  "active",
+                  "timesRedeemed",
+                  "createdAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "hasMore": {
+              "type": "boolean"
+            },
+            "nextCursor": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "data",
+            "hasMore"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

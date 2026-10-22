@@ -1,0 +1,1103 @@
+{
+  "$comment": "Phase screens for tools/parity/capture.mjs. Selectors are Playwright selectors evaluated on the React app (CSS, :has-text(), >> nth=N). Parity ids map to Flutter Semantics(identifier:) nodes (flt-semantics-identifier). 'flutterFallback' locates a Flutter semantics node by role/label when the id is not exposed; such rows still fail the layout gate as 'id-missing' but carry the measured delta. Anchors: 'at' is relative to the parity id's box on each side (falling back to the React box when Flutter lacks the id); 'point' is absolute viewport px. 'expect' holds the spec token per theme (informational; the gate is Flutter vs React).",
+  "phase": "phase-1",
+  "reactOrigin": "http://localhost:3000",
+  "flutterOrigin": "http://localhost:3001",
+  "flutterBase": "/app",
+  "viewports": [
+    [
+      1440,
+      900
+    ],
+    [
+      1280,
+      800
+    ]
+  ],
+  "timezoneId": "UTC",
+  "locale": "en-US",
+  "gates": {
+    "rectPx": 1,
+    "deltaE": 2,
+    "ssim": 0.98
+  },
+  "groups": {
+    "authShell": {
+      "ids": {
+        "auth.shell": {
+          "react": "div.light.desktop-title-bar-page"
+        },
+        "auth.shell.header": {
+          "react": "div.light.desktop-title-bar-page > header"
+        },
+        "auth.shell.logo": {
+          "react": "a[aria-label=\"Sim home\"]",
+          "flutterFallback": {
+            "role": "button",
+            "nth": 0
+          }
+        },
+        "auth.shell.column": {
+          "react": "div.light.desktop-title-bar-page > div.flex-1"
+        }
+      },
+      "anchors": [
+        {
+          "id": "shell-bg",
+          "parity": "auth.shell",
+          "at": [
+            8,
+            8
+          ],
+          "expect": {
+            "light": "#fefefe"
+          }
+        }
+      ]
+    },
+    "sidebarExpanded": {
+      "ids": {
+        "shell.viewport": {
+          "react": "div.workspace-root > div"
+        },
+        "shell.chrome": {
+          "react": "div.desktop-workspace-window-frame"
+        },
+        "shell.sidebar.shell": {
+          "react": "div.sidebar-shell-outer"
+        },
+        "shell.sidebar": {
+          "react": "aside.sidebar-container"
+        },
+        "shell.sidebar.resize-handle": {
+          "react": "[role=separator][aria-label=\"Resize sidebar\"]"
+        },
+        "shell.content": {
+          "react": "div.workspace-content-shell"
+        },
+        "shell.content.pane": {
+          "react": "div.workspace-content-shell > div"
+        },
+        "shell.sidebar.header": {
+          "react": "aside.sidebar-container > div > div.shrink-0.items-center.pt-2"
+        },
+        "workspace.switcher.trigger": {
+          "react": "button[aria-label=\"Switch workspace\"]"
+        },
+        "workspace.switcher.trigger.tile": {
+          "react": "button[aria-label=\"Switch workspace\"] > div >> nth=0"
+        },
+        "shell.sidebar.header.actions": {
+          "react": "aside.sidebar-container div:has(> button[aria-label=Search])"
+        },
+        "shell.sidebar.header.search": {
+          "react": "aside button[aria-label=Search]"
+        },
+        "shell.sidebar.header.collapse": {
+          "react": "aside button[aria-label=\"Collapse sidebar\"]"
+        },
+        "shell.sidebar.nav": {
+          "react": "aside.sidebar-container > div > div.border-b"
+        },
+        "shell.sidebar.nav.home": {
+          "react": "aside a[href$=\"/home\"]",
+          "text": true
+        },
+        "shell.sidebar.nav.integrations": {
+          "react": "aside a[href$=\"/integrations\"]",
+          "text": true
+        },
+        "shell.sidebar.scroll": {
+          "react": "aside.sidebar-container > div > div.overflow-y-auto"
+        },
+        "shell.sidebar.chats": {
+          "react": "aside .chats-section"
+        },
+        "shell.sidebar.chats.title": {
+          "react": "aside .chats-section > div >> nth=0"
+        },
+        "shell.sidebar.chats.item": {
+          "react": "aside .chats-section a >> nth=0"
+        },
+        "shell.sidebar.workspace": {
+          "react": "aside div.mt-4.shrink-0:has(a[href$=\"/tables\"])"
+        },
+        "shell.sidebar.workspace.title": {
+          "react": "aside div.mt-4.shrink-0:has(a[href$=\"/tables\"]) > div >> nth=0"
+        },
+        "shell.sidebar.nav.tables": {
+          "react": "aside a[href$=\"/tables\"]",
+          "text": true
+        },
+        "shell.sidebar.nav.files": {
+          "react": "aside a[href$=\"/files\"]",
+          "text": true
+        },
+        "shell.sidebar.nav.knowledge": {
+          "react": "aside a[href$=\"/knowledge\"]",
+          "text": true
+        },
+        "shell.sidebar.nav.logs": {
+          "react": "aside a[href$=\"/logs\"]",
+          "text": true
+        },
+        "shell.sidebar.workflows": {
+          "react": "aside .workflows-section"
+        },
+        "shell.sidebar.workflows.title": {
+          "react": "aside .workflows-section > div >> nth=0 >> button >> nth=0"
+        },
+        "sidebar.workflows.header.more": {
+          "react": "aside button[aria-label=\"More actions\"]"
+        },
+        "sidebar.workflows.header.new": {
+          "react": "aside button[aria-label=\"New workflow\"]"
+        },
+        "shell.sidebar.workflows.list": {
+          "react": "aside .workflows-section div.px-2:has([role=tree])"
+        },
+        "sidebar.tree": {
+          "react": "[role=tree][aria-label=Workflows]"
+        },
+        "sidebar.tree.workflow-row.94cb2172-79b9-5f9b-a15e-210e57132b5c": {
+          "react": "[role=tree] a[href$=\"/w/94cb2172-79b9-5f9b-a15e-210e57132b5c\"]",
+          "text": true
+        },
+        "sidebar.tree.folder-row.a21eb9d7-7350-580a-bd4b-5f96e6796149": {
+          "react": "[role=tree] [role=button][aria-label^=\"E2E folder\"]"
+        },
+        "sidebar.tree.workflow-row.551aa797-397c-5edc-958b-bd768958c92e": {
+          "react": "[role=tree] a[href$=\"/w/551aa797-397c-5edc-958b-bd768958c92e\"]",
+          "text": true
+        },
+        "shell.sidebar.footer": {
+          "react": "aside.sidebar-container > div > div.border-t"
+        },
+        "shell.sidebar.footer.profile": {
+          "react": "aside.sidebar-container > div > div.border-t button >> nth=0"
+        },
+        "shell.sidebar.footer.help": {
+          "react": "aside button[aria-label=Help]"
+        }
+      },
+      "children": {
+        "sidebar.tree": {
+          "react": "[role=tree] a[href*=\"/w/\"], [role=tree] [role=button][aria-expanded]",
+          "flutter": "^sidebar\\.tree\\.(workflow|folder)-row\\.[0-9a-f-]{36}$"
+        },
+        "shell.sidebar.nav": {
+          "react": "aside a[href^=\"/workspace/\"]:not([href*=\"/w/\"]):not([href*=\"/chat/\"])",
+          "flutter": "^shell\\.sidebar\\.nav\\.[a-z]+$"
+        }
+      },
+      "anchors": [
+        {
+          "id": "S1 header gutter",
+          "point": [
+            4,
+            24
+          ],
+          "expect": {
+            "light": "#fbfbfb",
+            "dark": "#1e1e1e"
+          }
+        },
+        {
+          "id": "S3 identity tile",
+          "point": [
+            18,
+            17
+          ],
+          "expect": {
+            "light": "#e5e5e5",
+            "dark": "#454545"
+          }
+        },
+        {
+          "id": "S4 active nav row",
+          "point": [
+            200,
+            69
+          ],
+          "expect": {
+            "light": "#ececec",
+            "dark": "#2c2c2c"
+          }
+        },
+        {
+          "id": "A1 sidebar section gap",
+          "point": [
+            4,
+            357
+          ],
+          "expect": {
+            "light": "#fbfbfb",
+            "dark": "#1e1e1e"
+          }
+        },
+        {
+          "id": "C1 rail gutter",
+          "point": [
+            4,
+            450
+          ],
+          "expect": {
+            "light": "#fbfbfb",
+            "dark": "#1e1e1e"
+          }
+        },
+        {
+          "id": "C2 content left border",
+          "point": [
+            224,
+            450
+          ],
+          "expect": {
+            "light": "#d8d8d8",
+            "dark": "#444444"
+          }
+        },
+        {
+          "id": "C6 rail right gutter",
+          "point": [
+            220,
+            450
+          ],
+          "expect": {
+            "light": "#fbfbfb",
+            "dark": "#1e1e1e"
+          }
+        }
+      ]
+    }
+  },
+  "screens": [
+    {
+      "name": "auth-login",
+      "auth": false,
+      "themes": [
+        "light"
+      ],
+      "react": "/login",
+      "flutter": "/login",
+      "ready": {
+        "react": "button[type=submit]",
+        "flutter": "auth.shell"
+      },
+      "include": [
+        "authShell"
+      ],
+      "ids": {
+        "auth.login.root": {
+          "react": "div.max-w-\\[400px\\] > div.space-y-6"
+        },
+        "auth.login.header": {
+          "react": "div.max-w-\\[400px\\] > div.space-y-6 > div.text-center"
+        },
+        "auth.login.title": {
+          "react": "h1",
+          "text": true
+        },
+        "auth.login.description": {
+          "react": "div.text-center > p",
+          "text": true
+        },
+        "auth.login.form": {
+          "react": "form"
+        },
+        "auth.login.fields": {
+          "react": "form > div.space-y-5"
+        },
+        "auth.login.email.field": {
+          "react": "form div.space-y-5 > div >> nth=0"
+        },
+        "auth.login.email": {
+          "react": "div:has(> input[placeholder=\"Enter your email\"])"
+        },
+        "auth.login.password.field": {
+          "react": "form div.space-y-5 > div >> nth=1"
+        },
+        "auth.login.password": {
+          "react": "div:has(> input[type=password])"
+        },
+        "auth.login.password.toggle": {
+          "react": "button[aria-label=\"Show password\"]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Show password"
+          }
+        },
+        "auth.login.forgot": {
+          "react": "button:has-text(\"Forgot password?\")",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Forgot password?"
+          }
+        },
+        "auth.login.submit": {
+          "react": "button[type=submit]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Sign in"
+          }
+        },
+        "auth.login.signupPrompt": {
+          "react": "div.space-y-6 > div.justify-center"
+        },
+        "auth.login.signupLink": {
+          "react": "a[href^=\"/signup\"]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Sign up"
+          }
+        },
+        "auth.login.legal": {
+          "react": "div.space-y-6 > p"
+        },
+        "auth.login.legal.terms": {
+          "react": "a[href=\"/terms\"]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Terms of Service"
+          }
+        },
+        "auth.login.legal.privacy": {
+          "react": "a[href=\"/privacy\"]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Privacy Policy"
+          }
+        }
+      },
+      "anchors": [
+        {
+          "id": "email fill",
+          "parity": "auth.login.email",
+          "at": [
+            3,
+            18
+          ],
+          "expect": {
+            "light": "#f3f3f3"
+          }
+        },
+        {
+          "id": "email border",
+          "parity": "auth.login.email",
+          "at": [
+            0,
+            18
+          ],
+          "expect": {
+            "light": "#d8d8d8"
+          }
+        },
+        {
+          "id": "submit fill (disabled, opacity .6)",
+          "parity": "auth.login.submit",
+          "at": [
+            6,
+            18
+          ]
+        }
+      ],
+      "ssim": [
+        "viewport"
+      ]
+    },
+    {
+      "name": "auth-signup",
+      "auth": false,
+      "themes": [
+        "light"
+      ],
+      "react": "/signup",
+      "flutter": "/signup",
+      "ready": {
+        "react": "button[type=submit]",
+        "flutter": "auth.shell"
+      },
+      "include": [
+        "authShell"
+      ],
+      "ids": {
+        "auth.signup.root": {
+          "react": "div.max-w-\\[400px\\] > div.space-y-6"
+        },
+        "auth.signup.header": {
+          "react": "div.max-w-\\[400px\\] > div.space-y-6 > div.text-center"
+        },
+        "auth.signup.title": {
+          "react": "h1",
+          "text": true
+        },
+        "auth.signup.form": {
+          "react": "form"
+        },
+        "auth.signup.name.field": {
+          "react": "form div.space-y-5 > div >> nth=0"
+        },
+        "auth.signup.name": {
+          "react": "div:has(> input[placeholder=\"Enter your name\"])"
+        },
+        "auth.signup.email.field": {
+          "react": "form div.space-y-5 > div >> nth=1"
+        },
+        "auth.signup.email": {
+          "react": "div:has(> input[placeholder=\"Enter your email\"])"
+        },
+        "auth.signup.password.field": {
+          "react": "form div.space-y-5 > div >> nth=2"
+        },
+        "auth.signup.password": {
+          "react": "div:has(> input[type=password])"
+        },
+        "auth.signup.submit": {
+          "react": "button[type=submit]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Create account"
+          }
+        },
+        "auth.signup.loginPrompt": {
+          "react": "div.space-y-6 > div.justify-center"
+        },
+        "auth.signup.loginLink": {
+          "react": "a[href^=\"/login\"]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Sign in"
+          }
+        },
+        "auth.signup.legal": {
+          "react": "div.space-y-6 > p"
+        }
+      },
+      "anchors": [
+        {
+          "id": "name fill",
+          "parity": "auth.signup.name",
+          "at": [
+            3,
+            18
+          ],
+          "expect": {
+            "light": "#f3f3f3"
+          }
+        },
+        {
+          "id": "name border",
+          "parity": "auth.signup.name",
+          "at": [
+            0,
+            18
+          ],
+          "expect": {
+            "light": "#d8d8d8"
+          }
+        },
+        {
+          "id": "submit fill",
+          "parity": "auth.signup.submit",
+          "at": [
+            6,
+            18
+          ]
+        }
+      ],
+      "ssim": [
+        "viewport"
+      ]
+    },
+    {
+      "name": "auth-reset-password",
+      "auth": false,
+      "themes": [
+        "light"
+      ],
+      "react": "/reset-password",
+      "flutter": "/reset-password",
+      "ready": {
+        "react": "button[type=submit]",
+        "flutter": "auth.shell"
+      },
+      "include": [
+        "authShell"
+      ],
+      "ids": {
+        "auth.reset.root": {
+          "react": "div.max-w-\\[400px\\] > div.space-y-6"
+        },
+        "auth.reset.header": {
+          "react": "div.max-w-\\[400px\\] > div.space-y-6 > div.text-center"
+        },
+        "auth.reset.form": {
+          "react": "form"
+        },
+        "auth.reset.password.field": {
+          "react": "form div.space-y-5 > div >> nth=0"
+        },
+        "auth.reset.password": {
+          "react": "div:has(> input[placeholder=\"Enter new password\"])"
+        },
+        "auth.reset.confirm.field": {
+          "react": "form div.space-y-5 > div >> nth=1"
+        },
+        "auth.reset.confirm": {
+          "react": "div:has(> input[placeholder=\"Confirm new password\"])"
+        },
+        "auth.reset.status": {
+          "react": "form div.text-caption:has-text(\"Invalid or missing reset token\")"
+        },
+        "auth.reset.submit": {
+          "react": "button[type=submit]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Reset Password"
+          }
+        },
+        "auth.reset.backPrompt": {
+          "react": "div.space-y-6 > div.justify-center"
+        }
+      },
+      "anchors": [
+        {
+          "id": "disabled field fill (50% over bg)",
+          "parity": "auth.reset.password",
+          "at": [
+            3,
+            18
+          ],
+          "expect": {
+            "light": "#f9f9f9"
+          }
+        },
+        {
+          "id": "password border",
+          "parity": "auth.reset.password",
+          "at": [
+            0,
+            18
+          ]
+        },
+        {
+          "id": "submit fill (disabled)",
+          "parity": "auth.reset.submit",
+          "at": [
+            6,
+            18
+          ]
+        }
+      ],
+      "ssim": [
+        "viewport"
+      ]
+    },
+    {
+      "name": "auth-verify",
+      "$comment": "verificationEmail is set in sessionStorage before load. On this stack EMAIL_VERIFICATION_ENABLED is off, so both apps take the skip path (/verify -> /home -> /login without a session); the parity check is that both land on the same route and render the same page. The OTP form needs the mailpit profile of the stack.",
+      "auth": false,
+      "themes": [
+        "light"
+      ],
+      "react": "/verify",
+      "flutter": "/verify",
+      "sessionStorage": {
+        "verificationEmail": "flutter-e2e@example.com"
+      },
+      "settleMs": 2500,
+      "ready": {
+        "react": "div.light.desktop-title-bar-page",
+        "flutter": "auth.shell"
+      },
+      "include": [
+        "authShell"
+      ],
+      "ids": {
+        "auth.login.submit": {
+          "react": "button[type=submit]",
+          "flutterFallback": {
+            "role": "button",
+            "label": "Sign in"
+          }
+        }
+      },
+      "anchors": [],
+      "ssim": [
+        "viewport"
+      ]
+    },
+    {
+      "name": "workspace-home-expanded",
+      "auth": true,
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "react": "/workspace/{workspaceId}/home",
+      "flutter": "/workspace/{workspaceId}/home",
+      "ready": {
+        "react": "aside [role=tree] a",
+        "flutter": "sidebar.tree"
+      },
+      "include": [
+        "sidebarExpanded"
+      ],
+      "ids": {},
+      "anchors": [
+        {
+          "id": "C3 content pane corner",
+          "point": [
+            236,
+            890
+          ],
+          "expect": {
+            "light": "#fefefe",
+            "dark": "#1b1b1b"
+          }
+        }
+      ],
+      "ssim": [
+        "shell.sidebar"
+      ]
+    },
+    {
+      "name": "workspace-home-collapsed",
+      "auth": true,
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "react": "/workspace/{workspaceId}/home",
+      "flutter": "/workspace/{workspaceId}/home",
+      "cookies": {
+        "sidebar_collapsed": "1"
+      },
+      "ready": {
+        "react": "aside button[aria-label=\"Expand sidebar\"]",
+        "flutter": "workspace.switcher.trigger.collapsed"
+      },
+      "ids": {
+        "shell.sidebar.shell": {
+          "react": "div.sidebar-shell-outer"
+        },
+        "shell.sidebar": {
+          "react": "aside.sidebar-container"
+        },
+        "shell.content": {
+          "react": "div.workspace-content-shell"
+        },
+        "shell.sidebar.header": {
+          "react": "aside.sidebar-container > div > div.shrink-0.items-center.pt-2"
+        },
+        "workspace.switcher.trigger.collapsed": {
+          "react": "aside button[aria-label=\"Expand sidebar\"]"
+        },
+        "shell.sidebar.nav": {
+          "react": "aside.sidebar-container > div > div.border-b"
+        },
+        "shell.sidebar.nav.home": {
+          "react": "aside a[href$=\"/home\"]"
+        },
+        "shell.sidebar.nav.integrations": {
+          "react": "aside a[href$=\"/integrations\"]"
+        },
+        "shell.sidebar.scroll": {
+          "react": "aside.sidebar-container > div > div.overflow-y-auto"
+        },
+        "shell.sidebar.chats": {
+          "react": "aside .chats-section"
+        },
+        "shell.sidebar.rail.chats": {
+          "react": "aside .chats-section div.px-2 > div >> nth=0"
+        },
+        "shell.sidebar.workspace": {
+          "react": "aside div.mt-4.shrink-0:has(a[href$=\"/logs\"])"
+        },
+        "shell.sidebar.nav.tables": {
+          "react": "aside div.mt-4.shrink-0:has(a[href$=\"/logs\"]) div.flex-col.px-2 > * >> nth=0"
+        },
+        "shell.sidebar.nav.files": {
+          "react": "aside div.mt-4.shrink-0:has(a[href$=\"/logs\"]) div.flex-col.px-2 > * >> nth=1"
+        },
+        "shell.sidebar.nav.knowledge": {
+          "react": "aside a[href$=\"/knowledge\"]"
+        },
+        "shell.sidebar.nav.logs": {
+          "react": "aside a[href$=\"/logs\"]"
+        },
+        "shell.sidebar.workflows": {
+          "react": "aside .workflows-section"
+        },
+        "shell.sidebar.rail.workflows": {
+          "react": "aside .workflows-section div.px-2 > div >> nth=0"
+        },
+        "shell.sidebar.footer": {
+          "react": "aside.sidebar-container > div > div.border-t"
+        },
+        "shell.sidebar.footer.profile": {
+          "react": "aside.sidebar-container > div > div.border-t button >> nth=0"
+        },
+        "shell.sidebar.footer.help": {
+          "react": "aside button[aria-label=Help]"
+        }
+      },
+      "anchors": [
+        {
+          "id": "C4 rail gutter",
+          "point": [
+            4,
+            450
+          ],
+          "expect": {
+            "light": "#fbfbfb",
+            "dark": "#1e1e1e"
+          }
+        },
+        {
+          "id": "C5 collapsed border column",
+          "point": [
+            48,
+            450
+          ],
+          "expect": {
+            "light": "#d8d8d8",
+            "dark": "#444444"
+          }
+        },
+        {
+          "id": "S3 identity tile",
+          "point": [
+            18,
+            17
+          ],
+          "expect": {
+            "light": "#e5e5e5",
+            "dark": "#454545"
+          }
+        }
+      ],
+      "ssim": [
+        "shell.sidebar"
+      ]
+    },
+    {
+      "name": "search-palette",
+      "auth": true,
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "react": "/workspace/{workspaceId}/home",
+      "flutter": "/workspace/{workspaceId}/home",
+      "ready": {
+        "react": "aside [role=tree] a",
+        "flutter": "sidebar.tree"
+      },
+      "actions": [
+        {
+          "key": "Control+k"
+        },
+        {
+          "waitFor": {
+            "react": "[role=dialog][aria-label=Search] [cmdk-item]",
+            "flutter": "search.dialog"
+          }
+        }
+      ],
+      "ids": {
+        "search.overlay": {
+          "react": "[data-native-surface-occlusion=modal]"
+        },
+        "search.dialog": {
+          "react": "[role=dialog][aria-label=Search]"
+        },
+        "search.card": {
+          "react": "[role=dialog][aria-label=Search] > div"
+        },
+        "search.palette.input": {
+          "react": "[role=dialog] input[cmdk-input]"
+        },
+        "search.palette.list": {
+          "react": "[role=dialog] [cmdk-list]"
+        },
+        "search.palette.group.sim": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Sim\"))"
+        },
+        "search.palette.row.actions.new-chat": {
+          "react": "[cmdk-item]:has-text(\"New chat\")",
+          "text": true
+        },
+        "search.palette.row.actions.create-workflow": {
+          "react": "[cmdk-item]:has-text(\"Create workflow\")",
+          "text": true
+        },
+        "search.palette.row.actions.invite-teammates": {
+          "react": "[cmdk-item]:has-text(\"Invite teammates\")",
+          "text": true
+        },
+        "search.palette.group.pages": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Pages\"))"
+        },
+        "search.palette.row.pages.integrations": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Pages\")) [cmdk-item]:has-text(\"Integrations\")",
+          "text": true
+        },
+        "search.palette.row.pages.logs": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Pages\")) [cmdk-item]:has-text(\"Logs\")"
+        },
+        "search.palette.row.pages.settings": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Pages\")) [cmdk-item]:has-text(\"Settings\")",
+          "text": true
+        },
+        "search.palette.group.workflows": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Workflows\"))"
+        },
+        "search.palette.row.workflows.94cb2172-79b9-5f9b-a15e-210e57132b5c": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Workflows\")) [cmdk-item]:has-text(\"Empty workflow\")",
+          "text": true
+        },
+        "search.palette.row.selected": {
+          "react": "[cmdk-item][aria-selected=true]"
+        },
+        "search.palette.row.shortcut": {
+          "react": "[role=dialog] [aria-label^=\"Keyboard shortcut\"] >> nth=0"
+        },
+        "shell.sidebar.header.search": {
+          "react": "aside button[aria-label=Search]"
+        },
+        "shell.sidebar": {
+          "react": "aside.sidebar-container"
+        }
+      },
+      "children": {
+        "search.palette.list": {
+          "react": "[role=dialog] [cmdk-group]:has([cmdk-group-heading]:text-matches(\"^(Sim|Pages|Workflows|Workspaces)$\"))",
+          "flutter": "^search\\.palette\\.group\\.[a-zA-Z]+$",
+          "note": "Phase 1 scope: Tables, Knowledge Bases, Logs, Chats and Integrations need Phase 2/4 data (known-gaps row 17); widen this selector when they land"
+        },
+        "search.palette.group.sim": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Sim\")) [cmdk-item]",
+          "flutter": "^search\\.palette\\.row\\.actions\\."
+        },
+        "search.palette.group.pages": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Pages\")) [cmdk-item]",
+          "flutter": "^search\\.palette\\.row\\.pages\\."
+        },
+        "search.palette.group.workflows": {
+          "react": "[cmdk-group]:has([cmdk-group-heading]:text-is(\"Workflows\")) [cmdk-item]",
+          "flutter": "^search\\.palette\\.row\\.workflows\\."
+        }
+      },
+      "anchors": [
+        {
+          "id": "S1 dialog ring",
+          "parity": "search.dialog",
+          "at": [
+            20,
+            1
+          ],
+          "expect": {
+            "light": "#f5f5f5",
+            "dark": "#363636"
+          }
+        },
+        {
+          "id": "S2 dialog border",
+          "parity": "search.dialog",
+          "at": [
+            20,
+            0
+          ],
+          "expect": {
+            "light": "#d8d8d8",
+            "dark": "#444444"
+          }
+        },
+        {
+          "id": "S3 card interior",
+          "parity": "search.card",
+          "at": [
+            4,
+            225
+          ],
+          "expect": {
+            "light": "#fefefe",
+            "dark": "#1b1b1b"
+          }
+        },
+        {
+          "id": "S4 selected row fill",
+          "parity": "search.palette.row.actions.new-chat",
+          "at": [
+            6,
+            15
+          ],
+          "expect": {
+            "light": "#ececec",
+            "dark": "#2c2c2c"
+          }
+        },
+        {
+          "id": "S6 input band",
+          "parity": "search.card",
+          "at": [
+            20,
+            3
+          ],
+          "expect": {
+            "light": "#fefefe",
+            "dark": "#1b1b1b"
+          }
+        },
+        {
+          "id": "S7 page outside dialog",
+          "point": [
+            1200,
+            760
+          ]
+        }
+      ],
+      "ssim": [
+        "search.dialog",
+        "shell.sidebar"
+      ]
+    },
+    {
+      "name": "workspace-switcher",
+      "auth": true,
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "react": "/workspace/{workspaceId}/home",
+      "flutter": "/workspace/{workspaceId}/home",
+      "ready": {
+        "react": "aside [role=tree] a",
+        "flutter": "sidebar.tree"
+      },
+      "actions": [
+        {
+          "click": "workspace.switcher.trigger"
+        },
+        {
+          "waitFor": {
+            "react": "[role=menu] [role=menuitem]",
+            "flutter": "workspace.switcher.menu"
+          }
+        }
+      ],
+      "ids": {
+        "workspace.switcher.trigger": {
+          "react": "button[aria-label=\"Switch workspace\"]"
+        },
+        "workspace.switcher.menu": {
+          "react": "[role=menu]"
+        },
+        "workspace.switcher.menu.list": {
+          "react": "[role=menu] > div >> nth=0"
+        },
+        "workspace.switcher.menu.row.44098e20-360c-53b2-adb0-efed21a7919c": {
+          "react": "[role=menu] [role=menuitem]:has-text(\"Flutter E2E workspace\")",
+          "text": true
+        },
+        "workspace.switcher.menu.separator": {
+          "react": "[role=menu] [role=separator]"
+        },
+        "workspace.switcher.menu.new": {
+          "react": "[role=menu] [role=menuitem]:has-text(\"New workspace\")",
+          "text": true
+        },
+        "workspace.switcher.menu.invite": {
+          "react": "[role=menu] [role=menuitem]:has-text(\"Invite teammates\")",
+          "text": true
+        },
+        "shell.sidebar": {
+          "react": "aside.sidebar-container"
+        },
+        "shell.sidebar.header": {
+          "react": "aside.sidebar-container > div > div.shrink-0.items-center.pt-2"
+        }
+      },
+      "children": {
+        "workspace.switcher.menu": {
+          "react": "[role=menu] [role=menuitem]",
+          "flutter": "^workspace\\.switcher\\.menu\\.(row\\.[0-9a-f-]{36}|new|invite|invitations|org-link)$"
+        }
+      },
+      "anchors": [
+        {
+          "id": "W1 identity tile",
+          "point": [
+            18,
+            17
+          ],
+          "expect": {
+            "light": "#e5e5e5",
+            "dark": "#454545"
+          }
+        },
+        {
+          "id": "W3 trigger (open/hovered)",
+          "parity": "workspace.switcher.trigger",
+          "at": [
+            4,
+            15
+          ]
+        },
+        {
+          "id": "W4 menu surface",
+          "parity": "workspace.switcher.menu",
+          "at": [
+            8,
+            2
+          ],
+          "expect": {
+            "light": "#fefefe",
+            "dark": "#1b1b1b"
+          }
+        },
+        {
+          "id": "W5 menu border",
+          "parity": "workspace.switcher.menu",
+          "at": [
+            128,
+            0
+          ],
+          "expect": {
+            "light": "#d8d8d8",
+            "dark": "#444444"
+          }
+        },
+        {
+          "id": "W6 current row fill",
+          "parity": "workspace.switcher.menu.row.44098e20-360c-53b2-adb0-efed21a7919c",
+          "at": [
+            4,
+            15
+          ],
+          "expect": {
+            "light": "#ececec",
+            "dark": "#2c2c2c"
+          }
+        },
+        {
+          "id": "W8 separator",
+          "parity": "workspace.switcher.menu.separator",
+          "at": [
+            100,
+            0
+          ],
+          "expect": {
+            "light": "#d8d8d8",
+            "dark": "#444444"
+          }
+        }
+      ],
+      "ssim": [
+        "workspace.switcher.menu",
+        "shell.sidebar.header"
+      ]
+    }
+  ]
+}

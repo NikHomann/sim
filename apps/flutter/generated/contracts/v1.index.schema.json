@@ -1,0 +1,2229 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/index.ts",
+  "contracts": {
+    "v1AddTableColumnContract": {
+      "method": "POST",
+      "path": "/api/v1/tables/[tableId]/columns",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "column": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "description": "Optional stable column identifier.",
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 50,
+                "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                "description": "Column name used as the row-data key."
+              },
+              "type": {
+                "type": "string",
+                "enum": [
+                  "string",
+                  "number",
+                  "currency",
+                  "boolean",
+                  "date",
+                  "ttl",
+                  "json",
+                  "select"
+                ],
+                "omitEnumValuesFromOpenApi": [
+                  "ttl"
+                ],
+                "description": "Data type of values stored in the column."
+              },
+              "required": {
+                "description": "Whether inserts require a value.",
+                "type": "boolean"
+              },
+              "unique": {
+                "description": "Whether values must be unique.",
+                "type": "boolean"
+              },
+              "position": {
+                "description": "Zero-based insertion position.",
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "options": {
+                "description": "Options for a select column.",
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Stable select-option identifier."
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100,
+                      "description": "Display name of the select option."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ]
+                }
+              },
+              "multiple": {
+                "description": "Whether a select column accepts multiple values.",
+                "type": "boolean"
+              },
+              "currencyCode": {
+                "description": "ISO 4217 code for a currency column.",
+                "type": "string",
+                "pattern": "^[A-Za-z]{3}$"
+              }
+            },
+            "required": [
+              "name",
+              "type"
+            ],
+            "description": "Typed column definition to add."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "column"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1BatchCreateTableRowsContract": {
+      "method": "POST",
+      "path": "/api/v1/tables/[tableId]/rows",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "rows": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "workspaceId",
+          "rows"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1CreateKnowledgeBaseContract": {
+      "method": "POST",
+      "path": "/api/v1/knowledge",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "chunkingConfig": {
+            "default": {
+              "maxSize": 1024,
+              "minSize": 100,
+              "overlap": 200
+            },
+            "type": "object",
+            "properties": {
+              "maxSize": {
+                "default": 1024,
+                "type": "number",
+                "minimum": 100,
+                "maximum": 4000
+              },
+              "minSize": {
+                "default": 100,
+                "type": "number",
+                "minimum": 1,
+                "maximum": 2000
+              },
+              "overlap": {
+                "default": 200,
+                "type": "number",
+                "minimum": 0,
+                "maximum": 500
+              }
+            }
+          }
+        },
+        "required": [
+          "workspaceId",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1CreateTableContract": {
+      "method": "POST",
+      "path": "/api/v1/tables",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+            "description": "Table name."
+          },
+          "description": {
+            "description": "Optional table description.",
+            "type": "string",
+            "maxLength": 500
+          },
+          "schema": {
+            "type": "object",
+            "properties": {
+              "columns": {
+                "minItems": 1,
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "description": "Stable server-assigned column identifier.",
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 50,
+                      "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                      "description": "Column name used as the public row-data key."
+                    },
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "string",
+                        "number",
+                        "currency",
+                        "boolean",
+                        "date",
+                        "ttl",
+                        "json",
+                        "select"
+                      ],
+                      "omitEnumValuesFromOpenApi": [
+                        "ttl"
+                      ],
+                      "description": "Data type of values stored in the column."
+                    },
+                    "required": {
+                      "default": false,
+                      "description": "Whether inserts require a value for this column.",
+                      "type": "boolean"
+                    },
+                    "unique": {
+                      "default": false,
+                      "description": "Whether values must be unique across table rows.",
+                      "type": "boolean"
+                    },
+                    "workflowGroupId": {
+                      "description": "Workflow group whose output populates this column.",
+                      "type": "string"
+                    },
+                    "options": {
+                      "description": "Options declared for a select column.",
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "description": "Stable select-option identifier."
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100,
+                            "description": "Display name of the select option."
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name"
+                        ]
+                      }
+                    },
+                    "multiple": {
+                      "description": "Whether a select column accepts multiple options.",
+                      "type": "boolean"
+                    },
+                    "currencyCode": {
+                      "description": "ISO 4217 code for a currency column, normalized to uppercase.",
+                      "type": "string",
+                      "pattern": "^[A-Za-z]{3}$"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "type"
+                  ],
+                  "description": "A typed column in a table schema."
+                },
+                "description": "Initial typed column definitions."
+              }
+            },
+            "required": [
+              "columns"
+            ],
+            "description": "Initial table schema."
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "folderId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "schema",
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1CreateTableRowContract": {
+      "method": "POST",
+      "path": "/api/v1/tables/[tableId]/rows",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "rows": {
+                "minItems": 1,
+                "maxItems": 1000,
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "workspaceId",
+              "rows"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "data": {
+                "description": "Row cells keyed by column name."
+              },
+              "afterRowId": {
+                "description": "Row after which to insert the new row.",
+                "type": "string",
+                "minLength": 1
+              },
+              "beforeRowId": {
+                "description": "Row before which to insert the new row.",
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "workspaceId",
+              "data"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1DeleteKnowledgeBaseContract": {
+      "method": "DELETE",
+      "path": "/api/v1/knowledge/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1DeleteKnowledgeDocumentContract": {
+      "method": "DELETE",
+      "path": "/api/v1/knowledge/[id]/documents/[documentId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1DeleteTableColumnContract": {
+      "method": "DELETE",
+      "path": "/api/v1/tables/[tableId]/columns",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "columnName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+            "description": "Name of the column to delete."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "columnName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1DeleteTableContract": {
+      "method": "DELETE",
+      "path": "/api/v1/tables/[tableId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1DeleteTableRowContract": {
+      "method": "DELETE",
+      "path": "/api/v1/tables/[tableId]/rows/[rowId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          },
+          "rowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table row identifier."
+          }
+        },
+        "required": [
+          "tableId",
+          "rowId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1DeleteTableRowsContract": {
+      "method": "DELETE",
+      "path": "/api/v1/tables/[tableId]/rows",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "filter": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/TablePredicate"
+              },
+              {}
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "rowIds": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "$defs": {
+          "TablePredicate": {
+            "id": "TablePredicate",
+            "title": "Table predicate",
+            "description": "Recursive non-empty `all`/`any` groups containing groups or conditions; the root cannot be a condition. Limits: 100 members per group, 10 levels, and 500 nodes. The negating operators include nulls and absent cells, multi-select included; combine with `isNotNull` or `isNotEmpty` to exclude them. Pattern operators use `*` as the only wildcard; `%`, `_`, and backslash are literal. Select operators: single-select uses `eq`/`ne`/`in`/`nin`; multi-select uses `contains`/`ncontains`; option names resolve to IDs. Full operand rules are documented on `op`.",
+            "type": "object",
+            "oneOf": [
+              {
+                "type": "object",
+                "description": "Matches a row when every member matches.",
+                "properties": {
+                  "all": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "Members combined with AND. An empty group is rejected, because it would compile to no filter at all.",
+                    "items": {
+                      "description": "A nested group, or a single condition.",
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/TablePredicate"
+                        },
+                        {
+                          "type": "object",
+                          "title": "Predicate condition",
+                          "description": "One column comparison.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128,
+                              "description": "Column name to compare, or one of the system fields `id`, `createdAt`, `updatedAt`."
+                            },
+                            "op": {
+                              "type": "string",
+                              "enum": [
+                                "eq",
+                                "ne",
+                                "gt",
+                                "gte",
+                                "lt",
+                                "lte",
+                                "in",
+                                "nin",
+                                "contains",
+                                "ncontains",
+                                "startsWith",
+                                "endsWith",
+                                "like",
+                                "ilike",
+                                "nlike",
+                                "nilike",
+                                "isEmpty",
+                                "isNotEmpty",
+                                "isNull",
+                                "isNotNull"
+                              ],
+                              "description": "Operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`; `in`/`nin` take arrays; `isEmpty`, `isNotEmpty`, `isNull`, and `isNotNull` take no operand. Text operators are `contains`, `ncontains`, `startsWith`, `endsWith`, `like`, `nlike`, `ilike`, and `nilike`. Contains variants are case-insensitive and literal; `like`/`nlike` are case-sensitive, while `ilike`/`nilike` are case-insensitive. `*` is the only wildcard; `%`, `_`, and backslash are literal. For `select` columns, single-select accepts `eq`, `ne`, `in`, `nin`; multi-select accepts `contains`, `ncontains`. Option names resolve to IDs."
+                            },
+                            "value": {
+                              "description": "Operand. A scalar for the comparison operators, an array of at most 1000 entries for `in`/`nin`, a pattern for the matching operators, and omitted for `isEmpty`/`isNotEmpty`/`isNull`/`isNotNull`."
+                            }
+                          },
+                          "required": [
+                            "field",
+                            "op"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "all"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "description": "Matches a row when at least one member matches.",
+                "properties": {
+                  "any": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "Members combined with OR. An empty group is rejected, because it would compile to no filter at all.",
+                    "items": {
+                      "description": "A nested group, or a single condition.",
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/TablePredicate"
+                        },
+                        {
+                          "type": "object",
+                          "title": "Predicate condition",
+                          "description": "One column comparison.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128,
+                              "description": "Column name to compare, or one of the system fields `id`, `createdAt`, `updatedAt`."
+                            },
+                            "op": {
+                              "type": "string",
+                              "enum": [
+                                "eq",
+                                "ne",
+                                "gt",
+                                "gte",
+                                "lt",
+                                "lte",
+                                "in",
+                                "nin",
+                                "contains",
+                                "ncontains",
+                                "startsWith",
+                                "endsWith",
+                                "like",
+                                "ilike",
+                                "nlike",
+                                "nilike",
+                                "isEmpty",
+                                "isNotEmpty",
+                                "isNull",
+                                "isNotNull"
+                              ],
+                              "description": "Operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`; `in`/`nin` take arrays; `isEmpty`, `isNotEmpty`, `isNull`, and `isNotNull` take no operand. Text operators are `contains`, `ncontains`, `startsWith`, `endsWith`, `like`, `nlike`, `ilike`, and `nilike`. Contains variants are case-insensitive and literal; `like`/`nlike` are case-sensitive, while `ilike`/`nilike` are case-insensitive. `*` is the only wildcard; `%`, `_`, and backslash are literal. For `select` columns, single-select accepts `eq`, `ne`, `in`, `nin`; multi-select accepts `contains`, `ncontains`. Option names resolve to IDs."
+                            },
+                            "value": {
+                              "description": "Operand. A scalar for the comparison operators, an array of at most 1000 entries for `in`/`nin`, a pattern for the matching operators, and omitted for `isEmpty`/`isNotEmpty`/`isNull`/`isNotNull`."
+                            }
+                          },
+                          "required": [
+                            "field",
+                            "op"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "any"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1GetKnowledgeBaseContract": {
+      "method": "GET",
+      "path": "/api/v1/knowledge/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1GetKnowledgeDocumentContract": {
+      "method": "GET",
+      "path": "/api/v1/knowledge/[id]/documents/[documentId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "documentId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1GetTableContract": {
+      "method": "GET",
+      "path": "/api/v1/tables/[tableId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1GetTableRowContract": {
+      "method": "GET",
+      "path": "/api/v1/tables/[tableId]/rows/[rowId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          },
+          "rowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table row identifier."
+          }
+        },
+        "required": [
+          "tableId",
+          "rowId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1KnowledgeSearchContract": {
+      "method": "POST",
+      "path": "/api/v1/knowledge/search",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "knowledgeBaseIds": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "minItems": 1,
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            ]
+          },
+          "query": {
+            "type": "string"
+          },
+          "topK": {
+            "default": 10,
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "tagFilters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "tagName": {
+                  "type": "string"
+                },
+                "fieldType": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "number",
+                    "date",
+                    "boolean"
+                  ]
+                },
+                "operator": {
+                  "default": "eq",
+                  "type": "string",
+                  "enum": [
+                    "eq",
+                    "neq",
+                    "contains",
+                    "not_contains",
+                    "starts_with",
+                    "ends_with",
+                    "gt",
+                    "gte",
+                    "lt",
+                    "lte",
+                    "between"
+                  ]
+                },
+                "value": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                "valueTo": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "tagName",
+                "value"
+              ]
+            }
+          },
+          "searchMode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "vector",
+                  "hybrid"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "knowledgeBaseIds"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1ListKnowledgeBasesContract": {
+      "method": "GET",
+      "path": "/api/v1/knowledge",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1ListKnowledgeDocumentsContract": {
+      "method": "GET",
+      "path": "/api/v1/knowledge/[id]/documents",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "search": {
+            "type": "string"
+          },
+          "enabledFilter": {
+            "default": "all",
+            "type": "string",
+            "enum": [
+              "all",
+              "enabled",
+              "disabled"
+            ]
+          },
+          "sortBy": {
+            "default": "uploadedAt",
+            "type": "string",
+            "enum": [
+              "filename",
+              "fileSize",
+              "tokenCount",
+              "chunkCount",
+              "uploadedAt",
+              "processingStatus",
+              "enabled"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1ListTableRowsContract": {
+      "method": "GET",
+      "path": "/api/v1/tables/[tableId]/rows",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "filter": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {}
+            ]
+          },
+          "sort": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {}
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          },
+          "offset": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "includeTotal": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1ListTablesContract": {
+      "method": "GET",
+      "path": "/api/v1/tables",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1UpdateKnowledgeBaseContract": {
+      "method": "PUT",
+      "path": "/api/v1/knowledge/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "chunkingConfig": {
+            "type": "object",
+            "properties": {
+              "maxSize": {
+                "type": "number",
+                "minimum": 100,
+                "maximum": 4000
+              },
+              "minSize": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 2000
+              },
+              "overlap": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 500
+              }
+            },
+            "required": [
+              "maxSize",
+              "minSize",
+              "overlap"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1UpdateRowsByFilterContract": {
+      "method": "PUT",
+      "path": "/api/v1/tables/[tableId]/rows",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "filter": {
+            "anyOf": [
+              {
+                "$ref": "#/$defs/TablePredicate"
+              },
+              {}
+            ]
+          },
+          "data": {
+            "description": "Row-data patch applied to every matching row."
+          },
+          "limit": {
+            "description": "Maximum matching rows to update.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        },
+        "required": [
+          "workspaceId",
+          "filter",
+          "data"
+        ],
+        "$defs": {
+          "TablePredicate": {
+            "id": "TablePredicate",
+            "title": "Table predicate",
+            "description": "Recursive non-empty `all`/`any` groups containing groups or conditions; the root cannot be a condition. Limits: 100 members per group, 10 levels, and 500 nodes. The negating operators include nulls and absent cells, multi-select included; combine with `isNotNull` or `isNotEmpty` to exclude them. Pattern operators use `*` as the only wildcard; `%`, `_`, and backslash are literal. Select operators: single-select uses `eq`/`ne`/`in`/`nin`; multi-select uses `contains`/`ncontains`; option names resolve to IDs. Full operand rules are documented on `op`.",
+            "type": "object",
+            "oneOf": [
+              {
+                "type": "object",
+                "description": "Matches a row when every member matches.",
+                "properties": {
+                  "all": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "Members combined with AND. An empty group is rejected, because it would compile to no filter at all.",
+                    "items": {
+                      "description": "A nested group, or a single condition.",
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/TablePredicate"
+                        },
+                        {
+                          "type": "object",
+                          "title": "Predicate condition",
+                          "description": "One column comparison.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128,
+                              "description": "Column name to compare, or one of the system fields `id`, `createdAt`, `updatedAt`."
+                            },
+                            "op": {
+                              "type": "string",
+                              "enum": [
+                                "eq",
+                                "ne",
+                                "gt",
+                                "gte",
+                                "lt",
+                                "lte",
+                                "in",
+                                "nin",
+                                "contains",
+                                "ncontains",
+                                "startsWith",
+                                "endsWith",
+                                "like",
+                                "ilike",
+                                "nlike",
+                                "nilike",
+                                "isEmpty",
+                                "isNotEmpty",
+                                "isNull",
+                                "isNotNull"
+                              ],
+                              "description": "Operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`; `in`/`nin` take arrays; `isEmpty`, `isNotEmpty`, `isNull`, and `isNotNull` take no operand. Text operators are `contains`, `ncontains`, `startsWith`, `endsWith`, `like`, `nlike`, `ilike`, and `nilike`. Contains variants are case-insensitive and literal; `like`/`nlike` are case-sensitive, while `ilike`/`nilike` are case-insensitive. `*` is the only wildcard; `%`, `_`, and backslash are literal. For `select` columns, single-select accepts `eq`, `ne`, `in`, `nin`; multi-select accepts `contains`, `ncontains`. Option names resolve to IDs."
+                            },
+                            "value": {
+                              "description": "Operand. A scalar for the comparison operators, an array of at most 1000 entries for `in`/`nin`, a pattern for the matching operators, and omitted for `isEmpty`/`isNotEmpty`/`isNull`/`isNotNull`."
+                            }
+                          },
+                          "required": [
+                            "field",
+                            "op"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "all"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "description": "Matches a row when at least one member matches.",
+                "properties": {
+                  "any": {
+                    "type": "array",
+                    "minItems": 1,
+                    "maxItems": 100,
+                    "description": "Members combined with OR. An empty group is rejected, because it would compile to no filter at all.",
+                    "items": {
+                      "description": "A nested group, or a single condition.",
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/TablePredicate"
+                        },
+                        {
+                          "type": "object",
+                          "title": "Predicate condition",
+                          "description": "One column comparison.",
+                          "properties": {
+                            "field": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128,
+                              "description": "Column name to compare, or one of the system fields `id`, `createdAt`, `updatedAt`."
+                            },
+                            "op": {
+                              "type": "string",
+                              "enum": [
+                                "eq",
+                                "ne",
+                                "gt",
+                                "gte",
+                                "lt",
+                                "lte",
+                                "in",
+                                "nin",
+                                "contains",
+                                "ncontains",
+                                "startsWith",
+                                "endsWith",
+                                "like",
+                                "ilike",
+                                "nlike",
+                                "nilike",
+                                "isEmpty",
+                                "isNotEmpty",
+                                "isNull",
+                                "isNotNull"
+                              ],
+                              "description": "Operators: `eq`, `ne`, `gt`, `gte`, `lt`, `lte`; `in`/`nin` take arrays; `isEmpty`, `isNotEmpty`, `isNull`, and `isNotNull` take no operand. Text operators are `contains`, `ncontains`, `startsWith`, `endsWith`, `like`, `nlike`, `ilike`, and `nilike`. Contains variants are case-insensitive and literal; `like`/`nlike` are case-sensitive, while `ilike`/`nilike` are case-insensitive. `*` is the only wildcard; `%`, `_`, and backslash are literal. For `select` columns, single-select accepts `eq`, `ne`, `in`, `nin`; multi-select accepts `contains`, `ncontains`. Option names resolve to IDs."
+                            },
+                            "value": {
+                              "description": "Operand. A scalar for the comparison operators, an array of at most 1000 entries for `in`/`nin`, a pattern for the matching operators, and omitted for `isEmpty`/`isNotEmpty`/`isNull`/`isNotNull`."
+                            }
+                          },
+                          "required": [
+                            "field",
+                            "op"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ]
+                    }
+                  }
+                },
+                "required": [
+                  "any"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1UpdateTableColumnContract": {
+      "method": "PATCH",
+      "path": "/api/v1/tables/[tableId]/columns",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "columnName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50,
+            "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+            "description": "Current name of the column to update."
+          },
+          "updates": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "description": "New column name.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 50,
+                "pattern": "^[A-Za-z_][A-Za-z0-9_]*$"
+              },
+              "type": {
+                "description": "New column data type.",
+                "type": "string",
+                "enum": [
+                  "string",
+                  "number",
+                  "currency",
+                  "boolean",
+                  "date",
+                  "ttl",
+                  "json",
+                  "select"
+                ],
+                "omitEnumValuesFromOpenApi": [
+                  "ttl"
+                ]
+              },
+              "required": {
+                "description": "New required-value setting.",
+                "type": "boolean"
+              },
+              "unique": {
+                "description": "New uniqueness setting.",
+                "type": "boolean"
+              },
+              "options": {
+                "description": "Replacement select options.",
+                "maxItems": 100,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Stable select-option identifier."
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100,
+                      "description": "Display name of the select option."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name"
+                  ]
+                }
+              },
+              "multiple": {
+                "description": "New multi-select setting.",
+                "type": "boolean"
+              },
+              "currencyCode": {
+                "description": "New ISO 4217 currency code.",
+                "type": "string",
+                "pattern": "^[A-Za-z]{3}$"
+              }
+            },
+            "description": "Column fields to update."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "columnName",
+          "updates"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1UpdateTableRowContract": {
+      "method": "PATCH",
+      "path": "/api/v1/tables/[tableId]/rows/[rowId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          },
+          "rowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table row identifier."
+          }
+        },
+        "required": [
+          "tableId",
+          "rowId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "data": {
+            "description": "Partial row-data patch keyed by column name."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "data"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1UploadKnowledgeDocumentContract": {
+      "method": "POST",
+      "path": "/api/v1/knowledge/[id]/documents",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1UpsertTableRowContract": {
+      "method": "POST",
+      "path": "/api/v1/tables/[tableId]/rows/upsert",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "data": {
+            "description": "Row cells keyed by column name."
+          },
+          "conflictTarget": {
+            "description": "Unique column used to detect a conflict.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId",
+          "data"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {}
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

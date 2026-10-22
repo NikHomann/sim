@@ -1,0 +1,46 @@
+{
+  "source": "apps/sim/lib/api/contracts/realtime-file-lists.ts",
+  "contracts": {
+    "projectFileListAccessContract": {
+      "method": "POST",
+      "path": "/api/internal/project-file-list/[projectId]/access",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "pattern": "^[^/:\\s]+$"
+          }
+        },
+        "required": [
+          "projectId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "projectId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "canRead": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "projectId",
+            "canRead"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

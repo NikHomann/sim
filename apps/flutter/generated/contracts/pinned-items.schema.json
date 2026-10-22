@@ -1,0 +1,228 @@
+{
+  "source": "apps/sim/lib/api/contracts/pinned-items.ts",
+  "contracts": {
+    "createPinnedItemContract": {
+      "method": "POST",
+      "path": "/api/pinned-items",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "workflow",
+              "file",
+              "knowledge_base",
+              "table",
+              "folder",
+              "workspace"
+            ]
+          },
+          "resourceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "workspaceId",
+          "resourceType",
+          "resourceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "pinnedItem": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "string"
+                },
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "workflow",
+                    "file",
+                    "knowledge_base",
+                    "table",
+                    "folder",
+                    "workspace"
+                  ]
+                },
+                "resourceId": {
+                  "type": "string"
+                },
+                "pinnedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "workspaceId",
+                "resourceType",
+                "resourceId",
+                "pinnedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "pinnedItem"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deletePinnedItemContract": {
+      "method": "DELETE",
+      "path": "/api/pinned-items/[resourceType]/[resourceId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "workflow",
+              "file",
+              "knowledge_base",
+              "table",
+              "folder",
+              "workspace"
+            ]
+          },
+          "resourceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "resourceType",
+          "resourceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listPinnedItemsContract": {
+      "method": "GET",
+      "path": "/api/pinned-items",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "workflow",
+              "file",
+              "knowledge_base",
+              "table",
+              "folder",
+              "workspace"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "pinnedItems": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "workspaceId": {
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "type": "string",
+                    "enum": [
+                      "workflow",
+                      "file",
+                      "knowledge_base",
+                      "table",
+                      "folder",
+                      "workspace"
+                    ]
+                  },
+                  "resourceId": {
+                    "type": "string"
+                  },
+                  "pinnedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "userId",
+                  "workspaceId",
+                  "resourceType",
+                  "resourceId",
+                  "pinnedAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "pinnedItems"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

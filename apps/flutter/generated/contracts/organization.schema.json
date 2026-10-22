@@ -1,0 +1,4781 @@
+{
+  "source": "apps/sim/lib/api/contracts/organization.ts",
+  "contracts": {
+    "addOrganizationDomainContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/domains",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 253
+          }
+        },
+        "required": [
+          "domain"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "domain": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "verified"
+                      ]
+                    },
+                    "verifiedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "challengeHost": {
+                      "type": "string"
+                    },
+                    "txtRecordValue": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "domain",
+                    "status",
+                    "verifiedAt",
+                    "challengeHost",
+                    "txtRecordValue"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "domain"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createOrganizationContract": {
+      "method": "POST",
+      "path": "/api/organizations",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "slug": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "organizationId": {
+              "type": "string"
+            },
+            "created": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success",
+            "organizationId",
+            "created"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getMemberRemovalImpactContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/removal-impact",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "credentials": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "workspaceId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "displayName",
+                  "type",
+                  "workspaceId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "credentials"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationBillingSummaryContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/billing-summary",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "subscriptionState": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "free",
+                    "lapsed"
+                  ]
+                },
+                "subscriptionPlan": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "subscriptionStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "creditBalance": {
+                  "type": "number"
+                },
+                "billingInterval": {
+                  "type": "string",
+                  "enum": [
+                    "month",
+                    "year"
+                  ]
+                },
+                "cancelAtPeriodEnd": {
+                  "type": "boolean"
+                },
+                "totalSeats": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "totalCurrentUsage": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "totalUsageLimit": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "minimumBillingAmount": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "billingPeriodEnd": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "billingBlocked": {
+                  "type": "boolean"
+                },
+                "billingBlockedReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "payment_failed",
+                        "dispute"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "blockedByOrgOwner": {
+                  "type": "boolean"
+                },
+                "upgradeWorkspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Unique workspace identifier."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "userRole": {
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "owner"
+                  ]
+                }
+              },
+              "required": [
+                "organizationId",
+                "subscriptionState",
+                "subscriptionPlan",
+                "subscriptionStatus",
+                "creditBalance",
+                "billingInterval",
+                "cancelAtPeriodEnd",
+                "totalSeats",
+                "totalCurrentUsage",
+                "totalUsageLimit",
+                "minimumBillingAmount",
+                "billingPeriodEnd",
+                "billingBlocked",
+                "billingBlockedReason",
+                "blockedByOrgOwner",
+                "upgradeWorkspaceId",
+                "userRole"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "include": {
+            "type": "string",
+            "maxLength": 100
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "type": "string"
+                },
+                "logo": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "metadata": {
+                  "description": "Organization-defined JSON metadata."
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "seats": {
+                  "type": "object",
+                  "properties": {
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "organizationName": {
+                      "type": "string"
+                    },
+                    "currentSeats": {
+                      "type": "number"
+                    },
+                    "maxSeats": {
+                      "type": "number"
+                    },
+                    "availableSeats": {
+                      "type": "number"
+                    },
+                    "subscriptionPlan": {
+                      "type": "string"
+                    },
+                    "canAddSeats": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "organizationId",
+                    "organizationName",
+                    "currentSeats",
+                    "maxSeats",
+                    "availableSeats",
+                    "subscriptionPlan",
+                    "canAddSeats"
+                  ],
+                  "additionalProperties": false
+                },
+                "seatAnalytics": {
+                  "type": "object",
+                  "properties": {
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "organizationName": {
+                      "type": "string"
+                    },
+                    "currentSeats": {
+                      "type": "number"
+                    },
+                    "maxSeats": {
+                      "type": "number"
+                    },
+                    "availableSeats": {
+                      "type": "number"
+                    },
+                    "subscriptionPlan": {
+                      "type": "string"
+                    },
+                    "canAddSeats": {
+                      "type": "boolean"
+                    },
+                    "utilizationRate": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "organizationId",
+                    "organizationName",
+                    "currentSeats",
+                    "maxSeats",
+                    "availableSeats",
+                    "subscriptionPlan",
+                    "canAddSeats",
+                    "utilizationRate"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "logo",
+                "metadata",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            },
+            "userRole": {
+              "type": "string",
+              "enum": [
+                "owner",
+                "admin",
+                "member"
+              ]
+            },
+            "hasAdminAccess": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success",
+            "data",
+            "userRole",
+            "hasAdminAccess"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationDataRetentionContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/data-retention",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "isEnterprise": {
+                  "type": "boolean"
+                },
+                "defaults": {
+                  "type": "object",
+                  "properties": {
+                    "logRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "softDeleteRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskCleanupHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fileVersionRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "piiRedaction": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "rules": {
+                              "maxItems": 1000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "workspaceId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "stages": {},
+                                  "entityTypes": {
+                                    "maxItems": 100,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "language": {
+                                    "type": "string",
+                                    "enum": [
+                                      "en",
+                                      "es",
+                                      "it",
+                                      "pl",
+                                      "fi"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "workspaceId"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "rules"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "retentionOverrides": {
+                      "anyOf": [
+                        {
+                          "maxItems": 1000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workspaceId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128,
+                                "description": "Unique workspace identifier."
+                              },
+                              "logRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "softDeleteRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "taskCleanupHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "fileVersionRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "logRetentionHours",
+                    "softDeleteRetentionHours",
+                    "taskCleanupHours",
+                    "fileVersionRetentionHours",
+                    "piiRedaction",
+                    "retentionOverrides"
+                  ],
+                  "additionalProperties": false
+                },
+                "configured": {
+                  "type": "object",
+                  "properties": {
+                    "logRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "softDeleteRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskCleanupHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fileVersionRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "piiRedaction": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "rules": {
+                              "maxItems": 1000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "workspaceId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "stages": {},
+                                  "entityTypes": {
+                                    "maxItems": 100,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "language": {
+                                    "type": "string",
+                                    "enum": [
+                                      "en",
+                                      "es",
+                                      "it",
+                                      "pl",
+                                      "fi"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "workspaceId"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "rules"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "retentionOverrides": {
+                      "anyOf": [
+                        {
+                          "maxItems": 1000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workspaceId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128,
+                                "description": "Unique workspace identifier."
+                              },
+                              "logRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "softDeleteRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "taskCleanupHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "fileVersionRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "logRetentionHours",
+                    "softDeleteRetentionHours",
+                    "taskCleanupHours",
+                    "fileVersionRetentionHours",
+                    "piiRedaction",
+                    "retentionOverrides"
+                  ],
+                  "additionalProperties": false
+                },
+                "effective": {
+                  "type": "object",
+                  "properties": {
+                    "logRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "softDeleteRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskCleanupHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fileVersionRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "piiRedaction": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "rules": {
+                              "maxItems": 1000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "workspaceId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "stages": {},
+                                  "entityTypes": {
+                                    "maxItems": 100,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "language": {
+                                    "type": "string",
+                                    "enum": [
+                                      "en",
+                                      "es",
+                                      "it",
+                                      "pl",
+                                      "fi"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "workspaceId"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "rules"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "retentionOverrides": {
+                      "anyOf": [
+                        {
+                          "maxItems": 1000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workspaceId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128,
+                                "description": "Unique workspace identifier."
+                              },
+                              "logRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "softDeleteRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "taskCleanupHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "fileVersionRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "logRetentionHours",
+                    "softDeleteRetentionHours",
+                    "taskCleanupHours",
+                    "fileVersionRetentionHours",
+                    "piiRedaction",
+                    "retentionOverrides"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "isEnterprise",
+                "defaults",
+                "configured",
+                "effective"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationMemberUsageLimitContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/members/[memberId]/usage-limit",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memberId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "memberId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "creditsUsed": {
+                  "type": "number"
+                },
+                "creditLimit": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "billingInterval": {
+                  "type": "string",
+                  "enum": [
+                    "month",
+                    "year"
+                  ]
+                }
+              },
+              "required": [
+                "creditsUsed",
+                "creditLimit",
+                "billingInterval"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationPlanSeatsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/billing-plan",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "subscriptionPlan": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "subscriptionStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "totalSeats": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "usedSeats": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "membersTotal": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "hasEnterprisePlan": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "organizationId",
+                "subscriptionPlan",
+                "subscriptionStatus",
+                "totalSeats",
+                "usedSeats",
+                "membersTotal",
+                "hasEnterprisePlan"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationRosterContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/roster",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "members": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "memberId": {
+                        "type": "string"
+                      },
+                      "userId": {
+                        "type": "string"
+                      },
+                      "role": {
+                        "type": "string",
+                        "enum": [
+                          "owner",
+                          "admin",
+                          "member",
+                          "external"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "image": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "suspendedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "workspaces": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "workspaceId": {
+                              "type": "string"
+                            },
+                            "workspaceName": {
+                              "type": "string"
+                            },
+                            "permission": {
+                              "type": "string",
+                              "enum": [
+                                "admin",
+                                "write",
+                                "read"
+                              ]
+                            },
+                            "roleSource": {
+                              "type": "string",
+                              "enum": [
+                                "owner",
+                                "explicit",
+                                "org-admin"
+                              ]
+                            },
+                            "isBilledAccount": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "workspaceId",
+                            "workspaceName",
+                            "permission",
+                            "roleSource",
+                            "isBilledAccount"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "memberId",
+                      "userId",
+                      "role",
+                      "createdAt",
+                      "name",
+                      "email",
+                      "image",
+                      "suspendedAt",
+                      "workspaces"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "pendingInvitations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "role": {
+                        "type": "string"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "organization",
+                          "workspace"
+                        ]
+                      },
+                      "membershipIntent": {
+                        "type": "string",
+                        "enum": [
+                          "internal",
+                          "external"
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      },
+                      "expiresAt": {
+                        "type": "string"
+                      },
+                      "inviteeName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "inviteeImage": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "workspaces": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "workspaceId": {
+                              "type": "string"
+                            },
+                            "workspaceName": {
+                              "type": "string"
+                            },
+                            "permission": {
+                              "type": "string",
+                              "enum": [
+                                "admin",
+                                "write",
+                                "read"
+                              ]
+                            },
+                            "roleSource": {
+                              "type": "string",
+                              "enum": [
+                                "owner",
+                                "explicit",
+                                "org-admin"
+                              ]
+                            },
+                            "isBilledAccount": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "workspaceId",
+                            "workspaceName",
+                            "permission",
+                            "roleSource",
+                            "isBilledAccount"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email",
+                      "role",
+                      "kind",
+                      "createdAt",
+                      "expiresAt",
+                      "inviteeName",
+                      "inviteeImage",
+                      "workspaces"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "workspaces": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "members",
+                "pendingInvitations",
+                "workspaces"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationSessionPolicyContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/session-policy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "isEnterprise": {
+                  "type": "boolean"
+                },
+                "configured": {
+                  "type": "object",
+                  "properties": {
+                    "maxSessionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "idleTimeoutHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "maxSessionHours",
+                    "idleTimeoutHours"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "isEnterprise",
+                "configured"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationSsoPolicyContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/sso-policy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "requireSso": {
+                  "type": "boolean"
+                },
+                "hasVerifiedProvider": {
+                  "type": "boolean"
+                },
+                "isEnforced": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "requireSso",
+                "hasVerifiedProvider",
+                "isEnforced"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationSurfaceContextContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/surface-context",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "context": {
+              "type": "object",
+              "properties": {
+                "organization": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "slug": {
+                      "type": "string"
+                    },
+                    "logo": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "memberCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "slug",
+                    "logo",
+                    "memberCount"
+                  ],
+                  "additionalProperties": false
+                },
+                "viewer": {
+                  "type": "object",
+                  "properties": {
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "owner",
+                        "admin",
+                        "member"
+                      ]
+                    },
+                    "isAdmin": {
+                      "type": "boolean"
+                    },
+                    "canInviteMembers": {
+                      "type": "boolean"
+                    },
+                    "canConnectSearchIntegrations": {
+                      "type": "boolean"
+                    },
+                    "canUsePersonalApiKeys": {
+                      "type": "boolean"
+                    },
+                    "canUseSearchMcp": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "role",
+                    "isAdmin",
+                    "canInviteMembers",
+                    "canConnectSearchIntegrations",
+                    "canUsePersonalApiKeys",
+                    "canUseSearchMcp"
+                  ],
+                  "additionalProperties": false
+                },
+                "connectedAccountsAvailable": {
+                  "type": "boolean"
+                },
+                "mothershipAvailable": {
+                  "type": "boolean"
+                },
+                "canBuild": {
+                  "type": "boolean"
+                },
+                "searchAccess": {
+                  "type": "object",
+                  "properties": {
+                    "sourceMirrored": {
+                      "type": "boolean"
+                    },
+                    "memberScoped": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "sourceMirrored",
+                    "memberScoped"
+                  ],
+                  "additionalProperties": false
+                },
+                "settingsFeatures": {
+                  "type": "object",
+                  "properties": {
+                    "billingEnabled": {
+                      "type": "boolean"
+                    },
+                    "hasEnterprisePlan": {
+                      "type": "boolean"
+                    },
+                    "governanceActive": {
+                      "type": "boolean"
+                    },
+                    "hosted": {
+                      "type": "boolean"
+                    },
+                    "selfHosted": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "boolean"
+                      }
+                    }
+                  },
+                  "required": [
+                    "billingEnabled",
+                    "hasEnterprisePlan",
+                    "governanceActive",
+                    "hosted",
+                    "selfHosted"
+                  ],
+                  "additionalProperties": false
+                },
+                "deployment": {
+                  "type": "object",
+                  "properties": {
+                    "hosted": {
+                      "type": "boolean"
+                    },
+                    "billingEnabled": {
+                      "type": "boolean"
+                    },
+                    "chatEnabled": {
+                      "type": "boolean"
+                    },
+                    "azureConfigured": {
+                      "type": "boolean"
+                    },
+                    "cohereConfigured": {
+                      "type": "boolean"
+                    },
+                    "features": {
+                      "type": "object",
+                      "properties": {
+                        "accessControl": {
+                          "type": "boolean"
+                        },
+                        "auditLogs": {
+                          "type": "boolean"
+                        },
+                        "customBlocks": {
+                          "type": "boolean"
+                        },
+                        "dataDrains": {
+                          "type": "boolean"
+                        },
+                        "dataRetention": {
+                          "type": "boolean"
+                        },
+                        "inbox": {
+                          "type": "boolean"
+                        },
+                        "sandboxes": {
+                          "type": "boolean"
+                        },
+                        "scim": {
+                          "type": "boolean"
+                        },
+                        "sessionPolicies": {
+                          "type": "boolean"
+                        },
+                        "sso": {
+                          "type": "boolean"
+                        },
+                        "usageMonitoring": {
+                          "type": "boolean"
+                        },
+                        "whitelabeling": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "accessControl",
+                        "auditLogs",
+                        "customBlocks",
+                        "dataDrains",
+                        "dataRetention",
+                        "inbox",
+                        "sandboxes",
+                        "scim",
+                        "sessionPolicies",
+                        "sso",
+                        "usageMonitoring",
+                        "whitelabeling"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "hosted",
+                    "billingEnabled",
+                    "chatEnabled",
+                    "azureConfigured",
+                    "cohereConfigured",
+                    "features"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "organization",
+                "viewer",
+                "connectedAccountsAvailable",
+                "mothershipAvailable",
+                "canBuild",
+                "searchAccess",
+                "settingsFeatures",
+                "deployment"
+              ],
+              "additionalProperties": false
+            },
+            "flags": {
+              "type": "object",
+              "properties": {
+                "dashboards": {
+                  "type": "boolean"
+                },
+                "workflow-tests": {
+                  "type": "boolean"
+                },
+                "changelog": {
+                  "type": "boolean"
+                },
+                "mothership-model-selector": {
+                  "type": "boolean"
+                },
+                "mothership-computer-use": {
+                  "type": "boolean"
+                },
+                "mothership-plan-mode": {
+                  "type": "boolean"
+                },
+                "projects": {
+                  "type": "boolean"
+                },
+                "mothership-memory-spaces": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "dashboards",
+                "workflow-tests",
+                "changelog",
+                "mothership-model-selector",
+                "mothership-computer-use",
+                "mothership-plan-mode",
+                "projects",
+                "mothership-memory-spaces"
+              ],
+              "additionalProperties": false
+            },
+            "benchmarkEnabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "context",
+            "flags",
+            "benchmarkEnabled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationWhitelabelContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/whitelabel",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "brandName": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "type": "string"
+                },
+                "wordmarkUrl": {
+                  "type": "string"
+                },
+                "primaryColor": {
+                  "type": "string"
+                },
+                "primaryHoverColor": {
+                  "type": "string"
+                },
+                "accentColor": {
+                  "type": "string"
+                },
+                "accentHoverColor": {
+                  "type": "string"
+                },
+                "supportEmail": {
+                  "type": "string"
+                },
+                "documentationUrl": {
+                  "type": "string"
+                },
+                "termsUrl": {
+                  "type": "string"
+                },
+                "privacyUrl": {
+                  "type": "string"
+                },
+                "hidePoweredBySim": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            },
+            "isEnterprise": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listOrganizationDomainsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/domains",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "isEnterprise": {
+                  "type": "boolean"
+                },
+                "domains": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "domain": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "pending",
+                          "verified"
+                        ]
+                      },
+                      "verifiedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "challengeHost": {
+                        "type": "string"
+                      },
+                      "txtRecordValue": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "domain",
+                      "status",
+                      "verifiedAt",
+                      "challengeHost",
+                      "txtRecordValue"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "isEnterprise",
+                "domains"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listOrganizationMembersContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/members",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "include": {
+            "type": "string",
+            "enum": [
+              "usage"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "organizationId": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string",
+                    "enum": [
+                      "owner",
+                      "admin",
+                      "member"
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "userEmail": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "currentPeriodCost": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "currentUsageLimit": {
+                    "anyOf": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "usageLimitUpdatedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "billingPeriodStart": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "billingPeriodEnd": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "userId",
+                  "organizationId",
+                  "role",
+                  "createdAt",
+                  "userName",
+                  "userEmail"
+                ],
+                "additionalProperties": {}
+              }
+            },
+            "total": {
+              "type": "number"
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "limit": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 100
+                },
+                "offset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "total",
+                "limit",
+                "offset",
+                "hasMore"
+              ],
+              "additionalProperties": false
+            },
+            "userRole": {
+              "type": "string",
+              "enum": [
+                "owner",
+                "admin",
+                "member"
+              ]
+            },
+            "hasAdminAccess": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success",
+            "data",
+            "total",
+            "pagination",
+            "userRole",
+            "hasAdminAccess"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "removeOrganizationDomainContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/domains/[domainId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "domainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "domainId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "removeOrganizationMemberContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/members/[memberId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memberId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "memberId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "revokeOrganizationSessionsContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/sessions/revoke",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "revokedSessions": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "revokedSessions"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "transferOwnershipContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/transfer-ownership",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "newOwnerUserId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "alsoLeave": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "newOwnerUserId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "transferred": {
+              "type": "boolean"
+            },
+            "left": {
+              "type": "boolean"
+            },
+            "warning": {
+              "type": "string"
+            },
+            "details": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "transferred",
+            "left"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateOrganizationContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "slug": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-z0-9-_]+$"
+          },
+          "logo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "slug": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "logo": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "slug",
+                "logo",
+                "updatedAt"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateOrganizationDataRetentionContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/data-retention",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "logRetentionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "softDeleteRetentionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "taskCleanupHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fileVersionRetentionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 24,
+                "maximum": 43800
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "piiRedaction": {
+            "type": "object",
+            "properties": {
+              "rules": {
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 100
+                    },
+                    "workspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "stages": {
+                      "type": "object",
+                      "properties": {
+                        "input": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "entityTypes": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "enum": [
+                                "en",
+                                "es",
+                                "it",
+                                "pl",
+                                "fi"
+                              ]
+                            },
+                            "customPatterns": {
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "regex": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 512
+                                  },
+                                  "replacement": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "regex",
+                                  "replacement"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "entityTypes"
+                          ]
+                        },
+                        "blockOutputs": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "entityTypes": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "enum": [
+                                "en",
+                                "es",
+                                "it",
+                                "pl",
+                                "fi"
+                              ]
+                            },
+                            "customPatterns": {
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "regex": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 512
+                                  },
+                                  "replacement": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "regex",
+                                  "replacement"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "entityTypes"
+                          ]
+                        },
+                        "logs": {
+                          "type": "object",
+                          "properties": {
+                            "enabled": {
+                              "type": "boolean"
+                            },
+                            "entityTypes": {
+                              "maxItems": 100,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "minLength": 1
+                              }
+                            },
+                            "language": {
+                              "type": "string",
+                              "enum": [
+                                "en",
+                                "es",
+                                "it",
+                                "pl",
+                                "fi"
+                              ]
+                            },
+                            "customPatterns": {
+                              "maxItems": 20,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "regex": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 512
+                                  },
+                                  "replacement": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  }
+                                },
+                                "required": [
+                                  "name",
+                                  "regex",
+                                  "replacement"
+                                ]
+                              }
+                            }
+                          },
+                          "required": [
+                            "enabled",
+                            "entityTypes"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "input",
+                        "blockOutputs",
+                        "logs"
+                      ]
+                    },
+                    "entityTypes": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "language": {
+                      "type": "string",
+                      "enum": [
+                        "en",
+                        "es",
+                        "it",
+                        "pl",
+                        "fi"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "workspaceId"
+                  ]
+                }
+              }
+            },
+            "required": [
+              "rules"
+            ]
+          },
+          "retentionOverrides": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Unique workspace identifier."
+                },
+                "logRetentionHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "softDeleteRetentionHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "taskCleanupHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "fileVersionRetentionHours": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 24,
+                      "maximum": 43800
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "workspaceId"
+              ]
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "isEnterprise": {
+                  "type": "boolean"
+                },
+                "defaults": {
+                  "type": "object",
+                  "properties": {
+                    "logRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "softDeleteRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskCleanupHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fileVersionRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "piiRedaction": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "rules": {
+                              "maxItems": 1000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "workspaceId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "stages": {},
+                                  "entityTypes": {
+                                    "maxItems": 100,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "language": {
+                                    "type": "string",
+                                    "enum": [
+                                      "en",
+                                      "es",
+                                      "it",
+                                      "pl",
+                                      "fi"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "workspaceId"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "rules"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "retentionOverrides": {
+                      "anyOf": [
+                        {
+                          "maxItems": 1000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workspaceId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128,
+                                "description": "Unique workspace identifier."
+                              },
+                              "logRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "softDeleteRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "taskCleanupHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "fileVersionRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "logRetentionHours",
+                    "softDeleteRetentionHours",
+                    "taskCleanupHours",
+                    "fileVersionRetentionHours",
+                    "piiRedaction",
+                    "retentionOverrides"
+                  ],
+                  "additionalProperties": false
+                },
+                "configured": {
+                  "type": "object",
+                  "properties": {
+                    "logRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "softDeleteRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskCleanupHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fileVersionRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "piiRedaction": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "rules": {
+                              "maxItems": 1000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "workspaceId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "stages": {},
+                                  "entityTypes": {
+                                    "maxItems": 100,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "language": {
+                                    "type": "string",
+                                    "enum": [
+                                      "en",
+                                      "es",
+                                      "it",
+                                      "pl",
+                                      "fi"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "workspaceId"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "rules"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "retentionOverrides": {
+                      "anyOf": [
+                        {
+                          "maxItems": 1000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workspaceId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128,
+                                "description": "Unique workspace identifier."
+                              },
+                              "logRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "softDeleteRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "taskCleanupHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "fileVersionRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "logRetentionHours",
+                    "softDeleteRetentionHours",
+                    "taskCleanupHours",
+                    "fileVersionRetentionHours",
+                    "piiRedaction",
+                    "retentionOverrides"
+                  ],
+                  "additionalProperties": false
+                },
+                "effective": {
+                  "type": "object",
+                  "properties": {
+                    "logRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "softDeleteRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "taskCleanupHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "fileVersionRetentionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "piiRedaction": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "rules": {
+                              "maxItems": 1000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1
+                                  },
+                                  "name": {
+                                    "type": "string",
+                                    "maxLength": 100
+                                  },
+                                  "workspaceId": {
+                                    "anyOf": [
+                                      {
+                                        "type": "string",
+                                        "minLength": 1
+                                      },
+                                      {
+                                        "type": "null"
+                                      }
+                                    ]
+                                  },
+                                  "stages": {},
+                                  "entityTypes": {
+                                    "maxItems": 100,
+                                    "type": "array",
+                                    "items": {
+                                      "type": "string",
+                                      "minLength": 1
+                                    }
+                                  },
+                                  "language": {
+                                    "type": "string",
+                                    "enum": [
+                                      "en",
+                                      "es",
+                                      "it",
+                                      "pl",
+                                      "fi"
+                                    ]
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "workspaceId"
+                                ],
+                                "additionalProperties": false
+                              }
+                            }
+                          },
+                          "required": [
+                            "rules"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "retentionOverrides": {
+                      "anyOf": [
+                        {
+                          "maxItems": 1000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "workspaceId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128,
+                                "description": "Unique workspace identifier."
+                              },
+                              "logRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "softDeleteRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "taskCleanupHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "fileVersionRetentionHours": {
+                                "anyOf": [
+                                  {
+                                    "type": "integer",
+                                    "minimum": 24,
+                                    "maximum": 43800
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "required": [
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "logRetentionHours",
+                    "softDeleteRetentionHours",
+                    "taskCleanupHours",
+                    "fileVersionRetentionHours",
+                    "piiRedaction",
+                    "retentionOverrides"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "isEnterprise",
+                "defaults",
+                "configured",
+                "effective"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateOrganizationMemberRoleContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/members/[memberId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memberId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "memberId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "owner",
+              "admin",
+              "member"
+            ]
+          }
+        },
+        "required": [
+          "role"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "owner",
+                    "admin",
+                    "member"
+                  ]
+                },
+                "updatedBy": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "role",
+                "updatedBy"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateOrganizationMemberUsageLimitContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/members/[memberId]/usage-limit",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "memberId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "memberId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "creditLimit": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "creditLimit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "creditLimit": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "creditLimit"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateOrganizationSessionPolicyContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/session-policy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "maxSessionHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 8760
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "idleTimeoutHours": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 48,
+                "maximum": 8760
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "maxSessionHours",
+          "idleTimeoutHours"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "isEnterprise": {
+                  "type": "boolean"
+                },
+                "configured": {
+                  "type": "object",
+                  "properties": {
+                    "maxSessionHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "idleTimeoutHours": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "minimum": -9007199254740991,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "maxSessionHours",
+                    "idleTimeoutHours"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "isEnterprise",
+                "configured"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateOrganizationSsoPolicyContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/sso-policy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "requireSso": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "requireSso"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "requireSso": {
+                  "type": "boolean"
+                },
+                "hasVerifiedProvider": {
+                  "type": "boolean"
+                },
+                "isEnforced": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "requireSso",
+                "hasVerifiedProvider",
+                "isEnforced"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateOrganizationUsageLimitContract": {
+      "method": "PUT",
+      "path": "/api/usage",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "context": {
+            "type": "string",
+            "const": "organization"
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "type": "number",
+            "minimum": 0
+          }
+        },
+        "required": [
+          "context",
+          "organizationId",
+          "limit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "context": {
+              "type": "string",
+              "const": "organization"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "organizationId": {
+              "type": "string"
+            },
+            "data": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "organizationName": {
+                      "type": "string"
+                    },
+                    "subscriptionState": {
+                      "type": "string",
+                      "enum": [
+                        "active",
+                        "free",
+                        "lapsed"
+                      ]
+                    },
+                    "hasSubscription": {
+                      "type": "boolean"
+                    },
+                    "subscriptionPlan": {
+                      "type": "string"
+                    },
+                    "subscriptionStatus": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "creditBalance": {
+                      "type": "number"
+                    },
+                    "billingInterval": {
+                      "type": "string",
+                      "enum": [
+                        "month",
+                        "year"
+                      ]
+                    },
+                    "cancelAtPeriodEnd": {
+                      "type": "boolean"
+                    },
+                    "totalSeats": {
+                      "type": "number"
+                    },
+                    "usedSeats": {
+                      "type": "number"
+                    },
+                    "seatsCount": {
+                      "type": "number"
+                    },
+                    "totalCurrentUsage": {
+                      "type": "number"
+                    },
+                    "totalUsageLimit": {
+                      "type": "number"
+                    },
+                    "minimumBillingAmount": {
+                      "type": "number"
+                    },
+                    "averageUsagePerMember": {
+                      "type": "number"
+                    },
+                    "billingPeriodStart": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "billingPeriodEnd": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "membersTotal": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "memberPagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 100
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "hasMore": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "limit",
+                        "offset",
+                        "hasMore"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "userName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "userEmail": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "joinedAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "additionalProperties": {}
+                      }
+                    },
+                    "billingBlocked": {
+                      "type": "boolean"
+                    },
+                    "billingBlockedReason": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "payment_failed",
+                            "dispute"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "blockedByOrgOwner": {
+                      "type": "boolean"
+                    },
+                    "upgradeWorkspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Unique workspace identifier."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "organizationId",
+                    "organizationName",
+                    "subscriptionState",
+                    "hasSubscription",
+                    "subscriptionPlan",
+                    "subscriptionStatus",
+                    "creditBalance",
+                    "billingInterval",
+                    "cancelAtPeriodEnd",
+                    "totalSeats",
+                    "usedSeats",
+                    "seatsCount",
+                    "totalCurrentUsage",
+                    "totalUsageLimit",
+                    "minimumBillingAmount",
+                    "averageUsagePerMember",
+                    "billingPeriodStart",
+                    "billingPeriodEnd",
+                    "membersTotal",
+                    "memberPagination",
+                    "members",
+                    "billingBlocked",
+                    "billingBlockedReason",
+                    "blockedByOrgOwner",
+                    "upgradeWorkspaceId"
+                  ],
+                  "additionalProperties": {}
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "success",
+            "context",
+            "userId",
+            "organizationId",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateOrganizationWhitelabelContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/whitelabel",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "brandName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "logoUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "wordmarkUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "primaryColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "primaryHoverColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accentColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "accentHoverColor": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^#([0-9a-f]{3}|[0-9a-f]{6})$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "supportEmail": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email",
+                "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "documentationUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "termsUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "privacyUrl": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uri"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "hidePoweredBySim": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "brandName": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "type": "string"
+                },
+                "wordmarkUrl": {
+                  "type": "string"
+                },
+                "primaryColor": {
+                  "type": "string"
+                },
+                "primaryHoverColor": {
+                  "type": "string"
+                },
+                "accentColor": {
+                  "type": "string"
+                },
+                "accentHoverColor": {
+                  "type": "string"
+                },
+                "supportEmail": {
+                  "type": "string"
+                },
+                "documentationUrl": {
+                  "type": "string"
+                },
+                "termsUrl": {
+                  "type": "string"
+                },
+                "privacyUrl": {
+                  "type": "string"
+                },
+                "hidePoweredBySim": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "verifyOrganizationDomainContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/domains/[domainId]/verify",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "domainId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "domainId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "domain": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "domain": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "verified"
+                      ]
+                    },
+                    "verifiedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "challengeHost": {
+                      "type": "string"
+                    },
+                    "txtRecordValue": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "domain",
+                    "status",
+                    "verifiedAt",
+                    "challengeHost",
+                    "txtRecordValue"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "domain"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

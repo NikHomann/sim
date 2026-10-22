@@ -1,0 +1,518 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/selectors.ts",
+  "contracts": {
+    "v2GetSelectorContract": {
+      "method": "POST",
+      "path": "/api/v2/selectors/get",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          },
+          "selectorKey": {
+            "type": "string",
+            "enum": [
+              "airtable.bases",
+              "airtable.tables",
+              "asana.workspaces",
+              "attio.lists",
+              "attio.objects",
+              "bigquery.datasets",
+              "bigquery.tables",
+              "bitbucket.workspaces",
+              "bitbucket.repositories",
+              "calcom.eventTypes",
+              "calcom.schedules",
+              "clickup.workspaces",
+              "clickup.spaces",
+              "clickup.folders",
+              "clickup.lists",
+              "coda.docs",
+              "coda.pages",
+              "coda.tables",
+              "coda.columns",
+              "coda.rows",
+              "coda.formulas",
+              "coda.controls",
+              "coda.folders",
+              "coda.permissions",
+              "confluence.spaces",
+              "confluence.spacesById",
+              "confluence.pages",
+              "google.tasks.lists",
+              "fivetran.groups",
+              "fivetran.connections",
+              "gmail.labels",
+              "google.calendar",
+              "google.drive",
+              "google.sheets",
+              "harmonic.savedSearches",
+              "helpscout.mailboxes",
+              "helpscout.assignees",
+              "hubspot.lists",
+              "hubspot.owners",
+              "hubspot.pipelines",
+              "hubspot.pipelineStages",
+              "hubspot.properties",
+              "jsm.requestTypes",
+              "jsm.serviceDesks",
+              "microsoft.planner.plans",
+              "notion.databases",
+              "notion.pages",
+              "netsuite.recordTypes",
+              "netsuite.asyncTasks",
+              "pipedrive.pipelines",
+              "sharepoint.lists",
+              "trello.boards",
+              "zoho_desk.organizations",
+              "zoho_desk.departments",
+              "zoho_desk.agents",
+              "zoom.meetings",
+              "slack.channels",
+              "snowflake.databases",
+              "snowflake.schemas",
+              "snowflake.tables",
+              "snowflake.warehouses",
+              "snowflake.roles",
+              "snowflake.fileFormats",
+              "snowflake.procedures",
+              "slack.users",
+              "outlook.folders",
+              "outlook.calendars",
+              "microsoft.teams",
+              "microsoft.chats",
+              "microsoft.channels",
+              "microsoft.planner",
+              "onedrive.files",
+              "onedrive.folders",
+              "sharepoint.sites",
+              "microsoft.excel",
+              "microsoft.excel.drives",
+              "microsoft.excel.sheets",
+              "microsoft.word",
+              "wealthbox.contacts",
+              "jira.issues",
+              "jira.projects",
+              "jira.projectKeys",
+              "linear.projects",
+              "linear.teams",
+              "monday.boards",
+              "monday.groups",
+              "webflow.sites",
+              "webflow.collections",
+              "webflow.items",
+              "planetscale.databases",
+              "powerbi.workspaces",
+              "powerbi.datasets",
+              "powerbi.reports",
+              "planetscale.branches",
+              "planetscale.backups",
+              "planetscale.deployRequests",
+              "cloudwatch.logGroups",
+              "cloudwatch.logStreams",
+              "imap.mailboxes",
+              "mcp.tools",
+              "managedAgent.agents",
+              "managedAgent.environments",
+              "managedAgent.vaults",
+              "managedAgent.memoryStores",
+              "knowledge.documents",
+              "sim.workflows",
+              "table.columns",
+              "table.outputColumns",
+              "workspace.secretNames",
+              "workspace.sandboxes",
+              "providers.ollamaEmbeddingModels",
+              "providers.openrouterEmbeddingModels"
+            ],
+            "description": "Registered selector key from an import or sync preview, such as `gmail.labels`."
+          },
+          "context": {
+            "default": {},
+            "description": "Only the dependencies declared by the selector, such as oauthCredential and channelId. Missing OAuth connections require human authorization.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 16384
+            }
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384,
+            "description": "Provider option ID to resolve with the same selector and declared context."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "selectorKey",
+          "id"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/SelectorOption"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "SelectorOption": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "description": "Provider resource identifier."
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "description": "Human-readable provider resource name."
+                },
+                "meta": {
+                  "description": "Safe scalar metadata for presenting or configuring this choice.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 16384
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "label"
+              ],
+              "additionalProperties": false,
+              "id": "SelectorOption",
+              "title": "SelectorOption",
+              "description": "The SelectorOption result."
+            }
+          }
+        }
+      }
+    },
+    "v2ListSelectorContract": {
+      "method": "POST",
+      "path": "/api/v2/selectors/list",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          },
+          "selectorKey": {
+            "type": "string",
+            "enum": [
+              "airtable.bases",
+              "airtable.tables",
+              "asana.workspaces",
+              "attio.lists",
+              "attio.objects",
+              "bigquery.datasets",
+              "bigquery.tables",
+              "bitbucket.workspaces",
+              "bitbucket.repositories",
+              "calcom.eventTypes",
+              "calcom.schedules",
+              "clickup.workspaces",
+              "clickup.spaces",
+              "clickup.folders",
+              "clickup.lists",
+              "coda.docs",
+              "coda.pages",
+              "coda.tables",
+              "coda.columns",
+              "coda.rows",
+              "coda.formulas",
+              "coda.controls",
+              "coda.folders",
+              "coda.permissions",
+              "confluence.spaces",
+              "confluence.spacesById",
+              "confluence.pages",
+              "google.tasks.lists",
+              "fivetran.groups",
+              "fivetran.connections",
+              "gmail.labels",
+              "google.calendar",
+              "google.drive",
+              "google.sheets",
+              "harmonic.savedSearches",
+              "helpscout.mailboxes",
+              "helpscout.assignees",
+              "hubspot.lists",
+              "hubspot.owners",
+              "hubspot.pipelines",
+              "hubspot.pipelineStages",
+              "hubspot.properties",
+              "jsm.requestTypes",
+              "jsm.serviceDesks",
+              "microsoft.planner.plans",
+              "notion.databases",
+              "notion.pages",
+              "netsuite.recordTypes",
+              "netsuite.asyncTasks",
+              "pipedrive.pipelines",
+              "sharepoint.lists",
+              "trello.boards",
+              "zoho_desk.organizations",
+              "zoho_desk.departments",
+              "zoho_desk.agents",
+              "zoom.meetings",
+              "slack.channels",
+              "snowflake.databases",
+              "snowflake.schemas",
+              "snowflake.tables",
+              "snowflake.warehouses",
+              "snowflake.roles",
+              "snowflake.fileFormats",
+              "snowflake.procedures",
+              "slack.users",
+              "outlook.folders",
+              "outlook.calendars",
+              "microsoft.teams",
+              "microsoft.chats",
+              "microsoft.channels",
+              "microsoft.planner",
+              "onedrive.files",
+              "onedrive.folders",
+              "sharepoint.sites",
+              "microsoft.excel",
+              "microsoft.excel.drives",
+              "microsoft.excel.sheets",
+              "microsoft.word",
+              "wealthbox.contacts",
+              "jira.issues",
+              "jira.projects",
+              "jira.projectKeys",
+              "linear.projects",
+              "linear.teams",
+              "monday.boards",
+              "monday.groups",
+              "webflow.sites",
+              "webflow.collections",
+              "webflow.items",
+              "planetscale.databases",
+              "powerbi.workspaces",
+              "powerbi.datasets",
+              "powerbi.reports",
+              "planetscale.branches",
+              "planetscale.backups",
+              "planetscale.deployRequests",
+              "cloudwatch.logGroups",
+              "cloudwatch.logStreams",
+              "imap.mailboxes",
+              "mcp.tools",
+              "managedAgent.agents",
+              "managedAgent.environments",
+              "managedAgent.vaults",
+              "managedAgent.memoryStores",
+              "knowledge.documents",
+              "sim.workflows",
+              "table.columns",
+              "table.outputColumns",
+              "workspace.secretNames",
+              "workspace.sandboxes",
+              "providers.ollamaEmbeddingModels",
+              "providers.openrouterEmbeddingModels"
+            ],
+            "description": "Registered selector key from an import or sync preview, such as `gmail.labels`."
+          },
+          "context": {
+            "default": {},
+            "description": "Only the dependencies declared by the selector, such as oauthCredential and channelId. Missing OAuth connections require human authorization.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 64
+            },
+            "additionalProperties": {
+              "type": "string",
+              "maxLength": 16384
+            }
+          },
+          "search": {
+            "description": "Provider option search text.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "cursor": {
+            "description": "Cursor returned by the preceding page. Keep `workspaceId`, `selectorKey`, `context`, and `search` unchanged; only `limit` may change. Restart without a cursor after a changed-page 409.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32768
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum options per page, from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "workspaceId",
+          "selectorKey"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/SelectorOption"
+              },
+              "description": "Authorized provider options in this page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "maxLength": 32768
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; null means there is nothing further to fetch. Never construct one yourself."
+            },
+            "truncated": {
+              "type": "boolean",
+              "description": "Whether provider limits left the result incomplete. A null `nextCursor` with `truncated: true` does not establish that all options were searched."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor",
+            "truncated"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "SelectorOption": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "description": "Provider resource identifier."
+                },
+                "label": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 16384,
+                  "description": "Human-readable provider resource name."
+                },
+                "meta": {
+                  "description": "Safe scalar metadata for presenting or configuring this choice.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "additionalProperties": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 16384
+                      },
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "label"
+              ],
+              "additionalProperties": false,
+              "id": "SelectorOption",
+              "title": "SelectorOption",
+              "description": "The SelectorOption result."
+            }
+          }
+        }
+      }
+    }
+  }
+}

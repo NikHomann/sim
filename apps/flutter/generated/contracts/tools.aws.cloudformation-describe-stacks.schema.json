@@ -1,0 +1,163 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-describe-stacks.ts",
+  "contracts": {
+    "awsCloudformationDescribeStacksContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/describe-stacks",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stackName": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "stacks": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "stackName": {
+                        "type": "string"
+                      },
+                      "stackId": {
+                        "type": "string"
+                      },
+                      "stackStatus": {
+                        "type": "string"
+                      },
+                      "stackStatusReason": {
+                        "type": "string"
+                      },
+                      "creationTime": {
+                        "type": "number"
+                      },
+                      "lastUpdatedTime": {
+                        "type": "number"
+                      },
+                      "description": {
+                        "type": "string"
+                      },
+                      "enableTerminationProtection": {
+                        "type": "boolean"
+                      },
+                      "driftInformation": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "stackDriftStatus": {
+                                "type": "string"
+                              },
+                              "lastCheckTimestamp": {
+                                "type": "number"
+                              }
+                            },
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "outputs": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "outputKey": {
+                              "type": "string"
+                            },
+                            "outputValue": {
+                              "type": "string"
+                            },
+                            "description": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "outputKey",
+                            "outputValue"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "tags": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string"
+                            },
+                            "value": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "value"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "stackName",
+                      "stackId",
+                      "stackStatus",
+                      "driftInformation",
+                      "outputs",
+                      "tags"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "stacks"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

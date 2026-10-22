@@ -1,0 +1,57 @@
+{
+  "source": "apps/sim/lib/api/contracts/block-visibility.ts",
+  "contracts": {
+    "getBlockVisibilityContract": {
+      "method": "GET",
+      "path": "/api/blocks/visibility",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "revealed": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "disabled": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "previewTagged": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "revealed",
+            "disabled",
+            "previewTagged"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

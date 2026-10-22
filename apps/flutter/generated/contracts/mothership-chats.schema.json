@@ -1,0 +1,2890 @@
+{
+  "source": "apps/sim/lib/api/contracts/mothership-chats.ts",
+  "contracts": {
+    "addMothershipChatResourceContract": {
+      "method": "POST",
+      "path": "/api/mothership/chat/resources",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resource": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "search",
+                  "sources",
+                  "table",
+                  "file",
+                  "dashboard",
+                  "test",
+                  "workflow",
+                  "knowledgebase",
+                  "folder",
+                  "filefolder",
+                  "task",
+                  "log",
+                  "integration"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "owner": {
+                "type": "object",
+                "properties": {
+                  "entityType": {
+                    "type": "string",
+                    "enum": [
+                      "workspace",
+                      "project",
+                      "organization",
+                      "user"
+                    ]
+                  },
+                  "entityId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "entityType",
+                  "entityId"
+                ],
+                "additionalProperties": false
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "workspaceName": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "path": {
+                "type": "string"
+              },
+              "viewId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "executionId": {
+                "type": "string"
+              },
+              "search": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "scope": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "organization"
+                          },
+                          "organizationId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "organizationId"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "workspace"
+                          },
+                          "workspaceId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "workspaceId"
+                        ]
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object",
+                    "properties": {
+                      "startDate": {
+                        "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "endDate": {
+                        "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "sortBy": {
+                        "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                        "type": "string",
+                        "enum": [
+                          "relevance",
+                          "newest",
+                          "oldest"
+                        ]
+                      },
+                      "source": {
+                        "description": "Connector type or upload source; narrows the selected search scope.",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "modifiedAfter": {
+                        "description": "ISO datetime; restricts results to documents modified after this time.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "modifiedBefore": {
+                        "description": "ISO datetime; restricts results to documents modified before this time.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "documentIds": {
+                        "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4000
+                        }
+                      }
+                    }
+                  },
+                  "topK": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50
+                  },
+                  "nativeQueries": {
+                    "minItems": 1,
+                    "maxItems": 9,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "provider": {
+                          "type": "string",
+                          "enum": [
+                            "google_drive",
+                            "gmail",
+                            "google_meet",
+                            "zoom",
+                            "google_calendar",
+                            "slack",
+                            "jira",
+                            "confluence",
+                            "github",
+                            "gitlab",
+                            "linear",
+                            "lucid",
+                            "hubspot",
+                            "fireflies",
+                            "granola",
+                            "notion",
+                            "coda"
+                          ]
+                        },
+                        "query": {
+                          "type": "string",
+                          "maxLength": 2000
+                        },
+                        "accountId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "issues",
+                            "code",
+                            "repositories",
+                            "commits",
+                            "merge_requests",
+                            "wiki",
+                            "contacts",
+                            "companies",
+                            "deals",
+                            "tickets",
+                            "lucidchart",
+                            "lucidspark",
+                            "transcript",
+                            "smart_notes",
+                            "meeting"
+                          ]
+                        },
+                        "project": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        },
+                        "browse": {
+                          "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                          "type": "string",
+                          "enum": [
+                            "folder",
+                            "private",
+                            "shared",
+                            "favorites",
+                            "recent"
+                          ]
+                        },
+                        "cursor": {
+                          "type": "string",
+                          "maxLength": 4000
+                        },
+                        "termClauses": {
+                          "maxItems": 10,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "maxLength": 500
+                          }
+                        },
+                        "modifiers": {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        "keywordOnly": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "query"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "query",
+                  "scope"
+                ]
+              },
+              "sources": {
+                "type": "object",
+                "properties": {
+                  "messageId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "requestId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "messageId"
+                ]
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "id",
+              "title"
+            ]
+          },
+          "clearViewId": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "chatId",
+          "resource"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "search",
+                      "sources",
+                      "table",
+                      "file",
+                      "dashboard",
+                      "test",
+                      "workflow",
+                      "knowledgebase",
+                      "folder",
+                      "filefolder",
+                      "task",
+                      "log",
+                      "integration"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project",
+                          "organization",
+                          "user"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  },
+                  "workspaceName": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "viewId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "executionId": {
+                    "type": "string"
+                  },
+                  "search": {
+                    "type": "object",
+                    "properties": {
+                      "query": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "organization"
+                              },
+                              "organizationId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "organizationId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "workspace"
+                              },
+                              "workspaceId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "filters": {
+                        "type": "object",
+                        "properties": {
+                          "startDate": {
+                            "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "endDate": {
+                            "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "sortBy": {
+                            "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                            "type": "string",
+                            "enum": [
+                              "relevance",
+                              "newest",
+                              "oldest"
+                            ]
+                          },
+                          "source": {
+                            "description": "Connector type or upload source; narrows the selected search scope.",
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "modifiedAfter": {
+                            "description": "ISO datetime; restricts results to documents modified after this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "modifiedBefore": {
+                            "description": "ISO datetime; restricts results to documents modified before this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "documentIds": {
+                            "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4000
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "topK": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50
+                      },
+                      "nativeQueries": {
+                        "minItems": 1,
+                        "maxItems": 9,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "provider": {
+                              "type": "string",
+                              "enum": [
+                                "google_drive",
+                                "gmail",
+                                "google_meet",
+                                "zoom",
+                                "google_calendar",
+                                "slack",
+                                "jira",
+                                "confluence",
+                                "github",
+                                "gitlab",
+                                "linear",
+                                "lucid",
+                                "hubspot",
+                                "fireflies",
+                                "granola",
+                                "notion",
+                                "coda"
+                              ]
+                            },
+                            "query": {
+                              "type": "string",
+                              "maxLength": 2000
+                            },
+                            "accountId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "issues",
+                                "code",
+                                "repositories",
+                                "commits",
+                                "merge_requests",
+                                "wiki",
+                                "contacts",
+                                "companies",
+                                "deals",
+                                "tickets",
+                                "lucidchart",
+                                "lucidspark",
+                                "transcript",
+                                "smart_notes",
+                                "meeting"
+                              ]
+                            },
+                            "project": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300
+                            },
+                            "browse": {
+                              "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                              "type": "string",
+                              "enum": [
+                                "folder",
+                                "private",
+                                "shared",
+                                "favorites",
+                                "recent"
+                              ]
+                            },
+                            "cursor": {
+                              "type": "string",
+                              "maxLength": 4000
+                            },
+                            "termClauses": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "maxLength": 500
+                              }
+                            },
+                            "modifiers": {
+                              "type": "string",
+                              "maxLength": 1000
+                            },
+                            "keywordOnly": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "provider",
+                            "query"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "query",
+                      "scope"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sources": {
+                    "type": "object",
+                    "properties": {
+                      "messageId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "requestId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "messageId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "resources"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createMothershipChatContract": {
+      "method": "POST",
+      "path": "/api/mothership/chats",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "organizationId": {
+                    "not": {}
+                  }
+                },
+                "required": [
+                  "workspaceId"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "workspaceId": {
+                    "not": {}
+                  }
+                },
+                "required": [
+                  "organizationId"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "mode": {
+                "type": "string",
+                "enum": [
+                  "agent",
+                  "assistant",
+                  "plan"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteMothershipChatContract": {
+      "method": "DELETE",
+      "path": "/api/mothership/chats/[chatId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "forkMothershipChatContract": {
+      "method": "POST",
+      "path": "/api/mothership/chats/[chatId]/fork",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upToMessageId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "upToMessageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "id": {
+              "type": "string"
+            },
+            "failedFileCopies": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "success",
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getMothershipChatContract": {
+      "method": "GET",
+      "path": "/api/mothership/chats/[chatId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "window": {
+            "type": "string",
+            "const": "latest"
+          },
+          "from": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "chat": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "mode": {
+                  "type": "string",
+                  "enum": [
+                    "agent",
+                    "assistant",
+                    "plan"
+                  ]
+                },
+                "messages": {
+                  "type": "array",
+                  "items": {}
+                },
+                "activeStreamId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "resources": {
+                  "type": "array",
+                  "items": {}
+                },
+                "effort": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "none",
+                        "low",
+                        "medium",
+                        "high",
+                        "xhigh",
+                        "max"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "updatedAt": {
+                  "anyOf": [
+                    {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "streamSnapshot": {
+                  "type": "object",
+                  "properties": {
+                    "events": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "previewSessions": {
+                      "type": "array",
+                      "items": {}
+                    },
+                    "status": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "events",
+                    "previewSessions",
+                    "status"
+                  ],
+                  "additionalProperties": {}
+                },
+                "olderCursor": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "windowStartCursor": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "mode",
+                "messages",
+                "activeStreamId",
+                "resources"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "chat"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getMothershipChatStreamStatusContract": {
+      "method": "GET",
+      "path": "/api/mothership/chats/[chatId]/stream-status",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "activeStreamId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "success",
+            "activeStreamId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listMothershipChatOlderMessagesContract": {
+      "method": "GET",
+      "path": "/api/mothership/chats/[chatId]/messages",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "before": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        },
+        "required": [
+          "before"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "messages": {
+              "type": "array",
+              "items": {}
+            },
+            "olderCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "success",
+            "messages",
+            "olderCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listMothershipChatsContract": {
+      "method": "GET",
+      "path": "/api/mothership/chats",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "allOf": [
+          {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "organizationId": {
+                    "not": {}
+                  }
+                },
+                "required": [
+                  "workspaceId"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "workspaceId": {
+                    "not": {}
+                  }
+                },
+                "required": [
+                  "organizationId"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "scope": {
+                "default": "active",
+                "type": "string",
+                "enum": [
+                  "active",
+                  "archived"
+                ]
+              }
+            }
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "agent",
+                      "assistant",
+                      "plan"
+                    ]
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  },
+                  "activeStreamId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastSeenAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "pinned": {
+                    "type": "boolean"
+                  },
+                  "deletedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "mode",
+                  "id",
+                  "title",
+                  "updatedAt",
+                  "activeStreamId",
+                  "lastSeenAt",
+                  "pinned",
+                  "deletedAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "markMothershipChatReadContract": {
+      "method": "POST",
+      "path": "/api/mothership/chats/read",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "mothershipExecuteContract": {
+      "method": "POST",
+      "path": "/api/mothership/execute",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "useConversationHistory": {
+            "type": "boolean"
+          },
+          "effort": {
+            "type": "string",
+            "enum": [
+              "none",
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          },
+          "modelSelection": {
+            "type": "object",
+            "properties": {
+              "model": {
+                "type": "string",
+                "enum": [
+                  "gpt-6-astra",
+                  "gpt-6-sol",
+                  "claude-opus-5-5",
+                  "claude-opus-5"
+                ]
+              },
+              "fastMode": {
+                "default": false,
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "model"
+            ]
+          },
+          "messages": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "system",
+                    "user",
+                    "assistant"
+                  ]
+                },
+                "content": {
+                  "type": "string",
+                  "maxLength": 1048576
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ]
+            }
+          },
+          "responseFormat": {},
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chatId": {
+            "type": "string"
+          },
+          "messageId": {
+            "type": "string"
+          },
+          "requestId": {
+            "type": "string"
+          },
+          "fileAttachments": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "text",
+                    "image",
+                    "document",
+                    "audio",
+                    "video"
+                  ]
+                },
+                "source": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "base64"
+                    },
+                    "media_type": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "data": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "media_type",
+                    "data"
+                  ]
+                },
+                "filename": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "contexts": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 1000
+                }
+              },
+              "required": [
+                "kind",
+                "label"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "mcpTools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "mcp"
+                },
+                "usageControl": {
+                  "type": "string",
+                  "enum": [
+                    "auto",
+                    "force",
+                    "none"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                },
+                "schema": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "$ref": "#/$defs/__schema0"
+                  }
+                },
+                "params": {
+                  "type": "object",
+                  "properties": {
+                    "serverId": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "toolName": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "serverName": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "serverId",
+                    "toolName"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "type",
+                "params"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "executionId": {
+            "type": "string"
+          },
+          "secretScope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "selected"
+            ]
+          },
+          "mountedSecrets": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          },
+          "userMetadata": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "timezone": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "required": [
+          "messages",
+          "workspaceId",
+          "userId"
+        ],
+        "$defs": {
+          "__schema0": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              },
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "$ref": "#/$defs/__schema0"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "x-sim-mcp-delegation": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 16384
+          }
+        },
+        "required": [
+          "x-sim-mcp-delegation"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "content": {
+              "type": "string"
+            },
+            "model": {
+              "type": "string",
+              "const": "mothership"
+            },
+            "conversationId": {
+              "type": "string"
+            },
+            "tokens": {
+              "type": "object",
+              "properties": {
+                "prompt": {
+                  "type": "number"
+                },
+                "completion": {
+                  "type": "number"
+                },
+                "total": {
+                  "type": "number"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "cost": {},
+            "toolCalls": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "model",
+            "conversationId",
+            "tokens"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "removeMothershipChatResourceContract": {
+      "method": "DELETE",
+      "path": "/api/mothership/chat/resources",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "object",
+            "properties": {
+              "entityType": {
+                "type": "string",
+                "enum": [
+                  "workspace",
+                  "project",
+                  "organization",
+                  "user"
+                ]
+              },
+              "entityId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "entityType",
+              "entityId"
+            ],
+            "additionalProperties": false
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "search",
+              "sources",
+              "table",
+              "file",
+              "dashboard",
+              "test",
+              "workflow",
+              "knowledgebase",
+              "folder",
+              "filefolder",
+              "task",
+              "log",
+              "integration"
+            ]
+          },
+          "resourceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "resourceType",
+          "resourceId",
+          "chatId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "search",
+                      "sources",
+                      "table",
+                      "file",
+                      "dashboard",
+                      "test",
+                      "workflow",
+                      "knowledgebase",
+                      "folder",
+                      "filefolder",
+                      "task",
+                      "log",
+                      "integration"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project",
+                          "organization",
+                          "user"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  },
+                  "workspaceName": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "viewId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "executionId": {
+                    "type": "string"
+                  },
+                  "search": {
+                    "type": "object",
+                    "properties": {
+                      "query": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "organization"
+                              },
+                              "organizationId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "organizationId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "workspace"
+                              },
+                              "workspaceId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "filters": {
+                        "type": "object",
+                        "properties": {
+                          "startDate": {
+                            "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "endDate": {
+                            "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "sortBy": {
+                            "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                            "type": "string",
+                            "enum": [
+                              "relevance",
+                              "newest",
+                              "oldest"
+                            ]
+                          },
+                          "source": {
+                            "description": "Connector type or upload source; narrows the selected search scope.",
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "modifiedAfter": {
+                            "description": "ISO datetime; restricts results to documents modified after this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "modifiedBefore": {
+                            "description": "ISO datetime; restricts results to documents modified before this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "documentIds": {
+                            "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4000
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "topK": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50
+                      },
+                      "nativeQueries": {
+                        "minItems": 1,
+                        "maxItems": 9,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "provider": {
+                              "type": "string",
+                              "enum": [
+                                "google_drive",
+                                "gmail",
+                                "google_meet",
+                                "zoom",
+                                "google_calendar",
+                                "slack",
+                                "jira",
+                                "confluence",
+                                "github",
+                                "gitlab",
+                                "linear",
+                                "lucid",
+                                "hubspot",
+                                "fireflies",
+                                "granola",
+                                "notion",
+                                "coda"
+                              ]
+                            },
+                            "query": {
+                              "type": "string",
+                              "maxLength": 2000
+                            },
+                            "accountId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "issues",
+                                "code",
+                                "repositories",
+                                "commits",
+                                "merge_requests",
+                                "wiki",
+                                "contacts",
+                                "companies",
+                                "deals",
+                                "tickets",
+                                "lucidchart",
+                                "lucidspark",
+                                "transcript",
+                                "smart_notes",
+                                "meeting"
+                              ]
+                            },
+                            "project": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300
+                            },
+                            "browse": {
+                              "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                              "type": "string",
+                              "enum": [
+                                "folder",
+                                "private",
+                                "shared",
+                                "favorites",
+                                "recent"
+                              ]
+                            },
+                            "cursor": {
+                              "type": "string",
+                              "maxLength": 4000
+                            },
+                            "termClauses": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "maxLength": 500
+                              }
+                            },
+                            "modifiers": {
+                              "type": "string",
+                              "maxLength": 1000
+                            },
+                            "keywordOnly": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "provider",
+                            "query"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "query",
+                      "scope"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sources": {
+                    "type": "object",
+                    "properties": {
+                      "messageId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "requestId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "messageId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "resources"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reorderMothershipChatResourcesContract": {
+      "method": "PATCH",
+      "path": "/api/mothership/chat/resources",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "search",
+                    "sources",
+                    "table",
+                    "file",
+                    "dashboard",
+                    "test",
+                    "workflow",
+                    "knowledgebase",
+                    "folder",
+                    "filefolder",
+                    "task",
+                    "log",
+                    "integration"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "enum": [
+                        "workspace",
+                        "project",
+                        "organization",
+                        "user"
+                      ]
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Unique workspace identifier."
+                },
+                "workspaceName": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "path": {
+                  "type": "string"
+                },
+                "viewId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "executionId": {
+                  "type": "string"
+                },
+                "search": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "scope": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "organization"
+                            },
+                            "organizationId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "organizationId"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "workspace"
+                            },
+                            "workspaceId": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "workspaceId"
+                          ]
+                        }
+                      ]
+                    },
+                    "filters": {
+                      "type": "object",
+                      "properties": {
+                        "startDate": {
+                          "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "endDate": {
+                          "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "sortBy": {
+                          "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                          "type": "string",
+                          "enum": [
+                            "relevance",
+                            "newest",
+                            "oldest"
+                          ]
+                        },
+                        "source": {
+                          "description": "Connector type or upload source; narrows the selected search scope.",
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 100
+                        },
+                        "modifiedAfter": {
+                          "description": "ISO datetime; restricts results to documents modified after this time.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "modifiedBefore": {
+                          "description": "ISO datetime; restricts results to documents modified before this time.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "documentIds": {
+                          "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                          "minItems": 1,
+                          "maxItems": 20,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4000
+                          }
+                        }
+                      }
+                    },
+                    "topK": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 50
+                    },
+                    "nativeQueries": {
+                      "minItems": 1,
+                      "maxItems": 9,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "enum": [
+                              "google_drive",
+                              "gmail",
+                              "google_meet",
+                              "zoom",
+                              "google_calendar",
+                              "slack",
+                              "jira",
+                              "confluence",
+                              "github",
+                              "gitlab",
+                              "linear",
+                              "lucid",
+                              "hubspot",
+                              "fireflies",
+                              "granola",
+                              "notion",
+                              "coda"
+                            ]
+                          },
+                          "query": {
+                            "type": "string",
+                            "maxLength": 2000
+                          },
+                          "accountId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "issues",
+                              "code",
+                              "repositories",
+                              "commits",
+                              "merge_requests",
+                              "wiki",
+                              "contacts",
+                              "companies",
+                              "deals",
+                              "tickets",
+                              "lucidchart",
+                              "lucidspark",
+                              "transcript",
+                              "smart_notes",
+                              "meeting"
+                            ]
+                          },
+                          "project": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          },
+                          "browse": {
+                            "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                            "type": "string",
+                            "enum": [
+                              "folder",
+                              "private",
+                              "shared",
+                              "favorites",
+                              "recent"
+                            ]
+                          },
+                          "cursor": {
+                            "type": "string",
+                            "maxLength": 4000
+                          },
+                          "termClauses": {
+                            "maxItems": 10,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "maxLength": 500
+                            }
+                          },
+                          "modifiers": {
+                            "type": "string",
+                            "maxLength": 1000
+                          },
+                          "keywordOnly": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "query"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "query",
+                    "scope"
+                  ]
+                },
+                "sources": {
+                  "type": "object",
+                  "properties": {
+                    "messageId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "messageId"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "title"
+              ]
+            }
+          }
+        },
+        "required": [
+          "chatId",
+          "resources"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "search",
+                      "sources",
+                      "table",
+                      "file",
+                      "dashboard",
+                      "test",
+                      "workflow",
+                      "knowledgebase",
+                      "folder",
+                      "filefolder",
+                      "task",
+                      "log",
+                      "integration"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project",
+                          "organization",
+                          "user"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  },
+                  "workspaceName": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "viewId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "executionId": {
+                    "type": "string"
+                  },
+                  "search": {
+                    "type": "object",
+                    "properties": {
+                      "query": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "organization"
+                              },
+                              "organizationId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "organizationId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "workspace"
+                              },
+                              "workspaceId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "filters": {
+                        "type": "object",
+                        "properties": {
+                          "startDate": {
+                            "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "endDate": {
+                            "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "sortBy": {
+                            "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                            "type": "string",
+                            "enum": [
+                              "relevance",
+                              "newest",
+                              "oldest"
+                            ]
+                          },
+                          "source": {
+                            "description": "Connector type or upload source; narrows the selected search scope.",
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "modifiedAfter": {
+                            "description": "ISO datetime; restricts results to documents modified after this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "modifiedBefore": {
+                            "description": "ISO datetime; restricts results to documents modified before this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "documentIds": {
+                            "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4000
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "topK": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50
+                      },
+                      "nativeQueries": {
+                        "minItems": 1,
+                        "maxItems": 9,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "provider": {
+                              "type": "string",
+                              "enum": [
+                                "google_drive",
+                                "gmail",
+                                "google_meet",
+                                "zoom",
+                                "google_calendar",
+                                "slack",
+                                "jira",
+                                "confluence",
+                                "github",
+                                "gitlab",
+                                "linear",
+                                "lucid",
+                                "hubspot",
+                                "fireflies",
+                                "granola",
+                                "notion",
+                                "coda"
+                              ]
+                            },
+                            "query": {
+                              "type": "string",
+                              "maxLength": 2000
+                            },
+                            "accountId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "issues",
+                                "code",
+                                "repositories",
+                                "commits",
+                                "merge_requests",
+                                "wiki",
+                                "contacts",
+                                "companies",
+                                "deals",
+                                "tickets",
+                                "lucidchart",
+                                "lucidspark",
+                                "transcript",
+                                "smart_notes",
+                                "meeting"
+                              ]
+                            },
+                            "project": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300
+                            },
+                            "browse": {
+                              "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                              "type": "string",
+                              "enum": [
+                                "folder",
+                                "private",
+                                "shared",
+                                "favorites",
+                                "recent"
+                              ]
+                            },
+                            "cursor": {
+                              "type": "string",
+                              "maxLength": 4000
+                            },
+                            "termClauses": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "maxLength": 500
+                              }
+                            },
+                            "modifiers": {
+                              "type": "string",
+                              "maxLength": 1000
+                            },
+                            "keywordOnly": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "provider",
+                            "query"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "query",
+                      "scope"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sources": {
+                    "type": "object",
+                    "properties": {
+                      "messageId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "requestId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "messageId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "resources"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "restoreMothershipChatContract": {
+      "method": "POST",
+      "path": "/api/mothership/chats/[chatId]/restore",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "setMothershipChatEffortContract": {
+      "method": "PUT",
+      "path": "/api/mothership/chats/[chatId]/effort",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "effort": {
+            "type": "string",
+            "enum": [
+              "none",
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
+        },
+        "required": [
+          "effort"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateMothershipChatContract": {
+      "method": "PATCH",
+      "path": "/api/mothership/chats/[chatId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "isUnread": {
+            "type": "boolean"
+          },
+          "pinned": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

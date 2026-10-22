@@ -1,0 +1,313 @@
+{
+  "source": "apps/sim/lib/api/contracts/mothership-memories.ts",
+  "contracts": {
+    "resolveMemoryNotesAccessContract": {
+      "method": "POST",
+      "path": "/api/mothership/memories/access",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "scope": {
+                    "type": "string",
+                    "const": "personal"
+                  }
+                },
+                "required": [
+                  "scope"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "scope": {
+                    "type": "string",
+                    "const": "workspace"
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                },
+                "required": [
+                  "scope",
+                  "workspaceId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "scope": {
+                    "type": "string",
+                    "const": "project"
+                  },
+                  "projectId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                },
+                "required": [
+                  "scope",
+                  "projectId"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "action": {
+            "type": "string",
+            "enum": [
+              "read",
+              "private_mutation",
+              "shared_mutation"
+            ]
+          }
+        },
+        "required": [
+          "target",
+          "action"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "version": {
+              "type": "number",
+              "const": 1
+            },
+            "actor": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "chatId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                }
+              },
+              "required": [
+                "userId",
+                "chatId"
+              ],
+              "additionalProperties": false
+            },
+            "target": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "scope": {
+                      "type": "string",
+                      "const": "personal"
+                    },
+                    "permissions": {
+                      "type": "object",
+                      "properties": {
+                        "read": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "privateMutation": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "sharedMutation": {
+                          "type": "boolean",
+                          "const": false
+                        }
+                      },
+                      "required": [
+                        "read",
+                        "privateMutation",
+                        "sharedMutation"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "scope",
+                    "permissions"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "scope": {
+                      "type": "string",
+                      "const": "project"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "permissions": {
+                      "type": "object",
+                      "properties": {
+                        "read": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "privateMutation": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "sharedMutation": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "read",
+                        "privateMutation",
+                        "sharedMutation"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "scope",
+                    "id",
+                    "name",
+                    "permissions"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "scope": {
+                      "type": "string",
+                      "const": "workspace"
+                    },
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "permissions": {
+                      "type": "object",
+                      "properties": {
+                        "read": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "privateMutation": {
+                          "type": "boolean",
+                          "const": true
+                        },
+                        "sharedMutation": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "read",
+                        "privateMutation",
+                        "sharedMutation"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "currentProject": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "scope": {
+                              "type": "string",
+                              "const": "project"
+                            },
+                            "id": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            },
+                            "name": {
+                              "type": "string"
+                            },
+                            "permissions": {
+                              "type": "object",
+                              "properties": {
+                                "read": {
+                                  "type": "boolean",
+                                  "const": true
+                                },
+                                "privateMutation": {
+                                  "type": "boolean",
+                                  "const": true
+                                },
+                                "sharedMutation": {
+                                  "type": "boolean"
+                                }
+                              },
+                              "required": [
+                                "read",
+                                "privateMutation",
+                                "sharedMutation"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "scope",
+                            "id",
+                            "name",
+                            "permissions"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "scope",
+                    "id",
+                    "name",
+                    "permissions",
+                    "currentProject"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "required": [
+            "success",
+            "version",
+            "actor",
+            "target"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

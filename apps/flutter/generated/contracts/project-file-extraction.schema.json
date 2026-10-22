@@ -1,0 +1,68 @@
+{
+  "source": "apps/sim/lib/api/contracts/project-file-extraction.ts",
+  "contracts": {
+    "extractProjectFileContract": {
+      "method": "POST",
+      "path": "/api/projects/[id]/files/[fileId]/extract",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "folderName": {
+              "type": "string"
+            },
+            "extractedCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "skippedCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "folderId": {
+              "type": "string",
+              "minLength": 1
+            },
+            "folderDisplayPath": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "folderName",
+            "extractedCount",
+            "skippedCount",
+            "folderId",
+            "folderDisplayPath"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

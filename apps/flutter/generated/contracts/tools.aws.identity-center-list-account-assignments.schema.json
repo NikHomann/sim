@@ -1,0 +1,119 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/identity-center-list-account-assignments.ts",
+  "contracts": {
+    "awsIdentityCenterListAccountAssignmentsContract": {
+      "method": "POST",
+      "path": "/api/tools/identity-center/list-account-assignments",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "instanceArn": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1224,
+            "pattern": "^arn:aws(-[a-z]{1,5}){0,3}:sso:::instance\\/(sso)?ins-[a-zA-Z0-9-.]{16}$"
+          },
+          "principalId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 47,
+            "pattern": "^([0-9a-f]{10}-)?[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$"
+          },
+          "principalType": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "GROUP"
+            ]
+          },
+          "maxResults": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "nextToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 65535
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "instanceArn",
+          "principalId",
+          "principalType"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "assignments": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "accountId": {
+                    "type": "string"
+                  },
+                  "permissionSetArn": {
+                    "type": "string"
+                  },
+                  "principalType": {
+                    "type": "string"
+                  },
+                  "principalId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "accountId",
+                  "permissionSetArn",
+                  "principalType",
+                  "principalId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextToken": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "count": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "assignments",
+            "nextToken",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

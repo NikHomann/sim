@@ -1,0 +1,44 @@
+{
+  "source": "apps/sim/lib/api/contracts/mothership-chat-images.ts",
+  "contracts": {
+    "getInlineChatImageContract": {
+      "method": "GET",
+      "path": "/api/mothership/chats/[chatId]/images/[requestId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+          },
+          "requestId": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]{1,128}$"
+          }
+        },
+        "required": [
+          "chatId",
+          "requestId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "path"
+        ]
+      },
+      "response": {
+        "mode": "binary"
+      }
+    }
+  }
+}

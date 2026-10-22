@@ -1,0 +1,745 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/google.ts",
+  "contracts": {
+    "gmailAddLabelContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/add-label",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "labelIds": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId",
+          "labelIds"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailArchiveContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/archive",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailDeleteContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/delete",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailDraftContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/draft",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contentType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "html"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "threadId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "replyToMessageId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bcc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attachments": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "uploadedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "context": {
+                      "type": "string"
+                    },
+                    "base64": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "size"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "to",
+          "body"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailEditDraftContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/edit-draft",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contentType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "html"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "threadId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "replyToMessageId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bcc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attachments": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "uploadedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "context": {
+                      "type": "string"
+                    },
+                    "base64": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "size"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "draftId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "to",
+          "body",
+          "draftId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailMarkReadContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/mark-read",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailMarkUnreadContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/mark-unread",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailMoveContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/move",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "addLabelIds": {
+            "type": "string",
+            "minLength": 1
+          },
+          "removeLabelIds": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId",
+          "addLabelIds"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailRemoveLabelContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/remove-label",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "labelIds": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId",
+          "labelIds"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailSendContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/send",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "to": {
+            "type": "string",
+            "minLength": 1
+          },
+          "subject": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contentType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "html"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "threadId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "replyToMessageId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "cc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bcc": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "attachments": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "key": {
+                      "type": "string"
+                    },
+                    "path": {
+                      "type": "string"
+                    },
+                    "url": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "size": {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "uploadedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "expiresAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {}
+                      ]
+                    },
+                    "context": {
+                      "type": "string"
+                    },
+                    "base64": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "size"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "to",
+          "body"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "gmailUnarchiveContract": {
+      "method": "POST",
+      "path": "/api/tools/gmail/unarchive",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "messageId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessToken",
+          "messageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    }
+  }
+}

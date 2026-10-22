@@ -1,0 +1,130 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-create-stack.ts",
+  "contracts": {
+    "awsCloudformationCreateStackContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/create-stack",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stackName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateBody": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "parameterKey": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "parameterValue": {
+                  "type": "string"
+                },
+                "usePreviousValue": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "parameterKey"
+              ]
+            }
+          },
+          "capabilities": {
+            "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 256
+                }
+              },
+              "required": [
+                "key",
+                "value"
+              ]
+            }
+          },
+          "onFailure": {
+            "type": "string",
+            "enum": [
+              "ROLLBACK",
+              "DELETE",
+              "DO_NOTHING"
+            ]
+          },
+          "timeoutInMinutes": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "stackName",
+          "templateBody"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "stackId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "stackId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

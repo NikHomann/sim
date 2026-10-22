@@ -1,0 +1,89 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/project-file-downloads.ts",
+  "contracts": {
+    "v2DownloadProjectFileItemsContract": {
+      "method": "GET",
+      "path": "/api/v2/projects/[projectId]/files/bulk-download",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          }
+        },
+        "required": [
+          "projectId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileIds": {
+            "description": "File identifiers to include, comma-separated. At most 100 entries.",
+            "type": "string"
+          },
+          "folderIds": {
+            "description": "Folder identifiers to include recursively, comma-separated. The resolved selection allows at most 100 files.",
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "v2ExportProjectFileSnapshotContract": {
+      "method": "POST",
+      "path": "/api/v2/projects/[projectId]/files/[fileId]/export",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "File identifier within the Project."
+          }
+        },
+        "required": [
+          "projectId",
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 5242880,
+            "description": "Visible Markdown snapshot to export. This does not replace the stored file or create a version."
+          }
+        },
+        "required": [
+          "content"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "binary"
+      }
+    }
+  }
+}

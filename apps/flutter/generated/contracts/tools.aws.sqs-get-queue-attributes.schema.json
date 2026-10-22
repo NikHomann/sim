@@ -1,0 +1,96 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/sqs-get-queue-attributes.ts",
+  "contracts": {
+    "awsSqsGetQueueAttributesContract": {
+      "method": "POST",
+      "path": "/api/tools/sqs/get-queue-attributes",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queueUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attributeNames": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": [
+                    "All",
+                    "ApproximateNumberOfMessages",
+                    "ApproximateNumberOfMessagesDelayed",
+                    "ApproximateNumberOfMessagesNotVisible",
+                    "ContentBasedDeduplication",
+                    "CreatedTimestamp",
+                    "DeduplicationScope",
+                    "DelaySeconds",
+                    "FifoQueue",
+                    "FifoThroughputLimit",
+                    "KmsDataKeyReusePeriodSeconds",
+                    "KmsMasterKeyId",
+                    "LastModifiedTimestamp",
+                    "MaximumMessageSize",
+                    "MessageRetentionPeriod",
+                    "Policy",
+                    "QueueArn",
+                    "ReceiveMessageWaitTimeSeconds",
+                    "RedriveAllowPolicy",
+                    "RedrivePolicy",
+                    "SqsManagedSseEnabled",
+                    "VisibilityTimeout"
+                  ]
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "queueUrl"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "attributes": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "attributes"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

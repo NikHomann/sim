@@ -1,0 +1,962 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/custom-tools.ts",
+  "contracts": {
+    "v2CreateCustomToolContract": {
+      "method": "POST",
+      "path": "/api/v2/custom-tools",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace in which to create the custom tool."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Display title, unique within the workspace."
+          },
+          "schema": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "function",
+                "description": "Function declaration discriminator."
+              },
+              "function": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Function name presented to the model."
+                  },
+                  "description": {
+                    "description": "Optional explanation of what the function does.",
+                    "type": "string"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "JSON Schema type for the arguments, usually `object`."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "description": "Caller-defined JSON Schema for one tool argument."
+                        },
+                        "description": "Caller-defined argument schemas keyed by argument name."
+                      },
+                      "required": {
+                        "description": "Names of required arguments.",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "properties"
+                    ],
+                    "additionalProperties": {
+                      "description": "Caller-defined extension value preserved by the public API."
+                    },
+                    "description": "JSON Schema describing the arguments accepted by the tool."
+                  }
+                },
+                "required": [
+                  "name",
+                  "parameters"
+                ],
+                "additionalProperties": {
+                  "description": "Caller-defined extension value preserved by the public API."
+                },
+                "description": "OpenAI-style function definition."
+              }
+            },
+            "required": [
+              "type",
+              "function"
+            ],
+            "additionalProperties": {
+              "description": "Caller-defined extension value preserved by the public API."
+            },
+            "description": "OpenAI-style function declaration describing the callable tool surface."
+          },
+          "code": {
+            "type": "string",
+            "maxLength": 100000,
+            "description": "Tool implementation executed in the sandboxed function runtime."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "title",
+          "schema",
+          "code"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2CustomTool"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2CustomTool": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique custom tool identifier."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Display title, unique within the workspace."
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "function",
+                      "description": "Function declaration discriminator."
+                    },
+                    "function": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Function name presented to the model."
+                        },
+                        "description": {
+                          "description": "Optional explanation of what the function does.",
+                          "type": "string"
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "JSON Schema type for the arguments, usually `object`."
+                            },
+                            "properties": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "description": "Caller-defined JSON Schema for one tool argument."
+                              },
+                              "description": "Caller-defined argument schemas keyed by argument name."
+                            },
+                            "required": {
+                              "description": "Names of required arguments.",
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "properties"
+                          ],
+                          "additionalProperties": {
+                            "description": "Caller-defined extension value preserved by the public API."
+                          },
+                          "description": "JSON Schema describing the arguments accepted by the tool."
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "parameters"
+                      ],
+                      "additionalProperties": {
+                        "description": "Caller-defined extension value preserved by the public API."
+                      },
+                      "description": "OpenAI-style function definition."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "function"
+                  ],
+                  "additionalProperties": {
+                    "description": "Caller-defined extension value preserved by the public API."
+                  },
+                  "description": "OpenAI-style function declaration describing the callable tool surface."
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Tool implementation executed in the sandboxed function runtime."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "schema",
+                "code",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2CustomTool",
+              "title": "Custom tool",
+              "description": "A workspace custom tool and its callable function declaration."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteCustomToolContract": {
+      "method": "DELETE",
+      "path": "/api/v2/custom-tools/[customToolId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "customToolId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique custom tool identifier."
+          }
+        },
+        "required": [
+          "customToolId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the custom tool."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2CustomToolDeleteData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2CustomToolDeleteData": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the deleted custom tool."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the custom tool was deleted."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2CustomToolDeleteData",
+              "title": "Delete custom tool data",
+              "description": "Custom tool deletion acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2GetCustomToolContract": {
+      "method": "GET",
+      "path": "/api/v2/custom-tools/[customToolId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "customToolId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique custom tool identifier."
+          }
+        },
+        "required": [
+          "customToolId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the custom tool."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2CustomTool"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2CustomTool": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique custom tool identifier."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Display title, unique within the workspace."
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "function",
+                      "description": "Function declaration discriminator."
+                    },
+                    "function": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Function name presented to the model."
+                        },
+                        "description": {
+                          "description": "Optional explanation of what the function does.",
+                          "type": "string"
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "JSON Schema type for the arguments, usually `object`."
+                            },
+                            "properties": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "description": "Caller-defined JSON Schema for one tool argument."
+                              },
+                              "description": "Caller-defined argument schemas keyed by argument name."
+                            },
+                            "required": {
+                              "description": "Names of required arguments.",
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "properties"
+                          ],
+                          "additionalProperties": {
+                            "description": "Caller-defined extension value preserved by the public API."
+                          },
+                          "description": "JSON Schema describing the arguments accepted by the tool."
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "parameters"
+                      ],
+                      "additionalProperties": {
+                        "description": "Caller-defined extension value preserved by the public API."
+                      },
+                      "description": "OpenAI-style function definition."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "function"
+                  ],
+                  "additionalProperties": {
+                    "description": "Caller-defined extension value preserved by the public API."
+                  },
+                  "description": "OpenAI-style function declaration describing the callable tool surface."
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Tool implementation executed in the sandboxed function runtime."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "schema",
+                "code",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2CustomTool",
+              "title": "Custom tool",
+              "description": "A workspace custom tool and its callable function declaration."
+            }
+          }
+        }
+      }
+    },
+    "v2ListCustomToolsContract": {
+      "method": "GET",
+      "path": "/api/v2/custom-tools",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the custom tool."
+          },
+          "search": {
+            "description": "Case-insensitive substring match against the tool title.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "title",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum custom tools to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2CustomTool"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2CustomTool": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique custom tool identifier."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Display title, unique within the workspace."
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "function",
+                      "description": "Function declaration discriminator."
+                    },
+                    "function": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Function name presented to the model."
+                        },
+                        "description": {
+                          "description": "Optional explanation of what the function does.",
+                          "type": "string"
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "JSON Schema type for the arguments, usually `object`."
+                            },
+                            "properties": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "description": "Caller-defined JSON Schema for one tool argument."
+                              },
+                              "description": "Caller-defined argument schemas keyed by argument name."
+                            },
+                            "required": {
+                              "description": "Names of required arguments.",
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "properties"
+                          ],
+                          "additionalProperties": {
+                            "description": "Caller-defined extension value preserved by the public API."
+                          },
+                          "description": "JSON Schema describing the arguments accepted by the tool."
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "parameters"
+                      ],
+                      "additionalProperties": {
+                        "description": "Caller-defined extension value preserved by the public API."
+                      },
+                      "description": "OpenAI-style function definition."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "function"
+                  ],
+                  "additionalProperties": {
+                    "description": "Caller-defined extension value preserved by the public API."
+                  },
+                  "description": "OpenAI-style function declaration describing the callable tool surface."
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Tool implementation executed in the sandboxed function runtime."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "schema",
+                "code",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2CustomTool",
+              "title": "Custom tool",
+              "description": "A workspace custom tool and its callable function declaration."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateCustomToolContract": {
+      "method": "PATCH",
+      "path": "/api/v2/custom-tools/[customToolId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "customToolId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique custom tool identifier."
+          }
+        },
+        "required": [
+          "customToolId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the custom tool."
+          },
+          "title": {
+            "description": "New display title for the tool.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "schema": {
+            "description": "Replacement function declaration.",
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "function",
+                "description": "Function declaration discriminator."
+              },
+              "function": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Function name presented to the model."
+                  },
+                  "description": {
+                    "description": "Optional explanation of what the function does.",
+                    "type": "string"
+                  },
+                  "parameters": {
+                    "type": "object",
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "description": "JSON Schema type for the arguments, usually `object`."
+                      },
+                      "properties": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "description": "Caller-defined JSON Schema for one tool argument."
+                        },
+                        "description": "Caller-defined argument schemas keyed by argument name."
+                      },
+                      "required": {
+                        "description": "Names of required arguments.",
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "type",
+                      "properties"
+                    ],
+                    "additionalProperties": {
+                      "description": "Caller-defined extension value preserved by the public API."
+                    },
+                    "description": "JSON Schema describing the arguments accepted by the tool."
+                  }
+                },
+                "required": [
+                  "name",
+                  "parameters"
+                ],
+                "additionalProperties": {
+                  "description": "Caller-defined extension value preserved by the public API."
+                },
+                "description": "OpenAI-style function definition."
+              }
+            },
+            "required": [
+              "type",
+              "function"
+            ],
+            "additionalProperties": {
+              "description": "Caller-defined extension value preserved by the public API."
+            }
+          },
+          "code": {
+            "description": "Replacement tool implementation.",
+            "type": "string",
+            "maxLength": 100000
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2CustomTool"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2CustomTool": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique custom tool identifier."
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Display title, unique within the workspace."
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "function",
+                      "description": "Function declaration discriminator."
+                    },
+                    "function": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Function name presented to the model."
+                        },
+                        "description": {
+                          "description": "Optional explanation of what the function does.",
+                          "type": "string"
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "description": "JSON Schema type for the arguments, usually `object`."
+                            },
+                            "properties": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "description": "Caller-defined JSON Schema for one tool argument."
+                              },
+                              "description": "Caller-defined argument schemas keyed by argument name."
+                            },
+                            "required": {
+                              "description": "Names of required arguments.",
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "properties"
+                          ],
+                          "additionalProperties": {
+                            "description": "Caller-defined extension value preserved by the public API."
+                          },
+                          "description": "JSON Schema describing the arguments accepted by the tool."
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "parameters"
+                      ],
+                      "additionalProperties": {
+                        "description": "Caller-defined extension value preserved by the public API."
+                      },
+                      "description": "OpenAI-style function definition."
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "function"
+                  ],
+                  "additionalProperties": {
+                    "description": "Caller-defined extension value preserved by the public API."
+                  },
+                  "description": "OpenAI-style function declaration describing the callable tool surface."
+                },
+                "code": {
+                  "type": "string",
+                  "description": "Tool implementation executed in the sandboxed function runtime."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the tool was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "title",
+                "schema",
+                "code",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2CustomTool",
+              "title": "Custom tool",
+              "description": "A workspace custom tool and its callable function declaration."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,911 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/skills.ts",
+  "contracts": {
+    "v2CreateSkillContract": {
+      "method": "POST",
+      "path": "/api/v2/skills",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace in which to create the skill."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+            "description": "Kebab-case name, unique within the workspace and not reserved by a built-in skill."
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024,
+            "description": "One-line summary of when the skill applies."
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000,
+            "description": "Skill body containing the instructions given to the agent."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "name",
+          "description",
+          "content"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2Skill"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Skill": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Kebab-case name that agents use to reference the skill."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "One-line summary of when the skill applies."
+                },
+                "readOnly": {
+                  "type": "boolean",
+                  "description": "Whether this is a built-in skill that cannot be modified or deleted."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was created. Built-in skills report the Unix epoch."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was last updated. Built-in skills report the Unix epoch."
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Skill body containing the instructions given to the agent."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "readOnly",
+                "createdAt",
+                "updatedAt",
+                "content"
+              ],
+              "additionalProperties": false,
+              "id": "V2Skill",
+              "title": "Skill",
+              "description": "A workspace or built-in skill including its instruction body."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteSkillContract": {
+      "method": "DELETE",
+      "path": "/api/v2/skills/[skillId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+          }
+        },
+        "required": [
+          "skillId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the skill."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2SkillDeleteData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2SkillDeleteData": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the deleted skill."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the skill was deleted."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2SkillDeleteData",
+              "title": "Delete skill data",
+              "description": "Skill deletion acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2GetSkillContract": {
+      "method": "GET",
+      "path": "/api/v2/skills/[skillId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+          }
+        },
+        "required": [
+          "skillId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the skill."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2Skill"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Skill": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Kebab-case name that agents use to reference the skill."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "One-line summary of when the skill applies."
+                },
+                "readOnly": {
+                  "type": "boolean",
+                  "description": "Whether this is a built-in skill that cannot be modified or deleted."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was created. Built-in skills report the Unix epoch."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was last updated. Built-in skills report the Unix epoch."
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Skill body containing the instructions given to the agent."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "readOnly",
+                "createdAt",
+                "updatedAt",
+                "content"
+              ],
+              "additionalProperties": false,
+              "id": "V2Skill",
+              "title": "Skill",
+              "description": "A workspace or built-in skill including its instruction body."
+            }
+          }
+        }
+      }
+    },
+    "v2GrantSkillEditorContract": {
+      "method": "POST",
+      "path": "/api/v2/skills/[skillId]/editors",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+          }
+        },
+        "required": [
+          "skillId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the skill."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "description": "Email address of a current workspace member."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": [
+          200,
+          201
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2SkillEditor"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2SkillEditor": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                  "description": "Email address of the skill editor."
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Display name of the skill editor."
+                },
+                "image": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Profile image URL of the skill editor."
+                },
+                "isWorkspaceAdmin": {
+                  "type": "boolean",
+                  "description": "Whether editor access is derived from workspace administration."
+                }
+              },
+              "required": [
+                "email",
+                "name",
+                "image",
+                "isWorkspaceAdmin"
+              ],
+              "additionalProperties": false,
+              "id": "V2SkillEditor",
+              "title": "Skill editor",
+              "description": "Public identity fields for a user who can edit a skill."
+            }
+          }
+        }
+      }
+    },
+    "v2ListSkillEditorsContract": {
+      "method": "GET",
+      "path": "/api/v2/skills/[skillId]/editors",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+          }
+        },
+        "required": [
+          "skillId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the skill."
+          },
+          "sortBy": {
+            "default": "email",
+            "description": "Field used to sort the result. Do not rely on case-insensitive ordering when sorting by `name`.",
+            "type": "string",
+            "enum": [
+              "email",
+              "name"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum skill editors to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2SkillEditor"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2SkillEditor": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                  "description": "Email address of the skill editor."
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Display name of the skill editor."
+                },
+                "image": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Profile image URL of the skill editor."
+                },
+                "isWorkspaceAdmin": {
+                  "type": "boolean",
+                  "description": "Whether editor access is derived from workspace administration."
+                }
+              },
+              "required": [
+                "email",
+                "name",
+                "image",
+                "isWorkspaceAdmin"
+              ],
+              "additionalProperties": false,
+              "id": "V2SkillEditor",
+              "title": "Skill editor",
+              "description": "Public identity fields for a user who can edit a skill."
+            }
+          }
+        }
+      }
+    },
+    "v2ListSkillsContract": {
+      "method": "GET",
+      "path": "/api/v2/skills",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the skill."
+          },
+          "search": {
+            "description": "Case-insensitive substring match against the skill name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Field used to sort the result. Do not rely on case-insensitive ordering when sorting by `name`.",
+            "type": "string",
+            "enum": [
+              "name",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum skills to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2SkillSummary"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2SkillSummary": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Kebab-case name that agents use to reference the skill."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "One-line summary of when the skill applies."
+                },
+                "readOnly": {
+                  "type": "boolean",
+                  "description": "Whether this is a built-in skill that cannot be modified or deleted."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was created. Built-in skills report the Unix epoch."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was last updated. Built-in skills report the Unix epoch."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "readOnly",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2SkillSummary",
+              "title": "Skill summary",
+              "description": "Public summary metadata for a workspace or built-in skill."
+            }
+          }
+        }
+      }
+    },
+    "v2RevokeSkillEditorContract": {
+      "method": "DELETE",
+      "path": "/api/v2/skills/[skillId]/editors",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+          }
+        },
+        "required": [
+          "skillId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the skill."
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+            "description": "Email address of a current workspace member."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "email"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2SkillEditorDeleteData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2SkillEditorDeleteData": {
+              "type": "object",
+              "properties": {
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$",
+                  "description": "Email address whose explicit editor grant was revoked."
+                },
+                "revoked": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the explicit editor grant was revoked."
+                }
+              },
+              "required": [
+                "email",
+                "revoked"
+              ],
+              "additionalProperties": false,
+              "id": "V2SkillEditorDeleteData",
+              "title": "Revoke skill editor data",
+              "description": "Skill editor revocation acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateSkillContract": {
+      "method": "PATCH",
+      "path": "/api/v2/skills/[skillId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "skillId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+          }
+        },
+        "required": [
+          "skillId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the skill."
+          },
+          "name": {
+            "description": "New kebab-case skill name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$"
+          },
+          "description": {
+            "description": "New one-line summary of when the skill applies.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "content": {
+            "description": "Replacement skill body.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2Skill"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Skill": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique skill identifier. A built-in skill is `builtin-` followed by its name, for example `builtin-research`."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Kebab-case name that agents use to reference the skill."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "One-line summary of when the skill applies."
+                },
+                "readOnly": {
+                  "type": "boolean",
+                  "description": "Whether this is a built-in skill that cannot be modified or deleted."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was created. Built-in skills report the Unix epoch."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the skill was last updated. Built-in skills report the Unix epoch."
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Skill body containing the instructions given to the agent."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "readOnly",
+                "createdAt",
+                "updatedAt",
+                "content"
+              ],
+              "additionalProperties": false,
+              "id": "V2Skill",
+              "title": "Skill",
+              "description": "A workspace or built-in skill including its instruction body."
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,220 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-create-email-identity.ts",
+  "contracts": {
+    "awsSesCreateEmailIdentityContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/create-email-identity",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "emailIdentity": {
+            "type": "string",
+            "minLength": 1
+          },
+          "dkimSigningAttributes": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "domainSigningSelector": {
+                    "type": "string"
+                  },
+                  "domainSigningPrivateKey": {
+                    "type": "string"
+                  },
+                  "nextSigningKeyLength": {
+                    "type": "string",
+                    "enum": [
+                      "RSA_1024_BIT",
+                      "RSA_2048_BIT"
+                    ]
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 256
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "value"
+                  ]
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "configurationSetName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "emailIdentity"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "identityType": {
+              "type": "string"
+            },
+            "verifiedForSendingStatus": {
+              "type": "boolean"
+            },
+            "dkimAttributes": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "signingEnabled": {
+                      "anyOf": [
+                        {
+                          "type": "boolean"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "status": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "tokens": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "signingAttributesOrigin": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "nextSigningKeyLength": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "currentSigningKeyLength": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastKeyGenerationTimestamp": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "signingHostedZone": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "signingEnabled",
+                    "status",
+                    "tokens",
+                    "signingAttributesOrigin",
+                    "nextSigningKeyLength",
+                    "currentSigningKeyLength",
+                    "lastKeyGenerationTimestamp",
+                    "signingHostedZone"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "identityType",
+            "verifiedForSendingStatus",
+            "dkimAttributes"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

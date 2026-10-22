@@ -1,0 +1,1846 @@
+{
+  "source": "apps/sim/lib/api/contracts/workspaces.ts",
+  "contracts": {
+    "createWorkspaceContract": {
+      "method": "POST",
+      "path": "/api/workspaces",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "skipDefaultWorkflow": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspace": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "ownerId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceMode": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "organization",
+                    "grandfathered_shared"
+                  ]
+                },
+                "role": {
+                  "type": "string"
+                },
+                "membershipId": {
+                  "type": "string"
+                },
+                "permissions": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "admin",
+                        "write",
+                        "read"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isOrgAdmin": {
+                  "type": "boolean"
+                },
+                "billedAccountUserId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "allowPersonalApiKeys": {
+                  "type": "boolean"
+                },
+                "storageUsedBytes": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "inboxEnabled": {
+                  "type": "boolean"
+                },
+                "inboxAddress": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxProviderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxSecretScope": {
+                  "type": "string"
+                },
+                "inboxMountedSecrets": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "organizationAssignedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "forkSyncNewWorkflowsExcluded": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "inviteMembersEnabled": {
+                  "type": "boolean"
+                },
+                "inviteDisabledReason": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inviteUpgradeRequired": {
+                  "type": "boolean"
+                },
+                "forkedFromWorkspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "ownerId",
+                "organizationId",
+                "workspaceMode"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "workspace"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteWorkspaceContract": {
+      "method": "DELETE",
+      "path": "/api/workspaces/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspace": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "ownerId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceMode": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "organization",
+                    "grandfathered_shared"
+                  ]
+                },
+                "role": {
+                  "type": "string"
+                },
+                "membershipId": {
+                  "type": "string"
+                },
+                "permissions": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "admin",
+                        "write",
+                        "read"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isOrgAdmin": {
+                  "type": "boolean"
+                },
+                "billedAccountUserId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "allowPersonalApiKeys": {
+                  "type": "boolean"
+                },
+                "storageUsedBytes": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "inboxEnabled": {
+                  "type": "boolean"
+                },
+                "inboxAddress": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxProviderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxSecretScope": {
+                  "type": "string"
+                },
+                "inboxMountedSecrets": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "organizationAssignedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "forkSyncNewWorkflowsExcluded": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "inviteMembersEnabled": {
+                  "type": "boolean"
+                },
+                "inviteDisabledReason": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inviteUpgradeRequired": {
+                  "type": "boolean"
+                },
+                "forkedFromWorkspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "ownerId",
+                "organizationId",
+                "workspaceMode"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "workspace"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceCreditAvailabilityContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/credit-availability",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "remainingDollars": {
+              "anyOf": [
+                {
+                  "type": "number",
+                  "minimum": 0
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "scope": {
+              "type": "string",
+              "enum": [
+                "payer",
+                "member",
+                "effective"
+              ]
+            }
+          },
+          "required": [
+            "remainingDollars",
+            "scope"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceFeatureFlagsContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/feature-flags",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "flags": {
+              "type": "object",
+              "properties": {
+                "dashboards": {
+                  "type": "boolean"
+                },
+                "workflow-tests": {
+                  "type": "boolean"
+                },
+                "changelog": {
+                  "type": "boolean"
+                },
+                "mothership-model-selector": {
+                  "type": "boolean"
+                },
+                "mothership-computer-use": {
+                  "type": "boolean"
+                },
+                "mothership-plan-mode": {
+                  "type": "boolean"
+                },
+                "projects": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "dashboards",
+                "workflow-tests",
+                "changelog",
+                "mothership-model-selector",
+                "mothership-computer-use",
+                "mothership-plan-mode",
+                "projects"
+              ],
+              "additionalProperties": false
+            },
+            "desktopExecutor": {
+              "type": "object",
+              "properties": {
+                "available": {
+                  "type": "boolean"
+                },
+                "registered": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "available",
+                "registered"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "flags",
+            "desktopExecutor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceHostContextContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/host-context",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspace": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "workspaceMode": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "organization",
+                    "grandfathered_shared"
+                  ]
+                },
+                "billedAccountUserId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "allowPersonalApiKeys": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "workspaceMode",
+                "billedAccountUserId"
+              ],
+              "additionalProperties": false
+            },
+            "hostOrganizationId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "ownerBilling": {
+              "type": "object",
+              "properties": {
+                "plan": {
+                  "type": "string"
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isPaid": {
+                  "type": "boolean"
+                },
+                "isPro": {
+                  "type": "boolean"
+                },
+                "isTeam": {
+                  "type": "boolean"
+                },
+                "isEnterprise": {
+                  "type": "boolean"
+                },
+                "isOrgScoped": {
+                  "type": "boolean"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "billingInterval": {
+                  "type": "string",
+                  "enum": [
+                    "month",
+                    "year"
+                  ]
+                },
+                "billingBlocked": {
+                  "type": "boolean"
+                },
+                "billingBlockedReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "payment_failed",
+                        "dispute"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "plan",
+                "status",
+                "isPaid",
+                "isPro",
+                "isTeam",
+                "isEnterprise",
+                "isOrgScoped",
+                "organizationId",
+                "billingInterval",
+                "billingBlocked",
+                "billingBlockedReason"
+              ],
+              "additionalProperties": false
+            },
+            "viewer": {
+              "type": "object",
+              "properties": {
+                "permission": {
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "write",
+                    "read"
+                  ]
+                },
+                "isHostOrganizationMember": {
+                  "type": "boolean"
+                },
+                "isHostOrganizationAdmin": {
+                  "type": "boolean"
+                },
+                "organizationRole": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "owner",
+                        "admin",
+                        "member"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "permission",
+                "isHostOrganizationMember",
+                "isHostOrganizationAdmin"
+              ],
+              "additionalProperties": false
+            },
+            "features": {
+              "type": "object",
+              "properties": {
+                "credentialGroups": {
+                  "type": "boolean"
+                },
+                "organizationSearch": {
+                  "type": "boolean"
+                },
+                "knowledgeMemberAccess": {
+                  "type": "boolean"
+                },
+                "knowledgeSourceMirroredAccess": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "credentialGroups"
+              ],
+              "additionalProperties": false
+            },
+            "deployment": {
+              "type": "object",
+              "properties": {
+                "hosted": {
+                  "type": "boolean"
+                },
+                "billingEnabled": {
+                  "type": "boolean"
+                },
+                "chatEnabled": {
+                  "type": "boolean"
+                },
+                "azureConfigured": {
+                  "type": "boolean"
+                },
+                "cohereConfigured": {
+                  "type": "boolean"
+                },
+                "features": {
+                  "type": "object",
+                  "properties": {
+                    "accessControl": {
+                      "type": "boolean"
+                    },
+                    "auditLogs": {
+                      "type": "boolean"
+                    },
+                    "customBlocks": {
+                      "type": "boolean"
+                    },
+                    "dataDrains": {
+                      "type": "boolean"
+                    },
+                    "dataRetention": {
+                      "type": "boolean"
+                    },
+                    "inbox": {
+                      "type": "boolean"
+                    },
+                    "sandboxes": {
+                      "type": "boolean"
+                    },
+                    "scim": {
+                      "type": "boolean"
+                    },
+                    "sessionPolicies": {
+                      "type": "boolean"
+                    },
+                    "sso": {
+                      "type": "boolean"
+                    },
+                    "usageMonitoring": {
+                      "type": "boolean"
+                    },
+                    "whitelabeling": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "accessControl",
+                    "auditLogs",
+                    "customBlocks",
+                    "dataDrains",
+                    "dataRetention",
+                    "inbox",
+                    "sandboxes",
+                    "scim",
+                    "sessionPolicies",
+                    "sso",
+                    "usageMonitoring",
+                    "whitelabeling"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "hosted",
+                "billingEnabled",
+                "chatEnabled",
+                "azureConfigured",
+                "cohereConfigured",
+                "features"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "workspace",
+            "hostOrganizationId",
+            "ownerBilling",
+            "viewer"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceMembersContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/members",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "image": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "userId",
+                  "name",
+                  "image"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "members"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspacePermissionsContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/permissions",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "users": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "image": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "permissionType": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "write",
+                      "read"
+                    ]
+                  },
+                  "isExternal": {
+                    "type": "boolean"
+                  },
+                  "joinedAt": {
+                    "type": "string"
+                  },
+                  "roleSource": {
+                    "type": "string",
+                    "enum": [
+                      "owner",
+                      "explicit",
+                      "org-admin"
+                    ]
+                  },
+                  "isOrgAdmin": {
+                    "type": "boolean"
+                  },
+                  "isBilledAccount": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "userId",
+                  "email",
+                  "name",
+                  "image",
+                  "permissionType",
+                  "isExternal",
+                  "joinedAt",
+                  "roleSource",
+                  "isOrgAdmin",
+                  "isBilledAccount"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "total": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "viewer": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string"
+                },
+                "isAdmin": {
+                  "type": "boolean"
+                },
+                "permissionType": {
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "write",
+                    "read"
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "isAdmin",
+                "permissionType"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "users",
+            "total"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceUsageGateContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/usage-gate",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isExceeded": {
+              "type": "boolean"
+            },
+            "message": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "scope": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "actor",
+                    "payer",
+                    "member"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "isExceeded",
+            "message",
+            "scope"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listWorkspacesContract": {
+      "method": "GET",
+      "path": "/api/workspaces",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "scope": {
+            "default": "active",
+            "type": "string",
+            "enum": [
+              "active",
+              "archived",
+              "all"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspaces": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "color": {
+                    "type": "string"
+                  },
+                  "logoUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "ownerId": {
+                    "type": "string"
+                  },
+                  "organizationId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "workspaceMode": {
+                    "type": "string",
+                    "enum": [
+                      "personal",
+                      "organization",
+                      "grandfathered_shared"
+                    ]
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "membershipId": {
+                    "type": "string"
+                  },
+                  "permissions": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "isOrgAdmin": {
+                    "type": "boolean"
+                  },
+                  "billedAccountUserId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "allowPersonalApiKeys": {
+                    "type": "boolean"
+                  },
+                  "storageUsedBytes": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "inboxEnabled": {
+                    "type": "boolean"
+                  },
+                  "inboxAddress": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "inboxProviderId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "inboxSecretScope": {
+                    "type": "string"
+                  },
+                  "inboxMountedSecrets": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "archivedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "organizationAssignedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "forkSyncNewWorkflowsExcluded": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  },
+                  "inviteMembersEnabled": {
+                    "type": "boolean"
+                  },
+                  "inviteDisabledReason": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "inviteUpgradeRequired": {
+                    "type": "boolean"
+                  },
+                  "forkedFromWorkspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "ownerId",
+                  "organizationId",
+                  "workspaceMode"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "lastActiveWorkspaceId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "pinnedWorkspaceIds": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "creationPolicy": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "canCreate": {
+                      "type": "boolean"
+                    },
+                    "workspaceMode": {
+                      "type": "string",
+                      "enum": [
+                        "personal",
+                        "organization",
+                        "grandfathered_shared"
+                      ]
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "maxWorkspaces": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "currentWorkspaceCount": {
+                      "type": "number"
+                    },
+                    "reason": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "blockedReasonCode": {
+                      "type": "string",
+                      "enum": [
+                        "organization-subscription-inactive",
+                        "permission-group-denied"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "canCreate",
+                    "workspaceMode",
+                    "organizationId",
+                    "maxWorkspaces",
+                    "currentWorkspaceCount",
+                    "reason"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "workspaces",
+            "lastActiveWorkspaceId",
+            "pinnedWorkspaceIds",
+            "creationPolicy"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "recordWorkspaceVisitContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/visit",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateWorkspaceContract": {
+      "method": "PATCH",
+      "path": "/api/workspaces/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "logoUrl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "billedAccountUserId": {
+            "type": "string"
+          },
+          "allowPersonalApiKeys": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspace": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "ownerId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceMode": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "organization",
+                    "grandfathered_shared"
+                  ]
+                },
+                "role": {
+                  "type": "string"
+                },
+                "membershipId": {
+                  "type": "string"
+                },
+                "permissions": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "admin",
+                        "write",
+                        "read"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isOrgAdmin": {
+                  "type": "boolean"
+                },
+                "billedAccountUserId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "allowPersonalApiKeys": {
+                  "type": "boolean"
+                },
+                "storageUsedBytes": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "inboxEnabled": {
+                  "type": "boolean"
+                },
+                "inboxAddress": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxProviderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxSecretScope": {
+                  "type": "string"
+                },
+                "inboxMountedSecrets": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "organizationAssignedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "forkSyncNewWorkflowsExcluded": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "inviteMembersEnabled": {
+                  "type": "boolean"
+                },
+                "inviteDisabledReason": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inviteUpgradeRequired": {
+                  "type": "boolean"
+                },
+                "forkedFromWorkspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "ownerId",
+                "organizationId",
+                "workspaceMode"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "workspace"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateWorkspacePermissionsContract": {
+      "method": "PATCH",
+      "path": "/api/workspaces/[id]/permissions",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "updates": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "permissions": {
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "write",
+                    "read"
+                  ]
+                }
+              },
+              "required": [
+                "userId",
+                "permissions"
+              ]
+            }
+          }
+        },
+        "required": [
+          "updates"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1057 @@
+{
+  "source": "apps/sim/lib/api/contracts/organization-scim.ts",
+  "contracts": {
+    "configureScimConnectionContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/scim",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          },
+          "settings": {
+            "type": "object",
+            "properties": {
+              "lockManualMembership": {
+                "type": "boolean"
+              },
+              "disableJit": {
+                "type": "boolean"
+              },
+              "autoMapPermissionGroupsByName": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "connection": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "disabled"
+                  ]
+                },
+                "baseUrl": {
+                  "type": "string"
+                },
+                "settings": {
+                  "type": "object",
+                  "properties": {
+                    "lockManualMembership": {
+                      "type": "boolean"
+                    },
+                    "disableJit": {
+                      "type": "boolean"
+                    },
+                    "autoMapPermissionGroupsByName": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "lastRequestAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "reconciledAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "credentials": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "tokenPrefix": {
+                        "type": "string"
+                      },
+                      "scopes": {
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "enum": [
+                            "users:read",
+                            "users:write",
+                            "groups:read",
+                            "groups:write"
+                          ]
+                        }
+                      },
+                      "expiresAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "lastUsedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "createdAt": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "tokenPrefix",
+                      "scopes",
+                      "expiresAt",
+                      "lastUsedAt",
+                      "createdAt"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "userCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                },
+                "groupCount": {
+                  "type": "integer",
+                  "minimum": -9007199254740991,
+                  "maximum": 9007199254740991
+                }
+              },
+              "required": [
+                "id",
+                "status",
+                "baseUrl",
+                "settings",
+                "lastRequestAt",
+                "reconciledAt",
+                "createdAt",
+                "credentials",
+                "userCount",
+                "groupCount"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "connection"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteScimGroupMappingContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/scim/mappings/[mappingId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "mappingId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "mappingId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "reconciledUsers": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "success",
+            "reconciledUsers"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getScimConnectionContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/scim",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "connection": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "active",
+                        "disabled"
+                      ]
+                    },
+                    "baseUrl": {
+                      "type": "string"
+                    },
+                    "settings": {
+                      "type": "object",
+                      "properties": {
+                        "lockManualMembership": {
+                          "type": "boolean"
+                        },
+                        "disableJit": {
+                          "type": "boolean"
+                        },
+                        "autoMapPermissionGroupsByName": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "lastRequestAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "reconciledAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "credentials": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "tokenPrefix": {
+                            "type": "string"
+                          },
+                          "scopes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "users:read",
+                                "users:write",
+                                "groups:read",
+                                "groups:write"
+                              ]
+                            }
+                          },
+                          "expiresAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "lastUsedAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "tokenPrefix",
+                          "scopes",
+                          "expiresAt",
+                          "lastUsedAt",
+                          "createdAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "userCount": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "groupCount": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "baseUrl",
+                    "settings",
+                    "lastRequestAt",
+                    "reconciledAt",
+                    "createdAt",
+                    "credentials",
+                    "userCount",
+                    "groupCount"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "connection"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "issueScimCredentialContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/scim/credentials",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "expiresInDays": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 3650
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "secret": {
+              "type": "string"
+            },
+            "credential": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "tokenPrefix": {
+                  "type": "string"
+                },
+                "scopes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "users:read",
+                      "users:write",
+                      "groups:read",
+                      "groups:write"
+                    ]
+                  }
+                },
+                "expiresAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastUsedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "tokenPrefix",
+                "scopes",
+                "expiresAt",
+                "lastUsedAt",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "secret",
+            "credential"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listScimActivityContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/scim/activity",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "entries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "method": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "scimType": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "detail": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "userAgent": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "durationMs": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "method",
+                  "path",
+                  "status",
+                  "scimType",
+                  "detail",
+                  "userAgent",
+                  "durationMs",
+                  "createdAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "entries"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listScimGroupMappingsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/scim/mappings",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "memberCount": {
+                    "type": "integer",
+                    "minimum": -9007199254740991,
+                    "maximum": 9007199254740991
+                  },
+                  "mappings": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "groupId": {
+                          "type": "string"
+                        },
+                        "groupDisplayName": {
+                          "type": "string"
+                        },
+                        "targetKind": {
+                          "type": "string",
+                          "enum": [
+                            "permission_group",
+                            "workspace",
+                            "org_role"
+                          ]
+                        },
+                        "permissionGroupId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "workspaceId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "permissionType": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "admin",
+                                "write",
+                                "read"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "role": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "groupId",
+                        "groupDisplayName",
+                        "targetKind",
+                        "permissionGroupId",
+                        "workspaceId",
+                        "permissionType",
+                        "role"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "displayName",
+                  "memberCount",
+                  "mappings"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "groups"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reconcileScimConnectionContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/scim/reconcile",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "reconciledUsers": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "grantsAdded": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "grantsRemoved": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "reconciledUsers",
+            "grantsAdded",
+            "grantsRemoved"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "revokeScimCredentialContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/scim/credentials/[credentialId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "credentialId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "credentialId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "upsertScimGroupMappingContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/scim/mappings",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "groupId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "targetKind": {
+                "type": "string",
+                "const": "permission_group"
+              },
+              "permissionGroupId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "groupId",
+              "targetKind",
+              "permissionGroupId"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "groupId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "targetKind": {
+                "type": "string",
+                "const": "workspace"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "permissionType": {
+                "type": "string",
+                "enum": [
+                  "admin",
+                  "write",
+                  "read"
+                ]
+              }
+            },
+            "required": [
+              "groupId",
+              "targetKind",
+              "workspaceId",
+              "permissionType"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "groupId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "targetKind": {
+                "type": "string",
+                "const": "org_role"
+              },
+              "role": {
+                "type": "string",
+                "const": "admin"
+              }
+            },
+            "required": [
+              "groupId",
+              "targetKind",
+              "role"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "mapping": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "groupId": {
+                  "type": "string"
+                },
+                "groupDisplayName": {
+                  "type": "string"
+                },
+                "targetKind": {
+                  "type": "string",
+                  "enum": [
+                    "permission_group",
+                    "workspace",
+                    "org_role"
+                  ]
+                },
+                "permissionGroupId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "permissionType": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "admin",
+                        "write",
+                        "read"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "role": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "groupId",
+                "groupDisplayName",
+                "targetKind",
+                "permissionGroupId",
+                "workspaceId",
+                "permissionType",
+                "role"
+              ],
+              "additionalProperties": false
+            },
+            "reconciledUsers": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "mapping",
+            "reconciledUsers"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

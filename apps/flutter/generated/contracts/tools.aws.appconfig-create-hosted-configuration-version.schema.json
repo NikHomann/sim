@@ -1,0 +1,144 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/appconfig-create-hosted-configuration-version.ts",
+  "contracts": {
+    "awsAppConfigCreateHostedConfigurationVersionContract": {
+      "method": "POST",
+      "path": "/api/tools/appconfig/create-hosted-configuration-version",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "configurationProfileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contentType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1024
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "latestVersionNumber": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "versionLabel": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 64
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "applicationId",
+          "configurationProfileId",
+          "content",
+          "contentType"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "applicationId": {
+              "type": "string"
+            },
+            "configurationProfileId": {
+              "type": "string"
+            },
+            "versionNumber": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "contentType": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "versionLabel": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "applicationId",
+            "configurationProfileId",
+            "versionNumber",
+            "contentType",
+            "versionLabel"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

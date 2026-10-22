@@ -1,0 +1,1942 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/agiloft.ts",
+  "contracts": {
+    "agiloftAsyncStatusContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/async_status",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "callbackId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "callbackId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "callbackId": {
+                  "type": "string"
+                },
+                "statusCode": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "complete": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "callbackId",
+                "statusCode",
+                "status",
+                "complete"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftAttachContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/attach",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "size": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "uploadedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {}
+                    ]
+                  },
+                  "expiresAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {}
+                    ]
+                  },
+                  "context": {
+                    "type": "string"
+                  },
+                  "base64": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "size"
+                ],
+                "additionalProperties": {}
+              },
+              {
+                "type": "string"
+              }
+            ]
+          },
+          "fileName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "overwrite": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId",
+          "fieldName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "recordId": {
+                  "type": "string"
+                },
+                "fieldName": {
+                  "type": "string"
+                },
+                "fileName": {
+                  "type": "string"
+                },
+                "totalAttachments": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "recordId",
+                "fieldName",
+                "fileName",
+                "totalAttachments"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftAttachmentInfoContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/attachment_info",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId",
+          "fieldName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "attachments": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "position": {
+                        "type": "number"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "size": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "position",
+                      "name",
+                      "size"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "totalCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "attachments",
+                "totalCount"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftCreateRecordContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/create_record",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "data": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "data"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "fields": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "fields"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftDeleteRecordContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/delete_record",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deleteRule": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "ERROR_IF_DEPENDANTS",
+                  "APPLY_DELETE_WHERE_POSSIBLE",
+                  "DELETE_WHERE_POSSIBLE_OTHERWISE_UNLINK",
+                  "APPLY_UNLINK",
+                  "UNLINK_WHERE_POSSIBLE_OTHERWISE_DELETE",
+                  "REPLACE_WITH_ANOTHER"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "substituteIds": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "deleted": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftGetChoiceLineIdContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/get_choice_line_id",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "fieldName",
+          "value"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "choiceLineId": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "choiceLineId"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftListTablesContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/list_tables",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "includeLinkedInfo": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "skipColumnsInfo": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "tables": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "label": {
+                        "type": "string"
+                      },
+                      "logicalName": {
+                        "type": "string"
+                      },
+                      "fields": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "columnName": {
+                              "type": "string"
+                            },
+                            "columnLabel": {
+                              "type": "string"
+                            },
+                            "columnType": {
+                              "type": "string"
+                            },
+                            "columnTypeDomain": {
+                              "type": "string"
+                            },
+                            "isLinked": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "columnName",
+                            "columnLabel",
+                            "columnType",
+                            "columnTypeDomain",
+                            "isLinked"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "label",
+                      "logicalName",
+                      "fields"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "totalCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "tables",
+                "totalCount"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftLockRecordContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/lock_record",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "lockAction": {
+            "type": "string",
+            "enum": [
+              "lock",
+              "unlock",
+              "check"
+            ]
+          },
+          "force": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId",
+          "lockAction"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "tableId": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lockStatus": {
+                  "type": "string"
+                },
+                "lockedBy": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lockExpiresInMinutes": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "tableId",
+                "lockStatus",
+                "lockedBy",
+                "lockExpiresInMinutes"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftNlpSearchContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/nlp_search",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "nlpQuery": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fields": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "nlpQuery",
+          "fields"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "records": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "totalCount": {
+                  "type": "number"
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "records",
+                "totalCount",
+                "truncated"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftReadRecordContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/read_record",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fields": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "fields": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "fields"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftRemoveAttachmentContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/remove_attachment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "position": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId",
+          "fieldName",
+          "position"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "recordId": {
+                  "type": "string"
+                },
+                "fieldName": {
+                  "type": "string"
+                },
+                "remainingAttachments": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "recordId",
+                "fieldName",
+                "remainingAttachments"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftRetrieveContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/retrieve",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fieldName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "position": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId",
+          "fieldName",
+          "position"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "file": {
+                  "type": "object",
+                  "properties": {
+                    "name": {
+                      "type": "string"
+                    },
+                    "mimeType": {
+                      "type": "string"
+                    },
+                    "data": {
+                      "type": "string"
+                    },
+                    "size": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "name",
+                    "mimeType",
+                    "data",
+                    "size"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "file"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftRunActionButtonContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/run_action_button",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "actionButtonField": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId",
+          "actionButtonField"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "recordId": {
+                  "type": "string"
+                },
+                "callbackId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "recordId",
+                "callbackId"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftSavedSearchContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/saved_search",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "searches": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "label": {
+                        "type": "string"
+                      },
+                      "id": {
+                        "anyOf": [
+                          {
+                            "type": "number"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "description": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "label",
+                      "id",
+                      "description"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "totalCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "searches",
+                "totalCount"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftSearchRecordsContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/search_records",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "search": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fields": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "records": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                },
+                "totalCount": {
+                  "type": "number"
+                },
+                "page": {
+                  "type": "number"
+                },
+                "limit": {
+                  "type": "number"
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "records",
+                "totalCount",
+                "page",
+                "limit",
+                "truncated"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftSelectRecordsContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/select_records",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "where": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "where"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "recordIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "totalCount": {
+                  "type": "number"
+                },
+                "truncated": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "recordIds",
+                "totalCount",
+                "truncated"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftUpdateRecordContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/update_record",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "recordId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "data": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "recordId",
+          "data"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "fields": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "id",
+                "fields"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "agiloftUpsertRecordContract": {
+      "method": "POST",
+      "path": "/api/tools/agiloft/upsert_record",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "instanceUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "knowledgeBase": {
+            "type": "string",
+            "minLength": 1
+          },
+          "login": {
+            "type": "string",
+            "minLength": 1
+          },
+          "password": {
+            "type": "string",
+            "minLength": 1
+          },
+          "table": {
+            "type": "string",
+            "minLength": 1
+          },
+          "match": {
+            "type": "string",
+            "minLength": 1
+          },
+          "data": {
+            "type": "string",
+            "minLength": 1
+          },
+          "async": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "instanceUrl",
+          "knowledgeBase",
+          "login",
+          "password",
+          "table",
+          "match",
+          "data"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "created": {
+                  "type": "boolean"
+                },
+                "callbackId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "created",
+                "callbackId"
+              ],
+              "additionalProperties": false
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,252 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/admin/outbox.ts",
+  "contracts": {
+    "adminV1ListOutboxContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/outbox",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "status": {
+            "default": "dead_letter",
+            "type": "string",
+            "enum": [
+              "pending",
+              "processing",
+              "completed",
+              "dead_letter"
+            ]
+          },
+          "eventType": {
+            "type": "string"
+          },
+          "limit": {
+            "default": 100,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "status",
+          "eventType",
+          "limit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "filter": {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "processing",
+                    "completed",
+                    "dead_letter"
+                  ]
+                },
+                "eventType": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "limit": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "status",
+                "eventType",
+                "limit"
+              ],
+              "additionalProperties": false
+            },
+            "rows": {
+              "type": "array",
+              "items": {}
+            },
+            "counts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "status": {
+                    "type": "string"
+                  },
+                  "eventType": {
+                    "type": "string"
+                  },
+                  "count": {
+                    "type": "number"
+                  }
+                },
+                "required": [
+                  "status",
+                  "eventType",
+                  "count"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "filter",
+            "rows",
+            "counts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1RequeueOutboxEventContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/outbox/[id]/requeue",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "requeued": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "eventType"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "requeued"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminV1ResolveOutboxEventContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/outbox/[id]/resolve",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 300
+          },
+          "resolvedBy": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 60
+          }
+        },
+        "required": [
+          "reason",
+          "resolvedBy"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "resolved": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "eventType": {
+                  "type": "string"
+                },
+                "lastError": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "eventType",
+                "lastError"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "resolved"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

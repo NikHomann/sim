@@ -1,0 +1,729 @@
+{
+  "source": "apps/sim/lib/api/contracts/sandboxes.ts",
+  "contracts": {
+    "createSandboxContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/sandboxes",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "javascript",
+              "python"
+            ]
+          },
+          "dependencies": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "cliTools": {
+            "default": [],
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "google-cloud-cli@577.0.0-r1",
+                "aws-cli@2.36.15-r1",
+                "azure-cli@2.89.0-r1",
+                "doctl@1.166.0-r1",
+                "github-cli@2.97.0-r1",
+                "gitlab-cli@1.111.0-r1",
+                "kubectl@1.36.3-r1",
+                "helm@4.2.3-r1",
+                "kustomize@5.8.1-r1",
+                "argocd@3.4.6-r1",
+                "terraform@1.15.8-r1",
+                "pulumi@3.255.0-r1",
+                "supabase-cli@2.111.0-r1",
+                "firebase-cli@15.25.1-r1",
+                "flyctl@0.4.78-r1",
+                "railway-cli@5.30.4-r1",
+                "stripe-cli@1.45.0-r1",
+                "duckdb@1.5.5-r1",
+                "rclone@1.75.0-r1",
+                "restic@0.19.1-r1",
+                "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                "mongosh@2.9.2-r1",
+                "sops@3.13.3-r1",
+                "age@1.3.1-r1"
+              ]
+            }
+          },
+          "systemPackages": {
+            "default": [],
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          }
+        },
+        "required": [
+          "name",
+          "language",
+          "dependencies"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sandbox": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "javascript",
+                    "python"
+                  ]
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "cliTools": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "google-cloud-cli@577.0.0-r1",
+                      "aws-cli@2.36.15-r1",
+                      "azure-cli@2.89.0-r1",
+                      "doctl@1.166.0-r1",
+                      "github-cli@2.97.0-r1",
+                      "gitlab-cli@1.111.0-r1",
+                      "kubectl@1.36.3-r1",
+                      "helm@4.2.3-r1",
+                      "kustomize@5.8.1-r1",
+                      "argocd@3.4.6-r1",
+                      "terraform@1.15.8-r1",
+                      "pulumi@3.255.0-r1",
+                      "supabase-cli@2.111.0-r1",
+                      "firebase-cli@15.25.1-r1",
+                      "flyctl@0.4.78-r1",
+                      "railway-cli@5.30.4-r1",
+                      "stripe-cli@1.45.0-r1",
+                      "duckdb@1.5.5-r1",
+                      "rclone@1.75.0-r1",
+                      "restic@0.19.1-r1",
+                      "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                      "mongosh@2.9.2-r1",
+                      "sops@3.13.3-r1",
+                      "age@1.3.1-r1"
+                    ]
+                  }
+                },
+                "systemPackages": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "buildStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "building",
+                        "ready",
+                        "failed"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "errorCode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "errorMessage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "errorDetail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "builtAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "language",
+                "dependencies",
+                "cliTools",
+                "systemPackages",
+                "buildStatus",
+                "errorCode",
+                "errorMessage",
+                "errorDetail",
+                "builtAt",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "sandbox"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteSandboxContract": {
+      "method": "DELETE",
+      "path": "/api/workspaces/[id]/sandboxes/[sandboxId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "sandboxId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "sandboxId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listSandboxesContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/sandboxes",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sandboxes": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "language": {
+                    "type": "string",
+                    "enum": [
+                      "javascript",
+                      "python"
+                    ]
+                  },
+                  "dependencies": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "cliTools": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "google-cloud-cli@577.0.0-r1",
+                        "aws-cli@2.36.15-r1",
+                        "azure-cli@2.89.0-r1",
+                        "doctl@1.166.0-r1",
+                        "github-cli@2.97.0-r1",
+                        "gitlab-cli@1.111.0-r1",
+                        "kubectl@1.36.3-r1",
+                        "helm@4.2.3-r1",
+                        "kustomize@5.8.1-r1",
+                        "argocd@3.4.6-r1",
+                        "terraform@1.15.8-r1",
+                        "pulumi@3.255.0-r1",
+                        "supabase-cli@2.111.0-r1",
+                        "firebase-cli@15.25.1-r1",
+                        "flyctl@0.4.78-r1",
+                        "railway-cli@5.30.4-r1",
+                        "stripe-cli@1.45.0-r1",
+                        "duckdb@1.5.5-r1",
+                        "rclone@1.75.0-r1",
+                        "restic@0.19.1-r1",
+                        "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                        "mongosh@2.9.2-r1",
+                        "sops@3.13.3-r1",
+                        "age@1.3.1-r1"
+                      ]
+                    }
+                  },
+                  "systemPackages": {
+                    "default": [],
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "buildStatus": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "pending",
+                          "building",
+                          "ready",
+                          "failed"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "errorCode": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "errorMessage": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "errorDetail": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "builtAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "language",
+                  "dependencies",
+                  "cliTools",
+                  "systemPackages",
+                  "buildStatus",
+                  "errorCode",
+                  "errorMessage",
+                  "errorDetail",
+                  "builtAt",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "strategy": {
+              "type": "string",
+              "enum": [
+                "prebuilt",
+                "runtime"
+              ]
+            },
+            "entitled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "sandboxes",
+            "strategy",
+            "entitled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateSandboxContract": {
+      "method": "PATCH",
+      "path": "/api/workspaces/[id]/sandboxes/[sandboxId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "sandboxId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "sandboxId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "javascript",
+              "python"
+            ]
+          },
+          "dependencies": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "cliTools": {
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "google-cloud-cli@577.0.0-r1",
+                "aws-cli@2.36.15-r1",
+                "azure-cli@2.89.0-r1",
+                "doctl@1.166.0-r1",
+                "github-cli@2.97.0-r1",
+                "gitlab-cli@1.111.0-r1",
+                "kubectl@1.36.3-r1",
+                "helm@4.2.3-r1",
+                "kustomize@5.8.1-r1",
+                "argocd@3.4.6-r1",
+                "terraform@1.15.8-r1",
+                "pulumi@3.255.0-r1",
+                "supabase-cli@2.111.0-r1",
+                "firebase-cli@15.25.1-r1",
+                "flyctl@0.4.78-r1",
+                "railway-cli@5.30.4-r1",
+                "stripe-cli@1.45.0-r1",
+                "duckdb@1.5.5-r1",
+                "rclone@1.75.0-r1",
+                "restic@0.19.1-r1",
+                "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                "mongosh@2.9.2-r1",
+                "sops@3.13.3-r1",
+                "age@1.3.1-r1"
+              ]
+            }
+          },
+          "systemPackages": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sandbox": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "javascript",
+                    "python"
+                  ]
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "cliTools": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "google-cloud-cli@577.0.0-r1",
+                      "aws-cli@2.36.15-r1",
+                      "azure-cli@2.89.0-r1",
+                      "doctl@1.166.0-r1",
+                      "github-cli@2.97.0-r1",
+                      "gitlab-cli@1.111.0-r1",
+                      "kubectl@1.36.3-r1",
+                      "helm@4.2.3-r1",
+                      "kustomize@5.8.1-r1",
+                      "argocd@3.4.6-r1",
+                      "terraform@1.15.8-r1",
+                      "pulumi@3.255.0-r1",
+                      "supabase-cli@2.111.0-r1",
+                      "firebase-cli@15.25.1-r1",
+                      "flyctl@0.4.78-r1",
+                      "railway-cli@5.30.4-r1",
+                      "stripe-cli@1.45.0-r1",
+                      "duckdb@1.5.5-r1",
+                      "rclone@1.75.0-r1",
+                      "restic@0.19.1-r1",
+                      "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                      "mongosh@2.9.2-r1",
+                      "sops@3.13.3-r1",
+                      "age@1.3.1-r1"
+                    ]
+                  }
+                },
+                "systemPackages": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "buildStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "building",
+                        "ready",
+                        "failed"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "errorCode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "errorMessage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "errorDetail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "builtAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "language",
+                "dependencies",
+                "cliTools",
+                "systemPackages",
+                "buildStatus",
+                "errorCode",
+                "errorMessage",
+                "errorDetail",
+                "builtAt",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "sandbox"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

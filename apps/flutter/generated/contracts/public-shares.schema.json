@@ -1,0 +1,609 @@
+{
+  "source": "apps/sim/lib/api/contracts/public-shares.ts",
+  "contracts": {
+    "authenticatePublicFileContract": {
+      "method": "POST",
+      "path": "/api/files/public/[token]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          }
+        },
+        "required": [
+          "password"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "authType": {
+              "type": "string",
+              "enum": [
+                "public",
+                "password",
+                "email",
+                "sso"
+              ]
+            }
+          },
+          "required": [
+            "authType"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getFileShareContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/files/[fileId]/share",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "share": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique share identifier."
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "Server-generated token embedded in the public share URL."
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "Public share URL."
+                    },
+                    "isActive": {
+                      "type": "boolean",
+                      "description": "Whether the public share currently resolves."
+                    },
+                    "resourceType": {
+                      "type": "string",
+                      "enum": [
+                        "file",
+                        "folder"
+                      ],
+                      "description": "Kind of resource being shared."
+                    },
+                    "resourceId": {
+                      "type": "string",
+                      "description": "Identifier of the shared resource."
+                    },
+                    "authType": {
+                      "type": "string",
+                      "enum": [
+                        "public",
+                        "password",
+                        "email",
+                        "sso"
+                      ],
+                      "description": "How access to the share is gated."
+                    },
+                    "hasPassword": {
+                      "type": "boolean",
+                      "description": "Whether a password is stored for this share."
+                    },
+                    "allowedEmails": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 320
+                      },
+                      "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "token",
+                    "url",
+                    "isActive",
+                    "resourceType",
+                    "resourceId",
+                    "authType",
+                    "hasPassword",
+                    "allowedEmails"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "share"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getPublicFileContentContract": {
+      "method": "GET",
+      "path": "/api/files/public/[token]/content",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "preview": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "getPublicFileContract": {
+      "method": "GET",
+      "path": "/api/files/public/[token]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string"
+            },
+            "size": {
+              "type": "number"
+            },
+            "workspaceName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "ownerName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "token",
+            "name",
+            "type",
+            "size",
+            "workspaceName",
+            "ownerName"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getPublicInlineFileContract": {
+      "method": "GET",
+      "path": "/api/files/public/[token]/inline",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        }
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "publicFileSSOContract": {
+      "method": "POST",
+      "path": "/api/files/public/[token]/sso",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "eligible": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "eligible"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "requestPublicFileOtpContract": {
+      "method": "POST",
+      "path": "/api/files/public/[token]/otp",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "upsertFileShareContract": {
+      "method": "PUT",
+      "path": "/api/workspaces/[id]/files/[fileId]/share",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          },
+          "authType": {
+            "type": "string",
+            "enum": [
+              "public",
+              "password",
+              "email",
+              "sso"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "minLength": 15,
+            "maxLength": 1024
+          },
+          "allowedEmails": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 320
+            }
+          },
+          "token": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        },
+        "required": [
+          "isActive"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "share": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique share identifier."
+                },
+                "token": {
+                  "type": "string",
+                  "description": "Server-generated token embedded in the public share URL."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Public share URL."
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "description": "Whether the public share currently resolves."
+                },
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "folder"
+                  ],
+                  "description": "Kind of resource being shared."
+                },
+                "resourceId": {
+                  "type": "string",
+                  "description": "Identifier of the shared resource."
+                },
+                "authType": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "password",
+                    "email",
+                    "sso"
+                  ],
+                  "description": "How access to the share is gated."
+                },
+                "hasPassword": {
+                  "type": "boolean",
+                  "description": "Whether a password is stored for this share."
+                },
+                "allowedEmails": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 320
+                  },
+                  "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                }
+              },
+              "required": [
+                "id",
+                "token",
+                "url",
+                "isActive",
+                "resourceType",
+                "resourceId",
+                "authType",
+                "hasPassword",
+                "allowedEmails"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "share"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "verifyPublicFileOtpContract": {
+      "method": "PUT",
+      "path": "/api/files/public/[token]/otp",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "otp": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 6
+          }
+        },
+        "required": [
+          "email",
+          "otp"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "authType": {
+              "type": "string",
+              "enum": [
+                "public",
+                "password",
+                "email",
+                "sso"
+              ]
+            }
+          },
+          "required": [
+            "authType"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

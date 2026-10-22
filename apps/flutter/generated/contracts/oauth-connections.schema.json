@@ -1,0 +1,609 @@
+{
+  "source": "apps/sim/lib/api/contracts/oauth-connections.ts",
+  "contracts": {
+    "authorizeInstagramContract": {
+      "method": "GET",
+      "path": "/api/auth/instagram/authorize",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "returnUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "draftId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        }
+      },
+      "response": {
+        "mode": "redirect"
+      }
+    },
+    "authorizeOAuth2Contract": {
+      "method": "GET",
+      "path": "/api/auth/oauth2/authorize",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "draftId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "providerId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "callbackURL": {
+            "type": "string",
+            "minLength": 1
+          },
+          "credentialId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "redirect"
+      }
+    },
+    "authorizeTrelloContract": {
+      "method": "GET",
+      "path": "/api/auth/trello/authorize",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "returnUrl": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "draftId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        }
+      },
+      "response": {
+        "mode": "redirect"
+      }
+    },
+    "disconnectOAuthContract": {
+      "method": "POST",
+      "path": "/api/auth/oauth/disconnect",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "minLength": 1
+          },
+          "providerId": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "provider"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "instagramCallbackContract": {
+      "method": "GET",
+      "path": "/api/auth/oauth2/callback/instagram",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "state": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "error_reason": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "error_description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "response": {
+        "mode": "redirect"
+      }
+    },
+    "listConnectedAccountsContract": {
+      "method": "GET",
+      "path": "/api/auth/accounts",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "minItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "accounts": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "accountId": {
+                    "type": "string"
+                  },
+                  "providerId": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "accountId",
+                  "providerId",
+                  "displayName"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "accounts"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listOAuthConnectionsContract": {
+      "method": "GET",
+      "path": "/api/auth/oauth/connections",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "connections": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string"
+                  },
+                  "baseProvider": {
+                    "type": "string"
+                  },
+                  "featureType": {
+                    "type": "string"
+                  },
+                  "isConnected": {
+                    "type": "boolean"
+                  },
+                  "accounts": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "lastConnected": {
+                    "type": "string"
+                  },
+                  "scopes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "provider",
+                  "baseProvider",
+                  "featureType",
+                  "isConnected",
+                  "accounts",
+                  "lastConnected",
+                  "scopes"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "connections"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "oauthTokenGetContract": {
+      "method": "GET",
+      "path": "/api/auth/oauth/token",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "credentialId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "credentialId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "credentialType": {
+              "type": "string",
+              "enum": [
+                "oauth",
+                "managed_oauth",
+                "service_account"
+              ]
+            },
+            "idToken": {
+              "type": "string"
+            },
+            "instanceUrl": {
+              "type": "string"
+            },
+            "apiDomain": {
+              "type": "string"
+            },
+            "cloudId": {
+              "type": "string"
+            },
+            "domain": {
+              "type": "string"
+            },
+            "realmId": {
+              "type": "string"
+            },
+            "quickBooksEnvironment": {
+              "type": "string",
+              "enum": [
+                "sandbox",
+                "production"
+              ]
+            },
+            "authStyle": {
+              "type": "string",
+              "enum": [
+                "x-api-token"
+              ]
+            }
+          },
+          "required": [
+            "accessToken"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "oauthTokenPostContract": {
+      "method": "POST",
+      "path": "/api/auth/oauth/token",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "credentialId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "credentialAccountUserId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "providerId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "toolId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workflowId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "scopes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "impersonateEmail": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        }
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "x-sim-managed-oauth-delegation": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "accessToken": {
+              "type": "string"
+            },
+            "credentialType": {
+              "type": "string",
+              "enum": [
+                "oauth",
+                "managed_oauth",
+                "service_account"
+              ]
+            },
+            "idToken": {
+              "type": "string"
+            },
+            "instanceUrl": {
+              "type": "string"
+            },
+            "apiDomain": {
+              "type": "string"
+            },
+            "cloudId": {
+              "type": "string"
+            },
+            "domain": {
+              "type": "string"
+            },
+            "realmId": {
+              "type": "string"
+            },
+            "quickBooksEnvironment": {
+              "type": "string",
+              "enum": [
+                "sandbox",
+                "production"
+              ]
+            },
+            "authStyle": {
+              "type": "string",
+              "enum": [
+                "x-api-token"
+              ]
+            }
+          },
+          "required": [
+            "accessToken"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksCallbackContract": {
+      "method": "GET",
+      "path": "/api/auth/oauth2/callback/quickbooks",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "state": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 4096
+          },
+          "realmId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "error_description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "state"
+        ]
+      },
+      "response": {
+        "mode": "redirect"
+      }
+    },
+    "storeTrelloTokenContract": {
+      "method": "POST",
+      "path": "/api/auth/trello/store",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "state": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token",
+          "state"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "trelloCallbackContract": {
+      "method": "GET",
+      "path": "/api/auth/trello/callback",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "minLength": 1
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "text"
+      }
+    }
+  }
+}

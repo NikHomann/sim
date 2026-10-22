@@ -1,0 +1,85 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/appconfig-get-configuration.ts",
+  "contracts": {
+    "awsAppConfigGetConfigurationContract": {
+      "method": "POST",
+      "path": "/api/tools/appconfig/get-configuration",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "environmentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "configurationProfileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "applicationId",
+          "environmentId",
+          "configurationProfileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "configuration": {
+              "type": "string"
+            },
+            "contentType": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "versionLabel": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "configuration",
+            "contentType",
+            "versionLabel"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

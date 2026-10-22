@@ -1,0 +1,424 @@
+{
+  "source": "apps/sim/lib/api/contracts/cleanup.ts",
+  "contracts": {
+    "logsCleanupContract": {
+      "method": "GET",
+      "path": "/api/logs/cleanup",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowLogs": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "jobLogs": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "largeValues": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "legacyLargeValues": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "orphanSnapshots": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "staleReferences": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "staleDependencies": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "largeValueTombstones": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": [
+          200,
+          202
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "triggered": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "jobIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "jobCount": {
+                  "type": "number"
+                },
+                "chunkCount": {
+                  "type": "number"
+                },
+                "workspaceCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "triggered",
+                "jobIds",
+                "jobCount",
+                "chunkCount",
+                "workspaceCount"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "triggered": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "runId": {
+                  "type": "string"
+                },
+                "limits": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "enum": [
+                      "workflowLogs",
+                      "jobLogs",
+                      "largeValues",
+                      "legacyLargeValues",
+                      "orphanSnapshots",
+                      "staleReferences",
+                      "staleDependencies",
+                      "largeValueTombstones",
+                      "workflows",
+                      "chats",
+                      "legacyFiles",
+                      "files",
+                      "knowledgeBases",
+                      "folders",
+                      "userTables",
+                      "memories",
+                      "mcpServers",
+                      "workflowMcpServers",
+                      "orphanKnowledgeBaseBindings"
+                    ]
+                  },
+                  "additionalProperties": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5000
+                  }
+                }
+              },
+              "required": [
+                "triggered",
+                "runId",
+                "limits"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "softDeletesCleanupContract": {
+      "method": "GET",
+      "path": "/api/cron/cleanup-soft-deletes",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflows": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "chats": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "legacyFiles": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "files": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "knowledgeBases": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "folders": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "userTables": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "memories": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "mcpServers": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "workflowMcpServers": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          },
+          "orphanKnowledgeBaseBindings": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "string",
+                "pattern": "^\\d+$"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": [
+          200,
+          202
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "triggered": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "jobIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "jobCount": {
+                  "type": "number"
+                },
+                "chunkCount": {
+                  "type": "number"
+                },
+                "workspaceCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "triggered",
+                "jobIds",
+                "jobCount",
+                "chunkCount",
+                "workspaceCount"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "triggered": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "runId": {
+                  "type": "string"
+                },
+                "limits": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "enum": [
+                      "workflowLogs",
+                      "jobLogs",
+                      "largeValues",
+                      "legacyLargeValues",
+                      "orphanSnapshots",
+                      "staleReferences",
+                      "staleDependencies",
+                      "largeValueTombstones",
+                      "workflows",
+                      "chats",
+                      "legacyFiles",
+                      "files",
+                      "knowledgeBases",
+                      "folders",
+                      "userTables",
+                      "memories",
+                      "mcpServers",
+                      "workflowMcpServers",
+                      "orphanKnowledgeBaseBindings"
+                    ]
+                  },
+                  "additionalProperties": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 5000
+                  }
+                }
+              },
+              "required": [
+                "triggered",
+                "runId",
+                "limits"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    }
+  }
+}

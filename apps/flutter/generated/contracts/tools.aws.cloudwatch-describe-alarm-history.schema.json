@@ -1,0 +1,121 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudwatch-describe-alarm-history.ts",
+  "contracts": {
+    "awsCloudwatchDescribeAlarmHistoryContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudwatch/describe-alarm-history",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "alarmName": {
+            "type": "string"
+          },
+          "historyItemType": {
+            "type": "string",
+            "enum": [
+              "ConfigurationUpdate",
+              "StateUpdate",
+              "Action",
+              "AlarmContributorStateUpdate",
+              "AlarmContributorAction"
+            ]
+          },
+          "startDate": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "endDate": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "scanBy": {
+            "type": "string",
+            "enum": [
+              "TimestampDescending",
+              "TimestampAscending"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "historyItemType",
+          "scanBy",
+          "limit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "alarmHistoryItems": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "alarmName": {
+                        "type": "string"
+                      },
+                      "alarmType": {
+                        "type": "string"
+                      },
+                      "timestamp": {
+                        "type": "number"
+                      },
+                      "historyItemType": {
+                        "type": "string"
+                      },
+                      "historySummary": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "alarmHistoryItems"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,851 @@
+{
+  "source": "apps/sim/lib/api/contracts/computer-use.ts",
+  "contracts": {
+    "authorizeComputerUseContract": {
+      "method": "POST",
+      "path": "/api/desktop/computer/authorize",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "toolCallId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[^\\x00-\\x1f\\x7f]+$"
+          }
+        },
+        "required": [
+          "toolCallId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "toolName": {
+              "type": "string",
+              "const": "computer"
+            },
+            "args": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "status"
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "list_apps"
+                    }
+                  },
+                  "required": [
+                    "action"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "activate_app"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "get_app_state"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "windowId": {
+                      "description": "Window reference from an earlier snapshot of this app. If omitted, get_app_state and press_key use the app's focused window; coordinate actions use the window the snapshot selected.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "click"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "elementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Element reference from that snapshot."
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "button": {
+                      "type": "string",
+                      "enum": [
+                        "left",
+                        "right"
+                      ]
+                    },
+                    "clickCount": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 3
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "elementId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "click"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "windowId": {
+                      "description": "Window reference from an earlier snapshot of this app. If omitted, get_app_state and press_key use the app's focused window; coordinate actions use the window the snapshot selected.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "button": {
+                      "type": "string",
+                      "enum": [
+                        "left",
+                        "right"
+                      ]
+                    },
+                    "clickCount": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 3
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "type_text"
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "elementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Element reference from that snapshot."
+                    },
+                    "text": {
+                      "type": "string",
+                      "maxLength": 32000,
+                      "description": "Literal text to type into the observed editable element."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "elementId",
+                    "text"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "press_key"
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "windowId": {
+                      "description": "Window reference from an earlier snapshot of this app. If omitted, get_app_state and press_key use the app's focused window; coordinate actions use the window the snapshot selected.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "elementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Element reference from that snapshot."
+                    },
+                    "key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "One key or chord, such as Enter, Tab, Escape, or Cmd+A. With elementId, focuses that element first."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "key"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "scroll"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "elementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Element reference from that snapshot."
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "deltaX": {
+                      "description": "Horizontal scroll distance in points; positive scrolls right, negative left. Omit for 0 when deltaY is set.",
+                      "type": "number",
+                      "minimum": -10000,
+                      "maximum": 10000
+                    },
+                    "deltaY": {
+                      "description": "Vertical scroll distance in points; positive scrolls down, negative up. Omit for 0 when deltaX is set.",
+                      "type": "number",
+                      "minimum": -10000,
+                      "maximum": 10000
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "elementId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "scroll"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "windowId": {
+                      "description": "Window reference from an earlier snapshot of this app. If omitted, get_app_state and press_key use the app's focused window; coordinate actions use the window the snapshot selected.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "deltaX": {
+                      "description": "Horizontal scroll distance in points; positive scrolls right, negative left. Omit for 0 when deltaY is set.",
+                      "type": "number",
+                      "minimum": -10000,
+                      "maximum": 10000
+                    },
+                    "deltaY": {
+                      "description": "Vertical scroll distance in points; positive scrolls down, negative up. Omit for 0 when deltaX is set.",
+                      "type": "number",
+                      "minimum": -10000,
+                      "maximum": 10000
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "x",
+                    "y"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "drag"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "windowId": {
+                      "description": "Window reference from an earlier snapshot of this app. If omitted, get_app_state and press_key use the app's focused window; coordinate actions use the window the snapshot selected.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    },
+                    "x": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "y": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "toX": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    },
+                    "toY": {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 100000
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "x",
+                    "y",
+                    "toX",
+                    "toY"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "set_value"
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "elementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Element reference from that snapshot."
+                    },
+                    "value": {
+                      "type": "string",
+                      "maxLength": 32000,
+                      "description": "Replacement value for an accessibility-writable element."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "elementId",
+                    "value"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "input_sequence"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "elementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Element reference from that snapshot."
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "activateFirst": {
+                      "description": "Explicitly bring this app to the foreground before the batch. Defaults to false; leave omitted for background input. An inactive app alone does not require activation. Do not set true when the user requires background operation. Editor, window, and geometry checks still apply.",
+                      "type": "boolean"
+                    },
+                    "steps": {
+                      "minItems": 1,
+                      "maxItems": 32,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "action": {
+                                "type": "string",
+                                "const": "type_text"
+                              },
+                              "text": {
+                                "type": "string",
+                                "maxLength": 32000
+                              }
+                            },
+                            "required": [
+                              "action",
+                              "text"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "action": {
+                                "type": "string",
+                                "const": "press_key"
+                              },
+                              "key": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 128
+                              }
+                            },
+                            "required": [
+                              "action",
+                              "key"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "description": "Sequential input into this observed editor. Stops if editor/window focus changes. At most 32 steps and 32000 total text code units; never automatically retry a partial sequence."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "elementId",
+                    "steps"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "action": {
+                      "type": "string",
+                      "const": "perform_action"
+                    },
+                    "observeAfter": {
+                      "description": "Every mutation returns fresh app state by default. Set includeScreenshot to true to include an image; otherwise no screenshot is captured. Observation failure never retries the action.",
+                      "type": "object",
+                      "properties": {
+                        "includeScreenshot": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    },
+                    "includeScreenshot": {
+                      "description": "Set true to include a screenshot in the returned state. On actions it overrides observeAfter.includeScreenshot.",
+                      "type": "boolean"
+                    },
+                    "bundleId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255,
+                      "description": "Exact bundleId returned by list_apps or a known installed macOS app. get_app_state may launch it."
+                    },
+                    "snapshotId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Latest unconsumed snapshotId from get_app_state for this app. Actions consume it."
+                    },
+                    "elementId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Element reference from that snapshot."
+                    },
+                    "accessibilityAction": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Exact action advertised by this element."
+                    }
+                  },
+                  "required": [
+                    "action",
+                    "bundleId",
+                    "snapshotId",
+                    "elementId",
+                    "accessibilityAction"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            },
+            "chatId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "toolName",
+            "args",
+            "chatId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "computerUseAvailabilityContract": {
+      "method": "GET",
+      "path": "/api/desktop/computer/availability",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              }
+            },
+            "required": [
+              "workspaceId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "organizationId": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "organizationId"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,650 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/workspace-operations.ts",
+  "contracts": {
+    "v2GetWorkspaceOperationContract": {
+      "method": "GET",
+      "path": "/api/v2/workspaces/[workspaceId]/operations/[operationId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          },
+          "operationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "description": "Durable operation identifier to use for polling."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "operationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkspaceOperationReport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceOperationReport": {
+              "type": "object",
+              "properties": {
+                "operationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Durable operation identifier to use for polling."
+                },
+                "requestId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Client request ID used to commit this operation. Reuse identical mutation inputs with this ID after an uncertain response."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Explicit current workspace scope."
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "workflow_import",
+                    "workspace_fork",
+                    "workspace_push",
+                    "workspace_pull"
+                  ],
+                  "description": "Type of committed workspace operation."
+                },
+                "applied": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "The business transaction committed, including when follow-up work fails."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "processing",
+                    "completed",
+                    "completed_with_warnings",
+                    "requires_configuration",
+                    "failed"
+                  ],
+                  "description": "Operation status; failed follow-up work does not undo the committed transaction."
+                },
+                "resourceIds": {
+                  "maxItems": 5000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "description": "Identifiers of resources created or changed by the committed operation."
+                },
+                "issues": {
+                  "maxItems": 2000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Stable machine-readable issue code."
+                      },
+                      "message": {
+                        "type": "string",
+                        "maxLength": 2048,
+                        "description": "Human-readable explanation of the issue."
+                      },
+                      "workflowId": {
+                        "description": "Workflow affected by this issue or deployment attempt.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "blockId": {
+                        "description": "Source block identifier before graph ID regeneration.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "subBlockKey": {
+                        "description": "Registered source field key, including the tool index for nested Agent fields.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Structured warnings, missing configuration, and follow-up failures."
+                },
+                "idMap": {
+                  "description": "Source graph identifiers mapped to the imported identifiers.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deploymentOperationIds": {
+                  "description": "Exact deployment attempts admitted by the workspace operation.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deployments": {
+                  "description": "Readiness of the exact admitted deployment attempts.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "operationId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Durable operation identifier to use for polling."
+                      },
+                      "workflowId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Workflow affected by this issue or deployment attempt."
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991,
+                        "description": "Deployment version number for this admitted attempt."
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "preparing",
+                          "activating",
+                          "active",
+                          "failed",
+                          "superseded"
+                        ],
+                        "description": "Status of this exact admitted deployment attempt."
+                      },
+                      "ready": {
+                        "type": "boolean",
+                        "description": "Whether this exact deployment attempt is active and all required components are ready."
+                      },
+                      "pendingComponents": {
+                        "maxItems": 32,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 128
+                        },
+                        "description": "Deployment components that have not finished becoming ready."
+                      }
+                    },
+                    "required": [
+                      "operationId",
+                      "workflowId",
+                      "version",
+                      "status",
+                      "ready",
+                      "pendingComponents"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "triggerUrlChanges": {
+                  "description": "Public trigger paths changed by this sync, with the affected workflow names.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Name of the workflow whose public trigger path stops serving."
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Public trigger path that stops serving after this sync."
+                      }
+                    },
+                    "required": [
+                      "workflowName",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "backgroundWorkId": {
+                  "description": "Workspace activity identifier for resource-copy progress.",
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "copyProgress": {
+                  "description": "Completion status and counts for explicitly selected resource copies.",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "completed",
+                        "failed"
+                      ],
+                      "description": "Background resource-copy status."
+                    },
+                    "copied": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources copied successfully."
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources that failed to copy."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "copied",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "operationId",
+                "requestId",
+                "workspaceId",
+                "kind",
+                "applied",
+                "status",
+                "resourceIds",
+                "issues"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceOperationReport",
+              "title": "Workspace operation receipt",
+              "description": "Committed operation receipt, resource copies, and exact deployment readiness."
+            }
+          }
+        }
+      }
+    },
+    "v2ListWorkspaceOperationsContract": {
+      "method": "GET",
+      "path": "/api/v2/workspaces/[workspaceId]/operations",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "description": "Maximum items to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "requestId": {
+            "description": "Find an uncertain mutation by the original client request ID; keep the same filter while paging.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/WorkspaceOperationReport"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceOperationReport": {
+              "type": "object",
+              "properties": {
+                "operationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Durable operation identifier to use for polling."
+                },
+                "requestId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Client request ID used to commit this operation. Reuse identical mutation inputs with this ID after an uncertain response."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Explicit current workspace scope."
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "workflow_import",
+                    "workspace_fork",
+                    "workspace_push",
+                    "workspace_pull"
+                  ],
+                  "description": "Type of committed workspace operation."
+                },
+                "applied": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "The business transaction committed, including when follow-up work fails."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "processing",
+                    "completed",
+                    "completed_with_warnings",
+                    "requires_configuration",
+                    "failed"
+                  ],
+                  "description": "Operation status; failed follow-up work does not undo the committed transaction."
+                },
+                "resourceIds": {
+                  "maxItems": 5000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "description": "Identifiers of resources created or changed by the committed operation."
+                },
+                "issues": {
+                  "maxItems": 2000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Stable machine-readable issue code."
+                      },
+                      "message": {
+                        "type": "string",
+                        "maxLength": 2048,
+                        "description": "Human-readable explanation of the issue."
+                      },
+                      "workflowId": {
+                        "description": "Workflow affected by this issue or deployment attempt.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "blockId": {
+                        "description": "Source block identifier before graph ID regeneration.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "subBlockKey": {
+                        "description": "Registered source field key, including the tool index for nested Agent fields.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Structured warnings, missing configuration, and follow-up failures."
+                },
+                "idMap": {
+                  "description": "Source graph identifiers mapped to the imported identifiers.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deploymentOperationIds": {
+                  "description": "Exact deployment attempts admitted by the workspace operation.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deployments": {
+                  "description": "Readiness of the exact admitted deployment attempts.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "operationId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Durable operation identifier to use for polling."
+                      },
+                      "workflowId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Workflow affected by this issue or deployment attempt."
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991,
+                        "description": "Deployment version number for this admitted attempt."
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "preparing",
+                          "activating",
+                          "active",
+                          "failed",
+                          "superseded"
+                        ],
+                        "description": "Status of this exact admitted deployment attempt."
+                      },
+                      "ready": {
+                        "type": "boolean",
+                        "description": "Whether this exact deployment attempt is active and all required components are ready."
+                      },
+                      "pendingComponents": {
+                        "maxItems": 32,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 128
+                        },
+                        "description": "Deployment components that have not finished becoming ready."
+                      }
+                    },
+                    "required": [
+                      "operationId",
+                      "workflowId",
+                      "version",
+                      "status",
+                      "ready",
+                      "pendingComponents"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "triggerUrlChanges": {
+                  "description": "Public trigger paths changed by this sync, with the affected workflow names.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Name of the workflow whose public trigger path stops serving."
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Public trigger path that stops serving after this sync."
+                      }
+                    },
+                    "required": [
+                      "workflowName",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "backgroundWorkId": {
+                  "description": "Workspace activity identifier for resource-copy progress.",
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "copyProgress": {
+                  "description": "Completion status and counts for explicitly selected resource copies.",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "completed",
+                        "failed"
+                      ],
+                      "description": "Background resource-copy status."
+                    },
+                    "copied": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources copied successfully."
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources that failed to copy."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "copied",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "operationId",
+                "requestId",
+                "workspaceId",
+                "kind",
+                "applied",
+                "status",
+                "resourceIds",
+                "issues"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceOperationReport",
+              "title": "Workspace operation receipt",
+              "description": "Committed operation receipt, resource copies, and exact deployment readiness."
+            }
+          }
+        }
+      }
+    }
+  }
+}

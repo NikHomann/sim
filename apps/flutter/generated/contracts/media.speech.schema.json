@@ -1,0 +1,41 @@
+{
+  "source": "apps/sim/lib/api/contracts/media/speech.ts",
+  "contracts": {
+    "speechTokenContract": {
+      "method": "POST",
+      "path": "/api/speech/token",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "token": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "token"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

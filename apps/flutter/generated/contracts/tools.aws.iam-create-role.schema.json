@@ -1,0 +1,126 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/iam-create-role.ts",
+  "contracts": {
+    "awsIamCreateRoleContract": {
+      "method": "POST",
+      "path": "/api/tools/iam/create-role",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "roleName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[\\w+=,.@-]+$"
+          },
+          "assumeRolePolicyDocument": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 131072,
+            "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u00FF]+$"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000,
+                "pattern": "^[\\u0009\\u000A\\u000D\\u0020-\\u007E\\u00A1-\\u00FF]*$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "path": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512,
+                "pattern": "^(?:\\u002F|\\u002F[\\u0021-\\u007E]+\\u002F)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxSessionDuration": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 3600,
+                "maximum": 43200
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "roleName",
+          "assumeRolePolicyDocument"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "roleName": {
+              "type": "string"
+            },
+            "roleId": {
+              "type": "string"
+            },
+            "arn": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "createDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "roleName",
+            "roleId",
+            "arn",
+            "path",
+            "createDate"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

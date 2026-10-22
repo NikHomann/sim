@@ -1,0 +1,884 @@
+{
+  "source": "apps/sim/lib/api/contracts/byok-keys.ts",
+  "contracts": {
+    "deleteByokKeyContract": {
+      "method": "DELETE",
+      "path": "/api/workspaces/[id]/byok-keys",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "anthropic",
+              "google",
+              "mistral",
+              "zai",
+              "kimi",
+              "typesafe",
+              "xai",
+              "fireworks",
+              "together",
+              "baseten",
+              "nebius",
+              "ollama-cloud",
+              "kie",
+              "falai",
+              "firecrawl",
+              "exa",
+              "context_dev",
+              "tinyfish",
+              "serper",
+              "linkup",
+              "perplexity",
+              "jina",
+              "google_cloud",
+              "parallel_ai",
+              "brandfetch",
+              "cohere",
+              "hunter",
+              "peopledatalabs",
+              "findymail",
+              "prospeo",
+              "wiza",
+              "zerobounce",
+              "neverbounce",
+              "millionverifier",
+              "datagma",
+              "dropcontact",
+              "leadmagic",
+              "icypeas",
+              "enrow"
+            ]
+          },
+          "keyId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "providerId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteOrganizationByokKeyContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/byok-keys",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "anthropic",
+              "google",
+              "mistral",
+              "zai",
+              "kimi",
+              "typesafe",
+              "xai",
+              "fireworks",
+              "together",
+              "baseten",
+              "nebius",
+              "ollama-cloud",
+              "kie",
+              "falai",
+              "firecrawl",
+              "exa",
+              "context_dev",
+              "tinyfish",
+              "serper",
+              "linkup",
+              "perplexity",
+              "jina",
+              "google_cloud",
+              "parallel_ai",
+              "brandfetch",
+              "cohere",
+              "hunter",
+              "peopledatalabs",
+              "findymail",
+              "prospeo",
+              "wiza",
+              "zerobounce",
+              "neverbounce",
+              "millionverifier",
+              "datagma",
+              "dropcontact",
+              "leadmagic",
+              "icypeas",
+              "enrow"
+            ]
+          },
+          "keyId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "providerId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getInheritedByokStatusContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/byok-keys/inherited-status",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "inheritedProviderIds": {
+              "maxItems": 40,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "openai",
+                  "anthropic",
+                  "google",
+                  "mistral",
+                  "zai",
+                  "kimi",
+                  "typesafe",
+                  "xai",
+                  "fireworks",
+                  "together",
+                  "baseten",
+                  "nebius",
+                  "ollama-cloud",
+                  "kie",
+                  "falai",
+                  "firecrawl",
+                  "exa",
+                  "context_dev",
+                  "tinyfish",
+                  "serper",
+                  "linkup",
+                  "perplexity",
+                  "jina",
+                  "google_cloud",
+                  "parallel_ai",
+                  "brandfetch",
+                  "cohere",
+                  "hunter",
+                  "peopledatalabs",
+                  "findymail",
+                  "prospeo",
+                  "wiza",
+                  "zerobounce",
+                  "neverbounce",
+                  "millionverifier",
+                  "datagma",
+                  "dropcontact",
+                  "leadmagic",
+                  "icypeas",
+                  "enrow"
+                ]
+              }
+            }
+          },
+          "required": [
+            "inheritedProviderIds"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listByokKeysContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/byok-keys",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "keys": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "providerId": {
+                    "type": "string",
+                    "enum": [
+                      "openai",
+                      "anthropic",
+                      "google",
+                      "mistral",
+                      "zai",
+                      "kimi",
+                      "typesafe",
+                      "xai",
+                      "fireworks",
+                      "together",
+                      "baseten",
+                      "nebius",
+                      "ollama-cloud",
+                      "kie",
+                      "falai",
+                      "firecrawl",
+                      "exa",
+                      "context_dev",
+                      "tinyfish",
+                      "serper",
+                      "linkup",
+                      "perplexity",
+                      "jina",
+                      "google_cloud",
+                      "parallel_ai",
+                      "brandfetch",
+                      "cohere",
+                      "hunter",
+                      "peopledatalabs",
+                      "findymail",
+                      "prospeo",
+                      "wiza",
+                      "zerobounce",
+                      "neverbounce",
+                      "millionverifier",
+                      "datagma",
+                      "dropcontact",
+                      "leadmagic",
+                      "icypeas",
+                      "enrow"
+                    ]
+                  },
+                  "name": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "maskedKey": {
+                    "type": "string"
+                  },
+                  "createdBy": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "providerId",
+                  "name",
+                  "maskedKey",
+                  "createdBy",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "keys"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listOrganizationByokKeysContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/byok-keys",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "keys": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "providerId": {
+                    "type": "string",
+                    "enum": [
+                      "openai",
+                      "anthropic",
+                      "google",
+                      "mistral",
+                      "zai",
+                      "kimi",
+                      "typesafe",
+                      "xai",
+                      "fireworks",
+                      "together",
+                      "baseten",
+                      "nebius",
+                      "ollama-cloud",
+                      "kie",
+                      "falai",
+                      "firecrawl",
+                      "exa",
+                      "context_dev",
+                      "tinyfish",
+                      "serper",
+                      "linkup",
+                      "perplexity",
+                      "jina",
+                      "google_cloud",
+                      "parallel_ai",
+                      "brandfetch",
+                      "cohere",
+                      "hunter",
+                      "peopledatalabs",
+                      "findymail",
+                      "prospeo",
+                      "wiza",
+                      "zerobounce",
+                      "neverbounce",
+                      "millionverifier",
+                      "datagma",
+                      "dropcontact",
+                      "leadmagic",
+                      "icypeas",
+                      "enrow"
+                    ]
+                  },
+                  "name": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "maskedKey": {
+                    "type": "string"
+                  },
+                  "createdBy": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "providerId",
+                  "name",
+                  "maskedKey",
+                  "createdBy",
+                  "createdAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "entitled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "keys",
+            "entitled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "upsertByokKeyContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/byok-keys",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "anthropic",
+              "google",
+              "mistral",
+              "zai",
+              "kimi",
+              "typesafe",
+              "xai",
+              "fireworks",
+              "together",
+              "baseten",
+              "nebius",
+              "ollama-cloud",
+              "kie",
+              "falai",
+              "firecrawl",
+              "exa",
+              "context_dev",
+              "tinyfish",
+              "serper",
+              "linkup",
+              "perplexity",
+              "jina",
+              "google_cloud",
+              "parallel_ai",
+              "brandfetch",
+              "cohere",
+              "hunter",
+              "peopledatalabs",
+              "findymail",
+              "prospeo",
+              "wiza",
+              "zerobounce",
+              "neverbounce",
+              "millionverifier",
+              "datagma",
+              "dropcontact",
+              "leadmagic",
+              "icypeas",
+              "enrow"
+            ]
+          },
+          "apiKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "keyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "providerId",
+          "apiKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "key": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "providerId": {
+                  "type": "string",
+                  "enum": [
+                    "openai",
+                    "anthropic",
+                    "google",
+                    "mistral",
+                    "zai",
+                    "kimi",
+                    "typesafe",
+                    "xai",
+                    "fireworks",
+                    "together",
+                    "baseten",
+                    "nebius",
+                    "ollama-cloud",
+                    "kie",
+                    "falai",
+                    "firecrawl",
+                    "exa",
+                    "context_dev",
+                    "tinyfish",
+                    "serper",
+                    "linkup",
+                    "perplexity",
+                    "jina",
+                    "google_cloud",
+                    "parallel_ai",
+                    "brandfetch",
+                    "cohere",
+                    "hunter",
+                    "peopledatalabs",
+                    "findymail",
+                    "prospeo",
+                    "wiza",
+                    "zerobounce",
+                    "neverbounce",
+                    "millionverifier",
+                    "datagma",
+                    "dropcontact",
+                    "leadmagic",
+                    "icypeas",
+                    "enrow"
+                  ]
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "maskedKey": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "providerId",
+                "name",
+                "maskedKey"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "key"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "upsertOrganizationByokKeyContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/byok-keys",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "enum": [
+              "openai",
+              "anthropic",
+              "google",
+              "mistral",
+              "zai",
+              "kimi",
+              "typesafe",
+              "xai",
+              "fireworks",
+              "together",
+              "baseten",
+              "nebius",
+              "ollama-cloud",
+              "kie",
+              "falai",
+              "firecrawl",
+              "exa",
+              "context_dev",
+              "tinyfish",
+              "serper",
+              "linkup",
+              "perplexity",
+              "jina",
+              "google_cloud",
+              "parallel_ai",
+              "brandfetch",
+              "cohere",
+              "hunter",
+              "peopledatalabs",
+              "findymail",
+              "prospeo",
+              "wiza",
+              "zerobounce",
+              "neverbounce",
+              "millionverifier",
+              "datagma",
+              "dropcontact",
+              "leadmagic",
+              "icypeas",
+              "enrow"
+            ]
+          },
+          "apiKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "keyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 120
+          }
+        },
+        "required": [
+          "providerId",
+          "apiKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "key": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "providerId": {
+                  "type": "string",
+                  "enum": [
+                    "openai",
+                    "anthropic",
+                    "google",
+                    "mistral",
+                    "zai",
+                    "kimi",
+                    "typesafe",
+                    "xai",
+                    "fireworks",
+                    "together",
+                    "baseten",
+                    "nebius",
+                    "ollama-cloud",
+                    "kie",
+                    "falai",
+                    "firecrawl",
+                    "exa",
+                    "context_dev",
+                    "tinyfish",
+                    "serper",
+                    "linkup",
+                    "perplexity",
+                    "jina",
+                    "google_cloud",
+                    "parallel_ai",
+                    "brandfetch",
+                    "cohere",
+                    "hunter",
+                    "peopledatalabs",
+                    "findymail",
+                    "prospeo",
+                    "wiza",
+                    "zerobounce",
+                    "neverbounce",
+                    "millionverifier",
+                    "datagma",
+                    "dropcontact",
+                    "leadmagic",
+                    "icypeas",
+                    "enrow"
+                  ]
+                },
+                "name": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "maskedKey": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "providerId",
+                "name",
+                "maskedKey"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "key"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

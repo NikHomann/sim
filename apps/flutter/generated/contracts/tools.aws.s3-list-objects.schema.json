@@ -1,0 +1,140 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/s3-list-objects.ts",
+  "contracts": {
+    "awsS3ListObjectsContract": {
+      "method": "POST",
+      "path": "/api/tools/s3/list-objects",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bucketName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prefix": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxKeys": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "continuationToken": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessKeyId",
+          "secretAccessKey",
+          "region",
+          "bucketName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "objects": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "key": {
+                        "type": "string"
+                      },
+                      "size": {
+                        "type": "number"
+                      },
+                      "lastModified": {
+                        "type": "string"
+                      },
+                      "etag": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "key",
+                      "size",
+                      "lastModified",
+                      "etag"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "isTruncated": {
+                  "type": "boolean"
+                },
+                "nextContinuationToken": {
+                  "type": "string"
+                },
+                "keyCount": {
+                  "type": "number"
+                },
+                "prefix": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "objects"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

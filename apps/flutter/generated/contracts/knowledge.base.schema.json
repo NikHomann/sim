@@ -1,0 +1,1491 @@
+{
+  "source": "apps/sim/lib/api/contracts/knowledge/base.ts",
+  "contracts": {
+    "bulkDeleteKnowledgeItemsContract": {
+      "method": "POST",
+      "path": "/api/knowledge/bulk-delete",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "knowledgeBaseIds": {
+            "default": [],
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "folderIds": {
+            "default": [],
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "deleted": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "skipped": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "notFound": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "failed": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "reason": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id",
+                      "name",
+                      "reason"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "deletedItems": {
+                  "type": "object",
+                  "properties": {
+                    "knowledgeBases": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    },
+                    "folders": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "knowledgeBases",
+                    "folders"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "deleted",
+                "skipped",
+                "notFound",
+                "failed",
+                "deletedItems"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "bulkMoveKnowledgeItemsContract": {
+      "method": "POST",
+      "path": "/api/knowledge/bulk-move",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "knowledgeBaseIds": {
+            "default": [],
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "folderIds": {
+            "default": [],
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "targetFolderId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "targetFolderId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "moved": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "skipped": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "notFound": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "failed": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "knowledgeBase",
+                          "folder"
+                        ]
+                      },
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "reason": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "id",
+                      "name",
+                      "reason"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "moved",
+                "skipped",
+                "notFound",
+                "failed"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createKnowledgeBaseContract": {
+      "method": "POST",
+      "path": "/api/knowledge",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "folderId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "chunkingConfig": {
+            "default": {
+              "maxSize": 1024,
+              "minSize": 100,
+              "overlap": 200
+            },
+            "type": "object",
+            "properties": {
+              "maxSize": {
+                "type": "number",
+                "minimum": 100,
+                "maximum": 4000
+              },
+              "minSize": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 2000
+              },
+              "overlap": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 500
+              },
+              "strategy": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "text",
+                  "regex",
+                  "recursive",
+                  "sentence",
+                  "token"
+                ]
+              },
+              "strategyOptions": {
+                "type": "object",
+                "properties": {
+                  "pattern": {
+                    "description": "Regular expression used by the regex chunking strategy.",
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "separators": {
+                    "description": "Ordered separators used to split content into chunks.",
+                    "maxItems": 32,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 100
+                    }
+                  },
+                  "recipe": {
+                    "description": "Content-aware recipe used by the automatic chunking strategy.",
+                    "type": "string",
+                    "enum": [
+                      "plain",
+                      "markdown",
+                      "code"
+                    ]
+                  },
+                  "strictBoundaries": {
+                    "description": "Whether regex matches must form strict chunk boundaries.",
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "maxSize",
+              "minSize",
+              "overlap"
+            ]
+          }
+        },
+        "required": [
+          "name",
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "isSearchIndex": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tokenCount": {
+                  "type": "number"
+                },
+                "embeddingModel": {
+                  "type": "string"
+                },
+                "embeddingDimension": {
+                  "type": "number"
+                },
+                "chunkingConfig": {
+                  "type": "object",
+                  "properties": {
+                    "maxSize": {
+                      "type": "number"
+                    },
+                    "minSize": {
+                      "type": "number"
+                    },
+                    "overlap": {
+                      "type": "number"
+                    },
+                    "strategy": {
+                      "type": "string",
+                      "enum": [
+                        "auto",
+                        "text",
+                        "regex",
+                        "recursive",
+                        "sentence",
+                        "token"
+                      ]
+                    },
+                    "strategyOptions": {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "description": "Regular expression used by the regex chunking strategy.",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "separators": {
+                          "description": "Ordered separators used to split content into chunks.",
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "recipe": {
+                          "description": "Content-aware recipe used by the automatic chunking strategy.",
+                          "type": "string",
+                          "enum": [
+                            "plain",
+                            "markdown",
+                            "code"
+                          ]
+                        },
+                        "strictBoundaries": {
+                          "description": "Whether regex matches must form strict chunk boundaries.",
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "maxSize",
+                    "minSize",
+                    "overlap"
+                  ],
+                  "additionalProperties": {}
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "docCount": {
+                  "type": "number"
+                },
+                "connectorTypes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "hasPermissionScopedConnector": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "name",
+                "description",
+                "embeddingModel",
+                "embeddingDimension",
+                "chunkingConfig",
+                "createdAt",
+                "updatedAt",
+                "deletedAt",
+                "workspaceId",
+                "folderId"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteKnowledgeBaseContract": {
+      "method": "DELETE",
+      "path": "/api/knowledge/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "message"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "exportKnowledgeBaseContract": {
+      "method": "GET",
+      "path": "/api/knowledge/[id]/export",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "vectors": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "getKnowledgeBaseContract": {
+      "method": "GET",
+      "path": "/api/knowledge/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "isSearchIndex": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tokenCount": {
+                  "type": "number"
+                },
+                "embeddingModel": {
+                  "type": "string"
+                },
+                "embeddingDimension": {
+                  "type": "number"
+                },
+                "chunkingConfig": {
+                  "type": "object",
+                  "properties": {
+                    "maxSize": {
+                      "type": "number"
+                    },
+                    "minSize": {
+                      "type": "number"
+                    },
+                    "overlap": {
+                      "type": "number"
+                    },
+                    "strategy": {
+                      "type": "string",
+                      "enum": [
+                        "auto",
+                        "text",
+                        "regex",
+                        "recursive",
+                        "sentence",
+                        "token"
+                      ]
+                    },
+                    "strategyOptions": {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "description": "Regular expression used by the regex chunking strategy.",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "separators": {
+                          "description": "Ordered separators used to split content into chunks.",
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "recipe": {
+                          "description": "Content-aware recipe used by the automatic chunking strategy.",
+                          "type": "string",
+                          "enum": [
+                            "plain",
+                            "markdown",
+                            "code"
+                          ]
+                        },
+                        "strictBoundaries": {
+                          "description": "Whether regex matches must form strict chunk boundaries.",
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "maxSize",
+                    "minSize",
+                    "overlap"
+                  ],
+                  "additionalProperties": {}
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "docCount": {
+                  "type": "number"
+                },
+                "connectorTypes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "hasPermissionScopedConnector": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "name",
+                "description",
+                "embeddingModel",
+                "embeddingDimension",
+                "chunkingConfig",
+                "createdAt",
+                "updatedAt",
+                "deletedAt",
+                "workspaceId",
+                "folderId"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listKnowledgeBasesContract": {
+      "method": "GET",
+      "path": "/api/knowledge",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope": {
+            "default": "active",
+            "type": "string",
+            "enum": [
+              "active",
+              "archived",
+              "all"
+            ]
+          },
+          "includeCounts": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "isSearchIndex": {
+                    "type": "boolean"
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "tokenCount": {
+                    "type": "number"
+                  },
+                  "embeddingModel": {
+                    "type": "string"
+                  },
+                  "embeddingDimension": {
+                    "type": "number"
+                  },
+                  "chunkingConfig": {
+                    "type": "object",
+                    "properties": {
+                      "maxSize": {
+                        "type": "number"
+                      },
+                      "minSize": {
+                        "type": "number"
+                      },
+                      "overlap": {
+                        "type": "number"
+                      },
+                      "strategy": {
+                        "type": "string",
+                        "enum": [
+                          "auto",
+                          "text",
+                          "regex",
+                          "recursive",
+                          "sentence",
+                          "token"
+                        ]
+                      },
+                      "strategyOptions": {
+                        "type": "object",
+                        "properties": {
+                          "pattern": {
+                            "description": "Regular expression used by the regex chunking strategy.",
+                            "type": "string",
+                            "maxLength": 500
+                          },
+                          "separators": {
+                            "description": "Ordered separators used to split content into chunks.",
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "recipe": {
+                            "description": "Content-aware recipe used by the automatic chunking strategy.",
+                            "type": "string",
+                            "enum": [
+                              "plain",
+                              "markdown",
+                              "code"
+                            ]
+                          },
+                          "strictBoundaries": {
+                            "description": "Whether regex matches must form strict chunk boundaries.",
+                            "type": "boolean"
+                          }
+                        },
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "maxSize",
+                      "minSize",
+                      "overlap"
+                    ],
+                    "additionalProperties": {}
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  },
+                  "deletedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "workspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "folderId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "docCount": {
+                    "type": "number"
+                  },
+                  "connectorTypes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "hasPermissionScopedConnector": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "userId",
+                  "name",
+                  "description",
+                  "embeddingModel",
+                  "embeddingDimension",
+                  "chunkingConfig",
+                  "createdAt",
+                  "updatedAt",
+                  "deletedAt",
+                  "workspaceId",
+                  "folderId"
+                ],
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "restoreKnowledgeBaseContract": {
+      "method": "POST",
+      "path": "/api/knowledge/[id]/restore",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateKnowledgeBaseContract": {
+      "method": "PUT",
+      "path": "/api/knowledge/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 10000
+          },
+          "chunkingConfig": {
+            "type": "object",
+            "properties": {
+              "maxSize": {
+                "type": "number",
+                "minimum": 100,
+                "maximum": 4000
+              },
+              "minSize": {
+                "type": "number",
+                "minimum": 1,
+                "maximum": 2000
+              },
+              "overlap": {
+                "type": "number",
+                "minimum": 0,
+                "maximum": 500
+              },
+              "strategy": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "text",
+                  "regex",
+                  "recursive",
+                  "sentence",
+                  "token"
+                ]
+              },
+              "strategyOptions": {
+                "type": "object",
+                "properties": {
+                  "pattern": {
+                    "description": "Regular expression used by the regex chunking strategy.",
+                    "type": "string",
+                    "maxLength": 500
+                  },
+                  "separators": {
+                    "description": "Ordered separators used to split content into chunks.",
+                    "maxItems": 32,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "maxLength": 100
+                    }
+                  },
+                  "recipe": {
+                    "description": "Content-aware recipe used by the automatic chunking strategy.",
+                    "type": "string",
+                    "enum": [
+                      "plain",
+                      "markdown",
+                      "code"
+                    ]
+                  },
+                  "strictBoundaries": {
+                    "description": "Whether regex matches must form strict chunk boundaries.",
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "maxSize",
+              "minSize",
+              "overlap"
+            ]
+          },
+          "folderId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "isSearchIndex": {
+                  "type": "boolean"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "tokenCount": {
+                  "type": "number"
+                },
+                "embeddingModel": {
+                  "type": "string"
+                },
+                "embeddingDimension": {
+                  "type": "number"
+                },
+                "chunkingConfig": {
+                  "type": "object",
+                  "properties": {
+                    "maxSize": {
+                      "type": "number"
+                    },
+                    "minSize": {
+                      "type": "number"
+                    },
+                    "overlap": {
+                      "type": "number"
+                    },
+                    "strategy": {
+                      "type": "string",
+                      "enum": [
+                        "auto",
+                        "text",
+                        "regex",
+                        "recursive",
+                        "sentence",
+                        "token"
+                      ]
+                    },
+                    "strategyOptions": {
+                      "type": "object",
+                      "properties": {
+                        "pattern": {
+                          "description": "Regular expression used by the regex chunking strategy.",
+                          "type": "string",
+                          "maxLength": 500
+                        },
+                        "separators": {
+                          "description": "Ordered separators used to split content into chunks.",
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "recipe": {
+                          "description": "Content-aware recipe used by the automatic chunking strategy.",
+                          "type": "string",
+                          "enum": [
+                            "plain",
+                            "markdown",
+                            "code"
+                          ]
+                        },
+                        "strictBoundaries": {
+                          "description": "Whether regex matches must form strict chunk boundaries.",
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "maxSize",
+                    "minSize",
+                    "overlap"
+                  ],
+                  "additionalProperties": {}
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "docCount": {
+                  "type": "number"
+                },
+                "connectorTypes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "hasPermissionScopedConnector": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "name",
+                "description",
+                "embeddingModel",
+                "embeddingDimension",
+                "chunkingConfig",
+                "createdAt",
+                "updatedAt",
+                "deletedAt",
+                "workspaceId",
+                "folderId"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "source": "apps/sim/lib/api/contracts/organizations.ts",
+  "contracts": {
+    "listCreatorOrganizationsContract": {
+      "method": "GET",
+      "path": "/api/organizations",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "organizations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "role": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "role"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "isMemberOfAnyOrg": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "organizations",
+            "isMemberOfAnyOrg"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

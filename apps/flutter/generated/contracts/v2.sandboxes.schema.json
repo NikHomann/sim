@@ -1,0 +1,1114 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/sandboxes.ts",
+  "contracts": {
+    "v2CreateSandboxContract": {
+      "method": "POST",
+      "path": "/api/v2/sandboxes",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace in which to create the sandbox."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "description": "Display name, unique within the workspace; 1 to 64 characters."
+          },
+          "language": {
+            "type": "string",
+            "enum": [
+              "javascript",
+              "python"
+            ],
+            "description": "Dependency ecosystem: `javascript` installs from npm, `python` from PyPI."
+          },
+          "dependencies": {
+            "default": [],
+            "description": "Package specifiers installed into the sandbox, one per entry.",
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "cliTools": {
+            "default": [],
+            "description": "Pinned managed CLI ids installed into the sandbox, at most 10, no duplicates.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "google-cloud-cli@577.0.0-r1",
+                "aws-cli@2.36.15-r1",
+                "azure-cli@2.89.0-r1",
+                "doctl@1.166.0-r1",
+                "github-cli@2.97.0-r1",
+                "gitlab-cli@1.111.0-r1",
+                "kubectl@1.36.3-r1",
+                "helm@4.2.3-r1",
+                "kustomize@5.8.1-r1",
+                "argocd@3.4.6-r1",
+                "terraform@1.15.8-r1",
+                "pulumi@3.255.0-r1",
+                "supabase-cli@2.111.0-r1",
+                "firebase-cli@15.25.1-r1",
+                "flyctl@0.4.78-r1",
+                "railway-cli@5.30.4-r1",
+                "stripe-cli@1.45.0-r1",
+                "duckdb@1.5.5-r1",
+                "rclone@1.75.0-r1",
+                "restic@0.19.1-r1",
+                "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                "mongosh@2.9.2-r1",
+                "sops@3.13.3-r1",
+                "age@1.3.1-r1"
+              ]
+            }
+          },
+          "systemPackages": {
+            "default": [],
+            "description": "Debian packages installed into the sandbox, one per entry.",
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          }
+        },
+        "required": [
+          "workspaceId",
+          "name",
+          "language"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2Sandbox"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Sandbox": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique sandbox identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name, unique within the workspace."
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "javascript",
+                    "python"
+                  ],
+                  "description": "Dependency ecosystem: `javascript` installs from npm, `python` from PyPI."
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Package specifiers installed into the sandbox, one per entry."
+                },
+                "cliTools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "google-cloud-cli@577.0.0-r1",
+                      "aws-cli@2.36.15-r1",
+                      "azure-cli@2.89.0-r1",
+                      "doctl@1.166.0-r1",
+                      "github-cli@2.97.0-r1",
+                      "gitlab-cli@1.111.0-r1",
+                      "kubectl@1.36.3-r1",
+                      "helm@4.2.3-r1",
+                      "kustomize@5.8.1-r1",
+                      "argocd@3.4.6-r1",
+                      "terraform@1.15.8-r1",
+                      "pulumi@3.255.0-r1",
+                      "supabase-cli@2.111.0-r1",
+                      "firebase-cli@15.25.1-r1",
+                      "flyctl@0.4.78-r1",
+                      "railway-cli@5.30.4-r1",
+                      "stripe-cli@1.45.0-r1",
+                      "duckdb@1.5.5-r1",
+                      "rclone@1.75.0-r1",
+                      "restic@0.19.1-r1",
+                      "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                      "mongosh@2.9.2-r1",
+                      "sops@3.13.3-r1",
+                      "age@1.3.1-r1"
+                    ]
+                  },
+                  "description": "Pinned managed CLI ids installed into the sandbox, at most 10, no duplicates."
+                },
+                "systemPackages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Debian packages installed into the sandbox, one per entry."
+                },
+                "buildStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "building",
+                        "ready",
+                        "failed"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Image build state. `null` when the deployment installs dependencies at run time and has nothing to build."
+                },
+                "errorCode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Classified build failure code, or `null`."
+                },
+                "errorMessage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Human-readable build failure summary, or `null`."
+                },
+                "errorDetail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Tail of the installer log for a failed build, or `null`."
+                },
+                "builtAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the current image finished building, or `null`."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "language",
+                "dependencies",
+                "cliTools",
+                "systemPackages",
+                "buildStatus",
+                "errorCode",
+                "errorMessage",
+                "errorDetail",
+                "builtAt",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2Sandbox",
+              "title": "Sandbox",
+              "description": "A workspace sandbox: a reusable dependency set that Function blocks execute against."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteSandboxContract": {
+      "method": "DELETE",
+      "path": "/api/v2/sandboxes/[sandboxId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "sandboxId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique sandbox identifier."
+          }
+        },
+        "required": [
+          "sandboxId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the sandbox."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2SandboxDeleteData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2SandboxDeleteData": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the deleted sandbox."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the sandbox was deleted."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2SandboxDeleteData",
+              "title": "Delete sandbox data",
+              "description": "Sandbox deletion acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2GetSandboxContract": {
+      "method": "GET",
+      "path": "/api/v2/sandboxes/[sandboxId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "sandboxId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique sandbox identifier."
+          }
+        },
+        "required": [
+          "sandboxId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the sandbox."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2Sandbox"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Sandbox": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique sandbox identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name, unique within the workspace."
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "javascript",
+                    "python"
+                  ],
+                  "description": "Dependency ecosystem: `javascript` installs from npm, `python` from PyPI."
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Package specifiers installed into the sandbox, one per entry."
+                },
+                "cliTools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "google-cloud-cli@577.0.0-r1",
+                      "aws-cli@2.36.15-r1",
+                      "azure-cli@2.89.0-r1",
+                      "doctl@1.166.0-r1",
+                      "github-cli@2.97.0-r1",
+                      "gitlab-cli@1.111.0-r1",
+                      "kubectl@1.36.3-r1",
+                      "helm@4.2.3-r1",
+                      "kustomize@5.8.1-r1",
+                      "argocd@3.4.6-r1",
+                      "terraform@1.15.8-r1",
+                      "pulumi@3.255.0-r1",
+                      "supabase-cli@2.111.0-r1",
+                      "firebase-cli@15.25.1-r1",
+                      "flyctl@0.4.78-r1",
+                      "railway-cli@5.30.4-r1",
+                      "stripe-cli@1.45.0-r1",
+                      "duckdb@1.5.5-r1",
+                      "rclone@1.75.0-r1",
+                      "restic@0.19.1-r1",
+                      "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                      "mongosh@2.9.2-r1",
+                      "sops@3.13.3-r1",
+                      "age@1.3.1-r1"
+                    ]
+                  },
+                  "description": "Pinned managed CLI ids installed into the sandbox, at most 10, no duplicates."
+                },
+                "systemPackages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Debian packages installed into the sandbox, one per entry."
+                },
+                "buildStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "building",
+                        "ready",
+                        "failed"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Image build state. `null` when the deployment installs dependencies at run time and has nothing to build."
+                },
+                "errorCode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Classified build failure code, or `null`."
+                },
+                "errorMessage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Human-readable build failure summary, or `null`."
+                },
+                "errorDetail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Tail of the installer log for a failed build, or `null`."
+                },
+                "builtAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the current image finished building, or `null`."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "language",
+                "dependencies",
+                "cliTools",
+                "systemPackages",
+                "buildStatus",
+                "errorCode",
+                "errorMessage",
+                "errorDetail",
+                "builtAt",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2Sandbox",
+              "title": "Sandbox",
+              "description": "A workspace sandbox: a reusable dependency set that Function blocks execute against."
+            }
+          }
+        }
+      }
+    },
+    "v2ListSandboxesContract": {
+      "method": "GET",
+      "path": "/api/v2/sandboxes",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the sandbox."
+          },
+          "search": {
+            "description": "Case-insensitive substring match against the sandbox name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sortBy": {
+            "default": "name",
+            "description": "Field used to sort the result. Do not rely on case-insensitive ordering when sorting by `name`.",
+            "type": "string",
+            "enum": [
+              "name",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum sandboxes to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2Sandbox"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Sandbox": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique sandbox identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name, unique within the workspace."
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "javascript",
+                    "python"
+                  ],
+                  "description": "Dependency ecosystem: `javascript` installs from npm, `python` from PyPI."
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Package specifiers installed into the sandbox, one per entry."
+                },
+                "cliTools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "google-cloud-cli@577.0.0-r1",
+                      "aws-cli@2.36.15-r1",
+                      "azure-cli@2.89.0-r1",
+                      "doctl@1.166.0-r1",
+                      "github-cli@2.97.0-r1",
+                      "gitlab-cli@1.111.0-r1",
+                      "kubectl@1.36.3-r1",
+                      "helm@4.2.3-r1",
+                      "kustomize@5.8.1-r1",
+                      "argocd@3.4.6-r1",
+                      "terraform@1.15.8-r1",
+                      "pulumi@3.255.0-r1",
+                      "supabase-cli@2.111.0-r1",
+                      "firebase-cli@15.25.1-r1",
+                      "flyctl@0.4.78-r1",
+                      "railway-cli@5.30.4-r1",
+                      "stripe-cli@1.45.0-r1",
+                      "duckdb@1.5.5-r1",
+                      "rclone@1.75.0-r1",
+                      "restic@0.19.1-r1",
+                      "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                      "mongosh@2.9.2-r1",
+                      "sops@3.13.3-r1",
+                      "age@1.3.1-r1"
+                    ]
+                  },
+                  "description": "Pinned managed CLI ids installed into the sandbox, at most 10, no duplicates."
+                },
+                "systemPackages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Debian packages installed into the sandbox, one per entry."
+                },
+                "buildStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "building",
+                        "ready",
+                        "failed"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Image build state. `null` when the deployment installs dependencies at run time and has nothing to build."
+                },
+                "errorCode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Classified build failure code, or `null`."
+                },
+                "errorMessage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Human-readable build failure summary, or `null`."
+                },
+                "errorDetail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Tail of the installer log for a failed build, or `null`."
+                },
+                "builtAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the current image finished building, or `null`."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "language",
+                "dependencies",
+                "cliTools",
+                "systemPackages",
+                "buildStatus",
+                "errorCode",
+                "errorMessage",
+                "errorDetail",
+                "builtAt",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2Sandbox",
+              "title": "Sandbox",
+              "description": "A workspace sandbox: a reusable dependency set that Function blocks execute against."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateSandboxContract": {
+      "method": "PATCH",
+      "path": "/api/v2/sandboxes/[sandboxId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "sandboxId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique sandbox identifier."
+          }
+        },
+        "required": [
+          "sandboxId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the sandbox."
+          },
+          "name": {
+            "description": "New display name, unique within the workspace; 1 to 64 characters.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "language": {
+            "description": "Replacement dependency ecosystem. The whole spec is revalidated against it, so a Python dependency list does not survive a switch to JavaScript.",
+            "type": "string",
+            "enum": [
+              "javascript",
+              "python"
+            ]
+          },
+          "dependencies": {
+            "description": "Replacement package list; replaces the whole list.",
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          },
+          "cliTools": {
+            "description": "Replacement managed CLI list; replaces the whole list.",
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "google-cloud-cli@577.0.0-r1",
+                "aws-cli@2.36.15-r1",
+                "azure-cli@2.89.0-r1",
+                "doctl@1.166.0-r1",
+                "github-cli@2.97.0-r1",
+                "gitlab-cli@1.111.0-r1",
+                "kubectl@1.36.3-r1",
+                "helm@4.2.3-r1",
+                "kustomize@5.8.1-r1",
+                "argocd@3.4.6-r1",
+                "terraform@1.15.8-r1",
+                "pulumi@3.255.0-r1",
+                "supabase-cli@2.111.0-r1",
+                "firebase-cli@15.25.1-r1",
+                "flyctl@0.4.78-r1",
+                "railway-cli@5.30.4-r1",
+                "stripe-cli@1.45.0-r1",
+                "duckdb@1.5.5-r1",
+                "rclone@1.75.0-r1",
+                "restic@0.19.1-r1",
+                "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                "mongosh@2.9.2-r1",
+                "sops@3.13.3-r1",
+                "age@1.3.1-r1"
+              ]
+            }
+          },
+          "systemPackages": {
+            "description": "Replacement Debian package list; replaces the whole list.",
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 2000
+            }
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2Sandbox"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Sandbox": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique sandbox identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Display name, unique within the workspace."
+                },
+                "language": {
+                  "type": "string",
+                  "enum": [
+                    "javascript",
+                    "python"
+                  ],
+                  "description": "Dependency ecosystem: `javascript` installs from npm, `python` from PyPI."
+                },
+                "dependencies": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Package specifiers installed into the sandbox, one per entry."
+                },
+                "cliTools": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "google-cloud-cli@577.0.0-r1",
+                      "aws-cli@2.36.15-r1",
+                      "azure-cli@2.89.0-r1",
+                      "doctl@1.166.0-r1",
+                      "github-cli@2.97.0-r1",
+                      "gitlab-cli@1.111.0-r1",
+                      "kubectl@1.36.3-r1",
+                      "helm@4.2.3-r1",
+                      "kustomize@5.8.1-r1",
+                      "argocd@3.4.6-r1",
+                      "terraform@1.15.8-r1",
+                      "pulumi@3.255.0-r1",
+                      "supabase-cli@2.111.0-r1",
+                      "firebase-cli@15.25.1-r1",
+                      "flyctl@0.4.78-r1",
+                      "railway-cli@5.30.4-r1",
+                      "stripe-cli@1.45.0-r1",
+                      "duckdb@1.5.5-r1",
+                      "rclone@1.75.0-r1",
+                      "restic@0.19.1-r1",
+                      "minio-mc@RELEASE.2025-08-13T08-35-41Z-r1",
+                      "mongosh@2.9.2-r1",
+                      "sops@3.13.3-r1",
+                      "age@1.3.1-r1"
+                    ]
+                  },
+                  "description": "Pinned managed CLI ids installed into the sandbox, at most 10, no duplicates."
+                },
+                "systemPackages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Debian packages installed into the sandbox, one per entry."
+                },
+                "buildStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "building",
+                        "ready",
+                        "failed"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Image build state. `null` when the deployment installs dependencies at run time and has nothing to build."
+                },
+                "errorCode": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Classified build failure code, or `null`."
+                },
+                "errorMessage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Human-readable build failure summary, or `null`."
+                },
+                "errorDetail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Tail of the installer log for a failed build, or `null`."
+                },
+                "builtAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the current image finished building, or `null`."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the sandbox was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "language",
+                "dependencies",
+                "cliTools",
+                "systemPackages",
+                "buildStatus",
+                "errorCode",
+                "errorMessage",
+                "errorDetail",
+                "builtAt",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2Sandbox",
+              "title": "Sandbox",
+              "description": "A workspace sandbox: a reusable dependency set that Function blocks execute against."
+            }
+          }
+        }
+      }
+    }
+  }
+}

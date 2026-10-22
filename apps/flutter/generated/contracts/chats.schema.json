@@ -1,0 +1,910 @@
+{
+  "source": "apps/sim/lib/api/contracts/chats.ts",
+  "contracts": {
+    "authenticateDeployedChatContract": {
+      "method": "POST",
+      "path": "/api/chat/[identifier]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "password": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email",
+                "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "string",
+                "const": ""
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "customizations": {
+              "type": "object",
+              "properties": {
+                "primaryColor": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string"
+                },
+                "welcomeMessage": {
+                  "type": "string"
+                },
+                "headerText": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "authType": {
+              "type": "string",
+              "enum": [
+                "public",
+                "password",
+                "email",
+                "sso"
+              ]
+            },
+            "outputConfigs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowId": {
+                    "type": "string"
+                  },
+                  "blockId": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "blockId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "includeThinking": {
+              "type": "boolean"
+            },
+            "includeToolCalls": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "description",
+            "customizations",
+            "authType",
+            "includeThinking",
+            "includeToolCalls"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "chatSSOContract": {
+      "method": "POST",
+      "path": "/api/chat/[identifier]/sso",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "eligible": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "eligible"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createChatContract": {
+      "method": "POST",
+      "path": "/api/chat",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identifier": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "customizations": {
+            "type": "object",
+            "properties": {
+              "primaryColor": {
+                "type": "string"
+              },
+              "welcomeMessage": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "primaryColor",
+              "welcomeMessage"
+            ]
+          },
+          "authType": {
+            "default": "public",
+            "type": "string",
+            "enum": [
+              "public",
+              "password",
+              "email",
+              "sso"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "allowedEmails": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outputConfigs": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "blockId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "blockId",
+                "path"
+              ]
+            }
+          },
+          "includeThinking": {
+            "default": false,
+            "type": "boolean"
+          },
+          "includeToolCalls": {
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "workflowId",
+          "identifier",
+          "title",
+          "customizations"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "chatId": {
+              "type": "string"
+            },
+            "chatUrl": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "chatId",
+            "chatUrl",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteChatContract": {
+      "method": "DELETE",
+      "path": "/api/chat/manage/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deployedChatPostContract": {
+      "method": "POST",
+      "path": "/api/chat/[identifier]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "input": {
+            "type": "string",
+            "maxLength": 1000000
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "email": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "email",
+                "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+              },
+              {
+                "type": "string",
+                "const": ""
+              }
+            ]
+          },
+          "conversationId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "files": {
+            "default": [],
+            "maxItems": 15,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "type": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "size": {
+                  "type": "number",
+                  "exclusiveMinimum": 0
+                },
+                "data": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 14680064
+                },
+                "lastModified": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "name",
+                "type",
+                "size",
+                "data"
+              ]
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "stream"
+      }
+    },
+    "getChatPasswordContract": {
+      "method": "GET",
+      "path": "/api/chat/manage/[id]/password",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "password": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "password"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getDeployedChatConfigContract": {
+      "method": "GET",
+      "path": "/api/chat/[identifier]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "customizations": {
+              "type": "object",
+              "properties": {
+                "primaryColor": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string"
+                },
+                "welcomeMessage": {
+                  "type": "string"
+                },
+                "headerText": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "authType": {
+              "type": "string",
+              "enum": [
+                "public",
+                "password",
+                "email",
+                "sso"
+              ]
+            },
+            "outputConfigs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowId": {
+                    "type": "string"
+                  },
+                  "blockId": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "blockId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "includeThinking": {
+              "type": "boolean"
+            },
+            "includeToolCalls": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "description",
+            "customizations",
+            "authType",
+            "includeThinking",
+            "includeToolCalls"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "requestChatEmailOtpContract": {
+      "method": "POST",
+      "path": "/api/chat/[identifier]/otp",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateChatContract": {
+      "method": "PATCH",
+      "path": "/api/chat/manage/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "identifier": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^[a-z0-9-]+$"
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "customizations": {
+            "type": "object",
+            "properties": {
+              "primaryColor": {
+                "type": "string"
+              },
+              "welcomeMessage": {
+                "type": "string"
+              },
+              "imageUrl": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "primaryColor",
+              "welcomeMessage"
+            ]
+          },
+          "authType": {
+            "type": "string",
+            "enum": [
+              "public",
+              "password",
+              "email",
+              "sso"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "allowedEmails": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "outputConfigs": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "blockId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "path": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "blockId",
+                "path"
+              ]
+            }
+          },
+          "includeThinking": {
+            "type": "boolean"
+          },
+          "includeToolCalls": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "chatUrl": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "chatUrl",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "validateChatIdentifierContract": {
+      "method": "GET",
+      "path": "/api/chat/validate",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[a-z0-9-]+$"
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "available": {
+              "type": "boolean"
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "available"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "verifyChatEmailOtpContract": {
+      "method": "PUT",
+      "path": "/api/chat/[identifier]/otp",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "identifier"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "otp": {
+            "type": "string",
+            "minLength": 6,
+            "maxLength": 6
+          }
+        },
+        "required": [
+          "email",
+          "otp"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "customizations": {
+              "type": "object",
+              "properties": {
+                "primaryColor": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string"
+                },
+                "welcomeMessage": {
+                  "type": "string"
+                },
+                "headerText": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "authType": {
+              "type": "string",
+              "enum": [
+                "public",
+                "password",
+                "email",
+                "sso"
+              ]
+            },
+            "outputConfigs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowId": {
+                    "type": "string"
+                  },
+                  "blockId": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "blockId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "includeThinking": {
+              "type": "boolean"
+            },
+            "includeToolCalls": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "title",
+            "description",
+            "customizations",
+            "authType",
+            "includeThinking",
+            "includeToolCalls"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

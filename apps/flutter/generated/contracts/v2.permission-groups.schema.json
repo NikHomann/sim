@@ -1,0 +1,2909 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/permission-groups.ts",
+  "contracts": {
+    "v2AddPermissionGroupMemberContract": {
+      "method": "POST",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups/[groupId]/members",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Permission group identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "groupId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Existing organization member to add."
+          }
+        },
+        "required": [
+          "userId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PermissionGroupAssignment"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroupAssignment": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Membership assignment identifier."
+                },
+                "permissionGroupId": {
+                  "type": "string",
+                  "description": "Group receiving the member."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "description": "Organization that owns the group."
+                },
+                "userId": {
+                  "type": "string",
+                  "description": "User assigned to the group."
+                },
+                "assignedBy": {
+                  "type": "string",
+                  "description": "User who made the assignment."
+                },
+                "assignedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the assignment was created."
+                }
+              },
+              "required": [
+                "id",
+                "permissionGroupId",
+                "organizationId",
+                "userId",
+                "assignedBy",
+                "assignedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroupAssignment",
+              "title": "Permission group assignment",
+              "description": "The newly created membership assignment."
+            }
+          }
+        }
+      }
+    },
+    "v2BulkAddPermissionGroupMembersContract": {
+      "method": "POST",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups/[groupId]/members/bulk",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Permission group identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "groupId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userIds": {
+            "description": "Organization member identifiers. Existing group members are skipped; users outside the organization are ignored.",
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "addAllOrganizationMembers": {
+            "description": "Add every current organization member in bounded batches within one transaction. Cannot be combined with userIds.",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PermissionGroupBulkAdd"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroupBulkAdd": {
+              "type": "object",
+              "properties": {
+                "added": {
+                  "type": "number",
+                  "description": "Number of members added."
+                },
+                "skipped": {
+                  "type": "number",
+                  "description": "Number of selected organization members already in the group."
+                }
+              },
+              "required": [
+                "added",
+                "skipped"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroupBulkAdd",
+              "title": "Permission group bulk addition",
+              "description": "Counts of added and already assigned organization members."
+            }
+          }
+        }
+      }
+    },
+    "v2CreatePermissionGroupContract": {
+      "method": "POST",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Group name, unique within the organization."
+          },
+          "description": {
+            "description": "Optional group description.",
+            "type": "string",
+            "maxLength": 500
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "allowedIntegrations": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+              },
+              "allowedModelProviders": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Model providers are limited to this list. Null permits every value; an empty list permits none."
+              },
+              "deniedModels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Models listed in this list are blocked."
+              },
+              "deniedTools": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Integration tools listed in this list are blocked."
+              },
+              "hideTraceSpans": {
+                "type": "boolean",
+                "description": "Withhold per-block trace spans from logs and from the API."
+              },
+              "hideKnowledgeBaseTab": {
+                "type": "boolean",
+                "description": "Revoke the Knowledge Base module. Members cannot open, search, or query any knowledge base."
+              },
+              "hideTablesTab": {
+                "type": "boolean",
+                "description": "Revoke the Tables module. Members cannot read or write any table."
+              },
+              "hideCopilot": {
+                "type": "boolean",
+                "description": "Revoke Chat. Members cannot ask Sim to build or edit anything."
+              },
+              "hideIntegrationsTab": {
+                "type": "boolean",
+                "description": "Revoke integration connections. Members cannot view, add, or remove an OAuth connection."
+              },
+              "hideSecretsTab": {
+                "type": "boolean",
+                "description": "Revoke secrets. Members cannot read, add, or change a workspace environment variable."
+              },
+              "hideApiKeysTab": {
+                "type": "boolean",
+                "description": "Revoke workspace API keys. Members cannot list, create, or revoke one."
+              },
+              "hideInboxTab": {
+                "type": "boolean",
+                "description": "Revoke the Sim Mailer inbox. Members cannot read or send mail."
+              },
+              "hideFilesTab": {
+                "type": "boolean",
+                "description": "Revoke the Files module. Members cannot list, upload, or download workspace files."
+              },
+              "disableMcpTools": {
+                "type": "boolean",
+                "description": "Block agents from calling MCP tools."
+              },
+              "disableCustomTools": {
+                "type": "boolean",
+                "description": "Block agents from calling user-defined custom tools."
+              },
+              "disableSkills": {
+                "type": "boolean",
+                "description": "Block agents from loading skills."
+              },
+              "disableInvitations": {
+                "type": "boolean",
+                "description": "Prevent inviting anyone to a workspace or to the organization."
+              },
+              "disablePublicApi": {
+                "type": "boolean",
+                "description": "Revoke public API access. Calls to a deployed workflow are refused."
+              },
+              "disablePublicFileSharing": {
+                "type": "boolean",
+                "description": "Revoke public file sharing. Members cannot create a share link."
+              },
+              "allowedFileShareAuthTypes": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "public",
+                        "password",
+                        "email",
+                        "sso"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Public file-share authentication is limited to this list. Null permits every value; an empty list permits none."
+              },
+              "hideDeployApi": {
+                "type": "boolean",
+                "description": "Prevent deploying a workflow as an API endpoint."
+              },
+              "hideDeployMcp": {
+                "type": "boolean",
+                "description": "Prevent exposing a workflow as an MCP server."
+              },
+              "hideDeployChatbot": {
+                "type": "boolean",
+                "description": "Prevent deploying a workflow as a chat."
+              },
+              "allowedChatDeployAuthTypes": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "public",
+                        "password",
+                        "email",
+                        "sso"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Chat deployment authentication is limited to this list. Null permits every value; an empty list permits none."
+              },
+              "disablePersonalApiKeys": {
+                "type": "boolean",
+                "description": "Prevent members from using a personal API key against this workspace."
+              },
+              "disableLogExport": {
+                "type": "boolean",
+                "description": "Prevent downloading execution logs as a CSV."
+              },
+              "hideCostInfo": {
+                "type": "boolean",
+                "description": "Withhold execution cost. Logs and member exports omit cost and token spend; organization-level data drains, configurable by org admins only, are not projected."
+              },
+              "disableKnowledgeBaseCreation": {
+                "type": "boolean",
+                "description": "Prevent creating knowledge bases, leaving existing ones queryable."
+              },
+              "disableKnowledgeBaseFileUpload": {
+                "type": "boolean",
+                "description": "Prevent uploading local documents, leaving sanctioned connectors as the only source."
+              },
+              "allowedKnowledgeConnectors": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Knowledge base connectors are limited to this list. Null permits every value; an empty list permits none."
+              },
+              "disableTableCreation": {
+                "type": "boolean",
+                "description": "Prevent creating tables, leaving existing ones usable."
+              },
+              "disableTableExport": {
+                "type": "boolean",
+                "description": "Prevent downloading a whole table as CSV or JSON."
+              },
+              "disableBulkFileDownload": {
+                "type": "boolean",
+                "description": "Prevent downloading folders as an archive."
+              },
+              "disablePersonalCredentials": {
+                "type": "boolean",
+                "description": "Prevent connecting personal credentials, leaving only workspace-shared ones."
+              },
+              "disableWorkspaceCreation": {
+                "type": "boolean",
+                "description": "Prevent creating new workspaces, which no existing group would govern. Read from the organization's default group, because creating a workspace names none."
+              },
+              "hideOrgMemberDirectory": {
+                "type": "boolean",
+                "description": "Withhold the member directory. Members cannot see the names or email addresses of other members. Read from the organization's default group, because the directory belongs to the organization and names no workspace."
+              },
+              "disableCliAccess": {
+                "type": "boolean",
+                "description": "Prevent approving a CLI login or using Sim CLI OAuth tokens for the public API. A login naming one of this group's workspaces is refused; an account-level login names none, so it is read from the organization's default group."
+              },
+              "disableWebhookTriggers": {
+                "type": "boolean",
+                "description": "Prevent making a workflow reachable from an inbound webhook."
+              },
+              "disableToolAutoApproval": {
+                "type": "boolean",
+                "description": "Prevent silencing a tool confirmation, so every call is confirmed again."
+              },
+              "hideSandboxesTab": {
+                "type": "boolean",
+                "description": "Revoke the Sandboxes module. Members cannot view, create, or change a workspace sandbox."
+              },
+              "disableOAuthAppAccess": {
+                "type": "boolean",
+                "description": "Prevent OAuth apps from accessing this group's workspaces. The organization's default group also governs authorizing apps and refreshing their access."
+              },
+              "disableKnowledgeBaseExport": {
+                "type": "boolean",
+                "description": "Prevent downloading a whole knowledge base as an archive."
+              },
+              "deniedPartialAccessProjectIssues": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "description": "Issues in the listed Projects are unavailable to teammates without access to every active environment."
+              },
+              "defaultAgentModel": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Default model for new Agent blocks. Null uses the platform default."
+              }
+            },
+            "additionalProperties": false,
+            "description": "Group settings to set. Omitted keys use the default permission configuration."
+          },
+          "isDefault": {
+            "description": "Whether the group is the organization default. Only one group can be the default.",
+            "type": "boolean"
+          },
+          "workspaceIds": {
+            "description": "Workspace IDs targeted by a non-default group. Required when creating a non-default group; omit for a default group.",
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PermissionGroup"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroup": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Permission group identifier."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "description": "Organization that owns the group."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Group name, unique within the organization."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional description of the group."
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "allowedIntegrations": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "allowedModelProviders": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Model providers are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "deniedModels": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Models listed in this list are blocked."
+                    },
+                    "deniedTools": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Integration tools listed in this list are blocked."
+                    },
+                    "hideTraceSpans": {
+                      "type": "boolean",
+                      "description": "Withhold per-block trace spans from logs and from the API."
+                    },
+                    "hideKnowledgeBaseTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Knowledge Base module. Members cannot open, search, or query any knowledge base."
+                    },
+                    "hideTablesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Tables module. Members cannot read or write any table."
+                    },
+                    "hideCopilot": {
+                      "type": "boolean",
+                      "description": "Revoke Chat. Members cannot ask Sim to build or edit anything."
+                    },
+                    "hideIntegrationsTab": {
+                      "type": "boolean",
+                      "description": "Revoke integration connections. Members cannot view, add, or remove an OAuth connection."
+                    },
+                    "hideSecretsTab": {
+                      "type": "boolean",
+                      "description": "Revoke secrets. Members cannot read, add, or change a workspace environment variable."
+                    },
+                    "hideApiKeysTab": {
+                      "type": "boolean",
+                      "description": "Revoke workspace API keys. Members cannot list, create, or revoke one."
+                    },
+                    "hideInboxTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sim Mailer inbox. Members cannot read or send mail."
+                    },
+                    "hideFilesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Files module. Members cannot list, upload, or download workspace files."
+                    },
+                    "disableMcpTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling MCP tools."
+                    },
+                    "disableCustomTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling user-defined custom tools."
+                    },
+                    "disableSkills": {
+                      "type": "boolean",
+                      "description": "Block agents from loading skills."
+                    },
+                    "disableInvitations": {
+                      "type": "boolean",
+                      "description": "Prevent inviting anyone to a workspace or to the organization."
+                    },
+                    "disablePublicApi": {
+                      "type": "boolean",
+                      "description": "Revoke public API access. Calls to a deployed workflow are refused."
+                    },
+                    "disablePublicFileSharing": {
+                      "type": "boolean",
+                      "description": "Revoke public file sharing. Members cannot create a share link."
+                    },
+                    "allowedFileShareAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Public file-share authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "hideDeployApi": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as an API endpoint."
+                    },
+                    "hideDeployMcp": {
+                      "type": "boolean",
+                      "description": "Prevent exposing a workflow as an MCP server."
+                    },
+                    "hideDeployChatbot": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as a chat."
+                    },
+                    "allowedChatDeployAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Chat deployment authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disablePersonalApiKeys": {
+                      "type": "boolean",
+                      "description": "Prevent members from using a personal API key against this workspace."
+                    },
+                    "disableLogExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading execution logs as a CSV."
+                    },
+                    "hideCostInfo": {
+                      "type": "boolean",
+                      "description": "Withhold execution cost. Logs and member exports omit cost and token spend; organization-level data drains, configurable by org admins only, are not projected."
+                    },
+                    "disableKnowledgeBaseCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating knowledge bases, leaving existing ones queryable."
+                    },
+                    "disableKnowledgeBaseFileUpload": {
+                      "type": "boolean",
+                      "description": "Prevent uploading local documents, leaving sanctioned connectors as the only source."
+                    },
+                    "allowedKnowledgeConnectors": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Knowledge base connectors are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disableTableCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating tables, leaving existing ones usable."
+                    },
+                    "disableTableExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole table as CSV or JSON."
+                    },
+                    "disableBulkFileDownload": {
+                      "type": "boolean",
+                      "description": "Prevent downloading folders as an archive."
+                    },
+                    "disablePersonalCredentials": {
+                      "type": "boolean",
+                      "description": "Prevent connecting personal credentials, leaving only workspace-shared ones."
+                    },
+                    "disableWorkspaceCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating new workspaces, which no existing group would govern. Read from the organization's default group, because creating a workspace names none."
+                    },
+                    "hideOrgMemberDirectory": {
+                      "type": "boolean",
+                      "description": "Withhold the member directory. Members cannot see the names or email addresses of other members. Read from the organization's default group, because the directory belongs to the organization and names no workspace."
+                    },
+                    "disableCliAccess": {
+                      "type": "boolean",
+                      "description": "Prevent approving a CLI login or using Sim CLI OAuth tokens for the public API. A login naming one of this group's workspaces is refused; an account-level login names none, so it is read from the organization's default group."
+                    },
+                    "disableWebhookTriggers": {
+                      "type": "boolean",
+                      "description": "Prevent making a workflow reachable from an inbound webhook."
+                    },
+                    "disableToolAutoApproval": {
+                      "type": "boolean",
+                      "description": "Prevent silencing a tool confirmation, so every call is confirmed again."
+                    },
+                    "hideSandboxesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sandboxes module. Members cannot view, create, or change a workspace sandbox."
+                    },
+                    "disableOAuthAppAccess": {
+                      "type": "boolean",
+                      "description": "Prevent OAuth apps from accessing this group's workspaces. The organization's default group also governs authorizing apps and refreshing their access."
+                    },
+                    "disableKnowledgeBaseExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole knowledge base as an archive."
+                    },
+                    "deniedPartialAccessProjectIssues": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "description": "Issues in the listed Projects are unavailable to teammates without access to every active environment."
+                    },
+                    "defaultAgentModel": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Default model for new Agent blocks. Null uses the platform default."
+                    }
+                  },
+                  "required": [
+                    "allowedIntegrations",
+                    "allowedModelProviders",
+                    "deniedModels",
+                    "deniedTools",
+                    "hideTraceSpans",
+                    "hideKnowledgeBaseTab",
+                    "hideTablesTab",
+                    "hideCopilot",
+                    "hideIntegrationsTab",
+                    "hideSecretsTab",
+                    "hideApiKeysTab",
+                    "hideInboxTab",
+                    "hideFilesTab",
+                    "disableMcpTools",
+                    "disableCustomTools",
+                    "disableSkills",
+                    "disableInvitations",
+                    "disablePublicApi",
+                    "disablePublicFileSharing",
+                    "allowedFileShareAuthTypes",
+                    "hideDeployApi",
+                    "hideDeployMcp",
+                    "hideDeployChatbot",
+                    "allowedChatDeployAuthTypes",
+                    "disablePersonalApiKeys",
+                    "disableLogExport",
+                    "hideCostInfo",
+                    "disableKnowledgeBaseCreation",
+                    "disableKnowledgeBaseFileUpload",
+                    "allowedKnowledgeConnectors",
+                    "disableTableCreation",
+                    "disableTableExport",
+                    "disableBulkFileDownload",
+                    "disablePersonalCredentials",
+                    "disableWorkspaceCreation",
+                    "hideOrgMemberDirectory",
+                    "disableCliAccess",
+                    "disableWebhookTriggers",
+                    "disableToolAutoApproval",
+                    "hideSandboxesTab",
+                    "disableOAuthAppAccess",
+                    "disableKnowledgeBaseExport",
+                    "deniedPartialAccessProjectIssues",
+                    "defaultAgentModel"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Resolved group settings. True disables a boolean capability; null allowlists permit every value and empty allowlists permit none. defaultAgentModel selects the default for new Agent blocks without restricting model selection."
+                },
+                "isDefault": {
+                  "type": "boolean",
+                  "description": "Whether this is the organization fallback group. It governs a human caller with no applicable workspace-specific group; its own membership assignments do not limit its audience. Organization-level actions use the default group."
+                },
+                "membershipMode": {
+                  "type": "string",
+                  "description": "When no explicit assignments exist, an `inherit` group governs every member in its targeted workspaces. An empty `explicit` group, including a SCIM-managed group, governs nobody."
+                },
+                "workspaceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Workspaces governed by a non-default group. Empty for the default group."
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "User who created the group."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "name",
+                "description",
+                "config",
+                "isDefault",
+                "membershipMode",
+                "workspaceIds",
+                "createdBy",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroup",
+              "title": "Permission group",
+              "description": "An organization permission group and its resolved settings for human callers. Workspace API keys use their workspace role and operation policy without a user permission group."
+            }
+          }
+        }
+      }
+    },
+    "v2DeletePermissionGroupContract": {
+      "method": "DELETE",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups/[groupId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Permission group identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "groupId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PermissionGroupDeletion"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroupDeletion": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Deleted permission group identifier."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the group was permanently deleted."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroupDeletion",
+              "title": "Permission group deletion",
+              "description": "Acknowledges permanent group deletion."
+            }
+          }
+        }
+      }
+    },
+    "v2GetPermissionGroupContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups/[groupId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Permission group identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "groupId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PermissionGroup"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroup": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Permission group identifier."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "description": "Organization that owns the group."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Group name, unique within the organization."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional description of the group."
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "allowedIntegrations": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "allowedModelProviders": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Model providers are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "deniedModels": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Models listed in this list are blocked."
+                    },
+                    "deniedTools": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Integration tools listed in this list are blocked."
+                    },
+                    "hideTraceSpans": {
+                      "type": "boolean",
+                      "description": "Withhold per-block trace spans from logs and from the API."
+                    },
+                    "hideKnowledgeBaseTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Knowledge Base module. Members cannot open, search, or query any knowledge base."
+                    },
+                    "hideTablesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Tables module. Members cannot read or write any table."
+                    },
+                    "hideCopilot": {
+                      "type": "boolean",
+                      "description": "Revoke Chat. Members cannot ask Sim to build or edit anything."
+                    },
+                    "hideIntegrationsTab": {
+                      "type": "boolean",
+                      "description": "Revoke integration connections. Members cannot view, add, or remove an OAuth connection."
+                    },
+                    "hideSecretsTab": {
+                      "type": "boolean",
+                      "description": "Revoke secrets. Members cannot read, add, or change a workspace environment variable."
+                    },
+                    "hideApiKeysTab": {
+                      "type": "boolean",
+                      "description": "Revoke workspace API keys. Members cannot list, create, or revoke one."
+                    },
+                    "hideInboxTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sim Mailer inbox. Members cannot read or send mail."
+                    },
+                    "hideFilesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Files module. Members cannot list, upload, or download workspace files."
+                    },
+                    "disableMcpTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling MCP tools."
+                    },
+                    "disableCustomTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling user-defined custom tools."
+                    },
+                    "disableSkills": {
+                      "type": "boolean",
+                      "description": "Block agents from loading skills."
+                    },
+                    "disableInvitations": {
+                      "type": "boolean",
+                      "description": "Prevent inviting anyone to a workspace or to the organization."
+                    },
+                    "disablePublicApi": {
+                      "type": "boolean",
+                      "description": "Revoke public API access. Calls to a deployed workflow are refused."
+                    },
+                    "disablePublicFileSharing": {
+                      "type": "boolean",
+                      "description": "Revoke public file sharing. Members cannot create a share link."
+                    },
+                    "allowedFileShareAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Public file-share authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "hideDeployApi": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as an API endpoint."
+                    },
+                    "hideDeployMcp": {
+                      "type": "boolean",
+                      "description": "Prevent exposing a workflow as an MCP server."
+                    },
+                    "hideDeployChatbot": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as a chat."
+                    },
+                    "allowedChatDeployAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Chat deployment authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disablePersonalApiKeys": {
+                      "type": "boolean",
+                      "description": "Prevent members from using a personal API key against this workspace."
+                    },
+                    "disableLogExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading execution logs as a CSV."
+                    },
+                    "hideCostInfo": {
+                      "type": "boolean",
+                      "description": "Withhold execution cost. Logs and member exports omit cost and token spend; organization-level data drains, configurable by org admins only, are not projected."
+                    },
+                    "disableKnowledgeBaseCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating knowledge bases, leaving existing ones queryable."
+                    },
+                    "disableKnowledgeBaseFileUpload": {
+                      "type": "boolean",
+                      "description": "Prevent uploading local documents, leaving sanctioned connectors as the only source."
+                    },
+                    "allowedKnowledgeConnectors": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Knowledge base connectors are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disableTableCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating tables, leaving existing ones usable."
+                    },
+                    "disableTableExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole table as CSV or JSON."
+                    },
+                    "disableBulkFileDownload": {
+                      "type": "boolean",
+                      "description": "Prevent downloading folders as an archive."
+                    },
+                    "disablePersonalCredentials": {
+                      "type": "boolean",
+                      "description": "Prevent connecting personal credentials, leaving only workspace-shared ones."
+                    },
+                    "disableWorkspaceCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating new workspaces, which no existing group would govern. Read from the organization's default group, because creating a workspace names none."
+                    },
+                    "hideOrgMemberDirectory": {
+                      "type": "boolean",
+                      "description": "Withhold the member directory. Members cannot see the names or email addresses of other members. Read from the organization's default group, because the directory belongs to the organization and names no workspace."
+                    },
+                    "disableCliAccess": {
+                      "type": "boolean",
+                      "description": "Prevent approving a CLI login or using Sim CLI OAuth tokens for the public API. A login naming one of this group's workspaces is refused; an account-level login names none, so it is read from the organization's default group."
+                    },
+                    "disableWebhookTriggers": {
+                      "type": "boolean",
+                      "description": "Prevent making a workflow reachable from an inbound webhook."
+                    },
+                    "disableToolAutoApproval": {
+                      "type": "boolean",
+                      "description": "Prevent silencing a tool confirmation, so every call is confirmed again."
+                    },
+                    "hideSandboxesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sandboxes module. Members cannot view, create, or change a workspace sandbox."
+                    },
+                    "disableOAuthAppAccess": {
+                      "type": "boolean",
+                      "description": "Prevent OAuth apps from accessing this group's workspaces. The organization's default group also governs authorizing apps and refreshing their access."
+                    },
+                    "disableKnowledgeBaseExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole knowledge base as an archive."
+                    },
+                    "deniedPartialAccessProjectIssues": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "description": "Issues in the listed Projects are unavailable to teammates without access to every active environment."
+                    },
+                    "defaultAgentModel": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Default model for new Agent blocks. Null uses the platform default."
+                    }
+                  },
+                  "required": [
+                    "allowedIntegrations",
+                    "allowedModelProviders",
+                    "deniedModels",
+                    "deniedTools",
+                    "hideTraceSpans",
+                    "hideKnowledgeBaseTab",
+                    "hideTablesTab",
+                    "hideCopilot",
+                    "hideIntegrationsTab",
+                    "hideSecretsTab",
+                    "hideApiKeysTab",
+                    "hideInboxTab",
+                    "hideFilesTab",
+                    "disableMcpTools",
+                    "disableCustomTools",
+                    "disableSkills",
+                    "disableInvitations",
+                    "disablePublicApi",
+                    "disablePublicFileSharing",
+                    "allowedFileShareAuthTypes",
+                    "hideDeployApi",
+                    "hideDeployMcp",
+                    "hideDeployChatbot",
+                    "allowedChatDeployAuthTypes",
+                    "disablePersonalApiKeys",
+                    "disableLogExport",
+                    "hideCostInfo",
+                    "disableKnowledgeBaseCreation",
+                    "disableKnowledgeBaseFileUpload",
+                    "allowedKnowledgeConnectors",
+                    "disableTableCreation",
+                    "disableTableExport",
+                    "disableBulkFileDownload",
+                    "disablePersonalCredentials",
+                    "disableWorkspaceCreation",
+                    "hideOrgMemberDirectory",
+                    "disableCliAccess",
+                    "disableWebhookTriggers",
+                    "disableToolAutoApproval",
+                    "hideSandboxesTab",
+                    "disableOAuthAppAccess",
+                    "disableKnowledgeBaseExport",
+                    "deniedPartialAccessProjectIssues",
+                    "defaultAgentModel"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Resolved group settings. True disables a boolean capability; null allowlists permit every value and empty allowlists permit none. defaultAgentModel selects the default for new Agent blocks without restricting model selection."
+                },
+                "isDefault": {
+                  "type": "boolean",
+                  "description": "Whether this is the organization fallback group. It governs a human caller with no applicable workspace-specific group; its own membership assignments do not limit its audience. Organization-level actions use the default group."
+                },
+                "membershipMode": {
+                  "type": "string",
+                  "description": "When no explicit assignments exist, an `inherit` group governs every member in its targeted workspaces. An empty `explicit` group, including a SCIM-managed group, governs nobody."
+                },
+                "workspaceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Workspaces governed by a non-default group. Empty for the default group."
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "User who created the group."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "name",
+                "description",
+                "config",
+                "isDefault",
+                "membershipMode",
+                "workspaceIds",
+                "createdBy",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroup",
+              "title": "Permission group",
+              "description": "An organization permission group and its resolved settings for human callers. Workspace API keys use their workspace role and operation policy without a user permission group."
+            }
+          }
+        }
+      }
+    },
+    "v2ListPermissionGroupMembersContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups/[groupId]/members",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Permission group identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "groupId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "sortBy": {
+            "default": "assignedAt",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "assignedAt",
+              "userId"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum group members to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2PermissionGroupMember"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroupMember": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Membership assignment identifier."
+                },
+                "userId": {
+                  "type": "string",
+                  "description": "Organization member assigned to the group."
+                },
+                "assignedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the member was assigned."
+                },
+                "userName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Member display name."
+                },
+                "userEmail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Member email address."
+                },
+                "userImage": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Member avatar URL."
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "assignedAt",
+                "userName",
+                "userEmail",
+                "userImage"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroupMember",
+              "title": "Permission group member",
+              "description": "An explicit permission-group membership assignment."
+            }
+          }
+        }
+      }
+    },
+    "v2ListPermissionGroupsContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "search": {
+            "description": "Case-insensitive substring match against the group name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Field used to sort the result. Do not rely on case-insensitive ordering when sorting by `name`.",
+            "type": "string",
+            "enum": [
+              "name",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum permission groups to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2PermissionGroup"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroup": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Permission group identifier."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "description": "Organization that owns the group."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Group name, unique within the organization."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional description of the group."
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "allowedIntegrations": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "allowedModelProviders": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Model providers are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "deniedModels": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Models listed in this list are blocked."
+                    },
+                    "deniedTools": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Integration tools listed in this list are blocked."
+                    },
+                    "hideTraceSpans": {
+                      "type": "boolean",
+                      "description": "Withhold per-block trace spans from logs and from the API."
+                    },
+                    "hideKnowledgeBaseTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Knowledge Base module. Members cannot open, search, or query any knowledge base."
+                    },
+                    "hideTablesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Tables module. Members cannot read or write any table."
+                    },
+                    "hideCopilot": {
+                      "type": "boolean",
+                      "description": "Revoke Chat. Members cannot ask Sim to build or edit anything."
+                    },
+                    "hideIntegrationsTab": {
+                      "type": "boolean",
+                      "description": "Revoke integration connections. Members cannot view, add, or remove an OAuth connection."
+                    },
+                    "hideSecretsTab": {
+                      "type": "boolean",
+                      "description": "Revoke secrets. Members cannot read, add, or change a workspace environment variable."
+                    },
+                    "hideApiKeysTab": {
+                      "type": "boolean",
+                      "description": "Revoke workspace API keys. Members cannot list, create, or revoke one."
+                    },
+                    "hideInboxTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sim Mailer inbox. Members cannot read or send mail."
+                    },
+                    "hideFilesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Files module. Members cannot list, upload, or download workspace files."
+                    },
+                    "disableMcpTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling MCP tools."
+                    },
+                    "disableCustomTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling user-defined custom tools."
+                    },
+                    "disableSkills": {
+                      "type": "boolean",
+                      "description": "Block agents from loading skills."
+                    },
+                    "disableInvitations": {
+                      "type": "boolean",
+                      "description": "Prevent inviting anyone to a workspace or to the organization."
+                    },
+                    "disablePublicApi": {
+                      "type": "boolean",
+                      "description": "Revoke public API access. Calls to a deployed workflow are refused."
+                    },
+                    "disablePublicFileSharing": {
+                      "type": "boolean",
+                      "description": "Revoke public file sharing. Members cannot create a share link."
+                    },
+                    "allowedFileShareAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Public file-share authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "hideDeployApi": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as an API endpoint."
+                    },
+                    "hideDeployMcp": {
+                      "type": "boolean",
+                      "description": "Prevent exposing a workflow as an MCP server."
+                    },
+                    "hideDeployChatbot": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as a chat."
+                    },
+                    "allowedChatDeployAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Chat deployment authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disablePersonalApiKeys": {
+                      "type": "boolean",
+                      "description": "Prevent members from using a personal API key against this workspace."
+                    },
+                    "disableLogExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading execution logs as a CSV."
+                    },
+                    "hideCostInfo": {
+                      "type": "boolean",
+                      "description": "Withhold execution cost. Logs and member exports omit cost and token spend; organization-level data drains, configurable by org admins only, are not projected."
+                    },
+                    "disableKnowledgeBaseCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating knowledge bases, leaving existing ones queryable."
+                    },
+                    "disableKnowledgeBaseFileUpload": {
+                      "type": "boolean",
+                      "description": "Prevent uploading local documents, leaving sanctioned connectors as the only source."
+                    },
+                    "allowedKnowledgeConnectors": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Knowledge base connectors are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disableTableCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating tables, leaving existing ones usable."
+                    },
+                    "disableTableExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole table as CSV or JSON."
+                    },
+                    "disableBulkFileDownload": {
+                      "type": "boolean",
+                      "description": "Prevent downloading folders as an archive."
+                    },
+                    "disablePersonalCredentials": {
+                      "type": "boolean",
+                      "description": "Prevent connecting personal credentials, leaving only workspace-shared ones."
+                    },
+                    "disableWorkspaceCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating new workspaces, which no existing group would govern. Read from the organization's default group, because creating a workspace names none."
+                    },
+                    "hideOrgMemberDirectory": {
+                      "type": "boolean",
+                      "description": "Withhold the member directory. Members cannot see the names or email addresses of other members. Read from the organization's default group, because the directory belongs to the organization and names no workspace."
+                    },
+                    "disableCliAccess": {
+                      "type": "boolean",
+                      "description": "Prevent approving a CLI login or using Sim CLI OAuth tokens for the public API. A login naming one of this group's workspaces is refused; an account-level login names none, so it is read from the organization's default group."
+                    },
+                    "disableWebhookTriggers": {
+                      "type": "boolean",
+                      "description": "Prevent making a workflow reachable from an inbound webhook."
+                    },
+                    "disableToolAutoApproval": {
+                      "type": "boolean",
+                      "description": "Prevent silencing a tool confirmation, so every call is confirmed again."
+                    },
+                    "hideSandboxesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sandboxes module. Members cannot view, create, or change a workspace sandbox."
+                    },
+                    "disableOAuthAppAccess": {
+                      "type": "boolean",
+                      "description": "Prevent OAuth apps from accessing this group's workspaces. The organization's default group also governs authorizing apps and refreshing their access."
+                    },
+                    "disableKnowledgeBaseExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole knowledge base as an archive."
+                    },
+                    "deniedPartialAccessProjectIssues": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "description": "Issues in the listed Projects are unavailable to teammates without access to every active environment."
+                    },
+                    "defaultAgentModel": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Default model for new Agent blocks. Null uses the platform default."
+                    }
+                  },
+                  "required": [
+                    "allowedIntegrations",
+                    "allowedModelProviders",
+                    "deniedModels",
+                    "deniedTools",
+                    "hideTraceSpans",
+                    "hideKnowledgeBaseTab",
+                    "hideTablesTab",
+                    "hideCopilot",
+                    "hideIntegrationsTab",
+                    "hideSecretsTab",
+                    "hideApiKeysTab",
+                    "hideInboxTab",
+                    "hideFilesTab",
+                    "disableMcpTools",
+                    "disableCustomTools",
+                    "disableSkills",
+                    "disableInvitations",
+                    "disablePublicApi",
+                    "disablePublicFileSharing",
+                    "allowedFileShareAuthTypes",
+                    "hideDeployApi",
+                    "hideDeployMcp",
+                    "hideDeployChatbot",
+                    "allowedChatDeployAuthTypes",
+                    "disablePersonalApiKeys",
+                    "disableLogExport",
+                    "hideCostInfo",
+                    "disableKnowledgeBaseCreation",
+                    "disableKnowledgeBaseFileUpload",
+                    "allowedKnowledgeConnectors",
+                    "disableTableCreation",
+                    "disableTableExport",
+                    "disableBulkFileDownload",
+                    "disablePersonalCredentials",
+                    "disableWorkspaceCreation",
+                    "hideOrgMemberDirectory",
+                    "disableCliAccess",
+                    "disableWebhookTriggers",
+                    "disableToolAutoApproval",
+                    "hideSandboxesTab",
+                    "disableOAuthAppAccess",
+                    "disableKnowledgeBaseExport",
+                    "deniedPartialAccessProjectIssues",
+                    "defaultAgentModel"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Resolved group settings. True disables a boolean capability; null allowlists permit every value and empty allowlists permit none. defaultAgentModel selects the default for new Agent blocks without restricting model selection."
+                },
+                "isDefault": {
+                  "type": "boolean",
+                  "description": "Whether this is the organization fallback group. It governs a human caller with no applicable workspace-specific group; its own membership assignments do not limit its audience. Organization-level actions use the default group."
+                },
+                "membershipMode": {
+                  "type": "string",
+                  "description": "When no explicit assignments exist, an `inherit` group governs every member in its targeted workspaces. An empty `explicit` group, including a SCIM-managed group, governs nobody."
+                },
+                "workspaceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Workspaces governed by a non-default group. Empty for the default group."
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "User who created the group."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "name",
+                "description",
+                "config",
+                "isDefault",
+                "membershipMode",
+                "workspaceIds",
+                "createdBy",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroup",
+              "title": "Permission group",
+              "description": "An organization permission group and its resolved settings for human callers. Workspace API keys use their workspace role and operation policy without a user permission group."
+            }
+          }
+        }
+      }
+    },
+    "v2RemovePermissionGroupMemberContract": {
+      "method": "DELETE",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups/[groupId]/members/[userId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Permission group identifier."
+          },
+          "userId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "User identifier of the member to remove."
+          }
+        },
+        "required": [
+          "organizationId",
+          "groupId",
+          "userId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PermissionGroupMemberDeletion"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroupMemberDeletion": {
+              "type": "object",
+              "properties": {
+                "userId": {
+                  "type": "string",
+                  "description": "User whose membership assignment was removed."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the assignment was removed."
+                }
+              },
+              "required": [
+                "userId",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroupMemberDeletion",
+              "title": "Permission group member deletion",
+              "description": "Acknowledges membership removal."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdatePermissionGroupContract": {
+      "method": "PATCH",
+      "path": "/api/v2/organizations/[organizationId]/permission-groups/[groupId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization that owns the permission groups."
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Permission group identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "groupId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Group name, unique within the organization."
+          },
+          "description": {
+            "description": "Group description. Null or an empty string clears it; omission leaves it unchanged.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "config": {
+            "type": "object",
+            "properties": {
+              "allowedIntegrations": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+              },
+              "allowedModelProviders": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Model providers are limited to this list. Null permits every value; an empty list permits none."
+              },
+              "deniedModels": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Models listed in this list are blocked."
+              },
+              "deniedTools": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "description": "Integration tools listed in this list are blocked."
+              },
+              "hideTraceSpans": {
+                "type": "boolean",
+                "description": "Withhold per-block trace spans from logs and from the API."
+              },
+              "hideKnowledgeBaseTab": {
+                "type": "boolean",
+                "description": "Revoke the Knowledge Base module. Members cannot open, search, or query any knowledge base."
+              },
+              "hideTablesTab": {
+                "type": "boolean",
+                "description": "Revoke the Tables module. Members cannot read or write any table."
+              },
+              "hideCopilot": {
+                "type": "boolean",
+                "description": "Revoke Chat. Members cannot ask Sim to build or edit anything."
+              },
+              "hideIntegrationsTab": {
+                "type": "boolean",
+                "description": "Revoke integration connections. Members cannot view, add, or remove an OAuth connection."
+              },
+              "hideSecretsTab": {
+                "type": "boolean",
+                "description": "Revoke secrets. Members cannot read, add, or change a workspace environment variable."
+              },
+              "hideApiKeysTab": {
+                "type": "boolean",
+                "description": "Revoke workspace API keys. Members cannot list, create, or revoke one."
+              },
+              "hideInboxTab": {
+                "type": "boolean",
+                "description": "Revoke the Sim Mailer inbox. Members cannot read or send mail."
+              },
+              "hideFilesTab": {
+                "type": "boolean",
+                "description": "Revoke the Files module. Members cannot list, upload, or download workspace files."
+              },
+              "disableMcpTools": {
+                "type": "boolean",
+                "description": "Block agents from calling MCP tools."
+              },
+              "disableCustomTools": {
+                "type": "boolean",
+                "description": "Block agents from calling user-defined custom tools."
+              },
+              "disableSkills": {
+                "type": "boolean",
+                "description": "Block agents from loading skills."
+              },
+              "disableInvitations": {
+                "type": "boolean",
+                "description": "Prevent inviting anyone to a workspace or to the organization."
+              },
+              "disablePublicApi": {
+                "type": "boolean",
+                "description": "Revoke public API access. Calls to a deployed workflow are refused."
+              },
+              "disablePublicFileSharing": {
+                "type": "boolean",
+                "description": "Revoke public file sharing. Members cannot create a share link."
+              },
+              "allowedFileShareAuthTypes": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "public",
+                        "password",
+                        "email",
+                        "sso"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Public file-share authentication is limited to this list. Null permits every value; an empty list permits none."
+              },
+              "hideDeployApi": {
+                "type": "boolean",
+                "description": "Prevent deploying a workflow as an API endpoint."
+              },
+              "hideDeployMcp": {
+                "type": "boolean",
+                "description": "Prevent exposing a workflow as an MCP server."
+              },
+              "hideDeployChatbot": {
+                "type": "boolean",
+                "description": "Prevent deploying a workflow as a chat."
+              },
+              "allowedChatDeployAuthTypes": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": [
+                        "public",
+                        "password",
+                        "email",
+                        "sso"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Chat deployment authentication is limited to this list. Null permits every value; an empty list permits none."
+              },
+              "disablePersonalApiKeys": {
+                "type": "boolean",
+                "description": "Prevent members from using a personal API key against this workspace."
+              },
+              "disableLogExport": {
+                "type": "boolean",
+                "description": "Prevent downloading execution logs as a CSV."
+              },
+              "hideCostInfo": {
+                "type": "boolean",
+                "description": "Withhold execution cost. Logs and member exports omit cost and token spend; organization-level data drains, configurable by org admins only, are not projected."
+              },
+              "disableKnowledgeBaseCreation": {
+                "type": "boolean",
+                "description": "Prevent creating knowledge bases, leaving existing ones queryable."
+              },
+              "disableKnowledgeBaseFileUpload": {
+                "type": "boolean",
+                "description": "Prevent uploading local documents, leaving sanctioned connectors as the only source."
+              },
+              "allowedKnowledgeConnectors": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Knowledge base connectors are limited to this list. Null permits every value; an empty list permits none."
+              },
+              "disableTableCreation": {
+                "type": "boolean",
+                "description": "Prevent creating tables, leaving existing ones usable."
+              },
+              "disableTableExport": {
+                "type": "boolean",
+                "description": "Prevent downloading a whole table as CSV or JSON."
+              },
+              "disableBulkFileDownload": {
+                "type": "boolean",
+                "description": "Prevent downloading folders as an archive."
+              },
+              "disablePersonalCredentials": {
+                "type": "boolean",
+                "description": "Prevent connecting personal credentials, leaving only workspace-shared ones."
+              },
+              "disableWorkspaceCreation": {
+                "type": "boolean",
+                "description": "Prevent creating new workspaces, which no existing group would govern. Read from the organization's default group, because creating a workspace names none."
+              },
+              "hideOrgMemberDirectory": {
+                "type": "boolean",
+                "description": "Withhold the member directory. Members cannot see the names or email addresses of other members. Read from the organization's default group, because the directory belongs to the organization and names no workspace."
+              },
+              "disableCliAccess": {
+                "type": "boolean",
+                "description": "Prevent approving a CLI login or using Sim CLI OAuth tokens for the public API. A login naming one of this group's workspaces is refused; an account-level login names none, so it is read from the organization's default group."
+              },
+              "disableWebhookTriggers": {
+                "type": "boolean",
+                "description": "Prevent making a workflow reachable from an inbound webhook."
+              },
+              "disableToolAutoApproval": {
+                "type": "boolean",
+                "description": "Prevent silencing a tool confirmation, so every call is confirmed again."
+              },
+              "hideSandboxesTab": {
+                "type": "boolean",
+                "description": "Revoke the Sandboxes module. Members cannot view, create, or change a workspace sandbox."
+              },
+              "disableOAuthAppAccess": {
+                "type": "boolean",
+                "description": "Prevent OAuth apps from accessing this group's workspaces. The organization's default group also governs authorizing apps and refreshing their access."
+              },
+              "disableKnowledgeBaseExport": {
+                "type": "boolean",
+                "description": "Prevent downloading a whole knowledge base as an archive."
+              },
+              "deniedPartialAccessProjectIssues": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "description": "Issues in the listed Projects are unavailable to teammates without access to every active environment."
+              },
+              "defaultAgentModel": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "description": "Default model for new Agent blocks. Null uses the platform default."
+              }
+            },
+            "additionalProperties": false,
+            "description": "Patch of group settings. Omitted keys remain unchanged; each supplied array replaces that entire list."
+          },
+          "isDefault": {
+            "description": "Whether the group is the organization default. Only one group can be the default.",
+            "type": "boolean"
+          },
+          "workspaceIds": {
+            "description": "Workspace identifiers for a non-default group. Required on creation; an empty update makes the group inactive.",
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PermissionGroup"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2PermissionGroup": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Permission group identifier."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "description": "Organization that owns the group."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Group name, unique within the organization."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional description of the group."
+                },
+                "config": {
+                  "type": "object",
+                  "properties": {
+                    "allowedIntegrations": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "allowedModelProviders": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Model providers are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "deniedModels": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Models listed in this list are blocked."
+                    },
+                    "deniedTools": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Integration tools listed in this list are blocked."
+                    },
+                    "hideTraceSpans": {
+                      "type": "boolean",
+                      "description": "Withhold per-block trace spans from logs and from the API."
+                    },
+                    "hideKnowledgeBaseTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Knowledge Base module. Members cannot open, search, or query any knowledge base."
+                    },
+                    "hideTablesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Tables module. Members cannot read or write any table."
+                    },
+                    "hideCopilot": {
+                      "type": "boolean",
+                      "description": "Revoke Chat. Members cannot ask Sim to build or edit anything."
+                    },
+                    "hideIntegrationsTab": {
+                      "type": "boolean",
+                      "description": "Revoke integration connections. Members cannot view, add, or remove an OAuth connection."
+                    },
+                    "hideSecretsTab": {
+                      "type": "boolean",
+                      "description": "Revoke secrets. Members cannot read, add, or change a workspace environment variable."
+                    },
+                    "hideApiKeysTab": {
+                      "type": "boolean",
+                      "description": "Revoke workspace API keys. Members cannot list, create, or revoke one."
+                    },
+                    "hideInboxTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sim Mailer inbox. Members cannot read or send mail."
+                    },
+                    "hideFilesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Files module. Members cannot list, upload, or download workspace files."
+                    },
+                    "disableMcpTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling MCP tools."
+                    },
+                    "disableCustomTools": {
+                      "type": "boolean",
+                      "description": "Block agents from calling user-defined custom tools."
+                    },
+                    "disableSkills": {
+                      "type": "boolean",
+                      "description": "Block agents from loading skills."
+                    },
+                    "disableInvitations": {
+                      "type": "boolean",
+                      "description": "Prevent inviting anyone to a workspace or to the organization."
+                    },
+                    "disablePublicApi": {
+                      "type": "boolean",
+                      "description": "Revoke public API access. Calls to a deployed workflow are refused."
+                    },
+                    "disablePublicFileSharing": {
+                      "type": "boolean",
+                      "description": "Revoke public file sharing. Members cannot create a share link."
+                    },
+                    "allowedFileShareAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Public file-share authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "hideDeployApi": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as an API endpoint."
+                    },
+                    "hideDeployMcp": {
+                      "type": "boolean",
+                      "description": "Prevent exposing a workflow as an MCP server."
+                    },
+                    "hideDeployChatbot": {
+                      "type": "boolean",
+                      "description": "Prevent deploying a workflow as a chat."
+                    },
+                    "allowedChatDeployAuthTypes": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ]
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Chat deployment authentication is limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disablePersonalApiKeys": {
+                      "type": "boolean",
+                      "description": "Prevent members from using a personal API key against this workspace."
+                    },
+                    "disableLogExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading execution logs as a CSV."
+                    },
+                    "hideCostInfo": {
+                      "type": "boolean",
+                      "description": "Withhold execution cost. Logs and member exports omit cost and token spend; organization-level data drains, configurable by org admins only, are not projected."
+                    },
+                    "disableKnowledgeBaseCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating knowledge bases, leaving existing ones queryable."
+                    },
+                    "disableKnowledgeBaseFileUpload": {
+                      "type": "boolean",
+                      "description": "Prevent uploading local documents, leaving sanctioned connectors as the only source."
+                    },
+                    "allowedKnowledgeConnectors": {
+                      "anyOf": [
+                        {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Knowledge base connectors are limited to this list. Null permits every value; an empty list permits none."
+                    },
+                    "disableTableCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating tables, leaving existing ones usable."
+                    },
+                    "disableTableExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole table as CSV or JSON."
+                    },
+                    "disableBulkFileDownload": {
+                      "type": "boolean",
+                      "description": "Prevent downloading folders as an archive."
+                    },
+                    "disablePersonalCredentials": {
+                      "type": "boolean",
+                      "description": "Prevent connecting personal credentials, leaving only workspace-shared ones."
+                    },
+                    "disableWorkspaceCreation": {
+                      "type": "boolean",
+                      "description": "Prevent creating new workspaces, which no existing group would govern. Read from the organization's default group, because creating a workspace names none."
+                    },
+                    "hideOrgMemberDirectory": {
+                      "type": "boolean",
+                      "description": "Withhold the member directory. Members cannot see the names or email addresses of other members. Read from the organization's default group, because the directory belongs to the organization and names no workspace."
+                    },
+                    "disableCliAccess": {
+                      "type": "boolean",
+                      "description": "Prevent approving a CLI login or using Sim CLI OAuth tokens for the public API. A login naming one of this group's workspaces is refused; an account-level login names none, so it is read from the organization's default group."
+                    },
+                    "disableWebhookTriggers": {
+                      "type": "boolean",
+                      "description": "Prevent making a workflow reachable from an inbound webhook."
+                    },
+                    "disableToolAutoApproval": {
+                      "type": "boolean",
+                      "description": "Prevent silencing a tool confirmation, so every call is confirmed again."
+                    },
+                    "hideSandboxesTab": {
+                      "type": "boolean",
+                      "description": "Revoke the Sandboxes module. Members cannot view, create, or change a workspace sandbox."
+                    },
+                    "disableOAuthAppAccess": {
+                      "type": "boolean",
+                      "description": "Prevent OAuth apps from accessing this group's workspaces. The organization's default group also governs authorizing apps and refreshing their access."
+                    },
+                    "disableKnowledgeBaseExport": {
+                      "type": "boolean",
+                      "description": "Prevent downloading a whole knowledge base as an archive."
+                    },
+                    "deniedPartialAccessProjectIssues": {
+                      "default": [],
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 255
+                      },
+                      "description": "Issues in the listed Projects are unavailable to teammates without access to every active environment."
+                    },
+                    "defaultAgentModel": {
+                      "default": null,
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Default model for new Agent blocks. Null uses the platform default."
+                    }
+                  },
+                  "required": [
+                    "allowedIntegrations",
+                    "allowedModelProviders",
+                    "deniedModels",
+                    "deniedTools",
+                    "hideTraceSpans",
+                    "hideKnowledgeBaseTab",
+                    "hideTablesTab",
+                    "hideCopilot",
+                    "hideIntegrationsTab",
+                    "hideSecretsTab",
+                    "hideApiKeysTab",
+                    "hideInboxTab",
+                    "hideFilesTab",
+                    "disableMcpTools",
+                    "disableCustomTools",
+                    "disableSkills",
+                    "disableInvitations",
+                    "disablePublicApi",
+                    "disablePublicFileSharing",
+                    "allowedFileShareAuthTypes",
+                    "hideDeployApi",
+                    "hideDeployMcp",
+                    "hideDeployChatbot",
+                    "allowedChatDeployAuthTypes",
+                    "disablePersonalApiKeys",
+                    "disableLogExport",
+                    "hideCostInfo",
+                    "disableKnowledgeBaseCreation",
+                    "disableKnowledgeBaseFileUpload",
+                    "allowedKnowledgeConnectors",
+                    "disableTableCreation",
+                    "disableTableExport",
+                    "disableBulkFileDownload",
+                    "disablePersonalCredentials",
+                    "disableWorkspaceCreation",
+                    "hideOrgMemberDirectory",
+                    "disableCliAccess",
+                    "disableWebhookTriggers",
+                    "disableToolAutoApproval",
+                    "hideSandboxesTab",
+                    "disableOAuthAppAccess",
+                    "disableKnowledgeBaseExport",
+                    "deniedPartialAccessProjectIssues",
+                    "defaultAgentModel"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Resolved group settings. True disables a boolean capability; null allowlists permit every value and empty allowlists permit none. defaultAgentModel selects the default for new Agent blocks without restricting model selection."
+                },
+                "isDefault": {
+                  "type": "boolean",
+                  "description": "Whether this is the organization fallback group. It governs a human caller with no applicable workspace-specific group; its own membership assignments do not limit its audience. Organization-level actions use the default group."
+                },
+                "membershipMode": {
+                  "type": "string",
+                  "description": "When no explicit assignments exist, an `inherit` group governs every member in its targeted workspaces. An empty `explicit` group, including a SCIM-managed group, governs nobody."
+                },
+                "workspaceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Workspaces governed by a non-default group. Empty for the default group."
+                },
+                "createdBy": {
+                  "type": "string",
+                  "description": "User who created the group."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the group was last updated."
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "name",
+                "description",
+                "config",
+                "isDefault",
+                "membershipMode",
+                "workspaceIds",
+                "createdBy",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2PermissionGroup",
+              "title": "Permission group",
+              "description": "An organization permission group and its resolved settings for human callers. Workspace API keys use their workspace role and operation policy without a user permission group."
+            }
+          }
+        }
+      }
+    }
+  }
+}

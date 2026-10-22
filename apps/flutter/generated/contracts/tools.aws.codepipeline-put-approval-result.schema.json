@@ -1,0 +1,102 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-put-approval-result.ts",
+  "contracts": {
+    "awsCodepipelinePutApprovalResultContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/put-approval-result",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "stageName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "actionName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "Approved",
+              "Rejected"
+            ]
+          },
+          "summary": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName",
+          "stageName",
+          "actionName",
+          "token",
+          "status",
+          "summary"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "approvedAt": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

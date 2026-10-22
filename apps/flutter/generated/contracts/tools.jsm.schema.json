@@ -1,0 +1,2049 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/jsm.ts",
+  "contracts": {
+    "jsmApprovalsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/approvals",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "approvalId": {
+            "type": "string"
+          },
+          "decision": {
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "action",
+          "issueIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmAttachFormContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/attach",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formTemplateId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formTemplateId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmCommentContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/comment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "body": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isPublic": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "body"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmCommentsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/comments",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isPublic": {
+            "type": "boolean"
+          },
+          "internal": {
+            "type": "boolean"
+          },
+          "expand": {
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmCopyFormsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/copy",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "sourceIssueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "targetIssueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formIds": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "sourceIssueIdOrKey",
+          "targetIssueIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmCreateObjectContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/object/create",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "objectTypeId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attributes": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "objectTypeAttributeId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "objectAttributeValues": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {}
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "objectTypeAttributeId",
+                "objectAttributeValues"
+              ]
+            }
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "objectTypeId",
+          "attributes"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmCustomersContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/customers",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "query": {
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "accountIds": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "emails": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "serviceDeskId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmDeleteFormContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/delete",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmDeleteObjectContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/object/delete",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "objectId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "objectId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmExternaliseFormContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/externalise",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmFormAnswersContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/answers",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmGetFormContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/get",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmGetObjectContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/object/get",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "objectId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "objectId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmGetObjectSchemaContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/schema",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "schemaId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "schemaId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmInternaliseFormContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/internalise",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmIssueFormsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/issue",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmListObjectSchemasContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/schemas",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "startAt": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "maxResults": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "includeCounts": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmListObjectTypesContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/object-types",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "schemaId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "excludeAbstract": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "schemaId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmObjectTypeAttributesContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/attributes",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "objectTypeId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "onlyValueEditable": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "query": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "objectTypeId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmOrganizationContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/organization",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "action"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmOrganizationsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/organizations",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "serviceDeskId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmParticipantsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/participants",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accountIds": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "action",
+          "issueIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmProjectFormStructureContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/structure",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "projectIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "projectIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmProjectFormTemplatesContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/templates",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "projectIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "projectIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmQueuesContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/queues",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "includeCount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "serviceDeskId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmReopenFormContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/reopen",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmRequestContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/request",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string"
+          },
+          "requestTypeId": {
+            "type": "string"
+          },
+          "summary": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "raiseOnBehalfOf": {
+            "type": "string"
+          },
+          "requestFieldValues": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "formAnswers": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "requestParticipants": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              }
+            ]
+          },
+          "channel": {
+            "type": "string"
+          },
+          "expand": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmRequestTypeFieldsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/requesttypefields",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requestTypeId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "serviceDeskId",
+          "requestTypeId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmRequestTypesContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/requesttypes",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "searchQuery": {
+            "type": "string"
+          },
+          "groupId": {
+            "type": "string"
+          },
+          "expand": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "serviceDeskId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmRequestsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/requests",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "serviceDeskId": {
+            "type": "string"
+          },
+          "requestOwnership": {
+            "type": "string"
+          },
+          "requestStatus": {
+            "type": "string"
+          },
+          "requestTypeId": {
+            "type": "string"
+          },
+          "searchTerm": {
+            "type": "string"
+          },
+          "expand": {
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmSaveFormAnswersContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/save",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "answers": {}
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId",
+          "answers"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmSearchObjectsAqlContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/search",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "qlQuery": {
+            "type": "string",
+            "minLength": 1
+          },
+          "page": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "resultsPerPage": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "includeAttributes": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "boolean"
+              }
+            ]
+          },
+          "objectTypeId": {
+            "type": "string"
+          },
+          "objectSchemaId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "qlQuery"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmServiceDesksContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/servicedesks",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "expand": {
+            "type": "string"
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmSlaContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/sla",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmSubmitFormContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/forms/submit",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "formId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "formId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmTransitionContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/transition",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "transitionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey",
+          "transitionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmTransitionsContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/transitions",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "issueIdOrKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "start": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          },
+          "limit": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 2147483647
+              }
+            ]
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "issueIdOrKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "jsmUpdateObjectContract": {
+      "method": "POST",
+      "path": "/api/tools/jsm/assets/object/update",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "objectId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "objectTypeId": {
+            "type": "string"
+          },
+          "attributes": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "objectTypeAttributeId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "objectAttributeValues": {
+                  "minItems": 1,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "value": {}
+                    },
+                    "required": [
+                      "value"
+                    ]
+                  }
+                }
+              },
+              "required": [
+                "objectTypeAttributeId",
+                "objectAttributeValues"
+              ]
+            }
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "objectId",
+          "attributes"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,199 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-get-pipeline.ts",
+  "contracts": {
+    "awsCodepipelineGetPipelineContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/get-pipeline",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName",
+          "version"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "pipelineName": {
+                  "type": "string"
+                },
+                "pipelineArn": {
+                  "type": "string"
+                },
+                "roleArn": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "number"
+                },
+                "pipelineType": {
+                  "type": "string"
+                },
+                "executionMode": {
+                  "type": "string"
+                },
+                "artifactStoreType": {
+                  "type": "string"
+                },
+                "artifactStoreLocation": {
+                  "type": "string"
+                },
+                "stages": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "stageName": {
+                        "type": "string"
+                      },
+                      "actions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "name": {
+                              "type": "string"
+                            },
+                            "category": {
+                              "type": "string"
+                            },
+                            "owner": {
+                              "type": "string"
+                            },
+                            "provider": {
+                              "type": "string"
+                            },
+                            "version": {
+                              "type": "string"
+                            },
+                            "runOrder": {
+                              "type": "number"
+                            },
+                            "configuration": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {
+                                "type": "string"
+                              }
+                            },
+                            "inputArtifacts": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            },
+                            "outputArtifacts": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "name",
+                            "category",
+                            "owner",
+                            "provider",
+                            "version",
+                            "configuration",
+                            "inputArtifacts",
+                            "outputArtifacts"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "stageName",
+                      "actions"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "variables": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "defaultValue": {
+                        "type": "string"
+                      },
+                      "description": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "created": {
+                  "type": "number"
+                },
+                "updated": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "pipelineName",
+                "roleArn",
+                "stages",
+                "variables"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

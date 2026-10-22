@@ -1,0 +1,1742 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/confluence.ts",
+  "contracts": {
+    "confluenceBlogPostOperationContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/blogposts",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "domain": {
+                "type": "string",
+                "minLength": 1
+              },
+              "accessToken": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloudId": {
+                "type": "string"
+              },
+              "spaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "title": {
+                "type": "string",
+                "minLength": 1
+              },
+              "content": {
+                "type": "string",
+                "minLength": 1
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "current",
+                  "draft"
+                ]
+              }
+            },
+            "required": [
+              "domain",
+              "accessToken",
+              "spaceId",
+              "title",
+              "content"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "domain": {
+                "type": "string",
+                "minLength": 1
+              },
+              "accessToken": {
+                "type": "string",
+                "minLength": 1
+              },
+              "cloudId": {
+                "type": "string"
+              },
+              "blogPostId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "bodyFormat": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "domain",
+              "accessToken",
+              "blogPostId"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceCreateCommentContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/comments",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "comment": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId",
+          "comment"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceCreatePageContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/create-page",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1
+          },
+          "parentId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId",
+          "title",
+          "content"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceCreatePagePropertyContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/page-properties",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {}
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId",
+          "key",
+          "value"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceCreateSpaceContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/space",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "name",
+          "key"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceDeleteAttachmentContract": {
+      "method": "DELETE",
+      "path": "/api/tools/confluence/attachment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "attachmentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "attachmentId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceDeleteBlogPostContract": {
+      "method": "DELETE",
+      "path": "/api/tools/confluence/blogposts",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "blogPostId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "blogPostId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceDeleteCommentContract": {
+      "method": "DELETE",
+      "path": "/api/tools/confluence/comment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "commentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "commentId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceDeleteLabelContract": {
+      "method": "DELETE",
+      "path": "/api/tools/confluence/labels",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "labelName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prefix": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId",
+          "labelName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceDeletePagePropertyContract": {
+      "method": "DELETE",
+      "path": "/api/tools/confluence/page-properties",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "propertyId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId",
+          "propertyId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceDeleteSpaceContract": {
+      "method": "DELETE",
+      "path": "/api/tools/confluence/space",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceGetSpaceContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/space",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceLabelMutationContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/labels",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "labelName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "prefix": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId",
+          "labelName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceListAttachmentsContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/attachments",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": "50",
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceListBlogPostsContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/blogposts",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "limit": {
+            "default": "25",
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "sort": {
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceListCommentsContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/comments",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": "25",
+            "type": "string"
+          },
+          "bodyFormat": {
+            "default": "storage",
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceListLabelsContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/labels",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": "25",
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceListPagePropertiesContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/page-properties",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": "50",
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceListSpacesContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/spaces",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "limit": {
+            "default": "25",
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluencePageAncestorsContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/page-ancestors",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 25,
+            "type": "number"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluencePageChildrenContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/page-children",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluencePageContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/page",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "id",
+            "title"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "confluencePageDescendantsContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/page-descendants",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluencePageVersionsContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/page-versions",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "versionNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              }
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluencePagesByLabelContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/pages-by-label",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "labelId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": "50",
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "labelId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceSearchContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/search",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "query": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 25,
+            "type": "number"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "query"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceSearchInSpaceContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/search-in-space",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "query": {
+            "type": "string"
+          },
+          "limit": {
+            "default": 25,
+            "type": "number"
+          },
+          "contentType": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceSpaceBlogPostsContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/space-blogposts",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 25,
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "bodyFormat": {
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceSpaceLabelsContract": {
+      "method": "GET",
+      "path": "/api/tools/confluence/space-labels",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": "25",
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceSpacePagesContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/space-pages",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          },
+          "status": {
+            "type": "string"
+          },
+          "bodyFormat": {
+            "type": "string"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceSpacePermissionsContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/space-permissions",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceSpacePropertiesContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/space-properties",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "action": {
+            "type": "string"
+          },
+          "key": {
+            "type": "string"
+          },
+          "value": {},
+          "propertyId": {
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceTasksContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/tasks",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "action": {
+            "type": "string"
+          },
+          "taskId": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string"
+          },
+          "assignedTo": {
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "type": "number"
+          },
+          "cursor": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceUpdateBlogPostContract": {
+      "method": "PUT",
+      "path": "/api/tools/confluence/blogposts",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "blogPostId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "title": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "blogPostId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceUpdateCommentContract": {
+      "method": "PUT",
+      "path": "/api/tools/confluence/comment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "commentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "comment": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "commentId",
+          "comment"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceUpdatePagePropertyContract": {
+      "method": "PUT",
+      "path": "/api/tools/confluence/page-properties",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {},
+          "propertyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "versionNumber": {
+            "type": "number",
+            "minimum": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId",
+          "key",
+          "value",
+          "propertyId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceUpdateSpaceContract": {
+      "method": "PUT",
+      "path": "/api/tools/confluence/space",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "spaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "spaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceUploadAttachmentContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/upload-attachment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "pageId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "file": {},
+          "fileName": {
+            "type": "string"
+          },
+          "comment": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "pageId",
+          "file"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    },
+    "confluenceUserContract": {
+      "method": "POST",
+      "path": "/api/tools/confluence/user",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessToken": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cloudId": {
+            "type": "string"
+          },
+          "accountId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "domain",
+          "accessToken",
+          "accountId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1687 @@
+{
+  "source": "apps/sim/lib/api/contracts/deployments.ts",
+  "contracts": {
+    "activateDeploymentVersionContract": {
+      "method": "PATCH",
+      "path": "/api/workflows/[id]/deployments/[version]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "isActive"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "deployedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "name": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "activeDeployment": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ActiveDeploymentSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "latestDeploymentAttempt": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/DeploymentOperationSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ActiveDeploymentSummary": {
+              "type": "object",
+              "properties": {
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Identifier of the active deployment version."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric active deployment version."
+                },
+                "deployedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this version became active.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "deploymentVersionId",
+                "version",
+                "deployedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ActiveDeploymentSummary",
+              "title": "Active deployment",
+              "description": "Summary of the workflow version currently serving API executions."
+            },
+            "DeploymentOperationSummary": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique deployment operation identifier."
+                },
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Deployment version targeted by this operation."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric deployment version."
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "deploy",
+                    "activate"
+                  ],
+                  "description": "Operation being performed on the deployment version."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "preparing",
+                    "activating",
+                    "active",
+                    "failed",
+                    "superseded"
+                  ],
+                  "description": "Current deployment lifecycle status."
+                },
+                "isCurrent": {
+                  "default": true,
+                  "description": "Whether this operation still describes the current deployment attempt.",
+                  "type": "boolean"
+                },
+                "readiness": {
+                  "$ref": "#/$defs/DeploymentReadiness"
+                },
+                "requestedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment operation was requested.",
+                  "format": "date-time"
+                },
+                "activatedAt": {
+                  "description": "ISO 8601 activation timestamp, or null before activation completes.",
+                  "format": "date-time",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "description": "Deployment failure details, or null when no failure occurred.",
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationError"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "deploymentVersionId",
+                "version",
+                "action",
+                "status",
+                "isCurrent",
+                "readiness",
+                "requestedAt"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationSummary",
+              "title": "Deployment operation",
+              "description": "Lifecycle state of a deployment or version-activation attempt."
+            },
+            "DeploymentReadiness": {
+              "type": "object",
+              "properties": {
+                "webhooks": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Webhook synchronization readiness."
+                },
+                "schedules": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Schedule synchronization readiness."
+                },
+                "mcp": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "MCP synchronization readiness."
+                }
+              },
+              "required": [
+                "webhooks",
+                "schedules",
+                "mcp"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentReadiness",
+              "title": "Deployment readiness",
+              "description": "Readiness of the side effects required to activate a deployment."
+            },
+            "DeploymentOperationError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Stable deployment failure code."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Human-readable deployment failure message."
+                },
+                "retryable": {
+                  "type": "boolean",
+                  "description": "Whether retrying the deployment may succeed."
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationError",
+              "title": "Deployment operation error",
+              "description": "Failure details for a deployment lifecycle operation."
+            }
+          }
+        }
+      }
+    },
+    "deployWorkflowContract": {
+      "method": "POST",
+      "path": "/api/workflows/[id]/deploy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isDeployed": {
+              "type": "boolean"
+            },
+            "deployedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "apiKey": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "needsRedeployment": {
+              "type": "boolean"
+            },
+            "isPublicApi": {
+              "type": "boolean"
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "activeDeployment": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ActiveDeploymentSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "latestDeploymentAttempt": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/DeploymentOperationSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "isDeployed"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ActiveDeploymentSummary": {
+              "type": "object",
+              "properties": {
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Identifier of the active deployment version."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric active deployment version."
+                },
+                "deployedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this version became active.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "deploymentVersionId",
+                "version",
+                "deployedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ActiveDeploymentSummary",
+              "title": "Active deployment",
+              "description": "Summary of the workflow version currently serving API executions."
+            },
+            "DeploymentOperationSummary": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique deployment operation identifier."
+                },
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Deployment version targeted by this operation."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric deployment version."
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "deploy",
+                    "activate"
+                  ],
+                  "description": "Operation being performed on the deployment version."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "preparing",
+                    "activating",
+                    "active",
+                    "failed",
+                    "superseded"
+                  ],
+                  "description": "Current deployment lifecycle status."
+                },
+                "isCurrent": {
+                  "default": true,
+                  "description": "Whether this operation still describes the current deployment attempt.",
+                  "type": "boolean"
+                },
+                "readiness": {
+                  "$ref": "#/$defs/DeploymentReadiness"
+                },
+                "requestedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment operation was requested.",
+                  "format": "date-time"
+                },
+                "activatedAt": {
+                  "description": "ISO 8601 activation timestamp, or null before activation completes.",
+                  "format": "date-time",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "description": "Deployment failure details, or null when no failure occurred.",
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationError"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "deploymentVersionId",
+                "version",
+                "action",
+                "status",
+                "isCurrent",
+                "readiness",
+                "requestedAt"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationSummary",
+              "title": "Deployment operation",
+              "description": "Lifecycle state of a deployment or version-activation attempt."
+            },
+            "DeploymentReadiness": {
+              "type": "object",
+              "properties": {
+                "webhooks": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Webhook synchronization readiness."
+                },
+                "schedules": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Schedule synchronization readiness."
+                },
+                "mcp": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "MCP synchronization readiness."
+                }
+              },
+              "required": [
+                "webhooks",
+                "schedules",
+                "mcp"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentReadiness",
+              "title": "Deployment readiness",
+              "description": "Readiness of the side effects required to activate a deployment."
+            },
+            "DeploymentOperationError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Stable deployment failure code."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Human-readable deployment failure message."
+                },
+                "retryable": {
+                  "type": "boolean",
+                  "description": "Whether retrying the deployment may succeed."
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationError",
+              "title": "Deployment operation error",
+              "description": "Failure details for a deployment lifecycle operation."
+            }
+          }
+        }
+      }
+    },
+    "getChatDeploymentStatusContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/chat/status",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isDeployed": {
+              "type": "boolean"
+            },
+            "deployment": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "identifier": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "identifier"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "isDeployed",
+            "deployment"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getChatDetailContract": {
+      "method": "GET",
+      "path": "/api/chat/manage/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "identifier": {
+              "type": "string"
+            },
+            "title": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "authType": {
+              "type": "string",
+              "enum": [
+                "public",
+                "password",
+                "email",
+                "sso"
+              ]
+            },
+            "allowedEmails": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "outputConfigs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "blockId": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "blockId",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "includeThinking": {
+              "type": "boolean"
+            },
+            "includeToolCalls": {
+              "type": "boolean"
+            },
+            "customizations": {
+              "type": "object",
+              "properties": {
+                "welcomeMessage": {
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "type": "string"
+                },
+                "primaryColor": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "isActive": {
+              "type": "boolean"
+            },
+            "chatUrl": {
+              "type": "string"
+            },
+            "hasPassword": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "id",
+            "identifier",
+            "title",
+            "description",
+            "authType",
+            "allowedEmails",
+            "outputConfigs",
+            "includeThinking",
+            "includeToolCalls",
+            "isActive",
+            "chatUrl",
+            "hasPassword"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getDeployedWorkflowStateContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/deployed",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "deployedState": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/DeployedWorkflowState"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "deployedState"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "DeployedWorkflowState": {
+              "id": "DeployedWorkflowState",
+              "title": "Deployed workflow state",
+              "description": "Workflow graph snapshot pinned by a deployment version.",
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    },
+    "getDeploymentInfoContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/deploy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isDeployed": {
+              "type": "boolean"
+            },
+            "deployedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "apiKey": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "needsRedeployment": {
+              "type": "boolean"
+            },
+            "isPublicApi": {
+              "type": "boolean"
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "activeDeployment": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ActiveDeploymentSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "latestDeploymentAttempt": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/DeploymentOperationSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "isDeployed"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ActiveDeploymentSummary": {
+              "type": "object",
+              "properties": {
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Identifier of the active deployment version."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric active deployment version."
+                },
+                "deployedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this version became active.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "deploymentVersionId",
+                "version",
+                "deployedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ActiveDeploymentSummary",
+              "title": "Active deployment",
+              "description": "Summary of the workflow version currently serving API executions."
+            },
+            "DeploymentOperationSummary": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique deployment operation identifier."
+                },
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Deployment version targeted by this operation."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric deployment version."
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "deploy",
+                    "activate"
+                  ],
+                  "description": "Operation being performed on the deployment version."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "preparing",
+                    "activating",
+                    "active",
+                    "failed",
+                    "superseded"
+                  ],
+                  "description": "Current deployment lifecycle status."
+                },
+                "isCurrent": {
+                  "default": true,
+                  "description": "Whether this operation still describes the current deployment attempt.",
+                  "type": "boolean"
+                },
+                "readiness": {
+                  "$ref": "#/$defs/DeploymentReadiness"
+                },
+                "requestedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment operation was requested.",
+                  "format": "date-time"
+                },
+                "activatedAt": {
+                  "description": "ISO 8601 activation timestamp, or null before activation completes.",
+                  "format": "date-time",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "description": "Deployment failure details, or null when no failure occurred.",
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationError"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "deploymentVersionId",
+                "version",
+                "action",
+                "status",
+                "isCurrent",
+                "readiness",
+                "requestedAt"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationSummary",
+              "title": "Deployment operation",
+              "description": "Lifecycle state of a deployment or version-activation attempt."
+            },
+            "DeploymentReadiness": {
+              "type": "object",
+              "properties": {
+                "webhooks": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Webhook synchronization readiness."
+                },
+                "schedules": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Schedule synchronization readiness."
+                },
+                "mcp": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "MCP synchronization readiness."
+                }
+              },
+              "required": [
+                "webhooks",
+                "schedules",
+                "mcp"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentReadiness",
+              "title": "Deployment readiness",
+              "description": "Readiness of the side effects required to activate a deployment."
+            },
+            "DeploymentOperationError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Stable deployment failure code."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Human-readable deployment failure message."
+                },
+                "retryable": {
+                  "type": "boolean",
+                  "description": "Whether retrying the deployment may succeed."
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationError",
+              "title": "Deployment operation error",
+              "description": "Failure details for a deployment lifecycle operation."
+            }
+          }
+        }
+      }
+    },
+    "getDeploymentVersionStateContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/deployments/[version]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "expectedDeploymentVersionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "deployedState": {
+              "$ref": "#/$defs/DeployedWorkflowState"
+            }
+          },
+          "required": [
+            "deployedState"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "DeployedWorkflowState": {
+              "id": "DeployedWorkflowState",
+              "title": "Deployed workflow state",
+              "description": "Workflow graph snapshot pinned by a deployment version.",
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        }
+      }
+    },
+    "listDeploymentVersionsContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/deployments",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "versions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "version": {
+                    "type": "number"
+                  },
+                  "name": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "isActive": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "createdBy": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "deployedBy": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "latestOperationStatus": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "preparing",
+                          "activating",
+                          "active",
+                          "failed",
+                          "superseded"
+                        ]
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "version",
+                  "isActive",
+                  "createdAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "versions"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "revertToDeploymentVersionContract": {
+      "method": "POST",
+      "path": "/api/workflows/[id]/deployments/[version]/revert",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 2147483647
+              },
+              {
+                "type": "string",
+                "const": "active"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "lastSaved": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "message",
+            "lastSaved"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "undeployWorkflowContract": {
+      "method": "DELETE",
+      "path": "/api/workflows/[id]/deploy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isDeployed": {
+              "type": "boolean"
+            },
+            "deployedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "apiKey": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "needsRedeployment": {
+              "type": "boolean"
+            },
+            "isPublicApi": {
+              "type": "boolean"
+            },
+            "warnings": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "activeDeployment": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/ActiveDeploymentSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "latestDeploymentAttempt": {
+              "anyOf": [
+                {
+                  "$ref": "#/$defs/DeploymentOperationSummary"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "isDeployed"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ActiveDeploymentSummary": {
+              "type": "object",
+              "properties": {
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Identifier of the active deployment version."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric active deployment version."
+                },
+                "deployedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this version became active.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "deploymentVersionId",
+                "version",
+                "deployedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ActiveDeploymentSummary",
+              "title": "Active deployment",
+              "description": "Summary of the workflow version currently serving API executions."
+            },
+            "DeploymentOperationSummary": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique deployment operation identifier."
+                },
+                "deploymentVersionId": {
+                  "type": "string",
+                  "description": "Deployment version targeted by this operation."
+                },
+                "version": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Numeric deployment version."
+                },
+                "action": {
+                  "type": "string",
+                  "enum": [
+                    "deploy",
+                    "activate"
+                  ],
+                  "description": "Operation being performed on the deployment version."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "preparing",
+                    "activating",
+                    "active",
+                    "failed",
+                    "superseded"
+                  ],
+                  "description": "Current deployment lifecycle status."
+                },
+                "isCurrent": {
+                  "default": true,
+                  "description": "Whether this operation still describes the current deployment attempt.",
+                  "type": "boolean"
+                },
+                "readiness": {
+                  "$ref": "#/$defs/DeploymentReadiness"
+                },
+                "requestedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment operation was requested.",
+                  "format": "date-time"
+                },
+                "activatedAt": {
+                  "description": "ISO 8601 activation timestamp, or null before activation completes.",
+                  "format": "date-time",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "error": {
+                  "description": "Deployment failure details, or null when no failure occurred.",
+                  "anyOf": [
+                    {
+                      "$ref": "#/$defs/DeploymentOperationError"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "deploymentVersionId",
+                "version",
+                "action",
+                "status",
+                "isCurrent",
+                "readiness",
+                "requestedAt"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationSummary",
+              "title": "Deployment operation",
+              "description": "Lifecycle state of a deployment or version-activation attempt."
+            },
+            "DeploymentReadiness": {
+              "type": "object",
+              "properties": {
+                "webhooks": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Webhook synchronization readiness."
+                },
+                "schedules": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "Schedule synchronization readiness."
+                },
+                "mcp": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "ready",
+                    "not_applicable"
+                  ],
+                  "description": "MCP synchronization readiness."
+                }
+              },
+              "required": [
+                "webhooks",
+                "schedules",
+                "mcp"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentReadiness",
+              "title": "Deployment readiness",
+              "description": "Readiness of the side effects required to activate a deployment."
+            },
+            "DeploymentOperationError": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "Stable deployment failure code."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Human-readable deployment failure message."
+                },
+                "retryable": {
+                  "type": "boolean",
+                  "description": "Whether retrying the deployment may succeed."
+                }
+              },
+              "required": [
+                "code",
+                "message",
+                "retryable"
+              ],
+              "additionalProperties": false,
+              "id": "DeploymentOperationError",
+              "title": "Deployment operation error",
+              "description": "Failure details for a deployment lifecycle operation."
+            }
+          }
+        }
+      }
+    },
+    "updateDeploymentVersionMetadataContract": {
+      "method": "PATCH",
+      "path": "/api/workflows/[id]/deployments/[version]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647
+          }
+        },
+        "required": [
+          "id",
+          "version"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "isActive": {
+            "type": "boolean",
+            "const": true
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "name": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "description"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updatePublicApiContract": {
+      "method": "PATCH",
+      "path": "/api/workflows/[id]/deploy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "isPublicApi": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "isPublicApi"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isPublicApi": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "isPublicApi"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

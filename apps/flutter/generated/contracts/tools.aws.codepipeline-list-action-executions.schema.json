@@ -1,0 +1,134 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-list-action-executions.ts",
+  "contracts": {
+    "awsCodepipelineListActionExecutionsContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/list-action-executions",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "pipelineExecutionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "maxResults": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "nextToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName",
+          "maxResults"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "actionExecutionDetails": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "pipelineExecutionId": {
+                        "type": "string"
+                      },
+                      "actionExecutionId": {
+                        "type": "string"
+                      },
+                      "pipelineVersion": {
+                        "type": "number"
+                      },
+                      "stageName": {
+                        "type": "string"
+                      },
+                      "actionName": {
+                        "type": "string"
+                      },
+                      "startTime": {
+                        "type": "number"
+                      },
+                      "lastUpdateTime": {
+                        "type": "number"
+                      },
+                      "updatedBy": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "externalExecutionId": {
+                        "type": "string"
+                      },
+                      "externalExecutionSummary": {
+                        "type": "string"
+                      },
+                      "externalExecutionUrl": {
+                        "type": "string"
+                      },
+                      "errorCode": {
+                        "type": "string"
+                      },
+                      "errorMessage": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": false
+                  }
+                },
+                "nextToken": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "actionExecutionDetails"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

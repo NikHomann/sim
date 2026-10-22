@@ -1,0 +1,74 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/meta.ts",
+  "contracts": {
+    "v2GetMetaContract": {
+      "method": "GET",
+      "path": "/api/v2/meta",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2Meta"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2Meta": {
+              "type": "object",
+              "properties": {
+                "v2Enabled": {
+                  "type": "boolean",
+                  "description": "Whether this API version is available. This is true when the endpoint is served."
+                },
+                "keyType": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "workspace",
+                    "oauth_access_token"
+                  ],
+                  "description": "Calling credential kind: a personal API key acting for its owner, a key bound to one workspace, or an OAuth access token acting for its user within granted scopes. Resource permissions and credential policies still apply."
+                },
+                "expiresAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the calling credential expires, or null when it does not."
+                }
+              },
+              "required": [
+                "v2Enabled",
+                "keyType",
+                "expiresAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2Meta",
+              "title": "API status",
+              "description": "API availability and lifecycle facts about the calling credential."
+            }
+          }
+        }
+      }
+    }
+  }
+}

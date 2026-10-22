@@ -1,0 +1,76 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/appconfig-delete-hosted-configuration-version.ts",
+  "contracts": {
+    "awsAppConfigDeleteHostedConfigurationVersionContract": {
+      "method": "POST",
+      "path": "/api/tools/appconfig/delete-hosted-configuration-version",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "configurationProfileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "versionNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "applicationId",
+          "configurationProfileId",
+          "versionNumber"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "applicationId": {
+              "type": "string"
+            },
+            "configurationProfileId": {
+              "type": "string"
+            },
+            "versionNumber": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "message",
+            "applicationId",
+            "configurationProfileId",
+            "versionNumber"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

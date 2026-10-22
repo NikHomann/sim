@@ -1,0 +1,915 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/knowledge-tags.ts",
+  "contracts": {
+    "v2BulkSaveKnowledgeTagDefinitionsContract": {
+      "method": "PUT",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/tags",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "definitions": {
+            "minItems": 1,
+            "maxItems": 17,
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/V2BulkSaveKnowledgeTagDefinition"
+            },
+            "description": "Tag definitions to create or update on the knowledge base."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "definitions"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "V2BulkSaveKnowledgeTagDefinition": {
+            "type": "object",
+            "properties": {
+              "tagSlot": {
+                "type": "string",
+                "enum": [
+                  "tag1",
+                  "tag2",
+                  "tag3",
+                  "tag4",
+                  "tag5",
+                  "tag6",
+                  "tag7",
+                  "number1",
+                  "number2",
+                  "number3",
+                  "number4",
+                  "number5",
+                  "date1",
+                  "date2",
+                  "boolean1",
+                  "boolean2",
+                  "boolean3"
+                ],
+                "description": "Storage slot the tag occupies. It must belong to the tag’s `fieldType`.",
+                "examples": [
+                  "tag1"
+                ]
+              },
+              "displayName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100,
+                "description": "Name tag filters and document reads use for this tag.",
+                "examples": [
+                  "category"
+                ]
+              },
+              "fieldType": {
+                "type": "string",
+                "enum": [
+                  "text",
+                  "number",
+                  "date",
+                  "boolean"
+                ],
+                "description": "Value type stored in the slot; it decides which slots are usable and which filter operators apply. Slot capacity per type: text 7, number 5, date 2, boolean 3.",
+                "examples": [
+                  "text"
+                ]
+              },
+              "originalDisplayName": {
+                "description": "Previous display name, when this entry renames an existing definition.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100,
+                "examples": [
+                  "category"
+                ]
+              }
+            },
+            "required": [
+              "tagSlot",
+              "displayName",
+              "fieldType"
+            ],
+            "additionalProperties": false,
+            "id": "V2BulkSaveKnowledgeTagDefinition",
+            "title": "Knowledge tag definition input",
+            "description": "One tag definition declared in a bulk save."
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2BulkSaveKnowledgeTagDefinitionsData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeTag": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Tag definition ID used by Update tag and Delete tag."
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "Display name used by tag filters and by tag values on document reads.",
+                  "examples": [
+                    "category"
+                  ]
+                },
+                "tagSlot": {
+                  "type": "string",
+                  "description": "Slot used by document updates: `tag1`–`tag7`, `number1`–`number5`, `date1`–`date2`, or `boolean1`–`boolean3`. Upload creation accepts text slots; use Update document for other types.",
+                  "examples": [
+                    "tag1"
+                  ]
+                },
+                "fieldType": {
+                  "type": "string",
+                  "description": "Value type stored in the slot; it determines the valid filter operators.",
+                  "examples": [
+                    "text"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "displayName",
+                "tagSlot",
+                "fieldType"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeTag",
+              "title": "Knowledge tag",
+              "description": "A tag defined on a knowledge base, and the slot it is stored in."
+            },
+            "V2BulkSaveKnowledgeTagDefinitionsData": {
+              "type": "object",
+              "properties": {
+                "created": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2KnowledgeTag"
+                  },
+                  "description": "Definitions that did not previously exist."
+                },
+                "updated": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2KnowledgeTag"
+                  },
+                  "description": "Definitions whose slot was already defined."
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Per-definition failures. A populated array still answers 200."
+                }
+              },
+              "required": [
+                "created",
+                "updated",
+                "errors"
+              ],
+              "additionalProperties": false,
+              "id": "V2BulkSaveKnowledgeTagDefinitionsData",
+              "title": "Bulk save knowledge tag definitions data",
+              "description": "Definitions created and updated by a bulk tag-definition save."
+            }
+          }
+        }
+      }
+    },
+    "v2CreateKnowledgeTagContract": {
+      "method": "POST",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/tags",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "description": "Name tag filters and document reads use for this tag.",
+            "examples": [
+              "category"
+            ]
+          },
+          "fieldType": {
+            "default": "text",
+            "type": "string",
+            "enum": [
+              "text",
+              "number",
+              "date",
+              "boolean"
+            ],
+            "description": "Value type stored in the slot; it decides which slots are usable and which filter operators apply. Slot capacity per type: text 7, number 5, date 2, boolean 3.",
+            "examples": [
+              "text"
+            ]
+          },
+          "tagSlot": {
+            "description": "Slot to store the tag in. Omit to take the next free slot for the field type; a slot that does not belong to the field type, or one already in use, is rejected.",
+            "type": "string",
+            "enum": [
+              "tag1",
+              "tag2",
+              "tag3",
+              "tag4",
+              "tag5",
+              "tag6",
+              "tag7",
+              "number1",
+              "number2",
+              "number3",
+              "number4",
+              "number5",
+              "date1",
+              "date2",
+              "boolean1",
+              "boolean2",
+              "boolean3"
+            ],
+            "examples": [
+              "tag1"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "displayName"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2KnowledgeTag"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeTag": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Tag definition ID used by Update tag and Delete tag."
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "Display name used by tag filters and by tag values on document reads.",
+                  "examples": [
+                    "category"
+                  ]
+                },
+                "tagSlot": {
+                  "type": "string",
+                  "description": "Slot used by document updates: `tag1`–`tag7`, `number1`–`number5`, `date1`–`date2`, or `boolean1`–`boolean3`. Upload creation accepts text slots; use Update document for other types.",
+                  "examples": [
+                    "tag1"
+                  ]
+                },
+                "fieldType": {
+                  "type": "string",
+                  "description": "Value type stored in the slot; it determines the valid filter operators.",
+                  "examples": [
+                    "text"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "displayName",
+                "tagSlot",
+                "fieldType"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeTag",
+              "title": "Knowledge tag",
+              "description": "A tag defined on a knowledge base, and the slot it is stored in."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteKnowledgeTagContract": {
+      "method": "DELETE",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/tags/[tagId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique tag definition identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "tagId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2DeleteKnowledgeTagData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2DeleteKnowledgeTagData": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the deleted tag definition."
+                },
+                "tagSlot": {
+                  "type": "string",
+                  "description": "Slot the deleted tag occupied; its values are now cleared."
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "Display name the deleted tag carried."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Confirms that the tag definition was deleted."
+                }
+              },
+              "required": [
+                "id",
+                "tagSlot",
+                "displayName",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2DeleteKnowledgeTagData",
+              "title": "Delete knowledge tag data",
+              "description": "Acknowledgement for a deleted tag definition."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteKnowledgeTagDefinitionsContract": {
+      "method": "DELETE",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/tags",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "unused": {
+            "description": "Whether to remove only the tag definitions no document in the knowledge base still carries a value for. Defaults to true. Pass `unused=false` to delete every definition on the knowledge base, which also clears its slot on every document and chunk and is not recoverable.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2DeleteKnowledgeTagDefinitionsData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2DeleteKnowledgeTagDefinitionsData": {
+              "type": "object",
+              "properties": {
+                "unused": {
+                  "type": "boolean",
+                  "description": "Whether the delete was restricted to definitions no document still uses."
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of tag definitions removed."
+                }
+              },
+              "required": [
+                "unused",
+                "count"
+              ],
+              "additionalProperties": false,
+              "id": "V2DeleteKnowledgeTagDefinitionsData",
+              "title": "Delete knowledge tag definitions data",
+              "description": "Outcome of a knowledge-base tag-definition delete."
+            }
+          }
+        }
+      }
+    },
+    "v2GetNextKnowledgeTagSlotContract": {
+      "method": "GET",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/tags/next-slot",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "fieldType": {
+            "type": "string",
+            "enum": [
+              "text",
+              "number",
+              "date",
+              "boolean"
+            ],
+            "description": "Value type stored in the slot; it decides which slots are usable and which filter operators apply. Slot capacity per type: text 7, number 5, date 2, boolean 3.",
+            "examples": [
+              "text"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "fieldType"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2NextKnowledgeTagSlotData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2NextKnowledgeTagSlotData": {
+              "type": "object",
+              "properties": {
+                "nextAvailableSlot": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "The free slot a create would take, or null when the field type is exhausted.",
+                  "examples": [
+                    "tag3"
+                  ]
+                },
+                "fieldType": {
+                  "type": "string",
+                  "description": "Field type the slots were counted for."
+                },
+                "usedSlots": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Slots of this field type already holding a tag."
+                },
+                "totalSlots": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Total slots this field type has: 7 for text, 5 for number, 2 for date, 3 for boolean."
+                },
+                "availableSlots": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Slots of this field type still free, or 0 when the field type is exhausted."
+                }
+              },
+              "required": [
+                "nextAvailableSlot",
+                "fieldType",
+                "usedSlots",
+                "totalSlots",
+                "availableSlots"
+              ],
+              "additionalProperties": false,
+              "id": "V2NextKnowledgeTagSlotData",
+              "title": "Next knowledge tag slot",
+              "description": "Slot availability for one tag field type."
+            }
+          }
+        }
+      }
+    },
+    "v2ListKnowledgeTagUsageContract": {
+      "method": "GET",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/tags/usage",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2KnowledgeTagUsage"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Always `null`. This list has no `cursor` or `limit` parameters; see the operation for inventory limits."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeTagUsage": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Tag definition ID used by Update Tag and Delete Tag.",
+                  "examples": [
+                    "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                  ]
+                },
+                "tagSlot": {
+                  "type": "string",
+                  "description": "Slot the tag occupies.",
+                  "examples": [
+                    "tag1"
+                  ]
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "Tag display name.",
+                  "examples": [
+                    "category"
+                  ]
+                },
+                "fieldType": {
+                  "type": "string",
+                  "description": "Value type stored in the slot.",
+                  "examples": [
+                    "text"
+                  ]
+                },
+                "documentCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Documents in the knowledge base carrying a value in this slot."
+                },
+                "chunkCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Indexed chunks carrying a value in this slot."
+                }
+              },
+              "required": [
+                "id",
+                "tagSlot",
+                "displayName",
+                "fieldType",
+                "documentCount",
+                "chunkCount"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeTagUsage",
+              "title": "Knowledge tag usage",
+              "description": "How widely one tag is populated across a knowledge base."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateKnowledgeTagContract": {
+      "method": "PATCH",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/tags/[tagId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tagId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique tag definition identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "tagId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "displayName": {
+            "description": "New tag display name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "examples": [
+              "category"
+            ]
+          },
+          "fieldType": {
+            "description": "New value type for the tag.",
+            "type": "string",
+            "enum": [
+              "text",
+              "number",
+              "date",
+              "boolean"
+            ],
+            "examples": [
+              "text"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2KnowledgeTag"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeTag": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Tag definition ID used by Update tag and Delete tag."
+                },
+                "displayName": {
+                  "type": "string",
+                  "description": "Display name used by tag filters and by tag values on document reads.",
+                  "examples": [
+                    "category"
+                  ]
+                },
+                "tagSlot": {
+                  "type": "string",
+                  "description": "Slot used by document updates: `tag1`–`tag7`, `number1`–`number5`, `date1`–`date2`, or `boolean1`–`boolean3`. Upload creation accepts text slots; use Update document for other types.",
+                  "examples": [
+                    "tag1"
+                  ]
+                },
+                "fieldType": {
+                  "type": "string",
+                  "description": "Value type stored in the slot; it determines the valid filter operators.",
+                  "examples": [
+                    "text"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "displayName",
+                "tagSlot",
+                "fieldType"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeTag",
+              "title": "Knowledge tag",
+              "description": "A tag defined on a knowledge base, and the slot it is stored in."
+            }
+          }
+        }
+      }
+    }
+  }
+}

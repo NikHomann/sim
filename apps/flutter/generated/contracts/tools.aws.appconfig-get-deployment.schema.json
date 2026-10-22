@@ -1,0 +1,164 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/appconfig-get-deployment.ts",
+  "contracts": {
+    "awsAppConfigGetDeploymentContract": {
+      "method": "POST",
+      "path": "/api/tools/appconfig/get-deployment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "environmentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deploymentNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "applicationId",
+          "environmentId",
+          "deploymentNumber"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "applicationId": {
+              "type": "string"
+            },
+            "environmentId": {
+              "type": "string"
+            },
+            "deploymentStrategyId": {
+              "type": "string"
+            },
+            "configurationProfileId": {
+              "type": "string"
+            },
+            "deploymentNumber": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "configurationName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "configurationVersion": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "state": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "percentageComplete": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "startedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "completedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "applicationId",
+            "environmentId",
+            "deploymentStrategyId",
+            "configurationProfileId",
+            "deploymentNumber",
+            "configurationName",
+            "configurationVersion",
+            "description",
+            "state",
+            "percentageComplete",
+            "startedAt",
+            "completedAt"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

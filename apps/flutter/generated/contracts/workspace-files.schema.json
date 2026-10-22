@@ -1,0 +1,1834 @@
+{
+  "source": "apps/sim/lib/api/contracts/workspace-files.ts",
+  "contracts": {
+    "createWorkspaceFileContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/files",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "contentType": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "folderId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "content": {
+            "default": "",
+            "type": "string",
+            "maxLength": 70000000
+          },
+          "encoding": {
+            "default": "utf-8",
+            "type": "string",
+            "enum": [
+              "utf-8",
+              "base64"
+            ]
+          }
+        },
+        "required": [
+          "name"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "file": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "width": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "height": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedBy": {
+                  "type": "string"
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderPath": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedAt": {},
+                "updatedAt": {},
+                "contentUpdatedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revision": {
+                  "type": "string"
+                },
+                "storageContext": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "mothership"
+                  ]
+                },
+                "vfsNamespace": {
+                  "type": "string",
+                  "enum": [
+                    "uploads",
+                    "tests",
+                    "changelog"
+                  ]
+                },
+                "share": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique share identifier."
+                        },
+                        "token": {
+                          "type": "string",
+                          "description": "Server-generated token embedded in the public share URL."
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "Public share URL."
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "description": "Whether the public share currently resolves."
+                        },
+                        "resourceType": {
+                          "type": "string",
+                          "enum": [
+                            "file",
+                            "folder"
+                          ],
+                          "description": "Kind of resource being shared."
+                        },
+                        "resourceId": {
+                          "type": "string",
+                          "description": "Identifier of the shared resource."
+                        },
+                        "authType": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "How access to the share is gated."
+                        },
+                        "hasPassword": {
+                          "type": "boolean",
+                          "description": "Whether a password is stored for this share."
+                        },
+                        "allowedEmails": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 320
+                          },
+                          "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "token",
+                        "url",
+                        "isActive",
+                        "resourceType",
+                        "resourceId",
+                        "authType",
+                        "hasPassword",
+                        "allowedEmails"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "key",
+                "path",
+                "size",
+                "type",
+                "uploadedBy",
+                "folderId",
+                "uploadedAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "file"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteWorkspaceFileContract": {
+      "method": "DELETE",
+      "path": "/api/workspaces/[id]/files/[fileId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "downloadWorkspaceFileUrlContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/files/[fileId]/download",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "downloadUrl": {
+              "type": "string",
+              "minLength": 1
+            },
+            "viewerUrl": {
+              "type": "string",
+              "minLength": 1
+            },
+            "fileName": {
+              "type": "string",
+              "minLength": 1
+            },
+            "expiresIn": {
+              "type": "null"
+            }
+          },
+          "required": [
+            "success",
+            "downloadUrl",
+            "viewerUrl",
+            "fileName",
+            "expiresIn"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "exportWorkspaceFileSnapshotContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/files/[fileId]/export",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 5242880
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "extractWorkspaceFileContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/files/[fileId]/extract",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "folderName": {
+              "type": "string"
+            },
+            "extractedCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "skippedCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "success",
+            "folderName",
+            "extractedCount",
+            "skippedCount"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getInlineWorkspaceFileContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/files/inline",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        }
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "listWorkspaceFilesContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/files",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "scope": {
+            "default": "active",
+            "type": "string",
+            "enum": [
+              "active",
+              "archived"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "workspaceId": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "size": {
+                    "type": "number"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "width": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "height": {
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "uploadedBy": {
+                    "type": "string"
+                  },
+                  "folderId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "folderPath": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "deletedAt": {
+                    "anyOf": [
+                      {},
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "uploadedAt": {},
+                  "updatedAt": {},
+                  "contentUpdatedAt": {
+                    "anyOf": [
+                      {},
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "revision": {
+                    "type": "string"
+                  },
+                  "storageContext": {
+                    "type": "string",
+                    "enum": [
+                      "workspace",
+                      "mothership"
+                    ]
+                  },
+                  "vfsNamespace": {
+                    "type": "string",
+                    "enum": [
+                      "uploads",
+                      "tests",
+                      "changelog"
+                    ]
+                  },
+                  "share": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "Unique share identifier."
+                          },
+                          "token": {
+                            "type": "string",
+                            "description": "Server-generated token embedded in the public share URL."
+                          },
+                          "url": {
+                            "type": "string",
+                            "description": "Public share URL."
+                          },
+                          "isActive": {
+                            "type": "boolean",
+                            "description": "Whether the public share currently resolves."
+                          },
+                          "resourceType": {
+                            "type": "string",
+                            "enum": [
+                              "file",
+                              "folder"
+                            ],
+                            "description": "Kind of resource being shared."
+                          },
+                          "resourceId": {
+                            "type": "string",
+                            "description": "Identifier of the shared resource."
+                          },
+                          "authType": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ],
+                            "description": "How access to the share is gated."
+                          },
+                          "hasPassword": {
+                            "type": "boolean",
+                            "description": "Whether a password is stored for this share."
+                          },
+                          "allowedEmails": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 320
+                            },
+                            "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "token",
+                          "url",
+                          "isActive",
+                          "resourceType",
+                          "resourceId",
+                          "authType",
+                          "hasPassword",
+                          "allowedEmails"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "workspaceId",
+                  "name",
+                  "key",
+                  "path",
+                  "size",
+                  "type",
+                  "uploadedBy",
+                  "folderId",
+                  "uploadedAt",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "files"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "readWorkspaceFileContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/files/[fileId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "file": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "width": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "height": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedBy": {
+                  "type": "string"
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderPath": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedAt": {},
+                "updatedAt": {},
+                "contentUpdatedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revision": {
+                  "type": "string"
+                },
+                "storageContext": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "mothership"
+                  ]
+                },
+                "vfsNamespace": {
+                  "type": "string",
+                  "enum": [
+                    "uploads",
+                    "tests",
+                    "changelog"
+                  ]
+                },
+                "share": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique share identifier."
+                        },
+                        "token": {
+                          "type": "string",
+                          "description": "Server-generated token embedded in the public share URL."
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "Public share URL."
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "description": "Whether the public share currently resolves."
+                        },
+                        "resourceType": {
+                          "type": "string",
+                          "enum": [
+                            "file",
+                            "folder"
+                          ],
+                          "description": "Kind of resource being shared."
+                        },
+                        "resourceId": {
+                          "type": "string",
+                          "description": "Identifier of the shared resource."
+                        },
+                        "authType": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "How access to the share is gated."
+                        },
+                        "hasPassword": {
+                          "type": "boolean",
+                          "description": "Whether a password is stored for this share."
+                        },
+                        "allowedEmails": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 320
+                          },
+                          "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "token",
+                        "url",
+                        "isActive",
+                        "resourceType",
+                        "resourceId",
+                        "authType",
+                        "hasPassword",
+                        "allowedEmails"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "key",
+                "path",
+                "size",
+                "type",
+                "uploadedBy",
+                "folderId",
+                "uploadedAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "file"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "renameWorkspaceFileContract": {
+      "method": "PATCH",
+      "path": "/api/workspaces/[id]/files/[fileId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "file": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "width": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "height": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedBy": {
+                  "type": "string"
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderPath": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedAt": {},
+                "updatedAt": {},
+                "contentUpdatedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revision": {
+                  "type": "string"
+                },
+                "storageContext": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "mothership"
+                  ]
+                },
+                "vfsNamespace": {
+                  "type": "string",
+                  "enum": [
+                    "uploads",
+                    "tests",
+                    "changelog"
+                  ]
+                },
+                "share": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique share identifier."
+                        },
+                        "token": {
+                          "type": "string",
+                          "description": "Server-generated token embedded in the public share URL."
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "Public share URL."
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "description": "Whether the public share currently resolves."
+                        },
+                        "resourceType": {
+                          "type": "string",
+                          "enum": [
+                            "file",
+                            "folder"
+                          ],
+                          "description": "Kind of resource being shared."
+                        },
+                        "resourceId": {
+                          "type": "string",
+                          "description": "Identifier of the shared resource."
+                        },
+                        "authType": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "How access to the share is gated."
+                        },
+                        "hasPassword": {
+                          "type": "boolean",
+                          "description": "Whether a password is stored for this share."
+                        },
+                        "allowedEmails": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 320
+                          },
+                          "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "token",
+                        "url",
+                        "isActive",
+                        "resourceType",
+                        "resourceId",
+                        "authType",
+                        "hasPassword",
+                        "allowedEmails"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "key",
+                "path",
+                "size",
+                "type",
+                "uploadedBy",
+                "folderId",
+                "uploadedAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "file"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "error": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "error"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "error": {
+                "type": "string"
+              },
+              "details": {
+                "type": "array",
+                "items": {}
+              }
+            },
+            "required": [
+              "error",
+              "details"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "success": {
+                "type": "boolean",
+                "const": false
+              },
+              "error": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "success",
+              "error"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      }
+    },
+    "restoreWorkspaceFileContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/files/[fileId]/restore",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateWorkspaceFileContentContract": {
+      "method": "PUT",
+      "path": "/api/workspaces/[id]/files/[fileId]/content",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "content": {
+            "type": "string",
+            "maxLength": 70000000
+          },
+          "encoding": {
+            "type": "string",
+            "enum": [
+              "base64",
+              "utf-8"
+            ]
+          },
+          "expectedUpdatedAt": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+          }
+        },
+        "required": [
+          "content"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "file": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "width": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "height": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedBy": {
+                  "type": "string"
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderPath": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedAt": {},
+                "updatedAt": {},
+                "contentUpdatedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revision": {
+                  "type": "string"
+                },
+                "storageContext": {
+                  "type": "string",
+                  "enum": [
+                    "workspace",
+                    "mothership"
+                  ]
+                },
+                "vfsNamespace": {
+                  "type": "string",
+                  "enum": [
+                    "uploads",
+                    "tests",
+                    "changelog"
+                  ]
+                },
+                "share": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique share identifier."
+                        },
+                        "token": {
+                          "type": "string",
+                          "description": "Server-generated token embedded in the public share URL."
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "Public share URL."
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "description": "Whether the public share currently resolves."
+                        },
+                        "resourceType": {
+                          "type": "string",
+                          "enum": [
+                            "file",
+                            "folder"
+                          ],
+                          "description": "Kind of resource being shared."
+                        },
+                        "resourceId": {
+                          "type": "string",
+                          "description": "Identifier of the shared resource."
+                        },
+                        "authType": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "How access to the share is gated."
+                        },
+                        "hasPassword": {
+                          "type": "boolean",
+                          "description": "Whether a password is stored for this share."
+                        },
+                        "allowedEmails": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 320
+                          },
+                          "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "token",
+                        "url",
+                        "isActive",
+                        "resourceType",
+                        "resourceId",
+                        "authType",
+                        "hasPassword",
+                        "allowedEmails"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "key",
+                "path",
+                "size",
+                "type",
+                "uploadedBy",
+                "folderId",
+                "uploadedAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "file"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateWorkspaceFileDimensionsContract": {
+      "method": "PATCH",
+      "path": "/api/workspaces/[id]/files/[fileId]/dimensions",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1
+          },
+          "width": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 100000
+          },
+          "height": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 100000
+          }
+        },
+        "required": [
+          "key",
+          "width",
+          "height"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "workspaceFileStyleContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/files/[fileId]/style",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "format": {
+              "type": "string",
+              "enum": [
+                "docx",
+                "pptx",
+                "pdf"
+              ]
+            },
+            "theme": {
+              "type": "object",
+              "properties": {
+                "colors": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  }
+                },
+                "fonts": {
+                  "type": "object",
+                  "properties": {
+                    "major": {
+                      "type": "string"
+                    },
+                    "minor": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "major",
+                    "minor"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "colors",
+                "fonts"
+              ],
+              "additionalProperties": false
+            },
+            "styles": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {},
+                "additionalProperties": {}
+              }
+            },
+            "defaults": {
+              "type": "object",
+              "properties": {
+                "fontSize": {
+                  "type": "number"
+                },
+                "font": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "pageSize": {
+              "type": "object",
+              "properties": {
+                "preset": {
+                  "type": "string",
+                  "enum": [
+                    "A4",
+                    "letter",
+                    "custom"
+                  ]
+                },
+                "widthPt": {
+                  "type": "number"
+                },
+                "heightPt": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "preset"
+              ],
+              "additionalProperties": false
+            },
+            "fonts": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "slideCount": {
+              "type": "number"
+            },
+            "aspectRatio": {
+              "type": "string",
+              "enum": [
+                "16:9",
+                "4:3",
+                "custom"
+              ]
+            },
+            "background": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "format"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

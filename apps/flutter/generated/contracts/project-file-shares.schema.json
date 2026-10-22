@@ -1,0 +1,305 @@
+{
+  "source": "apps/sim/lib/api/contracts/project-file-shares.ts",
+  "contracts": {
+    "getProjectFileShareContract": {
+      "method": "GET",
+      "path": "/api/projects/[id]/files/[fileId]/share",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "share": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "description": "Unique share identifier."
+                    },
+                    "token": {
+                      "type": "string",
+                      "description": "Server-generated token embedded in the public share URL."
+                    },
+                    "url": {
+                      "type": "string",
+                      "description": "Public share URL."
+                    },
+                    "isActive": {
+                      "type": "boolean",
+                      "description": "Whether the public share currently resolves."
+                    },
+                    "resourceType": {
+                      "type": "string",
+                      "enum": [
+                        "file",
+                        "folder"
+                      ],
+                      "description": "Kind of resource being shared."
+                    },
+                    "resourceId": {
+                      "type": "string",
+                      "description": "Identifier of the shared resource."
+                    },
+                    "authType": {
+                      "type": "string",
+                      "enum": [
+                        "public",
+                        "password",
+                        "email",
+                        "sso"
+                      ],
+                      "description": "How access to the share is gated."
+                    },
+                    "hasPassword": {
+                      "type": "boolean",
+                      "description": "Whether a password is stored for this share."
+                    },
+                    "allowedEmails": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 320
+                      },
+                      "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "token",
+                    "url",
+                    "isActive",
+                    "resourceType",
+                    "resourceId",
+                    "authType",
+                    "hasPassword",
+                    "allowedEmails"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "policy": {
+              "type": "object",
+              "properties": {
+                "canPublish": {
+                  "type": "boolean",
+                  "description": "Whether current Project sharing policies permit publishing or updating an active share."
+                },
+                "allowedAuthTypes": {
+                  "maxItems": 4,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": [
+                      "public",
+                      "password",
+                      "email",
+                      "sso"
+                    ]
+                  },
+                  "description": "Authentication modes permitted by every applicable active environment policy."
+                }
+              },
+              "required": [
+                "canPublish",
+                "allowedAuthTypes"
+              ],
+              "additionalProperties": false
+            },
+            "capabilities": {
+              "type": "object",
+              "properties": {
+                "canRead": {
+                  "type": "boolean"
+                },
+                "canWrite": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "canRead",
+                "canWrite"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "share",
+            "policy",
+            "capabilities"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateProjectFileShareContract": {
+      "method": "PUT",
+      "path": "/api/projects/[id]/files/[fileId]/share",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "isActive": {
+            "type": "boolean"
+          },
+          "authType": {
+            "type": "string",
+            "enum": [
+              "public",
+              "password",
+              "email",
+              "sso"
+            ]
+          },
+          "password": {
+            "type": "string",
+            "minLength": 15,
+            "maxLength": 1024
+          },
+          "allowedEmails": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 320
+            }
+          },
+          "token": {
+            "type": "string",
+            "minLength": 16,
+            "maxLength": 64,
+            "pattern": "^[A-Za-z0-9_-]+$"
+          }
+        },
+        "required": [
+          "isActive"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "share": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique share identifier."
+                },
+                "token": {
+                  "type": "string",
+                  "description": "Server-generated token embedded in the public share URL."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Public share URL."
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "description": "Whether the public share currently resolves."
+                },
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "file",
+                    "folder"
+                  ],
+                  "description": "Kind of resource being shared."
+                },
+                "resourceId": {
+                  "type": "string",
+                  "description": "Identifier of the shared resource."
+                },
+                "authType": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "password",
+                    "email",
+                    "sso"
+                  ],
+                  "description": "How access to the share is gated."
+                },
+                "hasPassword": {
+                  "type": "boolean",
+                  "description": "Whether a password is stored for this share."
+                },
+                "allowedEmails": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 320
+                  },
+                  "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                }
+              },
+              "required": [
+                "id",
+                "token",
+                "url",
+                "isActive",
+                "resourceType",
+                "resourceId",
+                "authType",
+                "hasPassword",
+                "allowedEmails"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "share"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

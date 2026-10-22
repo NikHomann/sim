@@ -1,0 +1,79 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-get-template.ts",
+  "contracts": {
+    "awsSesGetTemplateContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/get-template",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateName": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "templateName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "templateName": {
+              "type": "string"
+            },
+            "subjectPart": {
+              "type": "string"
+            },
+            "textPart": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "htmlPart": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "templateName",
+            "subjectPart",
+            "textPart",
+            "htmlPart"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

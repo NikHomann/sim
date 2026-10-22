@@ -1,0 +1,269 @@
+{
+  "source": "apps/sim/lib/api/contracts/common.ts",
+  "contracts": {
+    "getAllowedIntegrationsContract": {
+      "method": "GET",
+      "path": "/api/settings/allowed-integrations",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "allowedIntegrations": {
+              "anyOf": [
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "integrationAvailability": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "ready",
+                      "limited",
+                      "unavailable",
+                      "misconfigured"
+                    ]
+                  },
+                  "oauthAvailable": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "type",
+                  "state",
+                  "oauthAvailable"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "oauthServiceAvailability": {
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "providerId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "available": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "providerId",
+                  "available"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "allowedIntegrations",
+            "integrationAvailability",
+            "oauthServiceAvailability"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getAllowedProvidersContract": {
+      "method": "GET",
+      "path": "/api/settings/allowed-providers",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "blacklistedProviders": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "blacklistedProviders"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getJobStatusContract": {
+      "method": "GET",
+      "path": "/api/jobs/[jobId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "jobId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "jobId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "taskId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "pending",
+                "processing",
+                "completed",
+                "failed",
+                "cancelled"
+              ]
+            },
+            "metadata": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "output": {},
+            "error": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "taskId",
+            "status"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "getStarsContract": {
+      "method": "GET",
+      "path": "/api/stars",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "stars": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "stars"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getVoiceSettingsContract": {
+      "method": "GET",
+      "path": "/api/settings/voice",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sttAvailable": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "sttAvailable"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "integrationRequestContract": {
+      "method": "POST",
+      "path": "/api/help/integration-request",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "integrationName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "pattern": "^[^\\r\\n\\u0000-\\u001F\\u007F]+$"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "useCase": {
+            "type": "string",
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "integrationName",
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

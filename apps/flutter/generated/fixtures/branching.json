@@ -1,0 +1,2365 @@
+{
+  "name": "branching",
+  "description": "condition rows and router rows with dynamic handles, error edge",
+  "state": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "condition": {
+        "id": "condition",
+        "type": "condition",
+        "name": "Condition 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "conditions": {
+            "id": "conditions",
+            "type": "condition-input",
+            "value": "[{\"id\":\"c-if\",\"title\":\"if\",\"value\":\"<start.input> > 1\"},{\"id\":\"c-else-if\",\"title\":\"else if\",\"value\":\"<start.input> === 1\"},{\"id\":\"c-else\",\"title\":\"else\",\"value\":\"\"}]"
+          }
+        },
+        "outputs": {
+          "conditionResult": {
+            "type": "boolean",
+            "description": "Whether the selected branch's own test passed: true when an if/else-if condition matched, false when the else branch or no branch fired"
+          },
+          "selectedPath": {
+            "type": "json",
+            "description": "Selected execution path"
+          },
+          "selectedOption": {
+            "type": "string",
+            "description": "Selected condition option ID"
+          },
+          "selectedTitle": {
+            "type": "string",
+            "description": "Title of the selected branch (e.g. \"if\", \"else if\", \"else\"); null when no branch fired"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "router": {
+        "id": "router",
+        "type": "router",
+        "name": "Router 1",
+        "position": {
+          "x": 800,
+          "y": 200
+        },
+        "subBlocks": {
+          "prompt": {
+            "id": "prompt",
+            "type": "long-input",
+            "value": "Route the request: <start.input>"
+          },
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          },
+          "routes": {
+            "id": "routes",
+            "type": "short-input",
+            "value": "[{\"id\":\"r-sales\",\"title\":\"sales\",\"value\":\"Questions about pricing\"},{\"id\":\"r-support\",\"title\":\"support\",\"value\":\"Bug reports\"}]"
+          }
+        },
+        "outputs": {
+          "prompt": {
+            "type": "string",
+            "description": "Routing prompt used"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost information"
+          },
+          "selectedPath": {
+            "type": "json",
+            "description": "Selected routing path"
+          },
+          "selectedRoute": {
+            "type": "string",
+            "description": "Selected route ID"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent-a": {
+        "id": "agent-a",
+        "type": "agent",
+        "name": "Agent A",
+        "position": {
+          "x": 800,
+          "y": -200
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent-b": {
+        "id": "agent-b",
+        "type": "agent",
+        "name": "Agent B",
+        "position": {
+          "x": 1200,
+          "y": 100
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 1200,
+          "y": 300
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return 1"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "edges": [
+      {
+        "id": "edge-start-source-condition-target",
+        "source": "start",
+        "target": "condition",
+        "sourceHandle": "source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-condition-condition-c-if-agent-a-target",
+        "source": "condition",
+        "target": "agent-a",
+        "sourceHandle": "condition-c-if",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-condition-condition-c-else-if-router-target",
+        "source": "condition",
+        "target": "router",
+        "sourceHandle": "condition-c-else-if",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-router-router-r-sales-agent-b-target",
+        "source": "router",
+        "target": "agent-b",
+        "sourceHandle": "router-r-sales",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-router-router-r-support-function-target",
+        "source": "router",
+        "target": "function",
+        "sourceHandle": "router-r-support",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-agent-a-error-function-target",
+        "source": "agent-a",
+        "target": "function",
+        "sourceHandle": "error",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      }
+    ],
+    "loops": {},
+    "parallels": {}
+  },
+  "serialized": {
+    "version": "1.0",
+    "blocks": [
+      {
+        "id": "start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "config": {
+          "params": {
+            "startWorkflow": "manual"
+          }
+        },
+        "inputs": {
+          "input": "json"
+        },
+        "outputs": {},
+        "metadata": {
+          "id": "starter",
+          "name": "Start",
+          "description": "Start workflow",
+          "category": "blocks",
+          "color": "#2FB3FF"
+        },
+        "enabled": true
+      },
+      {
+        "id": "condition",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "config": {
+          "params": {
+            "conditions": "[{\"id\":\"c-if\",\"title\":\"if\",\"value\":\"<start.input> > 1\"},{\"id\":\"c-else-if\",\"title\":\"else if\",\"value\":\"<start.input> === 1\"},{\"id\":\"c-else\",\"title\":\"else\",\"value\":\"\"}]"
+          }
+        },
+        "inputs": {},
+        "outputs": {
+          "conditionResult": {
+            "type": "boolean",
+            "description": "Whether the selected branch's own test passed: true when an if/else-if condition matched, false when the else branch or no branch fired"
+          },
+          "selectedPath": {
+            "type": "json",
+            "description": "Selected execution path"
+          },
+          "selectedOption": {
+            "type": "string",
+            "description": "Selected condition option ID"
+          },
+          "selectedTitle": {
+            "type": "string",
+            "description": "Title of the selected branch (e.g. \"if\", \"else if\", \"else\"); null when no branch fired"
+          }
+        },
+        "metadata": {
+          "id": "condition",
+          "name": "Condition 1",
+          "description": "Add a condition",
+          "category": "blocks",
+          "color": "#FF752F"
+        },
+        "enabled": true
+      },
+      {
+        "id": "router",
+        "position": {
+          "x": 800,
+          "y": 200
+        },
+        "config": {
+          "tool": "openai",
+          "params": {
+            "prompt": "Route the request: <start.input>",
+            "model": "gpt-5.1",
+            "systemPrompt": "You are an intelligent routing agent responsible for directing workflow requests to the most appropriate block. Your task is to analyze the input and determine the single most suitable destination based on the request.\n\nKey Instructions:\n1. You MUST choose exactly ONE destination from the IDs of the blocks in the workflow. The destination must be a valid block id.\n\n2. Analysis Framework:\n   - Carefully evaluate the intent and requirements of the request\n   - Consider the primary action needed\n   - Match the core functionality with the most appropriate destination\n\nRouting Request: Route the request: <start.input>\n\nResponse Format:\nReturn ONLY the destination id as a single word, lowercase, no punctuation or explanation.\nExample: \"2acd9007-27e8-4510-a487-73d3b825e7c1\"\n\nRemember: Your response must be ONLY the block ID - no additional text, formatting, or explanation."
+          }
+        },
+        "inputs": {
+          "prompt": "string",
+          "model": "string",
+          "apiKey": "string",
+          "azureEndpoint": "string",
+          "azureApiVersion": "string",
+          "vertexProject": "string",
+          "vertexLocation": "string",
+          "vertexCredential": "string",
+          "bedrockAccessKeyId": "string",
+          "bedrockSecretKey": "string",
+          "bedrockRegion": "string",
+          "fallbackModels": "json",
+          "temperature": "number"
+        },
+        "outputs": {
+          "prompt": {
+            "type": "string",
+            "description": "Routing prompt used"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost information"
+          },
+          "selectedPath": {
+            "type": "json",
+            "description": "Selected routing path"
+          },
+          "selectedRoute": {
+            "type": "string",
+            "description": "Selected route ID"
+          }
+        },
+        "metadata": {
+          "id": "router",
+          "name": "Router 1",
+          "description": "Route workflow",
+          "category": "blocks",
+          "color": "#28C43F"
+        },
+        "enabled": true
+      },
+      {
+        "id": "agent-a",
+        "position": {
+          "x": 800,
+          "y": -200
+        },
+        "config": {
+          "tool": "openai",
+          "params": {
+            "model": "gpt-5.1"
+          }
+        },
+        "inputs": {
+          "evaluationState": "string",
+          "evaluationQuestions": "json",
+          "messages": "json",
+          "files": "array",
+          "memoryType": "string",
+          "conversationId": "string",
+          "slidingWindowSize": "string",
+          "slidingWindowTokens": "string",
+          "model": "string",
+          "apiKey": "string",
+          "azureEndpoint": "string",
+          "azureApiVersion": "string",
+          "vertexCredential": "string",
+          "vertexProject": "string",
+          "vertexLocation": "string",
+          "bedrockAccessKeyId": "string",
+          "bedrockSecretKey": "string",
+          "bedrockRegion": "string",
+          "responseFormat": "json",
+          "temperature": "number",
+          "maxTokens": "number",
+          "reasoningEffort": "string",
+          "verbosity": "string",
+          "thinkingLevel": "string",
+          "promptCaching": "boolean",
+          "fallbackModels": "json",
+          "tools": "json",
+          "skills": "json"
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "metadata": {
+          "id": "agent",
+          "name": "Agent A",
+          "description": "Build an agent",
+          "category": "blocks",
+          "color": "var(--brand)"
+        },
+        "enabled": true
+      },
+      {
+        "id": "agent-b",
+        "position": {
+          "x": 1200,
+          "y": 100
+        },
+        "config": {
+          "tool": "openai",
+          "params": {
+            "model": "gpt-5.1"
+          }
+        },
+        "inputs": {
+          "evaluationState": "string",
+          "evaluationQuestions": "json",
+          "messages": "json",
+          "files": "array",
+          "memoryType": "string",
+          "conversationId": "string",
+          "slidingWindowSize": "string",
+          "slidingWindowTokens": "string",
+          "model": "string",
+          "apiKey": "string",
+          "azureEndpoint": "string",
+          "azureApiVersion": "string",
+          "vertexCredential": "string",
+          "vertexProject": "string",
+          "vertexLocation": "string",
+          "bedrockAccessKeyId": "string",
+          "bedrockSecretKey": "string",
+          "bedrockRegion": "string",
+          "responseFormat": "json",
+          "temperature": "number",
+          "maxTokens": "number",
+          "reasoningEffort": "string",
+          "verbosity": "string",
+          "thinkingLevel": "string",
+          "promptCaching": "boolean",
+          "fallbackModels": "json",
+          "tools": "json",
+          "skills": "json"
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "metadata": {
+          "id": "agent",
+          "name": "Agent B",
+          "description": "Build an agent",
+          "category": "blocks",
+          "color": "var(--brand)"
+        },
+        "enabled": true
+      },
+      {
+        "id": "function",
+        "position": {
+          "x": 1200,
+          "y": 300
+        },
+        "config": {
+          "tool": "function_execute",
+          "params": {
+            "language": "javascript",
+            "code": "return 1"
+          }
+        },
+        "inputs": {
+          "code": "string",
+          "language": "string",
+          "timeout": "number",
+          "sandboxId": "string",
+          "secretScope": "string",
+          "mountedSecrets": "json"
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "metadata": {
+          "id": "function",
+          "name": "Function 1",
+          "description": "Run custom logic",
+          "category": "blocks",
+          "color": "#FF402F"
+        },
+        "enabled": true
+      }
+    ],
+    "connections": [
+      {
+        "source": "start",
+        "target": "condition",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "condition",
+        "target": "agent-a",
+        "sourceHandle": "condition-c-if",
+        "targetHandle": "target"
+      },
+      {
+        "source": "condition",
+        "target": "router",
+        "sourceHandle": "condition-c-else-if",
+        "targetHandle": "target"
+      },
+      {
+        "source": "router",
+        "target": "agent-b",
+        "sourceHandle": "router-r-sales",
+        "targetHandle": "target"
+      },
+      {
+        "source": "router",
+        "target": "function",
+        "sourceHandle": "router-r-support",
+        "targetHandle": "target"
+      },
+      {
+        "source": "agent-a",
+        "target": "function",
+        "sourceHandle": "error",
+        "targetHandle": "target"
+      }
+    ],
+    "loops": {},
+    "parallels": {}
+  },
+  "serializedRequiredValidation": {
+    "ok": false,
+    "error": "Router 1 is missing required fields: API Key"
+  },
+  "deserialized": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          },
+          "inputFormat": {
+            "id": "inputFormat",
+            "type": "input-format",
+            "value": null
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "condition": {
+        "id": "condition",
+        "type": "condition",
+        "name": "Condition 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "conditions": {
+            "id": "conditions",
+            "type": "condition-input",
+            "value": "[{\"id\":\"c-if\",\"title\":\"if\",\"value\":\"<start.input> > 1\"},{\"id\":\"c-else-if\",\"title\":\"else if\",\"value\":\"<start.input> === 1\"},{\"id\":\"c-else\",\"title\":\"else\",\"value\":\"\"}]"
+          }
+        },
+        "outputs": {
+          "conditionResult": {
+            "type": "boolean",
+            "description": "Whether the selected branch's own test passed: true when an if/else-if condition matched, false when the else branch or no branch fired"
+          },
+          "selectedPath": {
+            "type": "json",
+            "description": "Selected execution path"
+          },
+          "selectedOption": {
+            "type": "string",
+            "description": "Selected condition option ID"
+          },
+          "selectedTitle": {
+            "type": "string",
+            "description": "Title of the selected branch (e.g. \"if\", \"else if\", \"else\"); null when no branch fired"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "router": {
+        "id": "router",
+        "type": "router",
+        "name": "Router 1",
+        "position": {
+          "x": 800,
+          "y": 200
+        },
+        "subBlocks": {
+          "prompt": {
+            "id": "prompt",
+            "type": "long-input",
+            "value": "Route the request: <start.input>"
+          },
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          },
+          "vertexCredential": {
+            "id": "vertexCredential",
+            "type": "oauth-input",
+            "value": null
+          },
+          "vertexManualCredential": {
+            "id": "vertexManualCredential",
+            "type": "short-input",
+            "value": null
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": null
+          },
+          "azureEndpoint": {
+            "id": "azureEndpoint",
+            "type": "short-input",
+            "value": null
+          },
+          "azureApiVersion": {
+            "id": "azureApiVersion",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexProject": {
+            "id": "vertexProject",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexLocation": {
+            "id": "vertexLocation",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockAccessKeyId": {
+            "id": "bedrockAccessKeyId",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockSecretKey": {
+            "id": "bedrockSecretKey",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockRegion": {
+            "id": "bedrockRegion",
+            "type": "short-input",
+            "value": null
+          },
+          "fallbackModels": {
+            "id": "fallbackModels",
+            "type": "model-fallback-list",
+            "value": null
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": null
+          },
+          "systemPrompt": {
+            "id": "systemPrompt",
+            "type": "code",
+            "value": "You are an intelligent routing agent responsible for directing workflow requests to the most appropriate block. Your task is to analyze the input and determine the single most suitable destination based on the request.\n\nKey Instructions:\n1. You MUST choose exactly ONE destination from the IDs of the blocks in the workflow. The destination must be a valid block id.\n\n2. Analysis Framework:\n   - Carefully evaluate the intent and requirements of the request\n   - Consider the primary action needed\n   - Match the core functionality with the most appropriate destination\n\nRouting Request: Route the request: <start.input>\n\nResponse Format:\nReturn ONLY the destination id as a single word, lowercase, no punctuation or explanation.\nExample: \"2acd9007-27e8-4510-a487-73d3b825e7c1\"\n\nRemember: Your response must be ONLY the block ID - no additional text, formatting, or explanation."
+          }
+        },
+        "outputs": {
+          "prompt": {
+            "type": "string",
+            "description": "Routing prompt used"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost information"
+          },
+          "selectedPath": {
+            "type": "json",
+            "description": "Selected routing path"
+          },
+          "selectedRoute": {
+            "type": "string",
+            "description": "Selected route ID"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "agent-a": {
+        "id": "agent-a",
+        "type": "agent",
+        "name": "Agent A",
+        "position": {
+          "x": 800,
+          "y": -200
+        },
+        "subBlocks": {
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": null
+          },
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          },
+          "vertexCredential": {
+            "id": "vertexCredential",
+            "type": "oauth-input",
+            "value": null
+          },
+          "vertexManualCredential": {
+            "id": "vertexManualCredential",
+            "type": "short-input",
+            "value": null
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": null
+          },
+          "azureEndpoint": {
+            "id": "azureEndpoint",
+            "type": "short-input",
+            "value": null
+          },
+          "azureApiVersion": {
+            "id": "azureApiVersion",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexProject": {
+            "id": "vertexProject",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexLocation": {
+            "id": "vertexLocation",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockAccessKeyId": {
+            "id": "bedrockAccessKeyId",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockSecretKey": {
+            "id": "bedrockSecretKey",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockRegion": {
+            "id": "bedrockRegion",
+            "type": "short-input",
+            "value": null
+          },
+          "evaluationState": {
+            "id": "evaluationState",
+            "type": "long-input",
+            "value": null
+          },
+          "evaluationQuestions": {
+            "id": "evaluationQuestions",
+            "type": "code",
+            "value": null
+          },
+          "attachmentFiles": {
+            "id": "attachmentFiles",
+            "type": "file-upload",
+            "value": null
+          },
+          "files": {
+            "id": "files",
+            "type": "short-input",
+            "value": null
+          },
+          "reasoningEffort": {
+            "id": "reasoningEffort",
+            "type": "combobox",
+            "value": null
+          },
+          "verbosity": {
+            "id": "verbosity",
+            "type": "combobox",
+            "value": null
+          },
+          "thinkingLevel": {
+            "id": "thinkingLevel",
+            "type": "combobox",
+            "value": null
+          },
+          "promptCaching": {
+            "id": "promptCaching",
+            "type": "switch",
+            "value": null
+          },
+          "tools": {
+            "id": "tools",
+            "type": "tool-input",
+            "value": null
+          },
+          "skills": {
+            "id": "skills",
+            "type": "skill-input",
+            "value": null
+          },
+          "memoryType": {
+            "id": "memoryType",
+            "type": "dropdown",
+            "value": null
+          },
+          "conversationId": {
+            "id": "conversationId",
+            "type": "short-input",
+            "value": null
+          },
+          "slidingWindowSize": {
+            "id": "slidingWindowSize",
+            "type": "short-input",
+            "value": null
+          },
+          "slidingWindowTokens": {
+            "id": "slidingWindowTokens",
+            "type": "short-input",
+            "value": null
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": null
+          },
+          "maxTokens": {
+            "id": "maxTokens",
+            "type": "short-input",
+            "value": null
+          },
+          "responseFormat": {
+            "id": "responseFormat",
+            "type": "code",
+            "value": null
+          },
+          "previousInteractionId": {
+            "id": "previousInteractionId",
+            "type": "short-input",
+            "value": null
+          },
+          "fallbackModels": {
+            "id": "fallbackModels",
+            "type": "model-fallback-list",
+            "value": null
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "agent-b": {
+        "id": "agent-b",
+        "type": "agent",
+        "name": "Agent B",
+        "position": {
+          "x": 1200,
+          "y": 100
+        },
+        "subBlocks": {
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": null
+          },
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          },
+          "vertexCredential": {
+            "id": "vertexCredential",
+            "type": "oauth-input",
+            "value": null
+          },
+          "vertexManualCredential": {
+            "id": "vertexManualCredential",
+            "type": "short-input",
+            "value": null
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": null
+          },
+          "azureEndpoint": {
+            "id": "azureEndpoint",
+            "type": "short-input",
+            "value": null
+          },
+          "azureApiVersion": {
+            "id": "azureApiVersion",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexProject": {
+            "id": "vertexProject",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexLocation": {
+            "id": "vertexLocation",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockAccessKeyId": {
+            "id": "bedrockAccessKeyId",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockSecretKey": {
+            "id": "bedrockSecretKey",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockRegion": {
+            "id": "bedrockRegion",
+            "type": "short-input",
+            "value": null
+          },
+          "evaluationState": {
+            "id": "evaluationState",
+            "type": "long-input",
+            "value": null
+          },
+          "evaluationQuestions": {
+            "id": "evaluationQuestions",
+            "type": "code",
+            "value": null
+          },
+          "attachmentFiles": {
+            "id": "attachmentFiles",
+            "type": "file-upload",
+            "value": null
+          },
+          "files": {
+            "id": "files",
+            "type": "short-input",
+            "value": null
+          },
+          "reasoningEffort": {
+            "id": "reasoningEffort",
+            "type": "combobox",
+            "value": null
+          },
+          "verbosity": {
+            "id": "verbosity",
+            "type": "combobox",
+            "value": null
+          },
+          "thinkingLevel": {
+            "id": "thinkingLevel",
+            "type": "combobox",
+            "value": null
+          },
+          "promptCaching": {
+            "id": "promptCaching",
+            "type": "switch",
+            "value": null
+          },
+          "tools": {
+            "id": "tools",
+            "type": "tool-input",
+            "value": null
+          },
+          "skills": {
+            "id": "skills",
+            "type": "skill-input",
+            "value": null
+          },
+          "memoryType": {
+            "id": "memoryType",
+            "type": "dropdown",
+            "value": null
+          },
+          "conversationId": {
+            "id": "conversationId",
+            "type": "short-input",
+            "value": null
+          },
+          "slidingWindowSize": {
+            "id": "slidingWindowSize",
+            "type": "short-input",
+            "value": null
+          },
+          "slidingWindowTokens": {
+            "id": "slidingWindowTokens",
+            "type": "short-input",
+            "value": null
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": null
+          },
+          "maxTokens": {
+            "id": "maxTokens",
+            "type": "short-input",
+            "value": null
+          },
+          "responseFormat": {
+            "id": "responseFormat",
+            "type": "code",
+            "value": null
+          },
+          "previousInteractionId": {
+            "id": "previousInteractionId",
+            "type": "short-input",
+            "value": null
+          },
+          "fallbackModels": {
+            "id": "fallbackModels",
+            "type": "model-fallback-list",
+            "value": null
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 1200,
+          "y": 300
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return 1"
+          },
+          "sandboxId": {
+            "id": "sandboxId",
+            "type": "combobox",
+            "value": null
+          },
+          "secretScope": {
+            "id": "secretScope",
+            "type": "dropdown",
+            "value": null
+          },
+          "mountedSecrets": {
+            "id": "mountedSecrets",
+            "type": "dropdown",
+            "value": null
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      }
+    },
+    "edges": [
+      {
+        "id": "7c5aa9cf-1583-485f-82e8-26229185ef6d",
+        "source": "start",
+        "target": "condition",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "4f39fbfc-af64-4a69-88b6-b8c49c2923a2",
+        "source": "condition",
+        "target": "agent-a",
+        "sourceHandle": "condition-c-if",
+        "targetHandle": "target"
+      },
+      {
+        "id": "e12f2fc7-e336-4c38-b171-c5d8e0ddd715",
+        "source": "condition",
+        "target": "router",
+        "sourceHandle": "condition-c-else-if",
+        "targetHandle": "target"
+      },
+      {
+        "id": "a701b970-9c8c-4ac4-98a7-d03521126c35",
+        "source": "router",
+        "target": "agent-b",
+        "sourceHandle": "router-r-sales",
+        "targetHandle": "target"
+      },
+      {
+        "id": "b9ff8f2e-31ba-4cd3-84bf-d2d98409bfb8",
+        "source": "router",
+        "target": "function",
+        "sourceHandle": "router-r-support",
+        "targetHandle": "target"
+      },
+      {
+        "id": "33983425-0756-48bb-8de8-4a812af5c337",
+        "source": "agent-a",
+        "target": "function",
+        "sourceHandle": "error",
+        "targetHandle": "target"
+      }
+    ]
+  },
+  "loops": {},
+  "parallels": {},
+  "fieldIssues": {
+    "agent-a": {
+      "params": {
+        "model": "gpt-5.1"
+      },
+      "issues": {
+        "missingRequiredFields": [
+          "API Key"
+        ],
+        "inactiveModeValues": []
+      }
+    },
+    "agent-b": {
+      "params": {
+        "model": "gpt-5.1"
+      },
+      "issues": {
+        "missingRequiredFields": [
+          "API Key"
+        ],
+        "inactiveModeValues": []
+      }
+    },
+    "condition": {
+      "params": {
+        "conditions": "[{\"id\":\"c-if\",\"title\":\"if\",\"value\":\"<start.input> > 1\"},{\"id\":\"c-else-if\",\"title\":\"else if\",\"value\":\"<start.input> === 1\"},{\"id\":\"c-else\",\"title\":\"else\",\"value\":\"\"}]"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "function": {
+      "params": {
+        "language": "javascript",
+        "code": "return 1"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "router": {
+      "params": {
+        "prompt": "Route the request: <start.input>",
+        "model": "gpt-5.1",
+        "systemPrompt": "You are an intelligent routing agent responsible for directing workflow requests to the most appropriate block. Your task is to analyze the input and determine the single most suitable destination based on the request.\n\nKey Instructions:\n1. You MUST choose exactly ONE destination from the IDs of the blocks in the workflow. The destination must be a valid block id.\n\n2. Analysis Framework:\n   - Carefully evaluate the intent and requirements of the request\n   - Consider the primary action needed\n   - Match the core functionality with the most appropriate destination\n\nRouting Request: Route the request: <start.input>\n\nResponse Format:\nReturn ONLY the destination id as a single word, lowercase, no punctuation or explanation.\nExample: \"2acd9007-27e8-4510-a487-73d3b825e7c1\"\n\nRemember: Your response must be ONLY the block ID - no additional text, formatting, or explanation."
+      },
+      "issues": {
+        "missingRequiredFields": [
+          "API Key"
+        ],
+        "inactiveModeValues": []
+      }
+    },
+    "start": {
+      "params": {
+        "startWorkflow": "manual"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    }
+  },
+  "diff": {
+    "proposed": {
+      "blocks": {
+        "start": {
+          "id": "start",
+          "type": "starter",
+          "name": "Start",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "subBlocks": {
+            "startWorkflow": {
+              "id": "startWorkflow",
+              "type": "dropdown",
+              "value": "manual"
+            }
+          },
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "condition": {
+          "id": "condition",
+          "type": "condition",
+          "name": "Condition 1",
+          "position": {
+            "x": 400,
+            "y": 0
+          },
+          "subBlocks": {
+            "conditions": {
+              "id": "conditions",
+              "type": "condition-input",
+              "value": "[{\"id\":\"c-if\",\"title\":\"if\",\"value\":\"<start.input> > 10\"},{\"id\":\"c-else\",\"title\":\"else\",\"value\":\"\"}]",
+              "is_diff": "changed"
+            }
+          },
+          "outputs": {
+            "conditionResult": {
+              "type": "boolean",
+              "description": "Whether the selected branch's own test passed: true when an if/else-if condition matched, false when the else branch or no branch fired"
+            },
+            "selectedPath": {
+              "type": "json",
+              "description": "Selected execution path"
+            },
+            "selectedOption": {
+              "type": "string",
+              "description": "Selected condition option ID"
+            },
+            "selectedTitle": {
+              "type": "string",
+              "description": "Title of the selected branch (e.g. \"if\", \"else if\", \"else\"); null when no branch fired"
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "router": {
+          "id": "router",
+          "type": "router",
+          "name": "Router 1",
+          "position": {
+            "x": 800,
+            "y": 200
+          },
+          "subBlocks": {
+            "prompt": {
+              "id": "prompt",
+              "type": "long-input",
+              "value": "Route the request: <start.input>"
+            },
+            "model": {
+              "id": "model",
+              "type": "combobox",
+              "value": "gpt-5.1"
+            },
+            "routes": {
+              "id": "routes",
+              "type": "short-input",
+              "value": "[{\"id\":\"r-sales\",\"title\":\"sales\",\"value\":\"Questions about pricing\"},{\"id\":\"r-support\",\"title\":\"support\",\"value\":\"Bug reports\"}]"
+            }
+          },
+          "outputs": {
+            "prompt": {
+              "type": "string",
+              "description": "Routing prompt used"
+            },
+            "model": {
+              "type": "string",
+              "description": "Model used"
+            },
+            "tokens": {
+              "type": "json",
+              "description": "Token usage"
+            },
+            "cost": {
+              "type": "json",
+              "description": "Cost information"
+            },
+            "selectedPath": {
+              "type": "json",
+              "description": "Selected routing path"
+            },
+            "selectedRoute": {
+              "type": "string",
+              "description": "Selected route ID"
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "agent-a": {
+          "id": "agent-a",
+          "type": "agent",
+          "name": "Agent A",
+          "position": {
+            "x": 800,
+            "y": -200
+          },
+          "subBlocks": {
+            "model": {
+              "id": "model",
+              "type": "combobox",
+              "value": "gpt-5.1"
+            }
+          },
+          "outputs": {
+            "answers": {
+              "type": "json",
+              "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+              "condition": {
+                "field": "model",
+                "value": [
+                  "jev-latest",
+                  "jev-1.13.0",
+                  "jev-preview"
+                ],
+                "allowReference": true
+              }
+            },
+            "content": {
+              "type": "string",
+              "description": "Generated response content"
+            },
+            "model": {
+              "type": "string",
+              "description": "Model used for generation"
+            },
+            "tokens": {
+              "type": "json",
+              "description": "Token usage statistics"
+            },
+            "toolCalls": {
+              "type": "json",
+              "description": "Tool calls made"
+            },
+            "providerTiming": {
+              "type": "json",
+              "description": "Provider timing information"
+            },
+            "cost": {
+              "type": "json",
+              "description": "Cost of the API call"
+            },
+            "interactionId": {
+              "type": "string",
+              "description": "Interaction ID for multi-turn deep research follow-ups",
+              "condition": {
+                "field": "model",
+                "value": [
+                  "deep-research-pro-preview-12-2025",
+                  "vertex/deep-research-pro-preview-12-2025"
+                ]
+              }
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "agent-b": {
+          "id": "agent-b",
+          "type": "agent",
+          "name": "Agent B",
+          "position": {
+            "x": 1200,
+            "y": 100
+          },
+          "subBlocks": {
+            "model": {
+              "id": "model",
+              "type": "combobox",
+              "value": "gpt-5.1"
+            }
+          },
+          "outputs": {
+            "answers": {
+              "type": "json",
+              "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+              "condition": {
+                "field": "model",
+                "value": [
+                  "jev-latest",
+                  "jev-1.13.0",
+                  "jev-preview"
+                ],
+                "allowReference": true
+              }
+            },
+            "content": {
+              "type": "string",
+              "description": "Generated response content"
+            },
+            "model": {
+              "type": "string",
+              "description": "Model used for generation"
+            },
+            "tokens": {
+              "type": "json",
+              "description": "Token usage statistics"
+            },
+            "toolCalls": {
+              "type": "json",
+              "description": "Tool calls made"
+            },
+            "providerTiming": {
+              "type": "json",
+              "description": "Provider timing information"
+            },
+            "cost": {
+              "type": "json",
+              "description": "Cost of the API call"
+            },
+            "interactionId": {
+              "type": "string",
+              "description": "Interaction ID for multi-turn deep research follow-ups",
+              "condition": {
+                "field": "model",
+                "value": [
+                  "deep-research-pro-preview-12-2025",
+                  "vertex/deep-research-pro-preview-12-2025"
+                ]
+              }
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "function": {
+          "id": "function",
+          "type": "function",
+          "name": "Function 1",
+          "position": {
+            "x": 1200,
+            "y": 300
+          },
+          "subBlocks": {
+            "language": {
+              "id": "language",
+              "type": "dropdown",
+              "value": "javascript"
+            },
+            "code": {
+              "id": "code",
+              "type": "code",
+              "value": "return 1"
+            }
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "edge-start-source-condition-target",
+          "source": "start",
+          "target": "condition",
+          "sourceHandle": "source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-condition-condition-c-if-agent-a-target",
+          "source": "condition",
+          "target": "agent-a",
+          "sourceHandle": "condition-c-if",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-router-router-r-sales-agent-b-target",
+          "source": "router",
+          "target": "agent-b",
+          "sourceHandle": "router-r-sales",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-router-router-r-support-function-target",
+          "source": "router",
+          "target": "function",
+          "sourceHandle": "router-r-support",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-agent-a-error-function-target",
+          "source": "agent-a",
+          "target": "function",
+          "sourceHandle": "error",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        }
+      ],
+      "loops": {},
+      "parallels": {}
+    },
+    "result": {
+      "success": true,
+      "diff": {
+        "proposedState": {
+          "blocks": {
+            "start": {
+              "id": "start",
+              "type": "starter",
+              "name": "Start",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "subBlocks": {
+                "startWorkflow": {
+                  "id": "startWorkflow",
+                  "type": "dropdown",
+                  "value": "manual"
+                }
+              },
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            },
+            "condition": {
+              "id": "condition",
+              "type": "condition",
+              "name": "Condition 1",
+              "position": {
+                "x": 400,
+                "y": 0
+              },
+              "subBlocks": {
+                "conditions": {
+                  "id": "conditions",
+                  "type": "condition-input",
+                  "value": "[{\"id\":\"c-if\",\"title\":\"if\",\"value\":\"<start.input> > 10\"},{\"id\":\"c-else\",\"title\":\"else\",\"value\":\"\"}]",
+                  "is_diff": "changed"
+                }
+              },
+              "outputs": {
+                "conditionResult": {
+                  "type": "boolean",
+                  "description": "Whether the selected branch's own test passed: true when an if/else-if condition matched, false when the else branch or no branch fired"
+                },
+                "selectedPath": {
+                  "type": "json",
+                  "description": "Selected execution path"
+                },
+                "selectedOption": {
+                  "type": "string",
+                  "description": "Selected condition option ID"
+                },
+                "selectedTitle": {
+                  "type": "string",
+                  "description": "Title of the selected branch (e.g. \"if\", \"else if\", \"else\"); null when no branch fired"
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              },
+              "is_diff": "edited"
+            },
+            "router": {
+              "id": "router",
+              "type": "router",
+              "name": "Router 1",
+              "position": {
+                "x": 800,
+                "y": 200
+              },
+              "subBlocks": {
+                "prompt": {
+                  "id": "prompt",
+                  "type": "long-input",
+                  "value": "Route the request: <start.input>"
+                },
+                "model": {
+                  "id": "model",
+                  "type": "combobox",
+                  "value": "gpt-5.1"
+                },
+                "routes": {
+                  "id": "routes",
+                  "type": "short-input",
+                  "value": "[{\"id\":\"r-sales\",\"title\":\"sales\",\"value\":\"Questions about pricing\"},{\"id\":\"r-support\",\"title\":\"support\",\"value\":\"Bug reports\"}]"
+                }
+              },
+              "outputs": {
+                "prompt": {
+                  "type": "string",
+                  "description": "Routing prompt used"
+                },
+                "model": {
+                  "type": "string",
+                  "description": "Model used"
+                },
+                "tokens": {
+                  "type": "json",
+                  "description": "Token usage"
+                },
+                "cost": {
+                  "type": "json",
+                  "description": "Cost information"
+                },
+                "selectedPath": {
+                  "type": "json",
+                  "description": "Selected routing path"
+                },
+                "selectedRoute": {
+                  "type": "string",
+                  "description": "Selected route ID"
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            },
+            "agent-a": {
+              "id": "agent-a",
+              "type": "agent",
+              "name": "Agent A",
+              "position": {
+                "x": 830,
+                "y": -200
+              },
+              "subBlocks": {
+                "model": {
+                  "id": "model",
+                  "type": "combobox",
+                  "value": "gpt-5.1"
+                }
+              },
+              "outputs": {
+                "answers": {
+                  "type": "json",
+                  "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+                  "condition": {
+                    "field": "model",
+                    "value": [
+                      "jev-latest",
+                      "jev-1.13.0",
+                      "jev-preview"
+                    ],
+                    "allowReference": true
+                  }
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Generated response content"
+                },
+                "model": {
+                  "type": "string",
+                  "description": "Model used for generation"
+                },
+                "tokens": {
+                  "type": "json",
+                  "description": "Token usage statistics"
+                },
+                "toolCalls": {
+                  "type": "json",
+                  "description": "Tool calls made"
+                },
+                "providerTiming": {
+                  "type": "json",
+                  "description": "Provider timing information"
+                },
+                "cost": {
+                  "type": "json",
+                  "description": "Cost of the API call"
+                },
+                "interactionId": {
+                  "type": "string",
+                  "description": "Interaction ID for multi-turn deep research follow-ups",
+                  "condition": {
+                    "field": "model",
+                    "value": [
+                      "deep-research-pro-preview-12-2025",
+                      "vertex/deep-research-pro-preview-12-2025"
+                    ]
+                  }
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            },
+            "agent-b": {
+              "id": "agent-b",
+              "type": "agent",
+              "name": "Agent B",
+              "position": {
+                "x": 1200,
+                "y": 100
+              },
+              "subBlocks": {
+                "model": {
+                  "id": "model",
+                  "type": "combobox",
+                  "value": "gpt-5.1"
+                }
+              },
+              "outputs": {
+                "answers": {
+                  "type": "json",
+                  "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+                  "condition": {
+                    "field": "model",
+                    "value": [
+                      "jev-latest",
+                      "jev-1.13.0",
+                      "jev-preview"
+                    ],
+                    "allowReference": true
+                  }
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Generated response content"
+                },
+                "model": {
+                  "type": "string",
+                  "description": "Model used for generation"
+                },
+                "tokens": {
+                  "type": "json",
+                  "description": "Token usage statistics"
+                },
+                "toolCalls": {
+                  "type": "json",
+                  "description": "Tool calls made"
+                },
+                "providerTiming": {
+                  "type": "json",
+                  "description": "Provider timing information"
+                },
+                "cost": {
+                  "type": "json",
+                  "description": "Cost of the API call"
+                },
+                "interactionId": {
+                  "type": "string",
+                  "description": "Interaction ID for multi-turn deep research follow-ups",
+                  "condition": {
+                    "field": "model",
+                    "value": [
+                      "deep-research-pro-preview-12-2025",
+                      "vertex/deep-research-pro-preview-12-2025"
+                    ]
+                  }
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            },
+            "function": {
+              "id": "function",
+              "type": "function",
+              "name": "Function 1",
+              "position": {
+                "x": 1260,
+                "y": 300
+              },
+              "subBlocks": {
+                "language": {
+                  "id": "language",
+                  "type": "dropdown",
+                  "value": "javascript"
+                },
+                "code": {
+                  "id": "code",
+                  "type": "code",
+                  "value": "return 1"
+                }
+              },
+              "outputs": {
+                "result": {
+                  "type": "json",
+                  "description": "Structured result emitted by the executed code"
+                },
+                "stdout": {
+                  "type": "string",
+                  "description": "Console log output and debug messages from function execution"
+                },
+                "files": {
+                  "type": "file[]",
+                  "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            }
+          },
+          "edges": [
+            {
+              "id": "0c71617e-1024-4e24-bd7b-22845a33f10c",
+              "source": "start",
+              "target": "condition",
+              "sourceHandle": "source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "10223c4c-bfd4-43fc-8cc2-169cd6e2fcb7",
+              "source": "condition",
+              "target": "agent-a",
+              "sourceHandle": "condition-c-if",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "dac41a3f-c494-4723-94df-f4fd76c1da0b",
+              "source": "router",
+              "target": "agent-b",
+              "sourceHandle": "router-r-sales",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "d9cddce9-568b-4d2d-9bfd-496c68b1452a",
+              "source": "router",
+              "target": "function",
+              "sourceHandle": "router-r-support",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "45e5de6b-2f59-4526-bb21-1090a49f573b",
+              "source": "agent-a",
+              "target": "function",
+              "sourceHandle": "error",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            }
+          ],
+          "loops": {},
+          "parallels": {},
+          "lastSaved": 1792576837620
+        },
+        "diffAnalysis": {
+          "new_blocks": [],
+          "edited_blocks": [
+            "condition"
+          ],
+          "deleted_blocks": [],
+          "field_diffs": {
+            "condition": {
+              "changed_fields": [
+                "conditions"
+              ],
+              "unchanged_fields": [
+                "type",
+                "name",
+                "enabled",
+                "triggerMode",
+                "horizontalHandles",
+                "parentId"
+              ]
+            }
+          },
+          "edge_diff": {
+            "new_edges": [],
+            "deleted_edges": [
+              "condition-condition-c-else-if-router-target"
+            ],
+            "unchanged_edges": [
+              "start-source-condition-target",
+              "condition-condition-c-if-agent-a-target",
+              "router-router-r-sales-agent-b-target",
+              "router-router-r-support-function-target",
+              "agent-a-error-function-target"
+            ]
+          }
+        },
+        "metadata": {
+          "source": "workflow_state",
+          "timestamp": 1792576837623
+        }
+      }
+    }
+  }
+}

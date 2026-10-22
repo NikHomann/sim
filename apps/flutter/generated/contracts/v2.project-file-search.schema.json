@@ -1,0 +1,202 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/project-file-search.ts",
+  "contracts": {
+    "v2SearchProjectFileContentContract": {
+      "method": "GET",
+      "path": "/api/v2/projects/[projectId]/files/search",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "projectId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Project identifier."
+          }
+        },
+        "required": [
+          "projectId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "query": {
+            "type": "string",
+            "description": "Regular expression, or exact text when `mode` is `exact`.",
+            "minLength": 3,
+            "maxLength": 512
+          },
+          "mode": {
+            "default": "regex",
+            "description": "How `query` is read.",
+            "type": "string",
+            "enum": [
+              "exact",
+              "regex"
+            ]
+          },
+          "maxResults": {
+            "default": 50,
+            "description": "Maximum matching lines to return.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 200
+          },
+          "folderPaths": {
+            "description": "Comma-separated folder paths within the Project. Omit to search the entire Project; index coverage applies to the selected folders.",
+            "type": "string"
+          },
+          "includeSubfolders": {
+            "description": "Whether the scope descends into nested folders. Absent means yes. The listed spellings are the whole accepted vocabulary and are case-sensitive; any other value is rejected.",
+            "enum": [
+              "true",
+              "1",
+              "yes",
+              "on",
+              "y",
+              "enabled",
+              "false",
+              "0",
+              "no",
+              "off",
+              "n",
+              "disabled"
+            ],
+            "type": "string"
+          }
+        },
+        "required": [
+          "query"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2FileSearchResults"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2FileSearchResults": {
+              "type": "object",
+              "properties": {
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "fileId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "pattern": "^[A-Za-z0-9_-]+$",
+                        "description": "File the line belongs to."
+                      },
+                      "lineNumber": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991,
+                        "description": "1-based line the match sits on."
+                      },
+                      "text": {
+                        "type": "string",
+                        "description": "The matching line."
+                      }
+                    },
+                    "required": [
+                      "fileId",
+                      "lineNumber",
+                      "text"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Matching lines, one entry per line."
+                },
+                "count": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of results returned."
+                },
+                "truncated": {
+                  "type": "boolean",
+                  "description": "True when more matches exist beyond `maxResults`."
+                },
+                "complete": {
+                  "type": "boolean",
+                  "description": "True when no files in the searched scope have pending or failed indexing. Missing matches remain inconclusive unless this is true and both `indexStatus.skippedFiles` and `indexStatus.partialFiles` are zero."
+                },
+                "indexStatus": {
+                  "type": "object",
+                  "properties": {
+                    "readyFiles": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Files whose current revision is indexed and searchable."
+                    },
+                    "pendingFiles": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Files not yet indexed at their current revision. Their content was not searched."
+                    },
+                    "failedFiles": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Files whose indexing failed. Their content was not searched."
+                    },
+                    "skippedFiles": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Files deliberately not indexed, such as binaries and files above the size ceiling."
+                    },
+                    "partialFiles": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Files indexed only in part, so matches beyond the indexed portion are not found."
+                    }
+                  },
+                  "required": [
+                    "readyFiles",
+                    "pendingFiles",
+                    "failedFiles",
+                    "skippedFiles",
+                    "partialFiles"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Index coverage across the searched scope."
+                }
+              },
+              "required": [
+                "results",
+                "count",
+                "truncated",
+                "complete",
+                "indexStatus"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileSearchResults",
+              "title": "File search results",
+              "description": "Matching lines from indexed workspace file content, with index coverage."
+            }
+          }
+        }
+      }
+    }
+  }
+}

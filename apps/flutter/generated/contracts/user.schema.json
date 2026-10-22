@@ -1,0 +1,1209 @@
+{
+  "source": "apps/sim/lib/api/contracts/user.ts",
+  "contracts": {
+    "deleteAccountContract": {
+      "method": "POST",
+      "path": "/api/users/me/deletion",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "confirmEmail": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 320
+          }
+        },
+        "required": [
+          "confirmEmail"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "exportUsageLogsContract": {
+      "method": "GET",
+      "path": "/api/users/me/usage-logs/export",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "workflow",
+              "wand",
+              "sim-chat",
+              "mcp_copilot",
+              "mothership_block",
+              "knowledge-base",
+              "voice-input",
+              "enrichment",
+              "voice-output",
+              "api-tool"
+            ]
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "period": {
+            "default": "30d",
+            "type": "string",
+            "enum": [
+              "1d",
+              "7d",
+              "30d",
+              "all",
+              "custom"
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "minLength": 1
+          },
+          "endDate": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "text"
+      }
+    },
+    "forgetPasswordContract": {
+      "method": "POST",
+      "path": "/api/auth/forget-password",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "redirectTo": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "string",
+                "const": ""
+              }
+            ]
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getAccountDeletionPlanContract": {
+      "method": "GET",
+      "path": "/api/users/me/deletion",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "plan": {
+              "type": "object",
+              "properties": {
+                "blockers": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "enum": [
+                          "paid_organization_owner",
+                          "organization_member",
+                          "active_subscription",
+                          "shared_workspace",
+                          "organization_workspace",
+                          "data_drain_owner",
+                          "project_lifecycle"
+                        ]
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "workspacesToDelete": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "workspacesToTransfer": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "blockers",
+                "workspacesToDelete",
+                "workspacesToTransfer"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "plan"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getUsageLogsContract": {
+      "method": "GET",
+      "path": "/api/users/me/usage-logs",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "string",
+            "enum": [
+              "workflow",
+              "wand",
+              "sim-chat",
+              "mcp_copilot",
+              "mothership_block",
+              "knowledge-base",
+              "voice-input",
+              "enrichment",
+              "voice-output",
+              "api-tool"
+            ]
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "period": {
+            "default": "30d",
+            "type": "string",
+            "enum": [
+              "1d",
+              "7d",
+              "30d",
+              "all",
+              "custom"
+            ]
+          },
+          "startDate": {
+            "type": "string",
+            "minLength": 1
+          },
+          "endDate": {
+            "type": "string",
+            "minLength": 1
+          },
+          "limit": {
+            "default": 50,
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "includeCredits": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "logs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string",
+                    "enum": [
+                      "workflow",
+                      "wand",
+                      "sim-chat",
+                      "mcp_copilot",
+                      "mothership_block",
+                      "knowledge-base",
+                      "voice-input",
+                      "enrichment",
+                      "voice-output",
+                      "api-tool"
+                    ]
+                  },
+                  "workflowName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "creditCost": {
+                    "type": "number"
+                  },
+                  "hasCost": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "createdAt",
+                  "source",
+                  "workflowName",
+                  "creditCost",
+                  "hasCost"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "summary": {
+              "type": "object",
+              "properties": {
+                "totalCredits": {
+                  "type": "number"
+                },
+                "bySourceCredits": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "number"
+                  }
+                }
+              },
+              "required": [
+                "totalCredits",
+                "bySourceCredits"
+              ],
+              "additionalProperties": false
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "nextCursor": {
+                  "type": "string"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "hasMore"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "logs",
+            "summary",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getUserProfileContract": {
+      "method": "GET",
+      "path": "/api/users/me/profile",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "image": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "emailVerified": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "email",
+                "image"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "user"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getUserSettingsContract": {
+      "method": "GET",
+      "path": "/api/users/me/settings",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "theme": {
+                  "default": "system",
+                  "type": "string",
+                  "enum": [
+                    "system",
+                    "light",
+                    "dark"
+                  ]
+                },
+                "autoConnect": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "telemetryEnabled": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "emailPreferences": {
+                  "default": {},
+                  "type": "object",
+                  "properties": {
+                    "unsubscribeAll": {
+                      "type": "boolean"
+                    },
+                    "unsubscribeMarketing": {
+                      "type": "boolean"
+                    },
+                    "unsubscribeUpdates": {
+                      "type": "boolean"
+                    },
+                    "unsubscribeNotifications": {
+                      "type": "boolean"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "billingUsageNotificationsEnabled": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "superUserModeEnabled": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "mothershipEnvironment": {
+                  "default": "default",
+                  "type": "string",
+                  "enum": [
+                    "default",
+                    "dev",
+                    "staging",
+                    "prod"
+                  ]
+                },
+                "errorNotificationsEnabled": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "snapToGridSize": {
+                  "default": 0,
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 50
+                },
+                "showActionBar": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "autoFocusOnClick": {
+                  "default": true,
+                  "type": "boolean"
+                },
+                "copilotAutoAllowedTools": {
+                  "default": [],
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "timezone": {
+                  "default": null,
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastActiveWorkspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "theme",
+                "autoConnect",
+                "telemetryEnabled",
+                "emailPreferences",
+                "billingUsageNotificationsEnabled",
+                "superUserModeEnabled",
+                "mothershipEnvironment",
+                "errorNotificationsEnabled",
+                "snapToGridSize",
+                "showActionBar",
+                "autoFocusOnClick",
+                "copilotAutoAllowedTools",
+                "timezone"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listAuthorizedAppsContract": {
+      "method": "GET",
+      "path": "/api/users/me/authorized-apps",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "search": {
+            "type": "string",
+            "maxLength": 200
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "apps": {
+              "maxItems": 25,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "clientId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "scopes": {
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    }
+                  },
+                  "authorizedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                  }
+                },
+                "required": [
+                  "clientId",
+                  "name",
+                  "scopes",
+                  "authorizedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "apps",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "resetPasswordContract": {
+      "method": "POST",
+      "path": "/api/auth/reset-password",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "newPassword": {
+            "type": "string",
+            "minLength": 8,
+            "maxLength": 100,
+            "allOf": [
+              {
+                "pattern": "[A-Z]"
+              },
+              {
+                "pattern": "[a-z]"
+              },
+              {
+                "pattern": "[0-9]"
+              },
+              {
+                "pattern": "[^A-Za-z0-9]"
+              }
+            ]
+          }
+        },
+        "required": [
+          "token",
+          "newPassword"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "revokeAuthorizedAppContract": {
+      "method": "DELETE",
+      "path": "/api/users/me/authorized-apps/[clientId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "clientId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "subscriptionTransferContract": {
+      "method": "POST",
+      "path": "/api/users/me/subscription/[id]/transfer",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "unsubscribeFormContract": {
+      "method": "POST",
+      "path": "/api/users/me/settings/unsubscribe",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email",
+          "token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "all",
+                "marketing",
+                "updates",
+                "notifications"
+              ]
+            },
+            "emailType": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message",
+            "email",
+            "type",
+            "emailType"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "unsubscribeGetContract": {
+      "method": "GET",
+      "path": "/api/users/me/settings/unsubscribe",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "minLength": 1
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email",
+          "token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "email": {
+              "type": "string"
+            },
+            "token": {
+              "type": "string"
+            },
+            "emailType": {
+              "type": "string"
+            },
+            "isTransactional": {
+              "type": "boolean"
+            },
+            "currentPreferences": {
+              "type": "object",
+              "properties": {
+                "unsubscribeAll": {
+                  "type": "boolean"
+                },
+                "unsubscribeMarketing": {
+                  "type": "boolean"
+                },
+                "unsubscribeUpdates": {
+                  "type": "boolean"
+                },
+                "unsubscribeNotifications": {
+                  "type": "boolean"
+                }
+              },
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "email",
+            "token",
+            "emailType",
+            "isTransactional",
+            "currentPreferences"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "unsubscribePostContract": {
+      "method": "POST",
+      "path": "/api/users/me/settings/unsubscribe",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "type": {
+            "default": "all",
+            "type": "string",
+            "enum": [
+              "all",
+              "marketing",
+              "updates",
+              "notifications"
+            ]
+          }
+        },
+        "required": [
+          "email",
+          "token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            },
+            "email": {
+              "type": "string"
+            },
+            "type": {
+              "type": "string",
+              "enum": [
+                "all",
+                "marketing",
+                "updates",
+                "notifications"
+              ]
+            },
+            "emailType": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message",
+            "email",
+            "type",
+            "emailType"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateUserProfileContract": {
+      "method": "PATCH",
+      "path": "/api/users/me/profile",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "image": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "user": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "image": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "emailVerified": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "email",
+                "image"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "user"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateUserSettingsContract": {
+      "method": "PATCH",
+      "path": "/api/users/me/settings",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "theme": {
+            "type": "string",
+            "enum": [
+              "system",
+              "light",
+              "dark"
+            ]
+          },
+          "autoConnect": {
+            "type": "boolean"
+          },
+          "telemetryEnabled": {
+            "type": "boolean"
+          },
+          "emailPreferences": {
+            "type": "object",
+            "properties": {
+              "unsubscribeAll": {
+                "type": "boolean"
+              },
+              "unsubscribeMarketing": {
+                "type": "boolean"
+              },
+              "unsubscribeUpdates": {
+                "type": "boolean"
+              },
+              "unsubscribeNotifications": {
+                "type": "boolean"
+              }
+            }
+          },
+          "billingUsageNotificationsEnabled": {
+            "type": "boolean"
+          },
+          "superUserModeEnabled": {
+            "type": "boolean"
+          },
+          "mothershipEnvironment": {
+            "type": "string",
+            "enum": [
+              "default",
+              "dev",
+              "staging",
+              "prod"
+            ]
+          },
+          "errorNotificationsEnabled": {
+            "type": "boolean"
+          },
+          "snapToGridSize": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "showActionBar": {
+            "type": "boolean"
+          },
+          "autoFocusOnClick": {
+            "type": "boolean"
+          },
+          "copilotAutoAllowedTools": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "timezone": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "lastActiveWorkspaceId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,81 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-get-template.ts",
+  "contracts": {
+    "awsCloudformationGetTemplateContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/get-template",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stackName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateStage": {
+            "type": "string",
+            "enum": [
+              "Original",
+              "Processed"
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "stackName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "templateBody": {
+                  "type": "string"
+                },
+                "stagesAvailable": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "templateBody",
+                "stagesAvailable"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

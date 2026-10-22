@@ -1,0 +1,64 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/sqs-cancel-message-move-task.ts",
+  "contracts": {
+    "awsSqsCancelMessageMoveTaskContract": {
+      "method": "POST",
+      "path": "/api/tools/sqs/cancel-message-move-task",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "taskHandle": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "taskHandle"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "approximateNumberOfMessagesMoved": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "approximateNumberOfMessagesMoved"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

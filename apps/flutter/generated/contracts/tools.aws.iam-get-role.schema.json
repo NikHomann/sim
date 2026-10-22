@@ -1,0 +1,133 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/iam-get-role.ts",
+  "contracts": {
+    "awsIamGetRoleContract": {
+      "method": "POST",
+      "path": "/api/tools/iam/get-role",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "roleName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[\\w+=,.@-]+$"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "roleName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "roleName": {
+              "type": "string"
+            },
+            "roleId": {
+              "type": "string"
+            },
+            "arn": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "createDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "maxSessionDuration": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "assumeRolePolicyDocument": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "roleLastUsedDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "roleLastUsedRegion": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "roleName",
+            "roleId",
+            "arn",
+            "path",
+            "createDate",
+            "description",
+            "maxSessionDuration",
+            "assumeRolePolicyDocument",
+            "roleLastUsedDate",
+            "roleLastUsedRegion"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

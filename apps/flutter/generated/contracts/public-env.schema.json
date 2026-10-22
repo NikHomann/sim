@@ -1,0 +1,23 @@
+{
+  "source": "apps/sim/lib/api/contracts/public-env.ts",
+  "contracts": {
+    "getPublicEnvContract": {
+      "method": "GET",
+      "path": "/api/public-env",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "propertyNames": {
+            "type": "string",
+            "pattern": "^NEXT_PUBLIC_"
+          },
+          "additionalProperties": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

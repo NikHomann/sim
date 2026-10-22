@@ -1,0 +1,105 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/s3-copy-object.ts",
+  "contracts": {
+    "awsS3CopyObjectContract": {
+      "method": "POST",
+      "path": "/api/tools/s3/copy-object",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceBucket": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "destinationBucket": {
+            "type": "string",
+            "minLength": 1
+          },
+          "destinationKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "acl": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessKeyId",
+          "secretAccessKey",
+          "region",
+          "sourceBucket",
+          "sourceKey",
+          "destinationBucket",
+          "destinationKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string"
+                },
+                "uri": {
+                  "type": "string"
+                },
+                "copySourceVersionId": {
+                  "type": "string"
+                },
+                "versionId": {
+                  "type": "string"
+                },
+                "etag": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "url",
+                "uri"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1233 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/logs.ts",
+  "contracts": {
+    "v2GetLogContract": {
+      "method": "GET",
+      "path": "/api/v2/logs/[runId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "runId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "description": "Unique workflow run identifier."
+          }
+        },
+        "required": [
+          "runId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "includeWorkflowState": {
+            "description": "Include the saved workflow snapshot (default: true). Set false to omit block configuration from a log read. Other run fields are unchanged.",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "id": "GetLogQuery",
+        "title": "Execution log detail options",
+        "description": "Controls whether a log detail read includes its saved workflow snapshot."
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2LogDetail"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2LogFile": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier to address this file by on the download endpoint."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "File name, including its extension."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "File size in bytes."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type recorded for the file."
+                },
+                "downloadPath": {
+                  "type": "string",
+                  "description": "Path to fetch this file's bytes from, relative to the API host."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "size",
+                "type",
+                "downloadPath"
+              ],
+              "additionalProperties": false,
+              "id": "V2LogFile",
+              "title": "Execution log file",
+              "description": "A file produced by the run this log records."
+            },
+            "LogTraceSpan": {
+              "id": "LogTraceSpan",
+              "title": "Log trace span",
+              "description": "One recursive operation span in a workflow execution trace.",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Trace-span identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Trace-span name."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Trace-span category."
+                },
+                "duration": {
+                  "type": "number",
+                  "description": "Current trace-span duration in milliseconds."
+                },
+                "durationMs": {
+                  "type": "number",
+                  "description": "Compatibility field for span duration in milliseconds. Read `duration` for current trace spans."
+                },
+                "startTime": {
+                  "type": "string",
+                  "description": "ISO 8601 span start timestamp."
+                },
+                "endTime": {
+                  "type": "string",
+                  "description": "ISO 8601 span end timestamp."
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Trace-span status."
+                },
+                "errorHandled": {
+                  "type": "boolean",
+                  "description": "Whether the recorded error was handled."
+                },
+                "errorType": {
+                  "type": "string",
+                  "description": "Recorded error type."
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Recorded error message."
+                },
+                "blockId": {
+                  "type": "string",
+                  "description": "Workflow block associated with the span."
+                },
+                "input": {
+                  "description": "Input captured for the traced operation."
+                },
+                "output": {
+                  "description": "Output captured for the traced operation."
+                },
+                "tokens": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Total tokens attributed to the span."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "description": "Total tokens."
+                        },
+                        "input": {
+                          "type": "number",
+                          "description": "Input tokens."
+                        },
+                        "output": {
+                          "type": "number",
+                          "description": "Output tokens."
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Token usage attributed to the span."
+                },
+                "cost": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "number",
+                      "description": "Total span cost in USD."
+                    },
+                    "input": {
+                      "type": "number",
+                      "description": "Input-token cost in USD."
+                    },
+                    "output": {
+                      "type": "number",
+                      "description": "Output-token cost in USD."
+                    },
+                    "toolCost": {
+                      "type": "number",
+                      "description": "Tool cost in USD."
+                    }
+                  },
+                  "additionalProperties": false,
+                  "description": "Cost attributed to the span."
+                },
+                "relativeStartMs": {
+                  "type": "number",
+                  "description": "Offset from the root span in milliseconds."
+                },
+                "toolCalls": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Tool-call identifier."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Invoked tool name."
+                      },
+                      "arguments": {
+                        "description": "Arguments supplied to the tool call."
+                      },
+                      "result": {
+                        "description": "Value returned by the tool call."
+                      },
+                      "error": {
+                        "type": "string",
+                        "description": "Tool-call error message."
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "description": "ISO 8601 tool-call start timestamp."
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "description": "ISO 8601 tool-call end timestamp."
+                      },
+                      "duration": {
+                        "type": "number",
+                        "description": "Tool-call duration in milliseconds."
+                      }
+                    },
+                    "additionalProperties": {
+                      "description": "Additional provider-specific tool-call metadata."
+                    }
+                  },
+                  "description": "Tool calls recorded by the span."
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/LogTraceSpan"
+                  },
+                  "description": "Nested child trace spans."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "type"
+              ],
+              "additionalProperties": {
+                "description": "Additional provider-specific trace-span metadata."
+              }
+            },
+            "V2LogDetail": {
+              "type": "object",
+              "properties": {
+                "runId": {
+                  "type": "string",
+                  "description": "Unique run identifier."
+                },
+                "workflowId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Workflow identifier, or null when unavailable."
+                },
+                "deploymentVersionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Deployment version identifier, or null when unavailable."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "running",
+                    "paused",
+                    "redacting",
+                    "completed",
+                    "failed",
+                    "cancelled"
+                  ],
+                  "description": "Current execution status, reported as persisted. `redacting` is transient while run output is scrubbed. `paused` is reported only when a resume attempt did not complete; a run held at a human-in-the-loop pause point reads `pending` here, and `paused` on the workflow run resources. Use those when the pause state matters."
+                },
+                "level": {
+                  "type": "string",
+                  "description": "Log severity level."
+                },
+                "trigger": {
+                  "type": "string",
+                  "description": "Trigger that started the run."
+                },
+                "startedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 execution start timestamp."
+                },
+                "endedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 execution end timestamp, or null while the run is active."
+                },
+                "totalDurationMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Total execution duration in milliseconds, or null while unavailable."
+                },
+                "files": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/V2LogFile"
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Files the run produced, or null when none are recorded. Only the run's own output files appear; input attachments a caller supplied are addressed through the files API instead."
+                },
+                "executedByEmail": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "email",
+                      "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Email of the identity the run executed as: the caller for an interactive or personal-API-key run, and the workspace billing account for a schedule, webhook, deployed chat, or public API call. Null when the run failed before an identity was resolved."
+                },
+                "workflow": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Workflow identifier, or null when unavailable."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Workflow name."
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Workflow description, or null when unset."
+                    },
+                    "folderPath": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "title": "Folder path",
+                          "description": "Canonical slash-prefixed folder path. `/` is the workspace root. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+                          "maxLength": 4096
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Canonical folder path of the workflow, in the same form `folderPaths` accepts as a filter: `/` for a workflow at the workspace root. Null only when the path cannot be resolved — the folder has been deleted, or the workflow itself no longer exists."
+                    },
+                    "ownerEmail": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "email",
+                          "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Deprecated — use the run-level `executedByEmail` instead. Email of the workflow's current owner, or null when unavailable. This is a property of the workflow as it stands today, not of the run: it changes when workflow ownership is reassigned, and the owner is not the identity a background run executes as.",
+                      "deprecated": true
+                    },
+                    "workspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Owning workspace identifier, or null when unavailable."
+                    },
+                    "createdAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "ISO 8601 workflow creation timestamp, or null when unavailable."
+                    },
+                    "updatedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "ISO 8601 workflow update timestamp, or null when unavailable."
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "description": "Whether the workflow has been deleted."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "folderPath",
+                    "ownerEmail",
+                    "workspaceId",
+                    "createdAt",
+                    "updatedAt",
+                    "deleted"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Workflow snapshot associated with the execution."
+                },
+                "workflowState": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {},
+                      "additionalProperties": {
+                        "description": "One top-level snapshot section — `blocks`, `edges`, `loops`, `parallels`, or `variables` — passed through as stored."
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Workflow graph captured for the run, or null if unavailable or includeWorkflowState=false. Sensitive values are redacted to null; environment-variable references may be preserved."
+                },
+                "traceSpans": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/LogTraceSpan"
+                  },
+                  "description": "Materialized block-level execution trace spans."
+                },
+                "finalOutput": {
+                  "anyOf": [
+                    {
+                      "description": "Materialized final workflow output value."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Materialized final workflow output, or null when none was produced."
+                },
+                "cost": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "description": "Total execution cost in USD."
+                        },
+                        "items": {
+                          "anyOf": [
+                            {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "category": {
+                                    "type": "string",
+                                    "enum": [
+                                      "fixed",
+                                      "model",
+                                      "tool"
+                                    ],
+                                    "description": "What the line is for: the run's base fee (`fixed`), one model's inference (`model`), or one metered tool or integration call (`tool`)."
+                                  },
+                                  "description": {
+                                    "type": "string",
+                                    "description": "Human-readable name of the billed item, such as the model or tool id."
+                                  },
+                                  "cost": {
+                                    "type": "number",
+                                    "description": "Amount billed for this line, in USD."
+                                  },
+                                  "inputTokens": {
+                                    "description": "Input tokens attributed to this line. Absent for lines that do not bill tokens.",
+                                    "type": "number"
+                                  },
+                                  "outputTokens": {
+                                    "description": "Output tokens attributed to this line. Absent for lines that do not bill tokens.",
+                                    "type": "number"
+                                  }
+                                },
+                                "required": [
+                                  "category",
+                                  "description",
+                                  "cost"
+                                ],
+                                "additionalProperties": false,
+                                "description": "One billed line of a run, folded across every event that billed it."
+                              }
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Billed lines reconciling to `total`, or null when no itemized ledger exists for the run."
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "items"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Cost charged for the run, or null when unavailable."
+                },
+                "workflowInput": {
+                  "anyOf": [
+                    {
+                      "description": "Caller-supplied trigger payload for the run."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Input the run was triggered with, or null when the run recorded none. Credential-bearing and PII-masked values are redacted the same way `finalOutput` is."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 log creation timestamp."
+                }
+              },
+              "required": [
+                "runId",
+                "workflowId",
+                "deploymentVersionId",
+                "status",
+                "level",
+                "trigger",
+                "startedAt",
+                "endedAt",
+                "totalDurationMs",
+                "files",
+                "executedByEmail",
+                "workflow",
+                "workflowState",
+                "traceSpans",
+                "finalOutput",
+                "cost",
+                "workflowInput",
+                "createdAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2LogDetail",
+              "title": "Execution log detail",
+              "description": "Detailed workflow execution log including state, trace, output, and cost."
+            }
+          }
+        }
+      }
+    },
+    "v2ListLogsContract": {
+      "method": "GET",
+      "path": "/api/v2/logs",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace whose execution logs should be returned."
+          },
+          "workflowIds": {
+            "type": "string",
+            "description": "Comma-separated workflow identifiers to include. An empty entry is rejected. At most 200 entries."
+          },
+          "triggers": {
+            "type": "string",
+            "description": "Comma-separated, lowercase trigger types or webhook provider IDs. Matching is exact and case-sensitive; unknown values select no runs. An empty entry is rejected. The sentinel `all` disables this filter, even when listed with other values. At most 100 entries."
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "info",
+              "error"
+            ],
+            "description": "Severity level to include."
+          },
+          "startDate": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+            "description": "Only include runs started at or after this UTC ISO 8601 timestamp, e.g. `2026-08-06T00:00:00Z`. A date without a time, or a timestamp carrying a UTC offset instead of `Z`, is rejected, as is year `0000`, which names no storable instant."
+          },
+          "endDate": {
+            "type": "string",
+            "format": "date-time",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+            "description": "Only include runs started at or before this UTC ISO 8601 timestamp, e.g. `2026-08-06T00:00:00Z`. A date without a time, or a timestamp carrying a UTC offset instead of `Z`, is rejected, as is year `0000`, which names no storable instant."
+          },
+          "minDurationMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Minimum total execution duration in milliseconds. Whole milliseconds from 0 to 2147483647; the stored duration is a 32-bit integer, so a fractional or out-of-range bound is rejected."
+          },
+          "maxDurationMs": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2147483647,
+            "description": "Maximum total execution duration in milliseconds. Whole milliseconds from 0 to 2147483647; the stored duration is a 32-bit integer, so a fractional or out-of-range bound is rejected."
+          },
+          "minCost": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000000,
+            "description": "Minimum execution cost in USD, from 0 to 1000000. A run is never charged a negative amount, so a negative bound is rejected rather than treated as a filter that matches every run."
+          },
+          "maxCost": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1000000,
+            "description": "Maximum execution cost in USD, from 0 to 1000000. A run is never charged a negative amount, so a negative bound is rejected rather than treated as a filter that matches every run."
+          },
+          "model": {
+            "type": "string",
+            "description": "AI model used during execution."
+          },
+          "details": {
+            "default": "basic",
+            "type": "string",
+            "enum": [
+              "basic",
+              "full"
+            ],
+            "description": "Response detail level. `full` adds the `workflow` summary to every workflow run; a job run never carries one, whatever this is set to. `includeTraceSpans=true` and `includeFinalOutput=true` each imply `full`, so either one adds `workflow` even when `details=basic` is sent explicitly."
+          },
+          "includeTraceSpans": {
+            "description": "Whether to include block-level trace spans. Implies `details=full`. Spans are pruned on their own retention schedule, so a run whose spans have aged out returns `traceSpans: []` rather than an error.",
+            "type": "boolean"
+          },
+          "includeFinalOutput": {
+            "description": "Whether to include the final workflow output. Implies `details=full`, so the `workflow` summary is present regardless of what `details` is set to.",
+            "type": "boolean"
+          },
+          "limit": {
+            "description": "Maximum log entries per page. Values outside 1–1000 are truncated and clamped into that range rather than rejected. Defaults to 100.",
+            "type": "integer",
+            "default": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "includeHandledErrors": {
+            "description": "Whether `level=error` also selects runs that finished at `info` after a block error was recovered by an error path. Off by default: such a run succeeded, so it is an error only to a caller auditing error handling. Every row reports `hasHandledErrors` whether or not this is set. Job runs carry no block trace, so the flag never widens that branch.",
+            "type": "boolean"
+          },
+          "status": {
+            "type": "string",
+            "description": "Comma-separated execution statuses to include, from `pending` | `running` | `paused` | `redacting` | `completed` | `failed` | `cancelled`. An empty entry is rejected. ANDed with `level`, which reports severity rather than lifecycle."
+          },
+          "workflowName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Case-insensitive substring match against the run's workflow name. Runs whose workflow has been deleted match nothing, because the name is no longer joinable."
+          },
+          "includeJobRuns": {
+            "description": "Include Chat and Sim-agent jobs alongside workflow runs. Jobs use `kind: \"job\"` and have no workflow or cost ledger. Workflow, folder, model, or status filters exclude jobs. This option is valid only when sorting by `startedAt`.",
+            "type": "boolean"
+          },
+          "runId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9._:-]+$",
+            "description": "Exact run identifier to match."
+          },
+          "sortBy": {
+            "default": "startedAt",
+            "description": "Field used to sort the result. `durationMs` and `cost` are null until a run settles; those runs sort before recorded values in ascending order and after them in descending order. Only `startedAt` can order Chat and Sim-agent job runs, so any other value is rejected when job runs are included.",
+            "type": "string",
+            "enum": [
+              "startedAt",
+              "durationMs",
+              "cost",
+              "status"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "folderPaths": {
+            "type": "string",
+            "description": "Comma-separated workflow folder paths, including descendants. Up to 100 paths. Unknown folder paths contribute no matches."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2LogListItem"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2LogListItem": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "workflow",
+                    "job"
+                  ],
+                  "description": "Whether the run executed a workflow or a Chat / Sim-agent job. Job runs appear only when `includeJobRuns=true`."
+                },
+                "runId": {
+                  "type": "string",
+                  "description": "Unique run identifier."
+                },
+                "workflowId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Workflow identifier, or null when unavailable."
+                },
+                "deploymentVersionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Deployment version identifier, or null when unavailable."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "running",
+                    "paused",
+                    "redacting",
+                    "completed",
+                    "failed",
+                    "cancelled"
+                  ],
+                  "description": "Current execution status, reported as persisted. `redacting` is transient while run output is scrubbed. `paused` is reported only when a resume attempt did not complete; a run held at a human-in-the-loop pause point reads `pending` here, and `paused` on the workflow run resources. Use those when the pause state matters."
+                },
+                "level": {
+                  "type": "string",
+                  "description": "Log severity level."
+                },
+                "trigger": {
+                  "type": "string",
+                  "description": "Trigger that started the run."
+                },
+                "startedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 execution start timestamp."
+                },
+                "endedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 execution end timestamp, or null while the run is active."
+                },
+                "totalDurationMs": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Total execution duration in milliseconds, or null while unavailable."
+                },
+                "cost": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "description": "Total execution cost in USD."
+                        }
+                      },
+                      "required": [
+                        "total"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Cost charged for the run, or null when the run has neither a recorded total nor an itemized ledger."
+                },
+                "files": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/$defs/V2LogFile"
+                      }
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Files the run produced, or null when none are recorded. Only the run's own output files appear; input attachments a caller supplied are addressed through the files API instead."
+                },
+                "hasHandledErrors": {
+                  "type": "boolean",
+                  "description": "Whether a block in the run errored and was recovered by an error path. Such a run keeps `level: info`, so this is the only place the handled error shows at run level; pass `includeHandledErrors=true` with `level=error` to list these runs. Always false for a job run."
+                },
+                "workflow": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Workflow identifier, or null when unavailable."
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Workflow name."
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Workflow description, or null when unset."
+                    },
+                    "deleted": {
+                      "type": "boolean",
+                      "description": "Whether the workflow has been deleted."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "description",
+                    "deleted"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Workflow summary for a full-detail result."
+                },
+                "finalOutput": {
+                  "description": "Final workflow output."
+                },
+                "traceSpans": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/LogTraceSpan"
+                  },
+                  "description": "Block-level execution trace spans."
+                }
+              },
+              "required": [
+                "kind",
+                "runId",
+                "workflowId",
+                "deploymentVersionId",
+                "status",
+                "level",
+                "trigger",
+                "startedAt",
+                "endedAt",
+                "totalDurationMs",
+                "cost",
+                "files",
+                "hasHandledErrors"
+              ],
+              "additionalProperties": false,
+              "id": "V2LogListItem",
+              "title": "Execution log summary",
+              "description": "Summary information for one workflow execution log."
+            },
+            "V2LogFile": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier to address this file by on the download endpoint."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "File name, including its extension."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "File size in bytes."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type recorded for the file."
+                },
+                "downloadPath": {
+                  "type": "string",
+                  "description": "Path to fetch this file's bytes from, relative to the API host."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "size",
+                "type",
+                "downloadPath"
+              ],
+              "additionalProperties": false,
+              "id": "V2LogFile",
+              "title": "Execution log file",
+              "description": "A file produced by the run this log records."
+            },
+            "LogTraceSpan": {
+              "id": "LogTraceSpan",
+              "title": "Log trace span",
+              "description": "One recursive operation span in a workflow execution trace.",
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Trace-span identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Trace-span name."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Trace-span category."
+                },
+                "duration": {
+                  "type": "number",
+                  "description": "Current trace-span duration in milliseconds."
+                },
+                "durationMs": {
+                  "type": "number",
+                  "description": "Compatibility field for span duration in milliseconds. Read `duration` for current trace spans."
+                },
+                "startTime": {
+                  "type": "string",
+                  "description": "ISO 8601 span start timestamp."
+                },
+                "endTime": {
+                  "type": "string",
+                  "description": "ISO 8601 span end timestamp."
+                },
+                "status": {
+                  "type": "string",
+                  "description": "Trace-span status."
+                },
+                "errorHandled": {
+                  "type": "boolean",
+                  "description": "Whether the recorded error was handled."
+                },
+                "errorType": {
+                  "type": "string",
+                  "description": "Recorded error type."
+                },
+                "errorMessage": {
+                  "type": "string",
+                  "description": "Recorded error message."
+                },
+                "blockId": {
+                  "type": "string",
+                  "description": "Workflow block associated with the span."
+                },
+                "input": {
+                  "description": "Input captured for the traced operation."
+                },
+                "output": {
+                  "description": "Output captured for the traced operation."
+                },
+                "tokens": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "description": "Total tokens attributed to the span."
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "number",
+                          "description": "Total tokens."
+                        },
+                        "input": {
+                          "type": "number",
+                          "description": "Input tokens."
+                        },
+                        "output": {
+                          "type": "number",
+                          "description": "Output tokens."
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "Token usage attributed to the span."
+                },
+                "cost": {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "number",
+                      "description": "Total span cost in USD."
+                    },
+                    "input": {
+                      "type": "number",
+                      "description": "Input-token cost in USD."
+                    },
+                    "output": {
+                      "type": "number",
+                      "description": "Output-token cost in USD."
+                    },
+                    "toolCost": {
+                      "type": "number",
+                      "description": "Tool cost in USD."
+                    }
+                  },
+                  "additionalProperties": false,
+                  "description": "Cost attributed to the span."
+                },
+                "relativeStartMs": {
+                  "type": "number",
+                  "description": "Offset from the root span in milliseconds."
+                },
+                "toolCalls": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Tool-call identifier."
+                      },
+                      "name": {
+                        "type": "string",
+                        "description": "Invoked tool name."
+                      },
+                      "arguments": {
+                        "description": "Arguments supplied to the tool call."
+                      },
+                      "result": {
+                        "description": "Value returned by the tool call."
+                      },
+                      "error": {
+                        "type": "string",
+                        "description": "Tool-call error message."
+                      },
+                      "startTime": {
+                        "type": "string",
+                        "description": "ISO 8601 tool-call start timestamp."
+                      },
+                      "endTime": {
+                        "type": "string",
+                        "description": "ISO 8601 tool-call end timestamp."
+                      },
+                      "duration": {
+                        "type": "number",
+                        "description": "Tool-call duration in milliseconds."
+                      }
+                    },
+                    "additionalProperties": {
+                      "description": "Additional provider-specific tool-call metadata."
+                    }
+                  },
+                  "description": "Tool calls recorded by the span."
+                },
+                "children": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/LogTraceSpan"
+                  },
+                  "description": "Nested child trace spans."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "type"
+              ],
+              "additionalProperties": {
+                "description": "Additional provider-specific trace-span metadata."
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,132 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudwatch-put-metric-data.ts",
+  "contracts": {
+    "awsCloudwatchPutMetricDataContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudwatch/put-metric-data",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "namespace": {
+            "type": "string",
+            "minLength": 1
+          },
+          "metricName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "value": {
+            "type": "number"
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "Seconds",
+              "Microseconds",
+              "Milliseconds",
+              "Bytes",
+              "Kilobytes",
+              "Megabytes",
+              "Gigabytes",
+              "Terabytes",
+              "Bits",
+              "Kilobits",
+              "Megabits",
+              "Gigabits",
+              "Terabits",
+              "Percent",
+              "Count",
+              "Bytes/Second",
+              "Kilobytes/Second",
+              "Megabytes/Second",
+              "Gigabytes/Second",
+              "Terabytes/Second",
+              "Bits/Second",
+              "Kilobits/Second",
+              "Megabits/Second",
+              "Gigabits/Second",
+              "Terabits/Second",
+              "Count/Second",
+              "None"
+            ]
+          },
+          "dimensions": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "namespace",
+          "metricName",
+          "value"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "namespace": {
+                  "type": "string"
+                },
+                "metricName": {
+                  "type": "string"
+                },
+                "value": {
+                  "type": "number"
+                },
+                "unit": {
+                  "type": "string"
+                },
+                "timestamp": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "success",
+                "namespace",
+                "metricName",
+                "value",
+                "unit",
+                "timestamp"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,146 @@
+{
+  "source": "apps/sim/lib/api/contracts/oauth-provider.ts",
+  "contracts": {
+    "registerOAuthClientContract": {
+      "method": "POST",
+      "path": "/api/auth/oauth2/register",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "client_name": {
+            "default": "MCP client",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "redirect_uris": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 2048
+            }
+          },
+          "token_endpoint_auth_method": {
+            "default": "none",
+            "type": "string",
+            "enum": [
+              "none",
+              "client_secret_basic",
+              "client_secret_post"
+            ]
+          },
+          "grant_types": {
+            "default": [
+              "authorization_code",
+              "refresh_token"
+            ],
+            "minItems": 1,
+            "maxItems": 2,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "authorization_code",
+                "refresh_token"
+              ]
+            }
+          },
+          "response_types": {
+            "default": [
+              "code"
+            ],
+            "minItems": 1,
+            "maxItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "const": "code"
+            }
+          },
+          "scope": {
+            "default": "api:read api:write offline_access search:read",
+            "type": "string",
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "redirect_uris"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "client_id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            },
+            "client_name": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128
+            },
+            "redirect_uris": {
+              "minItems": 1,
+              "maxItems": 10,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              }
+            },
+            "token_endpoint_auth_method": {
+              "type": "string",
+              "const": "none"
+            },
+            "grant_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "authorization_code",
+                  "refresh_token"
+                ]
+              }
+            },
+            "response_types": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "const": "code"
+              }
+            },
+            "scope": {
+              "type": "string",
+              "maxLength": 128
+            },
+            "client_id_issued_at": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "client_id",
+            "client_name",
+            "redirect_uris",
+            "token_endpoint_auth_method",
+            "grant_types",
+            "response_types",
+            "scope",
+            "client_id_issued_at"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

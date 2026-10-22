@@ -1,0 +1,133 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudtrail-get-insight-selectors.ts",
+  "contracts": {
+    "awsCloudtrailGetInsightSelectorsContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudtrail/get-insight-selectors",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "trailName": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256,
+            "pattern": "^(?:arn:aws[a-zA-Z0-9-]*:cloudtrail:[a-z0-9-]+:\\d{12}:trail\\/[\\w.\\-/]+|[a-zA-Z0-9](?:[a-zA-Z0-9]|[._-][a-zA-Z0-9])+)$"
+          },
+          "eventDataStore": {
+            "type": "string",
+            "minLength": 3,
+            "maxLength": 256,
+            "pattern": "^[a-zA-Z0-9._/\\-:]+$"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "trailArn": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "eventDataStoreArn": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "insightsDestination": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "insightSelectors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "insightType": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "eventCategories": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "required": [
+                      "insightType",
+                      "eventCategories"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "trailArn",
+                "eventDataStoreArn",
+                "insightsDestination",
+                "insightSelectors"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

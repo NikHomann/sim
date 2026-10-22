@@ -1,0 +1,142 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/iam-get-policy.ts",
+  "contracts": {
+    "awsIamGetPolicyContract": {
+      "method": "POST",
+      "path": "/api/tools/iam/get-policy",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "policyArn": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 2048
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "policyArn"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "policyName": {
+              "type": "string"
+            },
+            "policyId": {
+              "type": "string"
+            },
+            "arn": {
+              "type": "string"
+            },
+            "path": {
+              "type": "string"
+            },
+            "attachmentCount": {
+              "type": "number"
+            },
+            "isAttachable": {
+              "type": "boolean"
+            },
+            "createDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "updateDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "defaultVersionId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "permissionsBoundaryUsageCount": {
+              "type": "number"
+            },
+            "tags": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "type": "string"
+                  },
+                  "value": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "key",
+                  "value"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "policyName",
+            "policyId",
+            "arn",
+            "path",
+            "attachmentCount",
+            "isAttachable",
+            "createDate",
+            "updateDate",
+            "description",
+            "defaultVersionId",
+            "permissionsBoundaryUsageCount",
+            "tags"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,175 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ssm-start-automation-execution.ts",
+  "contracts": {
+    "awsSsmStartAutomationExecutionContract": {
+      "method": "POST",
+      "path": "/api/tools/ssm/start-automation-execution",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentName": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_\\-.:/]{3,128}$"
+          },
+          "documentVersion": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(\\$LATEST|\\$DEFAULT|[1-9][0-9]*)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "mode": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Auto",
+                  "Interactive"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "targetParameterName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "targets": {
+            "anyOf": [
+              {
+                "maxItems": 1,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Key": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "Values": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "Key",
+                    "Values"
+                  ]
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxConcurrency": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 7,
+                "pattern": "^([1-9][0-9]*|[1-9][0-9]%|[1-9]%|100%)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxErrors": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 7,
+                "pattern": "^([1-9][0-9]*|[0]|[1-9][0-9]%|[0-9]%|100%)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "clientToken": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-fA-F0-9]{8}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{4}-[a-fA-F0-9]{12}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "documentName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "automationExecutionId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "automationExecutionId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

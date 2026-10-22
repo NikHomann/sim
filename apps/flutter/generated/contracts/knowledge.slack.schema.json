@@ -1,0 +1,675 @@
+{
+  "source": "apps/sim/lib/api/contracts/knowledge/slack.ts",
+  "contracts": {
+    "configureSlackSearchContract": {
+      "method": "POST",
+      "path": "/api/knowledge/slack",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "credentialId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "enabled": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "organizationId",
+          "credentialId",
+          "enabled"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "connectCustomSlackSearchContract": {
+      "method": "POST",
+      "path": "/api/knowledge/slack/setup/connect",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "clientId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "clientSecret": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "signingSecret": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "botToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000,
+            "pattern": "^xoxb-.*"
+          }
+        },
+        "required": [
+          "organizationId",
+          "name",
+          "description",
+          "botToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "organizationId": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "organizationId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getSlackSearchOnboardingContract": {
+      "method": "GET",
+      "path": "/api/knowledge/slack/onboarding",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "wrong_account"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "verify_email"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "membership_required"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "const": "identity_conflict"
+                }
+              },
+              "required": [
+                "status"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "needs_sources",
+                    "ready",
+                    "retried"
+                  ]
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "isAdmin": {
+                  "type": "boolean"
+                },
+                "question": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000
+                },
+                "slackUrl": {
+                  "type": "string",
+                  "maxLength": 3000,
+                  "format": "uri"
+                }
+              },
+              "required": [
+                "status",
+                "organizationId",
+                "isAdmin",
+                "question",
+                "slackUrl"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "listSlackSearchContract": {
+      "method": "GET",
+      "path": "/api/knowledge/slack",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sharedAppAvailable": {
+              "type": "boolean"
+            },
+            "memberAppKind": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "enum": [
+                    "custom",
+                    "shared"
+                  ]
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "installations": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "credentialId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "appId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "teamId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "teamName": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "appKind": {
+                    "type": "string",
+                    "enum": [
+                      "custom",
+                      "shared"
+                    ]
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "needsValidation": {
+                    "type": "boolean"
+                  },
+                  "lastOutcome": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 100
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastEventAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "credentialId",
+                  "appId",
+                  "teamId",
+                  "teamName",
+                  "appKind",
+                  "enabled",
+                  "needsValidation",
+                  "lastOutcome",
+                  "lastEventAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "bots": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "required": [
+                  "id",
+                  "displayName"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "sharedAppAvailable",
+            "memberAppKind",
+            "installations",
+            "bots"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "prepareSlackSearchContract": {
+      "method": "POST",
+      "path": "/api/knowledge/slack/setup",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          }
+        },
+        "required": [
+          "organizationId",
+          "name",
+          "description"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sharedAppId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "manifest": {
+              "type": "string",
+              "maxLength": 20000
+            },
+            "existingApp": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "appId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "teamId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "appId",
+                    "teamId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "createAppUrl": {
+              "type": "string",
+              "maxLength": 30000,
+              "format": "uri"
+            }
+          },
+          "required": [
+            "sharedAppId",
+            "manifest",
+            "existingApp",
+            "createAppUrl"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "removeSlackSearchContract": {
+      "method": "DELETE",
+      "path": "/api/knowledge/slack/[installationId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "installationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "installationId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "organizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 200
+            }
+          },
+          "required": [
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "retrySlackSearchOnboardingContract": {
+      "method": "POST",
+      "path": "/api/knowledge/slack/onboarding/retry",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "slackUrl": {
+              "type": "string",
+              "maxLength": 3000,
+              "format": "uri"
+            }
+          },
+          "required": [
+            "slackUrl"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "slackSearchOAuthCallbackContract": {
+      "method": "GET",
+      "path": "/api/knowledge/slack/oauth/callback",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "state": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          },
+          "error": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        }
+      },
+      "response": {
+        "mode": "redirect"
+      }
+    },
+    "startSlackSearchOAuthContract": {
+      "method": "POST",
+      "path": "/api/knowledge/slack/oauth",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 35
+          },
+          "description": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 140
+          },
+          "mode": {
+            "default": "custom",
+            "type": "string",
+            "enum": [
+              "custom",
+              "shared"
+            ]
+          },
+          "installationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "clientId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "clientSecret": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "signingSecret": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          }
+        },
+        "required": [
+          "organizationId",
+          "name",
+          "description"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "authorizationUrl": {
+              "type": "string",
+              "maxLength": 4000,
+              "format": "uri"
+            }
+          },
+          "required": [
+            "authorizationUrl"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

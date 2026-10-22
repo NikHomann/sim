@@ -1,0 +1,206 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ssm-get-command-invocation.ts",
+  "contracts": {
+    "awsSsmGetCommandInvocationContract": {
+      "method": "POST",
+      "path": "/api/tools/ssm/get-command-invocation",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "commandId": {
+            "type": "string",
+            "pattern": "^[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}$"
+          },
+          "instanceId": {
+            "type": "string",
+            "pattern": "^(i-(\\w{8}|\\w{17})|mi-\\w{17})$"
+          },
+          "pluginName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 4
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "commandId",
+          "instanceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "instanceId": {
+              "type": "string"
+            },
+            "comment": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "documentName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "documentVersion": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "pluginName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "responseCode": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "executionStartDateTime": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "executionElapsedTime": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "executionEndDateTime": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "status": {
+              "type": "string"
+            },
+            "statusDetails": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "standardOutputContent": {
+              "type": "string"
+            },
+            "standardOutputUrl": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "standardErrorContent": {
+              "type": "string"
+            },
+            "standardErrorUrl": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "commandId",
+            "instanceId",
+            "comment",
+            "documentName",
+            "documentVersion",
+            "pluginName",
+            "responseCode",
+            "executionStartDateTime",
+            "executionElapsedTime",
+            "executionEndDateTime",
+            "status",
+            "statusDetails",
+            "standardOutputContent",
+            "standardOutputUrl",
+            "standardErrorContent",
+            "standardErrorUrl"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

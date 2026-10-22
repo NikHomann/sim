@@ -1,0 +1,969 @@
+{
+  "source": "apps/sim/lib/api/contracts/project-file-versions.ts",
+  "contracts": {
+    "deleteProjectFileVersionContract": {
+      "method": "DELETE",
+      "path": "/api/projects/[id]/files/[fileId]/versions/[version]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "id",
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "fileId": {
+              "type": "string",
+              "description": "File whose version was deleted."
+            },
+            "version": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 2147483647,
+              "description": "Version number that was deleted."
+            },
+            "deleted": {
+              "type": "boolean",
+              "const": true,
+              "description": "The version is no longer available; stored-object cleanup is retried asynchronously when needed."
+            }
+          },
+          "required": [
+            "fileId",
+            "version",
+            "deleted"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getProjectFileVersionContract": {
+      "method": "GET",
+      "path": "/api/projects/[id]/files/[fileId]/versions/[version]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "id",
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "version": {
+              "$ref": "#/$defs/ProjectFileVersion"
+            }
+          },
+          "required": [
+            "version"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ProjectFileVersion": {
+              "title": "Project file version",
+              "description": "One recorded version of a shared Project file.",
+              "id": "ProjectFileVersion",
+              "$ref": "#/$defs/V2FileVersion"
+            },
+            "V2FileVersion": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "description": "File this version belongs to."
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version number, increasing by one per recorded version. Numbers are never reused, so a gap means an older version was removed by retention or deleted.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean",
+                  "description": "Whether this version holds the current content of the file."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Size in bytes of the stored content of this version."
+                },
+                "contentType": {
+                  "type": "string",
+                  "description": "MIME type of the stored content of this version."
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "upload",
+                    "user",
+                    "api",
+                    "copilot",
+                    "workflow",
+                    "collab",
+                    "revert",
+                    "unknown"
+                  ],
+                  "description": "What wrote this version: `upload` (the original upload), `user` (a save in the Sim editor), `api` (an API, CLI, or MCP write), `copilot` (Sim, the agent), `workflow` (a workflow run), `collab` (collaborative editing), `revert` (a revert to an earlier version), or `unknown` (content written before version history existed, or by a writer with no source of its own)."
+                },
+                "authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "User identifier."
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Current email address of the user, or null when the account no longer exists."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Users who wrote this version, in order of first contribution. Empty for actorless writers such as workspace API keys. A collaborative version lists every editor in its window."
+                },
+                "restoredFromVersion": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For a `revert` version, the version whose content it restored; otherwise null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this content became current.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last write folded into this version. Equals `createdAt` unless edits were coalesced into it.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:38:00Z"
+                  ]
+                },
+                "supersededAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when a newer version replaced this one, or null for the current version. Retention ages versions from this time.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "fileId",
+                "version",
+                "isCurrent",
+                "size",
+                "contentType",
+                "source",
+                "authors",
+                "restoredFromVersion",
+                "createdAt",
+                "updatedAt",
+                "supersededAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersion",
+              "title": "File version",
+              "description": "One recorded version of the content of a workspace file."
+            }
+          }
+        }
+      }
+    },
+    "listProjectFileVersionsContract": {
+      "method": "GET",
+      "path": "/api/projects/[id]/files/[fileId]/versions",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "sortBy": {
+            "default": "version",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "version"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum versions to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "revision": {
+              "description": "Opaque token for the content this write produced. Send it back as `expectedRevision` on the next write. Absent for a file with no recorded content version.",
+              "type": "string"
+            },
+            "versions": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ProjectFileVersion"
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "versions",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ProjectFileVersion": {
+              "title": "Project file version",
+              "description": "One recorded version of a shared Project file.",
+              "id": "ProjectFileVersion",
+              "$ref": "#/$defs/V2FileVersion"
+            },
+            "V2FileVersion": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "description": "File this version belongs to."
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version number, increasing by one per recorded version. Numbers are never reused, so a gap means an older version was removed by retention or deleted.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean",
+                  "description": "Whether this version holds the current content of the file."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Size in bytes of the stored content of this version."
+                },
+                "contentType": {
+                  "type": "string",
+                  "description": "MIME type of the stored content of this version."
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "upload",
+                    "user",
+                    "api",
+                    "copilot",
+                    "workflow",
+                    "collab",
+                    "revert",
+                    "unknown"
+                  ],
+                  "description": "What wrote this version: `upload` (the original upload), `user` (a save in the Sim editor), `api` (an API, CLI, or MCP write), `copilot` (Sim, the agent), `workflow` (a workflow run), `collab` (collaborative editing), `revert` (a revert to an earlier version), or `unknown` (content written before version history existed, or by a writer with no source of its own)."
+                },
+                "authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "User identifier."
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Current email address of the user, or null when the account no longer exists."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Users who wrote this version, in order of first contribution. Empty for actorless writers such as workspace API keys. A collaborative version lists every editor in its window."
+                },
+                "restoredFromVersion": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For a `revert` version, the version whose content it restored; otherwise null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this content became current.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last write folded into this version. Equals `createdAt` unless edits were coalesced into it.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:38:00Z"
+                  ]
+                },
+                "supersededAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when a newer version replaced this one, or null for the current version. Retention ages versions from this time.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "fileId",
+                "version",
+                "isCurrent",
+                "size",
+                "contentType",
+                "source",
+                "authors",
+                "restoredFromVersion",
+                "createdAt",
+                "updatedAt",
+                "supersededAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersion",
+              "title": "File version",
+              "description": "One recorded version of the content of a workspace file."
+            }
+          }
+        }
+      }
+    },
+    "readProjectFileVersionContentContract": {
+      "method": "GET",
+      "path": "/api/projects/[id]/files/[fileId]/versions/[version]/content",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "id",
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "revertProjectFileVersionContract": {
+      "method": "POST",
+      "path": "/api/projects/[id]/files/[fileId]/versions/[version]/revert",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "id",
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "expectedCurrentVersion": {
+            "description": "Revert only while this is still the current version; otherwise the request fails with `409`. Omit to revert whatever is current. Collaborative edits and repeated workflow writes that fold into the current version keep its number, so prefer `expectedRevision` to guard content.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "expectedRevision": {
+            "description": "Revert only while the file still holds the content this revision names, as returned by Get file metadata or an earlier write; otherwise the request fails with `409`. Unlike a version number, it also catches edits that folded into the current version.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "reverted": {
+              "type": "boolean"
+            },
+            "file": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "key": {
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string"
+                },
+                "url": {
+                  "type": "string"
+                },
+                "size": {
+                  "type": "number"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "width": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "height": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedBy": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderPath": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "uploadedAt": {},
+                "updatedAt": {},
+                "contentUpdatedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revision": {
+                  "type": "string"
+                },
+                "share": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "description": "Unique share identifier."
+                        },
+                        "token": {
+                          "type": "string",
+                          "description": "Server-generated token embedded in the public share URL."
+                        },
+                        "url": {
+                          "type": "string",
+                          "description": "Public share URL."
+                        },
+                        "isActive": {
+                          "type": "boolean",
+                          "description": "Whether the public share currently resolves."
+                        },
+                        "resourceType": {
+                          "type": "string",
+                          "enum": [
+                            "file",
+                            "folder"
+                          ],
+                          "description": "Kind of resource being shared."
+                        },
+                        "resourceId": {
+                          "type": "string",
+                          "description": "Identifier of the shared resource."
+                        },
+                        "authType": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "How access to the share is gated."
+                        },
+                        "hasPassword": {
+                          "type": "boolean",
+                          "description": "Whether a password is stored for this share."
+                        },
+                        "allowedEmails": {
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 320
+                          },
+                          "description": "Allowed addresses or @domain patterns for email and SSO shares."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "token",
+                        "url",
+                        "isActive",
+                        "resourceType",
+                        "resourceId",
+                        "authType",
+                        "hasPassword",
+                        "allowedEmails"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "const": "project"
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "key",
+                "path",
+                "size",
+                "type",
+                "uploadedBy",
+                "folderId",
+                "uploadedAt",
+                "updatedAt",
+                "owner"
+              ],
+              "additionalProperties": false
+            },
+            "version": {
+              "$ref": "#/$defs/ProjectFileVersion"
+            },
+            "revision": {
+              "description": "Opaque token for the content this write produced. Send it back as `expectedRevision` on the next write. Absent for a file with no recorded content version.",
+              "type": "string"
+            }
+          },
+          "required": [
+            "reverted",
+            "file",
+            "version"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ProjectFileVersion": {
+              "title": "Project file version",
+              "description": "One recorded version of a shared Project file.",
+              "id": "ProjectFileVersion",
+              "$ref": "#/$defs/V2FileVersion"
+            },
+            "V2FileVersion": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "description": "File this version belongs to."
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version number, increasing by one per recorded version. Numbers are never reused, so a gap means an older version was removed by retention or deleted.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean",
+                  "description": "Whether this version holds the current content of the file."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Size in bytes of the stored content of this version."
+                },
+                "contentType": {
+                  "type": "string",
+                  "description": "MIME type of the stored content of this version."
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "upload",
+                    "user",
+                    "api",
+                    "copilot",
+                    "workflow",
+                    "collab",
+                    "revert",
+                    "unknown"
+                  ],
+                  "description": "What wrote this version: `upload` (the original upload), `user` (a save in the Sim editor), `api` (an API, CLI, or MCP write), `copilot` (Sim, the agent), `workflow` (a workflow run), `collab` (collaborative editing), `revert` (a revert to an earlier version), or `unknown` (content written before version history existed, or by a writer with no source of its own)."
+                },
+                "authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "User identifier."
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Current email address of the user, or null when the account no longer exists."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Users who wrote this version, in order of first contribution. Empty for actorless writers such as workspace API keys. A collaborative version lists every editor in its window."
+                },
+                "restoredFromVersion": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For a `revert` version, the version whose content it restored; otherwise null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this content became current.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last write folded into this version. Equals `createdAt` unless edits were coalesced into it.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:38:00Z"
+                  ]
+                },
+                "supersededAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when a newer version replaced this one, or null for the current version. Retention ages versions from this time.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "fileId",
+                "version",
+                "isCurrent",
+                "size",
+                "contentType",
+                "source",
+                "authors",
+                "restoredFromVersion",
+                "createdAt",
+                "updatedAt",
+                "supersededAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersion",
+              "title": "File version",
+              "description": "One recorded version of the content of a workspace file."
+            }
+          }
+        }
+      }
+    }
+  }
+}

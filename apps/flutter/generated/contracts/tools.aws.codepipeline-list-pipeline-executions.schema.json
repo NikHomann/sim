@@ -1,0 +1,155 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-list-pipeline-executions.ts",
+  "contracts": {
+    "awsCodepipelineListPipelineExecutionsContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/list-pipeline-executions",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "maxResults": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "nextToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "succeededInStage": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName",
+          "maxResults"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "executions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "pipelineExecutionId": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "statusSummary": {
+                        "type": "string"
+                      },
+                      "startTime": {
+                        "type": "number"
+                      },
+                      "lastUpdateTime": {
+                        "type": "number"
+                      },
+                      "executionMode": {
+                        "type": "string"
+                      },
+                      "executionType": {
+                        "type": "string"
+                      },
+                      "stopTriggerReason": {
+                        "type": "string"
+                      },
+                      "triggerType": {
+                        "type": "string"
+                      },
+                      "triggerDetail": {
+                        "type": "string"
+                      },
+                      "rollbackTargetPipelineExecutionId": {
+                        "type": "string"
+                      },
+                      "sourceRevisions": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "actionName": {
+                              "type": "string"
+                            },
+                            "revisionId": {
+                              "type": "string"
+                            },
+                            "revisionSummary": {
+                              "type": "string"
+                            },
+                            "revisionUrl": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "actionName"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "pipelineExecutionId",
+                      "status",
+                      "sourceRevisions"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "nextToken": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "executions"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

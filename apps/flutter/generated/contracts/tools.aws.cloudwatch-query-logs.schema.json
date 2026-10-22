@@ -1,0 +1,128 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudwatch-query-logs.ts",
+  "contracts": {
+    "awsCloudwatchQueryLogsContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudwatch/query-logs",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "logGroupNames": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "queryString": {
+            "type": "string",
+            "minLength": 1
+          },
+          "startTime": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "endTime": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "logGroupNames",
+          "queryString",
+          "startTime",
+          "endTime",
+          "limit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "statistics": {
+                  "type": "object",
+                  "properties": {
+                    "bytesScanned": {
+                      "type": "number"
+                    },
+                    "recordsMatched": {
+                      "type": "number"
+                    },
+                    "recordsScanned": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "bytesScanned",
+                    "recordsMatched",
+                    "recordsScanned"
+                  ],
+                  "additionalProperties": false
+                },
+                "status": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "results",
+                "statistics",
+                "status"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

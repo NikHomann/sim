@@ -1,0 +1,118 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-create-change-set.ts",
+  "contracts": {
+    "awsCloudformationCreateChangeSetContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/create-change-set",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stackName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "changeSetName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateBody": {
+            "type": "string"
+          },
+          "usePreviousTemplate": {
+            "type": "boolean"
+          },
+          "parameters": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "parameterKey": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "parameterValue": {
+                  "type": "string"
+                },
+                "usePreviousValue": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "parameterKey"
+              ]
+            }
+          },
+          "capabilities": {
+            "type": "string"
+          },
+          "changeSetType": {
+            "type": "string",
+            "enum": [
+              "CREATE",
+              "UPDATE",
+              "IMPORT"
+            ]
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "stackName",
+          "changeSetName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "changeSetId": {
+                  "type": "string"
+                },
+                "stackId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "changeSetId",
+                "stackId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,808 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/organization-usage.ts",
+  "contracts": {
+    "v2GetOrganizationMemberUsageLimitContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/members/[userId]/usage-limit",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization identifier."
+          },
+          "userId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "User ID of an organization member or external collaborator with workspace access in this organization. Use List Organization Members or List Workspace Members to find it."
+          }
+        },
+        "required": [
+          "organizationId",
+          "userId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2OrganizationMemberUsageLimit"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2OrganizationMemberUsageLimit": {
+              "type": "object",
+              "properties": {
+                "creditsUsed": {
+                  "type": "number",
+                  "description": "Credits used by this person during the organization billing period."
+                },
+                "creditLimit": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Per-person credit cap. Null means no per-person cap; organization limits still apply. Zero prevents further credit-consuming usage."
+                },
+                "billingInterval": {
+                  "type": "string",
+                  "enum": [
+                    "month",
+                    "year"
+                  ],
+                  "description": "Organization billing interval used for the credit cap."
+                }
+              },
+              "required": [
+                "creditsUsed",
+                "creditLimit",
+                "billingInterval"
+              ],
+              "additionalProperties": false,
+              "id": "V2OrganizationMemberUsageLimit"
+            }
+          }
+        }
+      }
+    },
+    "v2GetOrganizationUsageBreakdownContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/usage/breakdown",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization identifier."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "preset": {
+            "default": "30d",
+            "description": "Reporting window. Custom requires startDate and endDate and is capped at 92 days; other presets reject those bounds. Resolved billing windows are capped at 366 days.",
+            "type": "string",
+            "enum": [
+              "current-period",
+              "previous-period",
+              "7d",
+              "30d",
+              "custom"
+            ]
+          },
+          "startDate": {
+            "description": "First calendar date included, in the selected timezone. Requires preset=custom.",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "endDate": {
+            "description": "Last calendar date included, in the selected timezone. Requires preset=custom.",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "timezone": {
+            "default": "UTC",
+            "description": "IANA timezone for calendar boundaries; defaults to UTC.",
+            "type": "string",
+            "minLength": 1
+          },
+          "workspaceId": {
+            "description": "Restrict usage to one workspace owned by the organization.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "dimension": {
+            "type": "string",
+            "enum": [
+              "member",
+              "workspace",
+              "workflow",
+              "model",
+              "byok",
+              "source"
+            ],
+            "description": "Usage grouping dimension."
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum ranked groups to return. Remaining usage is summarized in other. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          }
+        },
+        "required": [
+          "dimension"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2OrganizationUsageBreakdown"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2OrganizationUsageBreakdown": {
+              "type": "object",
+              "properties": {
+                "dimension": {
+                  "type": "string",
+                  "enum": [
+                    "member",
+                    "workspace",
+                    "workflow",
+                    "model",
+                    "byok",
+                    "source"
+                  ],
+                  "description": "Usage grouping dimension."
+                },
+                "rows": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Group identifier; an empty ID represents unattributed usage."
+                      },
+                      "label": {
+                        "type": "string",
+                        "description": "Display label for the usage group."
+                      },
+                      "credits": {
+                        "type": "number",
+                        "description": "Whole credits attributed to this total or group."
+                      },
+                      "events": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991,
+                        "description": "Number of usage events."
+                      },
+                      "share": {
+                        "type": "number",
+                        "minimum": 0,
+                        "maximum": 1,
+                        "description": "Fraction of total cost, or total tokens for BYOK, between zero and one."
+                      },
+                      "providerId": {
+                        "description": "Model provider identifier, when applicable.",
+                        "type": "string"
+                      },
+                      "tokens": {
+                        "description": "Input and output tokens for model or BYOK groups.",
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "label",
+                      "credits",
+                      "events",
+                      "share"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Top usage groups ordered by cost, or tokens for BYOK."
+                },
+                "other": {
+                  "type": "object",
+                  "properties": {
+                    "credits": {
+                      "type": "number",
+                      "description": "Whole credits attributed to this total or group."
+                    },
+                    "events": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991,
+                      "description": "Number of usage events."
+                    },
+                    "rowCount": {
+                      "type": "integer",
+                      "minimum": -9007199254740991,
+                      "maximum": 9007199254740991,
+                      "description": "Number of groups omitted from rows."
+                    },
+                    "tokens": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Input and output tokens attributed to omitted groups."
+                    }
+                  },
+                  "required": [
+                    "credits",
+                    "events",
+                    "rowCount",
+                    "tokens"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Combined usage for groups omitted by the limit."
+                },
+                "totalCredits": {
+                  "type": "number",
+                  "description": "Whole credits represented by this breakdown; workflow includes only workflow-attributed usage."
+                }
+              },
+              "required": [
+                "dimension",
+                "rows",
+                "other",
+                "totalCredits"
+              ],
+              "additionalProperties": false,
+              "id": "V2OrganizationUsageBreakdown"
+            }
+          }
+        }
+      }
+    },
+    "v2GetOrganizationUsageSummaryContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/usage/summary",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization identifier."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "preset": {
+            "default": "30d",
+            "description": "Reporting window. Custom requires startDate and endDate and is capped at 92 days; other presets reject those bounds. Resolved billing windows are capped at 366 days.",
+            "type": "string",
+            "enum": [
+              "current-period",
+              "previous-period",
+              "7d",
+              "30d",
+              "custom"
+            ]
+          },
+          "startDate": {
+            "description": "First calendar date included, in the selected timezone. Requires preset=custom.",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "endDate": {
+            "description": "Last calendar date included, in the selected timezone. Requires preset=custom.",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "timezone": {
+            "default": "UTC",
+            "description": "IANA timezone for calendar boundaries; defaults to UTC.",
+            "type": "string",
+            "minLength": 1
+          },
+          "workspaceId": {
+            "description": "Restrict usage to one workspace owned by the organization.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2OrganizationUsageSummary"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2OrganizationUsageSummary": {
+              "type": "object",
+              "properties": {
+                "window": {
+                  "type": "object",
+                  "properties": {
+                    "start": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                      "description": "Inclusive reporting-window start."
+                    },
+                    "end": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                      "description": "Exclusive reporting-window end."
+                    },
+                    "source": {
+                      "type": "string",
+                      "enum": [
+                        "reporting",
+                        "stripe",
+                        "default",
+                        "range"
+                      ],
+                      "description": "How the reporting window was resolved."
+                    }
+                  },
+                  "required": [
+                    "start",
+                    "end",
+                    "source"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Resolved reporting window."
+                },
+                "bucket": {
+                  "type": "string",
+                  "enum": [
+                    "day",
+                    "week",
+                    "month"
+                  ],
+                  "description": "Calendar granularity of the usage series."
+                },
+                "totals": {
+                  "type": "object",
+                  "properties": {
+                    "credits": {
+                      "type": "number",
+                      "description": "Whole credits attributed to this total or group."
+                    }
+                  },
+                  "required": [
+                    "credits"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Total usage for the selected window."
+                },
+                "previousTotals": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "credits": {
+                          "type": "number",
+                          "description": "Whole credits attributed to this total or group."
+                        }
+                      },
+                      "required": [
+                        "credits"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Exact previous-period total, or null when no exact comparison is available."
+                },
+                "series": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "timestamp": {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                        "description": "Start of this calendar bucket."
+                      },
+                      "credits": {
+                        "type": "number",
+                        "description": "Whole credits attributed to this total or group."
+                      },
+                      "events": {
+                        "type": "integer",
+                        "minimum": -9007199254740991,
+                        "maximum": 9007199254740991,
+                        "description": "Number of usage events."
+                      }
+                    },
+                    "required": [
+                      "timestamp",
+                      "credits",
+                      "events"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Chronological usage buckets, including buckets with no usage."
+                }
+              },
+              "required": [
+                "window",
+                "bucket",
+                "totals",
+                "previousTotals",
+                "series"
+              ],
+              "additionalProperties": false,
+              "id": "V2OrganizationUsageSummary"
+            }
+          }
+        }
+      }
+    },
+    "v2ListOrganizationUsageEventsContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/usage/events",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization identifier."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "preset": {
+            "default": "30d",
+            "description": "Reporting window. Custom requires startDate and endDate and is capped at 92 days; other presets reject those bounds. Resolved billing windows are capped at 366 days.",
+            "type": "string",
+            "enum": [
+              "current-period",
+              "previous-period",
+              "7d",
+              "30d",
+              "custom"
+            ]
+          },
+          "startDate": {
+            "description": "First calendar date included, in the selected timezone. Requires preset=custom.",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "endDate": {
+            "description": "Last calendar date included, in the selected timezone. Requires preset=custom.",
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "timezone": {
+            "default": "UTC",
+            "description": "IANA timezone for calendar boundaries; defaults to UTC.",
+            "type": "string",
+            "minLength": 1
+          },
+          "source": {
+            "description": "Restrict events to one product surface.",
+            "type": "string",
+            "enum": [
+              "workflow",
+              "wand",
+              "sim-chat",
+              "mcp_copilot",
+              "mothership_block",
+              "knowledge-base",
+              "voice-input",
+              "enrichment",
+              "voice-output",
+              "api-tool"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum usage events per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "createdAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2OrganizationUsageEvent"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2OrganizationUsageEvent": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Usage event identifier."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the usage event was recorded."
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "workflow",
+                    "wand",
+                    "sim-chat",
+                    "mcp_copilot",
+                    "mothership_block",
+                    "knowledge-base",
+                    "voice-input",
+                    "enrichment",
+                    "voice-output",
+                    "api-tool"
+                  ],
+                  "description": "Product surface that recorded the usage."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Usage event description, such as a model name."
+                },
+                "workflowName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Workflow name, or null for non-workflow usage or a deleted workflow."
+                },
+                "credits": {
+                  "type": "number",
+                  "description": "Credits consumed by this event, rounded to whole credits."
+                },
+                "hasCost": {
+                  "type": "boolean",
+                  "description": "Whether the event consumed credits before rounding, including sub-credit usage."
+                }
+              },
+              "required": [
+                "id",
+                "createdAt",
+                "source",
+                "description",
+                "workflowName",
+                "credits",
+                "hasCost"
+              ],
+              "additionalProperties": false,
+              "id": "V2OrganizationUsageEvent"
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateOrganizationMemberUsageLimitContract": {
+      "method": "PATCH",
+      "path": "/api/v2/organizations/[organizationId]/members/[userId]/usage-limit",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization identifier."
+          },
+          "userId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "User ID of an organization member or external collaborator with workspace access in this organization. Use List Organization Members or List Workspace Members to find it."
+          }
+        },
+        "required": [
+          "organizationId",
+          "userId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "creditLimit": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Credit cap for this person. Send null to clear the cap or 0 to prevent further credit-consuming usage. Organization limits still apply."
+          }
+        },
+        "required": [
+          "creditLimit"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2OrganizationMemberUsageLimitUpdate"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2OrganizationMemberUsageLimitUpdate": {
+              "type": "object",
+              "properties": {
+                "creditLimit": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Credit cap for this person. Send null to clear the cap or 0 to prevent further credit-consuming usage. Organization limits still apply."
+                }
+              },
+              "required": [
+                "creditLimit"
+              ],
+              "additionalProperties": false,
+              "id": "V2OrganizationMemberUsageLimitUpdate"
+            }
+          }
+        }
+      }
+    }
+  }
+}

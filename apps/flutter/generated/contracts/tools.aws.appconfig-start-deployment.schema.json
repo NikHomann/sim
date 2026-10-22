@@ -1,0 +1,117 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/appconfig-start-deployment.ts",
+  "contracts": {
+    "awsAppConfigStartDeploymentContract": {
+      "method": "POST",
+      "path": "/api/tools/appconfig/start-deployment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "environmentId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "deploymentStrategyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "configurationProfileId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "configurationVersion": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1024
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "applicationId",
+          "environmentId",
+          "deploymentStrategyId",
+          "configurationProfileId",
+          "configurationVersion"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "deploymentNumber": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "state": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "percentageComplete": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "deploymentNumber",
+            "state",
+            "percentageComplete"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

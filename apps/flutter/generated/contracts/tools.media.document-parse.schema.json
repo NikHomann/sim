@@ -1,0 +1,647 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/media/document-parse.ts",
+  "contracts": {
+    "textractAnalyzeExpenseContract": {
+      "method": "POST",
+      "path": "/api/tools/textract/analyze-expense",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(eu-isoe|us-isob|us-iso|us-gov|af|ap|ca|cn|eu|il|me|mx|sa|us)-(central|north|northeast|northwest|south|southeast|southwest|east|west)-\\d{1,2}$"
+          },
+          "processingMode": {
+            "default": "sync",
+            "type": "string",
+            "enum": [
+              "sync",
+              "async"
+            ]
+          },
+          "filePath": {
+            "type": "string"
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "size": {
+                "type": "number",
+                "minimum": 0
+              },
+              "type": {
+                "type": "string"
+              },
+              "uploadedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "context": {
+                "type": "string"
+              },
+              "base64": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "size"
+            ],
+            "additionalProperties": {}
+          },
+          "s3Uri": {
+            "type": "string"
+          },
+          "__resolvedSecretTraceProvenance": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "number",
+                "const": 1,
+                "description": "Secret provenance format version."
+              },
+              "complete": {
+                "type": "boolean",
+                "description": "Whether the provenance trace is complete."
+              },
+              "entries": {
+                "maxItems": 10000,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "encryptedValue": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 8388608,
+                      "description": "Encrypted secret value carried across the trusted execution boundary."
+                    },
+                    "name": {
+                      "description": "Optional source secret name.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1024
+                    }
+                  },
+                  "required": [
+                    "encryptedValue"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Encrypted secret provenance entries."
+              },
+              "scope": {
+                "description": "Authorization scope bound to the encrypted provenance.",
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024,
+                    "description": "User scope for the encrypted provenance."
+                  },
+                  "workspaceId": {
+                    "description": "Optional workspace scope for the encrypted provenance.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024
+                  }
+                },
+                "required": [
+                  "userId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "version",
+              "complete",
+              "entries"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "accessKeyId",
+          "secretAccessKey",
+          "region"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {},
+            "error": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "textractAnalyzeIdContract": {
+      "method": "POST",
+      "path": "/api/tools/textract/analyze-id",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(eu-isoe|us-isob|us-iso|us-gov|af|ap|ca|cn|eu|il|me|mx|sa|us)-(central|north|northeast|northwest|south|southeast|southwest|east|west)-\\d{1,2}$"
+          },
+          "filePath": {
+            "type": "string"
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "size": {
+                "type": "number",
+                "minimum": 0
+              },
+              "type": {
+                "type": "string"
+              },
+              "uploadedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "context": {
+                "type": "string"
+              },
+              "base64": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "size"
+            ],
+            "additionalProperties": {}
+          },
+          "filePathBack": {
+            "type": "string"
+          },
+          "fileBack": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "size": {
+                "type": "number",
+                "minimum": 0
+              },
+              "type": {
+                "type": "string"
+              },
+              "uploadedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "context": {
+                "type": "string"
+              },
+              "base64": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "size"
+            ],
+            "additionalProperties": {}
+          },
+          "__resolvedSecretTraceProvenance": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "number",
+                "const": 1,
+                "description": "Secret provenance format version."
+              },
+              "complete": {
+                "type": "boolean",
+                "description": "Whether the provenance trace is complete."
+              },
+              "entries": {
+                "maxItems": 10000,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "encryptedValue": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 8388608,
+                      "description": "Encrypted secret value carried across the trusted execution boundary."
+                    },
+                    "name": {
+                      "description": "Optional source secret name.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1024
+                    }
+                  },
+                  "required": [
+                    "encryptedValue"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Encrypted secret provenance entries."
+              },
+              "scope": {
+                "description": "Authorization scope bound to the encrypted provenance.",
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024,
+                    "description": "User scope for the encrypted provenance."
+                  },
+                  "workspaceId": {
+                    "description": "Optional workspace scope for the encrypted provenance.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024
+                  }
+                },
+                "required": [
+                  "userId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "version",
+              "complete",
+              "entries"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "accessKeyId",
+          "secretAccessKey",
+          "region"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {},
+            "error": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "textractParseContract": {
+      "method": "POST",
+      "path": "/api/tools/textract/parse",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(eu-isoe|us-isob|us-iso|us-gov|af|ap|ca|cn|eu|il|me|mx|sa|us)-(central|north|northeast|northwest|south|southeast|southwest|east|west)-\\d{1,2}$"
+          },
+          "processingMode": {
+            "default": "sync",
+            "type": "string",
+            "enum": [
+              "sync",
+              "async"
+            ]
+          },
+          "filePath": {
+            "type": "string"
+          },
+          "file": {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "string"
+              },
+              "key": {
+                "type": "string"
+              },
+              "path": {
+                "type": "string"
+              },
+              "url": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1
+              },
+              "size": {
+                "type": "number",
+                "minimum": 0
+              },
+              "type": {
+                "type": "string"
+              },
+              "uploadedAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "expiresAt": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {}
+                ]
+              },
+              "context": {
+                "type": "string"
+              },
+              "base64": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "name",
+              "size"
+            ],
+            "additionalProperties": {}
+          },
+          "s3Uri": {
+            "type": "string"
+          },
+          "featureTypes": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "TABLES",
+                "FORMS",
+                "QUERIES",
+                "SIGNATURES",
+                "LAYOUT"
+              ]
+            }
+          },
+          "queries": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "Text": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "Alias": {
+                  "type": "string"
+                },
+                "Pages": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "Text"
+              ]
+            }
+          },
+          "__resolvedSecretTraceProvenance": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "number",
+                "const": 1,
+                "description": "Secret provenance format version."
+              },
+              "complete": {
+                "type": "boolean",
+                "description": "Whether the provenance trace is complete."
+              },
+              "entries": {
+                "maxItems": 10000,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "encryptedValue": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 8388608,
+                      "description": "Encrypted secret value carried across the trusted execution boundary."
+                    },
+                    "name": {
+                      "description": "Optional source secret name.",
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1024
+                    }
+                  },
+                  "required": [
+                    "encryptedValue"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Encrypted secret provenance entries."
+              },
+              "scope": {
+                "description": "Authorization scope bound to the encrypted provenance.",
+                "type": "object",
+                "properties": {
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024,
+                    "description": "User scope for the encrypted provenance."
+                  },
+                  "workspaceId": {
+                    "description": "Optional workspace scope for the encrypted provenance.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 1024
+                  }
+                },
+                "required": [
+                  "userId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "version",
+              "complete",
+              "entries"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "required": [
+          "accessKeyId",
+          "secretAccessKey",
+          "region"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {},
+            "error": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

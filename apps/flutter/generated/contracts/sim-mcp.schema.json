@@ -1,0 +1,40 @@
+{
+  "source": "apps/sim/lib/api/contracts/sim-mcp.ts",
+  "contracts": {
+    "simMcpContract": {
+      "method": "POST",
+      "path": "/api/mcp",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "jsonrpc": {
+            "type": "string",
+            "const": "2.0"
+          }
+        },
+        "required": [
+          "jsonrpc"
+        ],
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "jsonrpc": {
+              "type": "string",
+              "const": "2.0"
+            }
+          },
+          "required": [
+            "jsonrpc"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

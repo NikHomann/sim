@@ -1,0 +1,99 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-send-templated-email.ts",
+  "contracts": {
+    "awsSesSendTemplatedEmailContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/send-templated-email",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fromAddress": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "toAddresses": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "templateData": {
+            "type": "string",
+            "minLength": 1
+          },
+          "ccAddresses": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "bccAddresses": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "configurationSetName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "fromAddress",
+          "toAddresses",
+          "templateName",
+          "templateData"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "messageId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "messageId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1368 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/sso.ts",
+  "contracts": {
+    "v2AddOrganizationDomainContract": {
+      "method": "POST",
+      "path": "/api/v2/organizations/[organizationId]/domains",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "domain": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 253,
+            "description": "Domain to claim and verify through a DNS TXT record."
+          }
+        },
+        "required": [
+          "domain"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": [
+          200,
+          201
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Domain claim identifier."
+                },
+                "domain": {
+                  "type": "string",
+                  "description": "Normalized email domain."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "verified"
+                  ],
+                  "description": "DNS ownership verification state."
+                },
+                "verifiedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When domain ownership was verified."
+                },
+                "challengeHost": {
+                  "type": "string",
+                  "description": "DNS host where the verification TXT record must be published."
+                },
+                "txtRecordValue": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "TXT record value for a pending domain; only administrators receive it."
+                }
+              },
+              "required": [
+                "id",
+                "domain",
+                "status",
+                "verifiedAt",
+                "challengeHost",
+                "txtRecordValue"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2DeleteSsoProviderContract": {
+      "method": "DELETE",
+      "path": "/api/v2/organizations/[organizationId]/sso/providers/[providerId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          },
+          "providerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Identity provider identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "providerId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "providerId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Removed provider identifier."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "The provider was removed; existing accounts and memberships remain."
+                }
+              },
+              "required": [
+                "providerId",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2GetSsoPolicyContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/sso/policy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "requireSso": {
+                  "type": "boolean",
+                  "description": "Stored single sign-on requirement."
+                },
+                "hasVerifiedProvider": {
+                  "type": "boolean",
+                  "description": "Whether a verified provider can satisfy the requirement."
+                },
+                "isEnforced": {
+                  "type": "boolean",
+                  "description": "Whether sign-in currently enforces the requirement."
+                }
+              },
+              "required": [
+                "requireSso",
+                "hasVerifiedProvider",
+                "isEnforced"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2GetSsoProviderContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/sso/providers/[providerId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          },
+          "providerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Identity provider identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "providerId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Provider record identifier."
+                },
+                "providerId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Globally unique identity provider identifier."
+                },
+                "providerType": {
+                  "type": "string",
+                  "enum": [
+                    "oidc",
+                    "saml"
+                  ],
+                  "description": "Identity provider protocol."
+                },
+                "domain": {
+                  "type": "string",
+                  "description": "Email domain served by the provider."
+                },
+                "domainKey": {
+                  "type": "string",
+                  "description": "Normalized email domain used for sign-in."
+                },
+                "issuer": {
+                  "type": "string",
+                  "description": "Identity provider issuer URL."
+                },
+                "oidcConfig": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "JSON configuration with the client secret redacted; null for SAML."
+                },
+                "samlConfig": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "JSON configuration without private keys; null for OIDC."
+                },
+                "jitProvisioningEnabled": {
+                  "type": "boolean",
+                  "description": "Whether successful SSO sign-in may add organization members, subject to membership and seat policies."
+                },
+                "domainVerified": {
+                  "type": "boolean",
+                  "description": "Whether the provider has a verified domain grant."
+                },
+                "isPrimary": {
+                  "type": "boolean",
+                  "description": "Whether this provider currently handles sign-in for its domain."
+                }
+              },
+              "required": [
+                "id",
+                "providerId",
+                "providerType",
+                "domain",
+                "domainKey",
+                "issuer",
+                "oidcConfig",
+                "samlConfig",
+                "jitProvisioningEnabled",
+                "domainVerified",
+                "isPrimary"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2ListOrganizationDomainsContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/domains",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "description": "Maximum domain claims to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "sortBy": {
+            "default": "domain",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "domain"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Domain claim identifier."
+                  },
+                  "domain": {
+                    "type": "string",
+                    "description": "Normalized email domain."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "verified"
+                    ],
+                    "description": "DNS ownership verification state."
+                  },
+                  "verifiedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "When domain ownership was verified."
+                  },
+                  "challengeHost": {
+                    "type": "string",
+                    "description": "DNS host where the verification TXT record must be published."
+                  },
+                  "txtRecordValue": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "TXT record value for a pending domain; only administrators receive it."
+                  }
+                },
+                "required": [
+                  "id",
+                  "domain",
+                  "status",
+                  "verifiedAt",
+                  "challengeHost",
+                  "txtRecordValue"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2ListSsoProvidersContract": {
+      "method": "GET",
+      "path": "/api/v2/organizations/[organizationId]/sso/providers",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "description": "Maximum identity providers to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "sortBy": {
+            "default": "providerId",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "providerId",
+              "domain"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Provider record identifier."
+                  },
+                  "providerId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Globally unique identity provider identifier."
+                  },
+                  "providerType": {
+                    "type": "string",
+                    "enum": [
+                      "oidc",
+                      "saml"
+                    ],
+                    "description": "Identity provider protocol."
+                  },
+                  "domain": {
+                    "type": "string",
+                    "description": "Email domain served by the provider."
+                  },
+                  "domainKey": {
+                    "type": "string",
+                    "description": "Normalized email domain used for sign-in."
+                  },
+                  "issuer": {
+                    "type": "string",
+                    "description": "Identity provider issuer URL."
+                  },
+                  "oidcConfig": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "JSON configuration with the client secret redacted; null for SAML."
+                  },
+                  "samlConfig": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "JSON configuration without private keys; null for OIDC."
+                  },
+                  "jitProvisioningEnabled": {
+                    "type": "boolean",
+                    "description": "Whether successful SSO sign-in may add organization members, subject to membership and seat policies."
+                  },
+                  "domainVerified": {
+                    "type": "boolean",
+                    "description": "Whether the provider has a verified domain grant."
+                  },
+                  "isPrimary": {
+                    "type": "boolean",
+                    "description": "Whether this provider currently handles sign-in for its domain."
+                  }
+                },
+                "required": [
+                  "id",
+                  "providerId",
+                  "providerType",
+                  "domain",
+                  "domainKey",
+                  "issuer",
+                  "oidcConfig",
+                  "samlConfig",
+                  "jitProvisioningEnabled",
+                  "domainVerified",
+                  "isPrimary"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2RemoveOrganizationDomainContract": {
+      "method": "DELETE",
+      "path": "/api/v2/organizations/[organizationId]/domains/[domainId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          },
+          "domainId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Domain claim owned by this organization."
+          }
+        },
+        "required": [
+          "organizationId",
+          "domainId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Removed domain claim identifier."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "The claim was removed; providers on this domain lose verified sign-in authority."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2SaveSsoProviderContract": {
+      "method": "POST",
+      "path": "/api/v2/organizations/[organizationId]/sso/providers",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "providerType": {
+                "type": "string",
+                "const": "oidc",
+                "description": "Configure an OpenID Connect identity provider."
+              },
+              "providerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255,
+                "description": "Globally unique provider ID; saving an existing provider replaces its supplied configuration."
+              },
+              "issuer": {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri",
+                "description": "Identity provider issuer URL."
+              },
+              "domain": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255,
+                "description": "Email domain already verified by this organization."
+              },
+              "jitProvisioningEnabled": {
+                "default": true,
+                "description": "Allow SSO sign-in to provision organization membership, subject to eligibility and available seats.",
+                "type": "boolean"
+              },
+              "mapping": {
+                "default": {
+                  "id": "sub",
+                  "email": "email",
+                  "name": "name",
+                  "image": "picture"
+                },
+                "description": "Identity-provider claims mapped to user fields.",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "default": "sub",
+                    "description": "Claim holding the stable identity identifier.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "default": "email",
+                    "description": "Claim holding the email address.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "name": {
+                    "default": "name",
+                    "description": "Claim holding the display name.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "image": {
+                    "default": "picture",
+                    "description": "Claim holding the avatar URL.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  }
+                },
+                "additionalProperties": false
+              },
+              "clientId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024,
+                "description": "Identity provider client identifier."
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8192,
+                "description": "Write-only client secret; the redacted marker from Get SSO Provider preserves an existing secret.",
+                "writeOnly": true
+              },
+              "scopes": {
+                "default": [
+                  "openid",
+                  "profile",
+                  "email"
+                ],
+                "description": "OIDC scopes; offline_access is omitted.",
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255
+                }
+              },
+              "pkce": {
+                "default": true,
+                "description": "Use PKCE for the authorization flow.",
+                "type": "boolean"
+              },
+              "authorizationEndpoint": {
+                "description": "Optional authorization endpoint; otherwise resolved through issuer discovery.",
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              "tokenEndpoint": {
+                "description": "Optional token endpoint; otherwise resolved through issuer discovery.",
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              "userInfoEndpoint": {
+                "description": "Optional UserInfo endpoint.",
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              "skipUserInfoEndpoint": {
+                "default": false,
+                "description": "Read identity claims from the ID token instead of calling UserInfo.",
+                "type": "boolean"
+              },
+              "jwksEndpoint": {
+                "description": "Optional signing-key endpoint; otherwise resolved through issuer discovery.",
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              }
+            },
+            "required": [
+              "providerType",
+              "providerId",
+              "issuer",
+              "domain",
+              "clientId",
+              "clientSecret"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "providerType": {
+                "type": "string",
+                "const": "saml",
+                "description": "Configure a SAML identity provider."
+              },
+              "providerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255,
+                "description": "Globally unique provider ID; saving an existing provider replaces its supplied configuration."
+              },
+              "issuer": {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri",
+                "description": "Identity provider issuer URL."
+              },
+              "domain": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255,
+                "description": "Email domain already verified by this organization."
+              },
+              "jitProvisioningEnabled": {
+                "default": true,
+                "description": "Allow SSO sign-in to provision organization membership, subject to eligibility and available seats.",
+                "type": "boolean"
+              },
+              "mapping": {
+                "default": {
+                  "id": "sub",
+                  "email": "email",
+                  "name": "name",
+                  "image": "picture"
+                },
+                "description": "Identity-provider claims mapped to user fields.",
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "default": "sub",
+                    "description": "Claim holding the stable identity identifier.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "default": "email",
+                    "description": "Claim holding the email address.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "name": {
+                    "default": "name",
+                    "description": "Claim holding the display name.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "image": {
+                    "default": "picture",
+                    "description": "Claim holding the avatar URL.",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  }
+                },
+                "additionalProperties": false
+              },
+              "entryPoint": {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri",
+                "description": "Identity provider SAML sign-in endpoint."
+              },
+              "cert": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 65536,
+                "description": "Identity provider signing certificate."
+              },
+              "callbackUrl": {
+                "description": "SAML callback URL; defaults to this provider’s Sim callback.",
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              "audience": {
+                "description": "SAML audience; omission preserves the saved value.",
+                "type": "string",
+                "maxLength": 2048
+              },
+              "wantAssertionsSigned": {
+                "description": "Require signed assertions; omission preserves the saved value.",
+                "type": "boolean"
+              },
+              "signatureAlgorithm": {
+                "description": "Signature algorithm accepted by the SAML configuration validator; omission preserves the saved value.",
+                "type": "string",
+                "maxLength": 255
+              },
+              "digestAlgorithm": {
+                "description": "Digest algorithm accepted by the SAML configuration validator; omission preserves the saved value.",
+                "type": "string",
+                "maxLength": 255
+              },
+              "identifierFormat": {
+                "description": "SAML NameID format; omission clears the saved value.",
+                "type": "string",
+                "maxLength": 2048
+              },
+              "idpMetadata": {
+                "description": "Identity provider metadata XML; omission clears the saved document.",
+                "type": "string",
+                "maxLength": 102400
+              }
+            },
+            "required": [
+              "providerType",
+              "providerId",
+              "issuer",
+              "domain",
+              "entryPoint",
+              "cert"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "status": [
+          200,
+          201
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "providerId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Saved provider identifier."
+                },
+                "providerType": {
+                  "type": "string",
+                  "enum": [
+                    "oidc",
+                    "saml"
+                  ],
+                  "description": "Saved identity provider protocol."
+                },
+                "created": {
+                  "type": "boolean",
+                  "description": "Whether a new provider was created."
+                }
+              },
+              "required": [
+                "providerId",
+                "providerType",
+                "created"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2SetPrimarySsoProviderContract": {
+      "method": "POST",
+      "path": "/api/v2/organizations/[organizationId]/sso/providers/[providerId]/primary",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          },
+          "providerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Identity provider identifier."
+          }
+        },
+        "required": [
+          "organizationId",
+          "providerId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "default": {},
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "providerId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Provider selected for domain sign-in."
+                },
+                "domain": {
+                  "type": "string",
+                  "description": "Verified domain whose primary provider changed."
+                }
+              },
+              "required": [
+                "providerId",
+                "domain"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2UpdateSsoPolicyContract": {
+      "method": "PATCH",
+      "path": "/api/v2/organizations/[organizationId]/sso/policy",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          }
+        },
+        "required": [
+          "organizationId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "requireSso": {
+            "type": "boolean",
+            "description": "Require organization SSO on future sign-ins; existing sessions remain active."
+          }
+        },
+        "required": [
+          "requireSso"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "requireSso": {
+                  "type": "boolean",
+                  "description": "Stored single sign-on requirement."
+                },
+                "hasVerifiedProvider": {
+                  "type": "boolean",
+                  "description": "Whether a verified provider can satisfy the requirement."
+                },
+                "isEnforced": {
+                  "type": "boolean",
+                  "description": "Whether sign-in currently enforces the requirement."
+                }
+              },
+              "required": [
+                "requireSso",
+                "hasVerifiedProvider",
+                "isEnforced"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v2VerifyOrganizationDomainContract": {
+      "method": "POST",
+      "path": "/api/v2/organizations/[organizationId]/domains/[domainId]/verify",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Organization whose single sign-on settings and verified domains are managed."
+          },
+          "domainId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Domain claim owned by this organization."
+          }
+        },
+        "required": [
+          "organizationId",
+          "domainId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "default": {},
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Domain claim identifier."
+                },
+                "domain": {
+                  "type": "string",
+                  "description": "Normalized email domain."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "verified"
+                  ],
+                  "description": "DNS ownership verification state."
+                },
+                "verifiedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When domain ownership was verified."
+                },
+                "challengeHost": {
+                  "type": "string",
+                  "description": "DNS host where the verification TXT record must be published."
+                },
+                "txtRecordValue": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "TXT record value for a pending domain; only administrators receive it."
+                }
+              },
+              "required": [
+                "id",
+                "domain",
+                "status",
+                "verifiedAt",
+                "challengeHost",
+                "txtRecordValue"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

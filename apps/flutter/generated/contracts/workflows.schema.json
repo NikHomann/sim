@@ -1,0 +1,3944 @@
+{
+  "source": "apps/sim/lib/api/contracts/workflows.ts",
+  "contracts": {
+    "cancelWorkflowExecutionContract": {
+      "method": "POST",
+      "path": "/api/workflows/[id]/executions/[executionId]/cancel",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "executionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "executionId": {
+              "type": "string"
+            },
+            "redisAvailable": {
+              "type": "boolean"
+            },
+            "durablyRecorded": {
+              "type": "boolean"
+            },
+            "locallyAborted": {
+              "type": "boolean"
+            },
+            "pausedCancelled": {
+              "type": "boolean"
+            },
+            "reason": {
+              "type": "string",
+              "enum": [
+                "recorded",
+                "already_cancelled",
+                "already_completed",
+                "already_failed",
+                "redis_unavailable",
+                "redis_write_failed",
+                "paused_event_publish_failed",
+                "paused_database_cancel_failed",
+                "queue_cancelled",
+                "active_resume_signal_failed",
+                "cancellation_not_finalized"
+              ]
+            }
+          },
+          "required": [
+            "success",
+            "executionId",
+            "redisAvailable",
+            "durablyRecorded",
+            "locallyAborted",
+            "pausedCancelled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createWorkflowContract": {
+      "method": "POST",
+      "path": "/api/workflows",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "default": "",
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "folderId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "deduplicate": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "type": "string"
+            },
+            "workspaceId": {
+              "type": "string"
+            },
+            "folderId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sortOrder": {
+              "type": "number"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "updatedAt": {
+              "type": "string"
+            },
+            "startBlockId": {
+              "type": "string"
+            },
+            "subBlockValues": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "description",
+            "workspaceId",
+            "sortOrder",
+            "createdAt",
+            "updatedAt",
+            "startBlockId",
+            "subBlockValues"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteWorkflowContract": {
+      "method": "DELETE",
+      "path": "/api/workflows/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "duplicateWorkflowContract": {
+      "method": "POST",
+      "path": "/api/workflows/[id]/duplicate",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "folderId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "newId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "workspaceId": {
+              "type": "string"
+            },
+            "folderId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "sortOrder": {
+              "type": "number"
+            },
+            "locked": {
+              "type": "boolean"
+            },
+            "blocksCount": {
+              "type": "number"
+            },
+            "edgesCount": {
+              "type": "number"
+            },
+            "subflowsCount": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "id",
+            "name",
+            "description",
+            "workspaceId",
+            "folderId",
+            "sortOrder",
+            "locked",
+            "blocksCount",
+            "edgesCount",
+            "subflowsCount"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getPauseContextDetailContract": {
+      "method": "GET",
+      "path": "/api/resume/[workflowId]/[executionId]/[contextId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contextId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workflowId",
+          "executionId",
+          "contextId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "execution": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workflowId": {
+                  "type": "string"
+                },
+                "executionId": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "totalPauseCount": {
+                  "type": "number"
+                },
+                "resumedCount": {
+                  "type": "number"
+                },
+                "pausedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "updatedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "expiresAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "metadata": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "triggerIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "pausePoints": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "workflowId",
+                "executionId",
+                "status",
+                "totalPauseCount",
+                "resumedCount",
+                "pausedAt",
+                "updatedAt",
+                "expiresAt",
+                "metadata",
+                "triggerIds",
+                "pausePoints"
+              ],
+              "additionalProperties": {}
+            },
+            "pausePoint": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {}
+            },
+            "queue": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "activeResumeEntry": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "execution",
+            "pausePoint",
+            "queue"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "getWorkflowExecutionContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/executions/[executionId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "executionId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "includeOutput": {
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ]
+          },
+          "selectedOutputs": {
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "executionId": {
+              "type": "string"
+            },
+            "workflowId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "pending",
+                "running",
+                "paused",
+                "completed",
+                "failed",
+                "cancelled"
+              ]
+            },
+            "trigger": {
+              "type": "string"
+            },
+            "level": {
+              "type": "string"
+            },
+            "startedAt": {
+              "type": "string"
+            },
+            "endedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "totalDurationMs": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "paused": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "contextId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Resume context identifier, or null while every pause point is mid-resume."
+                    },
+                    "pausedAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                      "description": "ISO 8601 timestamp when the execution entered the paused state."
+                    },
+                    "resumeAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "ISO 8601 scheduled automatic-resume timestamp, or null when no resume time is set."
+                    },
+                    "pauseKind": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "time",
+                            "human"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Whether the pause waits for time or human input, or null when unspecified."
+                    },
+                    "blockedOnBlockId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Workflow block awaiting resume, or null when no block is identified."
+                    },
+                    "automaticResumeWaitingReason": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Recorded automatic-resume failure, or null when no failure is recorded. Inspect `pauseKind` and `resumeAt` to distinguish a scheduled time pause from human input. Cleared after a successful resume. A non-retryable or exhausted failure starts with `Automatic resume requires manual intervention: `."
+                    },
+                    "pausedExecutionId": {
+                      "type": "string",
+                      "description": "Persistent paused-execution record identifier."
+                    },
+                    "pausePointCount": {
+                      "type": "number",
+                      "description": "Number of pause points tracked for the execution."
+                    },
+                    "resumedCount": {
+                      "type": "number",
+                      "description": "Number of pause points that have resumed."
+                    }
+                  },
+                  "required": [
+                    "contextId",
+                    "pausedAt",
+                    "resumeAt",
+                    "pauseKind",
+                    "blockedOnBlockId",
+                    "automaticResumeWaitingReason",
+                    "pausedExecutionId",
+                    "pausePointCount",
+                    "resumedCount"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "cost": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "total": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "total"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "finalOutput": {
+              "anyOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "blockOutputs": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "executionId",
+            "workflowId",
+            "status",
+            "trigger",
+            "level",
+            "startedAt",
+            "endedAt",
+            "totalDurationMs",
+            "paused",
+            "cost",
+            "error",
+            "finalOutput",
+            "blockOutputs"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkflowNormalizedStateContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/state",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "blocks": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "position": {
+                    "type": "object",
+                    "properties": {
+                      "x": {
+                        "type": "number"
+                      },
+                      "y": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "x",
+                      "y"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "subBlocks": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "value": {}
+                      },
+                      "required": [
+                        "id",
+                        "type",
+                        "value"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "outputs": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "horizontalHandles": {
+                    "type": "boolean"
+                  },
+                  "height": {
+                    "type": "number"
+                  },
+                  "advancedMode": {
+                    "type": "boolean"
+                  },
+                  "errorEnabled": {
+                    "type": "boolean"
+                  },
+                  "retry": {
+                    "type": "object",
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "maxTries": {
+                        "type": "integer",
+                        "minimum": 2,
+                        "maximum": 5
+                      },
+                      "waitBetweenTriesMs": {
+                        "type": "integer",
+                        "minimum": 0,
+                        "maximum": 5000
+                      }
+                    },
+                    "required": [
+                      "enabled",
+                      "maxTries",
+                      "waitBetweenTriesMs"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "triggerMode": {
+                    "type": "boolean"
+                  },
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "parentId": {
+                        "type": "string"
+                      },
+                      "extent": {
+                        "type": "string",
+                        "const": "parent"
+                      },
+                      "width": {
+                        "type": "number"
+                      },
+                      "height": {
+                        "type": "number"
+                      },
+                      "collection": {},
+                      "count": {
+                        "type": "number"
+                      },
+                      "loopType": {
+                        "type": "string",
+                        "enum": [
+                          "for",
+                          "forEach",
+                          "while",
+                          "doWhile"
+                        ]
+                      },
+                      "whileCondition": {
+                        "type": "string"
+                      },
+                      "doWhileCondition": {
+                        "type": "string"
+                      },
+                      "parallelType": {
+                        "type": "string",
+                        "enum": [
+                          "collection",
+                          "count"
+                        ]
+                      },
+                      "batchSize": {
+                        "type": "number"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "canonicalModes": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "enum": [
+                            "basic",
+                            "advanced"
+                          ]
+                        }
+                      }
+                    },
+                    "additionalProperties": false
+                  },
+                  "locked": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "type",
+                  "name",
+                  "position",
+                  "subBlocks",
+                  "outputs",
+                  "enabled"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "edges": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "source": {
+                    "type": "string"
+                  },
+                  "target": {
+                    "type": "string"
+                  },
+                  "sourceHandle": {},
+                  "targetHandle": {},
+                  "type": {
+                    "type": "string"
+                  },
+                  "animated": {
+                    "type": "boolean"
+                  },
+                  "style": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "data": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "labelStyle": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "labelShowBg": {
+                    "type": "boolean"
+                  },
+                  "labelBgStyle": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  },
+                  "labelBgPadding": {
+                    "type": "array",
+                    "prefixItems": [
+                      {
+                        "type": "number"
+                      },
+                      {
+                        "type": "number"
+                      }
+                    ]
+                  },
+                  "labelBgBorderRadius": {
+                    "type": "number"
+                  },
+                  "markerStart": {
+                    "type": "string"
+                  },
+                  "markerEnd": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "source",
+                  "target",
+                  "sourceHandle",
+                  "targetHandle"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "loops": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "nodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "iterations": {
+                    "type": "number"
+                  },
+                  "loopType": {
+                    "type": "string",
+                    "enum": [
+                      "for",
+                      "forEach",
+                      "while",
+                      "doWhile"
+                    ]
+                  },
+                  "forEachItems": {
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "items": {}
+                      },
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "whileCondition": {
+                    "type": "string"
+                  },
+                  "doWhileCondition": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "locked": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "nodes",
+                  "iterations",
+                  "loopType"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "parallels": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "nodes": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "distribution": {
+                    "anyOf": [
+                      {
+                        "type": "array",
+                        "items": {}
+                      },
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "string"
+                      }
+                    ]
+                  },
+                  "count": {
+                    "type": "number"
+                  },
+                  "parallelType": {
+                    "type": "string",
+                    "enum": [
+                      "count",
+                      "collection"
+                    ]
+                  },
+                  "batchSize": {
+                    "type": "number"
+                  },
+                  "enabled": {
+                    "type": "boolean"
+                  },
+                  "locked": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "nodes"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "variables": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "object",
+                      "array",
+                      "plain"
+                    ]
+                  },
+                  "value": {},
+                  "validationError": {
+                    "type": "string"
+                  },
+                  "workflowId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "type",
+                  "value",
+                  "workflowId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "blocks",
+            "edges",
+            "loops",
+            "parallels",
+            "variables"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkflowStateContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sortOrder": {
+                  "type": "number"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "lastSynced": {},
+                "createdAt": {},
+                "updatedAt": {},
+                "isDeployed": {
+                  "type": "boolean"
+                },
+                "deployedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isPublicApi": {
+                  "type": "boolean"
+                },
+                "locked": {
+                  "type": "boolean"
+                },
+                "forkSyncExcluded": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "runCount": {
+                  "type": "number"
+                },
+                "lastRunAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "state": {
+                  "type": "object",
+                  "properties": {
+                    "blocks": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "object",
+                            "properties": {
+                              "x": {
+                                "type": "number"
+                              },
+                              "y": {
+                                "type": "number"
+                              }
+                            },
+                            "required": [
+                              "x",
+                              "y"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "subBlocks": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "type": {
+                                  "type": "string"
+                                },
+                                "value": {}
+                              },
+                              "required": [
+                                "id",
+                                "type",
+                                "value"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "outputs": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "horizontalHandles": {
+                            "type": "boolean"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "advancedMode": {
+                            "type": "boolean"
+                          },
+                          "errorEnabled": {
+                            "type": "boolean"
+                          },
+                          "retry": {
+                            "type": "object",
+                            "properties": {
+                              "enabled": {
+                                "type": "boolean"
+                              },
+                              "maxTries": {
+                                "type": "integer",
+                                "minimum": 2,
+                                "maximum": 5
+                              },
+                              "waitBetweenTriesMs": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 5000
+                              }
+                            },
+                            "required": [
+                              "enabled",
+                              "maxTries",
+                              "waitBetweenTriesMs"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "triggerMode": {
+                            "type": "boolean"
+                          },
+                          "data": {
+                            "type": "object",
+                            "properties": {
+                              "parentId": {
+                                "type": "string"
+                              },
+                              "extent": {
+                                "type": "string",
+                                "const": "parent"
+                              },
+                              "width": {
+                                "type": "number"
+                              },
+                              "height": {
+                                "type": "number"
+                              },
+                              "collection": {},
+                              "count": {
+                                "type": "number"
+                              },
+                              "loopType": {
+                                "type": "string",
+                                "enum": [
+                                  "for",
+                                  "forEach",
+                                  "while",
+                                  "doWhile"
+                                ]
+                              },
+                              "whileCondition": {
+                                "type": "string"
+                              },
+                              "doWhileCondition": {
+                                "type": "string"
+                              },
+                              "parallelType": {
+                                "type": "string",
+                                "enum": [
+                                  "collection",
+                                  "count"
+                                ]
+                              },
+                              "batchSize": {
+                                "type": "number"
+                              },
+                              "type": {
+                                "type": "string"
+                              },
+                              "canonicalModes": {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {
+                                  "type": "string",
+                                  "enum": [
+                                    "basic",
+                                    "advanced"
+                                  ]
+                                }
+                              }
+                            },
+                            "additionalProperties": false
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "position",
+                          "subBlocks",
+                          "outputs",
+                          "enabled"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "edges": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "source": {
+                            "type": "string"
+                          },
+                          "target": {
+                            "type": "string"
+                          },
+                          "sourceHandle": {},
+                          "targetHandle": {},
+                          "type": {
+                            "type": "string"
+                          },
+                          "animated": {
+                            "type": "boolean"
+                          },
+                          "style": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "data": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "label": {
+                            "type": "string"
+                          },
+                          "labelStyle": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "labelShowBg": {
+                            "type": "boolean"
+                          },
+                          "labelBgStyle": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {}
+                          },
+                          "labelBgPadding": {
+                            "type": "array",
+                            "prefixItems": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "number"
+                              }
+                            ]
+                          },
+                          "labelBgBorderRadius": {
+                            "type": "number"
+                          },
+                          "markerStart": {
+                            "type": "string"
+                          },
+                          "markerEnd": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "source",
+                          "target",
+                          "sourceHandle",
+                          "targetHandle"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "loops": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "nodes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "iterations": {
+                            "type": "number"
+                          },
+                          "loopType": {
+                            "type": "string",
+                            "enum": [
+                              "for",
+                              "forEach",
+                              "while",
+                              "doWhile"
+                            ]
+                          },
+                          "forEachItems": {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {}
+                              },
+                              {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "whileCondition": {
+                            "type": "string"
+                          },
+                          "doWhileCondition": {
+                            "type": "string"
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "nodes",
+                          "iterations",
+                          "loopType"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "parallels": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "nodes": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "distribution": {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {}
+                              },
+                              {
+                                "type": "object",
+                                "propertyNames": {
+                                  "type": "string"
+                                },
+                                "additionalProperties": {}
+                              },
+                              {
+                                "type": "string"
+                              }
+                            ]
+                          },
+                          "count": {
+                            "type": "number"
+                          },
+                          "parallelType": {
+                            "type": "string",
+                            "enum": [
+                              "count",
+                              "collection"
+                            ]
+                          },
+                          "batchSize": {
+                            "type": "number"
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "locked": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "nodes"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "lastSaved": {
+                      "type": "number"
+                    },
+                    "isDeployed": {
+                      "type": "boolean"
+                    },
+                    "deployedAt": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "variables": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "string",
+                              "number",
+                              "boolean",
+                              "object",
+                              "array",
+                              "plain"
+                            ]
+                          },
+                          "value": {},
+                          "validationError": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "type",
+                          "value"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "metadata": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "description": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "blocks",
+                    "edges"
+                  ],
+                  "additionalProperties": false
+                },
+                "variables": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "string",
+                          "number",
+                          "boolean",
+                          "object",
+                          "array",
+                          "plain"
+                        ]
+                      },
+                      "value": {},
+                      "validationError": {
+                        "type": "string"
+                      },
+                      "workflowId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "type",
+                      "value",
+                      "workflowId"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "userId",
+                "workspaceId",
+                "folderId",
+                "sortOrder",
+                "name",
+                "description",
+                "lastSynced",
+                "createdAt",
+                "updatedAt",
+                "isDeployed",
+                "deployedAt",
+                "isPublicApi",
+                "locked",
+                "forkSyncExcluded",
+                "runCount",
+                "lastRunAt",
+                "archivedAt",
+                "state"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkflowStatusContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/status",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isDeployed": {
+              "type": "boolean"
+            },
+            "deployedAt": {
+              "anyOf": [
+                {},
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "isPublished": {
+              "type": "boolean"
+            },
+            "needsRedeployment": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "isDeployed",
+            "needsRedeployment"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkflowVariablesContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/variables",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "string",
+                      "number",
+                      "boolean",
+                      "object",
+                      "array",
+                      "plain"
+                    ]
+                  },
+                  "value": {},
+                  "validationError": {
+                    "type": "string"
+                  },
+                  "workflowId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "type",
+                  "value",
+                  "workflowId"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "importWorkflowAsSuperuserContract": {
+      "method": "POST",
+      "path": "/api/superuser/import-workflow",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "targetWorkspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workflowId",
+          "targetWorkspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "newWorkflowId": {
+              "type": "string"
+            },
+            "copilotChatsImported": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "success",
+            "newWorkflowId",
+            "copilotChatsImported"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listWorkflowsContract": {
+      "method": "GET",
+      "path": "/api/workflows",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "scope": {
+            "default": "active",
+            "type": "string",
+            "enum": [
+              "active",
+              "archived",
+              "all"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "workspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "folderId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "sortOrder": {
+                    "type": "number"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  },
+                  "archivedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "locked": {
+                    "type": "boolean"
+                  },
+                  "forkSyncExcluded": {
+                    "default": false,
+                    "type": "boolean"
+                  },
+                  "isDeployed": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "description",
+                  "workspaceId",
+                  "folderId",
+                  "sortOrder",
+                  "createdAt",
+                  "updatedAt",
+                  "archivedAt",
+                  "locked",
+                  "forkSyncExcluded"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "pausedWorkflowExecutionByIdContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/paused/[executionId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "executionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "workflowId": {
+              "type": "string"
+            },
+            "executionId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "totalPauseCount": {
+              "type": "number"
+            },
+            "resumedCount": {
+              "type": "number"
+            },
+            "pausedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "updatedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "expiresAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "metadata": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "triggerIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "pausePoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "executionSnapshot": {},
+            "queue": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "id",
+            "workflowId",
+            "executionId",
+            "status",
+            "totalPauseCount",
+            "resumedCount",
+            "pausedAt",
+            "updatedAt",
+            "expiresAt",
+            "metadata",
+            "triggerIds",
+            "pausePoints",
+            "executionSnapshot",
+            "queue"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "pausedWorkflowExecutionsContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/paused",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "pausedExecutions": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "workflowId": {
+                    "type": "string"
+                  },
+                  "executionId": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "totalPauseCount": {
+                    "type": "number"
+                  },
+                  "resumedCount": {
+                    "type": "number"
+                  },
+                  "pausedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "updatedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "expiresAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "triggerIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "pausePoints": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "workflowId",
+                  "executionId",
+                  "status",
+                  "totalPauseCount",
+                  "resumedCount",
+                  "pausedAt",
+                  "updatedAt",
+                  "expiresAt",
+                  "metadata",
+                  "triggerIds",
+                  "pausePoints"
+                ],
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "pausedExecutions"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "putWorkflowNormalizedStateContract": {
+      "method": "PUT",
+      "path": "/api/workflows/[id]/state",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "blocks": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "object",
+                  "properties": {
+                    "x": {
+                      "type": "number"
+                    },
+                    "y": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "x",
+                    "y"
+                  ]
+                },
+                "subBlocks": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "value": {}
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "value"
+                    ]
+                  }
+                },
+                "outputs": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "horizontalHandles": {
+                  "type": "boolean"
+                },
+                "height": {
+                  "type": "number"
+                },
+                "advancedMode": {
+                  "type": "boolean"
+                },
+                "errorEnabled": {
+                  "type": "boolean"
+                },
+                "retry": {
+                  "type": "object",
+                  "properties": {
+                    "enabled": {
+                      "type": "boolean"
+                    },
+                    "maxTries": {
+                      "type": "integer",
+                      "minimum": 2,
+                      "maximum": 5
+                    },
+                    "waitBetweenTriesMs": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 5000
+                    }
+                  },
+                  "required": [
+                    "enabled",
+                    "maxTries",
+                    "waitBetweenTriesMs"
+                  ]
+                },
+                "triggerMode": {
+                  "type": "boolean"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "parentId": {
+                      "type": "string"
+                    },
+                    "extent": {
+                      "type": "string",
+                      "const": "parent"
+                    },
+                    "width": {
+                      "type": "number"
+                    },
+                    "height": {
+                      "type": "number"
+                    },
+                    "collection": {},
+                    "count": {
+                      "type": "number"
+                    },
+                    "loopType": {
+                      "type": "string",
+                      "enum": [
+                        "for",
+                        "forEach",
+                        "while",
+                        "doWhile"
+                      ]
+                    },
+                    "whileCondition": {
+                      "type": "string"
+                    },
+                    "doWhileCondition": {
+                      "type": "string"
+                    },
+                    "parallelType": {
+                      "type": "string",
+                      "enum": [
+                        "collection",
+                        "count"
+                      ]
+                    },
+                    "batchSize": {
+                      "type": "number"
+                    },
+                    "type": {
+                      "type": "string"
+                    },
+                    "canonicalModes": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "type": "string",
+                        "enum": [
+                          "basic",
+                          "advanced"
+                        ]
+                      }
+                    }
+                  }
+                },
+                "locked": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "type",
+                "name",
+                "position",
+                "subBlocks",
+                "outputs",
+                "enabled"
+              ]
+            }
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "source": {
+                  "type": "string"
+                },
+                "target": {
+                  "type": "string"
+                },
+                "sourceHandle": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "targetHandle": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "type": {
+                  "type": "string"
+                },
+                "animated": {
+                  "type": "boolean"
+                },
+                "style": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "data": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "label": {
+                  "type": "string"
+                },
+                "labelStyle": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "labelShowBg": {
+                  "type": "boolean"
+                },
+                "labelBgStyle": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                "labelBgPadding": {
+                  "type": "array",
+                  "prefixItems": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "number"
+                    }
+                  ]
+                },
+                "labelBgBorderRadius": {
+                  "type": "number"
+                },
+                "markerStart": {
+                  "type": "string"
+                },
+                "markerEnd": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "source",
+                "target"
+              ]
+            }
+          },
+          "loops": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "nodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "iterations": {
+                  "type": "number"
+                },
+                "loopType": {
+                  "type": "string",
+                  "enum": [
+                    "for",
+                    "forEach",
+                    "while",
+                    "doWhile"
+                  ]
+                },
+                "forEachItems": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {}
+                    },
+                    {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "whileCondition": {
+                  "type": "string"
+                },
+                "doWhileCondition": {
+                  "type": "string"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "locked": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "nodes",
+                "iterations",
+                "loopType"
+              ]
+            }
+          },
+          "parallels": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "nodes": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "distribution": {
+                  "anyOf": [
+                    {
+                      "type": "array",
+                      "items": {}
+                    },
+                    {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "string"
+                    }
+                  ]
+                },
+                "count": {
+                  "type": "number"
+                },
+                "parallelType": {
+                  "type": "string",
+                  "enum": [
+                    "count",
+                    "collection"
+                  ]
+                },
+                "batchSize": {
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "locked": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "nodes"
+              ]
+            }
+          },
+          "lastSaved": {
+            "type": "number"
+          },
+          "isDeployed": {
+            "type": "boolean"
+          },
+          "deployedAt": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "variables": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "number",
+                    "boolean",
+                    "object",
+                    "array",
+                    "plain"
+                  ]
+                },
+                "value": {},
+                "validationError": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "type",
+                "value"
+              ]
+            }
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string"
+              },
+              "description": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "required": [
+          "blocks",
+          "edges"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "warnings": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "success",
+            "warnings"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reorderWorkflowsContract": {
+      "method": "PUT",
+      "path": "/api/workflows/reorder",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string"
+          },
+          "updates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "sortOrder": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "sortOrder"
+              ]
+            }
+          }
+        },
+        "required": [
+          "workspaceId",
+          "updates"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "updated": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "success",
+            "updated"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "restoreWorkflowContract": {
+      "method": "POST",
+      "path": "/api/workflows/[id]/restore",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "resumeWorkflowExecutionContextContract": {
+      "method": "POST",
+      "path": "/api/resume/[workflowId]/[executionId]/[contextId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "contextId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workflowId",
+          "executionId",
+          "contextId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "status": {
+              "type": "string",
+              "enum": [
+                "queued",
+                "started"
+              ]
+            },
+            "success": {
+              "type": "boolean"
+            },
+            "async": {
+              "type": "boolean"
+            },
+            "executionId": {
+              "type": "string"
+            },
+            "queuePosition": {
+              "type": "number"
+            },
+            "jobId": {
+              "type": "string"
+            },
+            "output": {},
+            "error": {
+              "type": "string"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "duration": {
+                  "type": "number"
+                },
+                "startTime": {
+                  "type": "string"
+                },
+                "endTime": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false
+            },
+            "message": {
+              "type": "string"
+            },
+            "statusUrl": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "resumeWorkflowExecutionContract": {
+      "method": "GET",
+      "path": "/api/resume/[workflowId]/[executionId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workflowId",
+          "executionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "workflowId": {
+              "type": "string"
+            },
+            "executionId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "totalPauseCount": {
+              "type": "number"
+            },
+            "resumedCount": {
+              "type": "number"
+            },
+            "pausedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "updatedAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "expiresAt": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "metadata": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {}
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "triggerIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "pausePoints": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            },
+            "executionSnapshot": {},
+            "queue": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "id",
+            "workflowId",
+            "executionId",
+            "status",
+            "totalPauseCount",
+            "resumedCount",
+            "pausedAt",
+            "updatedAt",
+            "expiresAt",
+            "metadata",
+            "triggerIds",
+            "pausePoints",
+            "executionSnapshot",
+            "queue"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "streamWorkflowExecutionContract": {
+      "method": "GET",
+      "path": "/api/workflows/[id]/executions/[executionId]/stream",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "executionId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "from": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "from"
+        ]
+      },
+      "response": {
+        "mode": "stream"
+      }
+    },
+    "updateWorkflowContract": {
+      "method": "PUT",
+      "path": "/api/workflows/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1
+          },
+          "description": {
+            "type": "string"
+          },
+          "folderId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "sortOrder": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "locked": {
+            "type": "boolean"
+          },
+          "forkSyncExcluded": {
+            "type": "boolean"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workflow": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "sortOrder": {
+                  "type": "number"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "locked": {
+                  "type": "boolean"
+                },
+                "forkSyncExcluded": {
+                  "default": false,
+                  "type": "boolean"
+                },
+                "isDeployed": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "workspaceId",
+                "folderId",
+                "sortOrder",
+                "createdAt",
+                "updatedAt",
+                "archivedAt",
+                "locked",
+                "forkSyncExcluded"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "workflow"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "workflowAutoLayoutContract": {
+      "method": "POST",
+      "path": "/api/workflows/[id]/autolayout",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "spacing": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "horizontal": {
+                "type": "number",
+                "minimum": 100,
+                "maximum": 1000
+              },
+              "vertical": {
+                "type": "number",
+                "minimum": 50,
+                "maximum": 500
+              }
+            }
+          },
+          "alignment": {
+            "default": "center",
+            "type": "string",
+            "enum": [
+              "start",
+              "center",
+              "end"
+            ]
+          },
+          "padding": {
+            "default": {},
+            "type": "object",
+            "properties": {
+              "x": {
+                "type": "number",
+                "minimum": 50,
+                "maximum": 500
+              },
+              "y": {
+                "type": "number",
+                "minimum": 50,
+                "maximum": 500
+              }
+            }
+          },
+          "gridSize": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 50
+          },
+          "blocks": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "edges": {
+            "type": "array",
+            "items": {}
+          },
+          "loops": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          },
+          "parallels": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "blockCount": {
+                  "type": "number"
+                },
+                "elapsed": {
+                  "type": "string"
+                },
+                "layoutedBlocks": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "position": {
+                        "type": "object",
+                        "properties": {
+                          "x": {
+                            "type": "number"
+                          },
+                          "y": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "x",
+                          "y"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "subBlocks": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string"
+                            },
+                            "type": {
+                              "type": "string"
+                            },
+                            "value": {}
+                          },
+                          "required": [
+                            "id",
+                            "type",
+                            "value"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "outputs": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "horizontalHandles": {
+                        "type": "boolean"
+                      },
+                      "height": {
+                        "type": "number"
+                      },
+                      "advancedMode": {
+                        "type": "boolean"
+                      },
+                      "errorEnabled": {
+                        "type": "boolean"
+                      },
+                      "retry": {
+                        "type": "object",
+                        "properties": {
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "maxTries": {
+                            "type": "integer",
+                            "minimum": 2,
+                            "maximum": 5
+                          },
+                          "waitBetweenTriesMs": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 5000
+                          }
+                        },
+                        "required": [
+                          "enabled",
+                          "maxTries",
+                          "waitBetweenTriesMs"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "triggerMode": {
+                        "type": "boolean"
+                      },
+                      "data": {
+                        "type": "object",
+                        "properties": {
+                          "parentId": {
+                            "type": "string"
+                          },
+                          "extent": {
+                            "type": "string",
+                            "const": "parent"
+                          },
+                          "width": {
+                            "type": "number"
+                          },
+                          "height": {
+                            "type": "number"
+                          },
+                          "collection": {},
+                          "count": {
+                            "type": "number"
+                          },
+                          "loopType": {
+                            "type": "string",
+                            "enum": [
+                              "for",
+                              "forEach",
+                              "while",
+                              "doWhile"
+                            ]
+                          },
+                          "whileCondition": {
+                            "type": "string"
+                          },
+                          "doWhileCondition": {
+                            "type": "string"
+                          },
+                          "parallelType": {
+                            "type": "string",
+                            "enum": [
+                              "collection",
+                              "count"
+                            ]
+                          },
+                          "batchSize": {
+                            "type": "number"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "canonicalModes": {
+                            "type": "object",
+                            "propertyNames": {
+                              "type": "string"
+                            },
+                            "additionalProperties": {
+                              "type": "string",
+                              "enum": [
+                                "basic",
+                                "advanced"
+                              ]
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "locked": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "type",
+                      "name",
+                      "position",
+                      "subBlocks",
+                      "outputs",
+                      "enabled"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "blockCount",
+                "elapsed",
+                "layoutedBlocks"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "message",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "workflowVariablesContract": {
+      "method": "POST",
+      "path": "/api/workflows/[id]/variables",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "variables": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "string",
+                    "number",
+                    "boolean",
+                    "object",
+                    "array",
+                    "plain"
+                  ]
+                },
+                "value": {},
+                "validationError": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "type",
+                "value"
+              ]
+            }
+          }
+        },
+        "required": [
+          "variables"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

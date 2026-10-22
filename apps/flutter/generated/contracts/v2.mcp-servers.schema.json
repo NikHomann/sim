@@ -1,0 +1,1183 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/mcp-servers.ts",
+  "contracts": {
+    "v2CreateMcpServerContract": {
+      "method": "POST",
+      "path": "/api/v2/mcp-servers",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace in which to register the server."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Server display name."
+          },
+          "description": {
+            "description": "Optional server description.",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "transport": {
+            "description": "Transport protocol. Defaults to `streamable-http` on creation.",
+            "default": "streamable-http",
+            "type": "string",
+            "enum": [
+              "streamable-http"
+            ]
+          },
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "description": "Absolute HTTP or HTTPS endpoint URL without `{{ENV_VAR}}` references. It determines server identity and is immutable: delete and recreate the server to change endpoints."
+          },
+          "authType": {
+            "description": "Authentication method. On creation, omission without `headers` probes once: an OAuth challenge selects `oauth`, an unauthenticated success selects `none`, and other outcomes fall back to `headers`. An OAuth client ID selects `oauth` when the method is omitted. Set explicitly to use headers with a server advertising OAuth; adding headers later does not change the saved method.",
+            "type": "string",
+            "enum": [
+              "none",
+              "headers",
+              "oauth"
+            ]
+          },
+          "headers": {
+            "description": "Write-only request headers sent to the server. Replaced wholesale rather than merged on update: sending this field drops every stored header it does not repeat.",
+            "writeOnly": true,
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1
+            },
+            "additionalProperties": {
+              "type": "string",
+              "description": "Header value sent to the MCP server."
+            }
+          },
+          "timeout": {
+            "description": "Per-request timeout in milliseconds. Defaults to 30000 on creation.",
+            "default": 30000,
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 300000
+          },
+          "retries": {
+            "description": "Number of retries per request. Defaults to 3 on creation.",
+            "default": 3,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "enabled": {
+            "description": "Whether workflows can use the server's tools. Defaults to true on creation.",
+            "default": true,
+            "type": "boolean"
+          },
+          "oauthClientId": {
+            "description": "Pre-registered OAuth client identifier. Changing it on update revokes the stored OAuth grant and forces reauthorization.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "oauthClientSecret": {
+            "description": "Write-only pre-registered OAuth client secret. Sending it on update as null or a new value revokes the stored OAuth grant and forces reauthorization, as does switching away from OAuth authentication.",
+            "writeOnly": true,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "name",
+          "url"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2McpServer"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2McpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique server identifier derived from the workspace and endpoint URL."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name."
+                },
+                "description": {
+                  "description": "Optional server description.",
+                  "type": "string"
+                },
+                "transport": {
+                  "default": "streamable-http",
+                  "description": "Transport used to communicate with the server.",
+                  "type": "string",
+                  "enum": [
+                    "streamable-http"
+                  ]
+                },
+                "authType": {
+                  "description": "Authentication method used by the server.",
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "headers",
+                    "oauth"
+                  ]
+                },
+                "url": {
+                  "description": "Server endpoint URL.",
+                  "type": "string"
+                },
+                "timeout": {
+                  "description": "Per-request timeout in milliseconds.",
+                  "type": "number"
+                },
+                "retries": {
+                  "description": "Number of retries attempted per request.",
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the server tools are available to workflows."
+                },
+                "connectionStatus": {
+                  "description": "Result of the most recent tool connection attempt. New registrations start `disconnected`; re-registration resets this state only when connection inputs change. Authentication probes do not establish a tool connection. Tool discovery updates this state.",
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "disconnected",
+                    "error"
+                  ]
+                },
+                "lastError": {
+                  "description": "Message from the most recent failed tool connection, or null when absent. Successful discovery or re-registration with changed connection inputs clears it.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "toolCount": {
+                  "description": "Number of tools discovered on the server.",
+                  "type": "number"
+                },
+                "lastToolsRefresh": {
+                  "description": "ISO 8601 timestamp of the most recent tool-list refresh.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "lastConnected": {
+                  "description": "ISO 8601 timestamp of the most recent successful tool connection. Absent until one succeeds, or after re-registration changes connection inputs.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "createdAt": {
+                  "description": "ISO 8601 timestamp when the server was registered.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "description": "ISO 8601 timestamp when the server was last updated.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "oauthClientId": {
+                  "description": "Pre-registered OAuth client identifier, when configured.",
+                  "type": "string"
+                },
+                "hasHeaders": {
+                  "type": "boolean",
+                  "description": "Whether any request headers are configured."
+                },
+                "headerNames": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Configured header name."
+                  },
+                  "description": "Names of configured request headers. Header values are never returned."
+                },
+                "hasOauthClientSecret": {
+                  "type": "boolean",
+                  "description": "Whether an OAuth client secret is stored. The value is never returned."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "transport",
+                "enabled",
+                "createdAt",
+                "updatedAt",
+                "hasHeaders",
+                "headerNames",
+                "hasOauthClientSecret"
+              ],
+              "additionalProperties": false,
+              "id": "V2McpServer",
+              "title": "MCP server",
+              "description": "Public MCP server configuration without write-only credential values."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteMcpServerContract": {
+      "method": "DELETE",
+      "path": "/api/v2/mcp-servers/[mcpServerId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "mcpServerId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique MCP server identifier."
+          }
+        },
+        "required": [
+          "mcpServerId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the MCP server."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2McpServerDeleteData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2McpServerDeleteData": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the deleted MCP server."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the server was deleted."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2McpServerDeleteData",
+              "title": "Delete MCP server data",
+              "description": "MCP server deletion acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2GetMcpServerContract": {
+      "method": "GET",
+      "path": "/api/v2/mcp-servers/[mcpServerId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "mcpServerId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique MCP server identifier."
+          }
+        },
+        "required": [
+          "mcpServerId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the MCP server."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2McpServer"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2McpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique server identifier derived from the workspace and endpoint URL."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name."
+                },
+                "description": {
+                  "description": "Optional server description.",
+                  "type": "string"
+                },
+                "transport": {
+                  "default": "streamable-http",
+                  "description": "Transport used to communicate with the server.",
+                  "type": "string",
+                  "enum": [
+                    "streamable-http"
+                  ]
+                },
+                "authType": {
+                  "description": "Authentication method used by the server.",
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "headers",
+                    "oauth"
+                  ]
+                },
+                "url": {
+                  "description": "Server endpoint URL.",
+                  "type": "string"
+                },
+                "timeout": {
+                  "description": "Per-request timeout in milliseconds.",
+                  "type": "number"
+                },
+                "retries": {
+                  "description": "Number of retries attempted per request.",
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the server tools are available to workflows."
+                },
+                "connectionStatus": {
+                  "description": "Result of the most recent tool connection attempt. New registrations start `disconnected`; re-registration resets this state only when connection inputs change. Authentication probes do not establish a tool connection. Tool discovery updates this state.",
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "disconnected",
+                    "error"
+                  ]
+                },
+                "lastError": {
+                  "description": "Message from the most recent failed tool connection, or null when absent. Successful discovery or re-registration with changed connection inputs clears it.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "toolCount": {
+                  "description": "Number of tools discovered on the server.",
+                  "type": "number"
+                },
+                "lastToolsRefresh": {
+                  "description": "ISO 8601 timestamp of the most recent tool-list refresh.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "lastConnected": {
+                  "description": "ISO 8601 timestamp of the most recent successful tool connection. Absent until one succeeds, or after re-registration changes connection inputs.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "createdAt": {
+                  "description": "ISO 8601 timestamp when the server was registered.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "description": "ISO 8601 timestamp when the server was last updated.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "oauthClientId": {
+                  "description": "Pre-registered OAuth client identifier, when configured.",
+                  "type": "string"
+                },
+                "hasHeaders": {
+                  "type": "boolean",
+                  "description": "Whether any request headers are configured."
+                },
+                "headerNames": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Configured header name."
+                  },
+                  "description": "Names of configured request headers. Header values are never returned."
+                },
+                "hasOauthClientSecret": {
+                  "type": "boolean",
+                  "description": "Whether an OAuth client secret is stored. The value is never returned."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "transport",
+                "enabled",
+                "createdAt",
+                "updatedAt",
+                "hasHeaders",
+                "headerNames",
+                "hasOauthClientSecret"
+              ],
+              "additionalProperties": false,
+              "id": "V2McpServer",
+              "title": "MCP server",
+              "description": "Public MCP server configuration without write-only credential values."
+            }
+          }
+        }
+      }
+    },
+    "v2ListMcpServerToolsContract": {
+      "method": "GET",
+      "path": "/api/v2/mcp-servers/[mcpServerId]/tools",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "mcpServerId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique MCP server identifier."
+          }
+        },
+        "required": [
+          "mcpServerId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the MCP server."
+          },
+          "refresh": {
+            "description": "Refresh tools using your credentials. Otherwise results may reuse another workspace member's recent discovery and omit newly added tools.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2McpTool"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Always `null`. This list has no `cursor` or `limit` parameters; see the operation for inventory limits."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2McpTool": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "description": "Tool name, as the MCP server reports it."
+                },
+                "description": {
+                  "description": "Tool description reported by the server.",
+                  "type": "string"
+                },
+                "inputSchema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "object",
+                      "description": "JSON Schema type of the argument object. MCP requires `object`."
+                    },
+                    "properties": {
+                      "description": "Argument schemas keyed by argument name.",
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {
+                        "description": "Server-defined JSON Schema for one tool argument."
+                      }
+                    },
+                    "required": {
+                      "description": "Names of the arguments the tool requires.",
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "description": "Name of a required argument."
+                      }
+                    }
+                  },
+                  "required": [
+                    "type"
+                  ],
+                  "additionalProperties": {
+                    "description": "Additional JSON Schema keyword reported by the server."
+                  },
+                  "description": "JSON Schema for the tool's arguments, as reported by the server."
+                },
+                "serverId": {
+                  "type": "string",
+                  "description": "Identifier of the MCP server exposing the tool."
+                },
+                "serverName": {
+                  "type": "string",
+                  "description": "Display name of the MCP server exposing the tool."
+                }
+              },
+              "required": [
+                "name",
+                "inputSchema",
+                "serverId",
+                "serverName"
+              ],
+              "additionalProperties": false,
+              "id": "V2McpTool",
+              "title": "MCP tool",
+              "description": "A tool exposed by a registered MCP server."
+            }
+          }
+        }
+      }
+    },
+    "v2ListMcpServersContract": {
+      "method": "GET",
+      "path": "/api/v2/mcp-servers",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the MCP server."
+          },
+          "search": {
+            "description": "Case-insensitive substring match against the server name.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Field used to sort the result. Do not rely on case-insensitive ordering when sorting by `name`.",
+            "type": "string",
+            "enum": [
+              "name",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum MCP servers to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2McpServer"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2McpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique server identifier derived from the workspace and endpoint URL."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name."
+                },
+                "description": {
+                  "description": "Optional server description.",
+                  "type": "string"
+                },
+                "transport": {
+                  "default": "streamable-http",
+                  "description": "Transport used to communicate with the server.",
+                  "type": "string",
+                  "enum": [
+                    "streamable-http"
+                  ]
+                },
+                "authType": {
+                  "description": "Authentication method used by the server.",
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "headers",
+                    "oauth"
+                  ]
+                },
+                "url": {
+                  "description": "Server endpoint URL.",
+                  "type": "string"
+                },
+                "timeout": {
+                  "description": "Per-request timeout in milliseconds.",
+                  "type": "number"
+                },
+                "retries": {
+                  "description": "Number of retries attempted per request.",
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the server tools are available to workflows."
+                },
+                "connectionStatus": {
+                  "description": "Result of the most recent tool connection attempt. New registrations start `disconnected`; re-registration resets this state only when connection inputs change. Authentication probes do not establish a tool connection. Tool discovery updates this state.",
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "disconnected",
+                    "error"
+                  ]
+                },
+                "lastError": {
+                  "description": "Message from the most recent failed tool connection, or null when absent. Successful discovery or re-registration with changed connection inputs clears it.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "toolCount": {
+                  "description": "Number of tools discovered on the server.",
+                  "type": "number"
+                },
+                "lastToolsRefresh": {
+                  "description": "ISO 8601 timestamp of the most recent tool-list refresh.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "lastConnected": {
+                  "description": "ISO 8601 timestamp of the most recent successful tool connection. Absent until one succeeds, or after re-registration changes connection inputs.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "createdAt": {
+                  "description": "ISO 8601 timestamp when the server was registered.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "description": "ISO 8601 timestamp when the server was last updated.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "oauthClientId": {
+                  "description": "Pre-registered OAuth client identifier, when configured.",
+                  "type": "string"
+                },
+                "hasHeaders": {
+                  "type": "boolean",
+                  "description": "Whether any request headers are configured."
+                },
+                "headerNames": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Configured header name."
+                  },
+                  "description": "Names of configured request headers. Header values are never returned."
+                },
+                "hasOauthClientSecret": {
+                  "type": "boolean",
+                  "description": "Whether an OAuth client secret is stored. The value is never returned."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "transport",
+                "enabled",
+                "createdAt",
+                "updatedAt",
+                "hasHeaders",
+                "headerNames",
+                "hasOauthClientSecret"
+              ],
+              "additionalProperties": false,
+              "id": "V2McpServer",
+              "title": "MCP server",
+              "description": "Public MCP server configuration without write-only credential values."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateMcpServerContract": {
+      "method": "PATCH",
+      "path": "/api/v2/mcp-servers/[mcpServerId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "mcpServerId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique MCP server identifier."
+          }
+        },
+        "required": [
+          "mcpServerId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the MCP server."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Server display name."
+          },
+          "description": {
+            "description": "Optional server description.",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "transport": {
+            "description": "Transport protocol. Defaults to `streamable-http` on creation.",
+            "default": "streamable-http",
+            "type": "string",
+            "enum": [
+              "streamable-http"
+            ]
+          },
+          "url": {
+            "description": "Immutable server URL. When provided, it must equal the current URL; use delete and create to change endpoints.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "authType": {
+            "description": "Authentication method. On creation, omission without `headers` probes once: an OAuth challenge selects `oauth`, an unauthenticated success selects `none`, and other outcomes fall back to `headers`. An OAuth client ID selects `oauth` when the method is omitted. Set explicitly to use headers with a server advertising OAuth; adding headers later does not change the saved method.",
+            "type": "string",
+            "enum": [
+              "none",
+              "headers",
+              "oauth"
+            ]
+          },
+          "headers": {
+            "description": "Write-only request headers sent to the server. Replaced wholesale rather than merged on update: sending this field drops every stored header it does not repeat.",
+            "writeOnly": true,
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1
+            },
+            "additionalProperties": {
+              "type": "string",
+              "description": "Header value sent to the MCP server."
+            }
+          },
+          "timeout": {
+            "description": "Per-request timeout in milliseconds. Defaults to 30000 on creation.",
+            "default": 30000,
+            "type": "integer",
+            "minimum": 1000,
+            "maximum": 300000
+          },
+          "retries": {
+            "description": "Number of retries per request. Defaults to 3 on creation.",
+            "default": 3,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10
+          },
+          "enabled": {
+            "description": "Whether workflows can use the server's tools. Defaults to true on creation.",
+            "default": true,
+            "type": "boolean"
+          },
+          "oauthClientId": {
+            "description": "Pre-registered OAuth client identifier. Changing it on update revokes the stored OAuth grant and forces reauthorization.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "oauthClientSecret": {
+            "description": "Write-only pre-registered OAuth client secret. Sending it on update as null or a new value revokes the stored OAuth grant and forces reauthorization, as does switching away from OAuth authentication.",
+            "writeOnly": true,
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2McpServer"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2McpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique server identifier derived from the workspace and endpoint URL."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name."
+                },
+                "description": {
+                  "description": "Optional server description.",
+                  "type": "string"
+                },
+                "transport": {
+                  "default": "streamable-http",
+                  "description": "Transport used to communicate with the server.",
+                  "type": "string",
+                  "enum": [
+                    "streamable-http"
+                  ]
+                },
+                "authType": {
+                  "description": "Authentication method used by the server.",
+                  "type": "string",
+                  "enum": [
+                    "none",
+                    "headers",
+                    "oauth"
+                  ]
+                },
+                "url": {
+                  "description": "Server endpoint URL.",
+                  "type": "string"
+                },
+                "timeout": {
+                  "description": "Per-request timeout in milliseconds.",
+                  "type": "number"
+                },
+                "retries": {
+                  "description": "Number of retries attempted per request.",
+                  "type": "number"
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the server tools are available to workflows."
+                },
+                "connectionStatus": {
+                  "description": "Result of the most recent tool connection attempt. New registrations start `disconnected`; re-registration resets this state only when connection inputs change. Authentication probes do not establish a tool connection. Tool discovery updates this state.",
+                  "type": "string",
+                  "enum": [
+                    "connected",
+                    "disconnected",
+                    "error"
+                  ]
+                },
+                "lastError": {
+                  "description": "Message from the most recent failed tool connection, or null when absent. Successful discovery or re-registration with changed connection inputs clears it.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "toolCount": {
+                  "description": "Number of tools discovered on the server.",
+                  "type": "number"
+                },
+                "lastToolsRefresh": {
+                  "description": "ISO 8601 timestamp of the most recent tool-list refresh.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "lastConnected": {
+                  "description": "ISO 8601 timestamp of the most recent successful tool connection. Absent until one succeeds, or after re-registration changes connection inputs.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "createdAt": {
+                  "description": "ISO 8601 timestamp when the server was registered.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "description": "ISO 8601 timestamp when the server was last updated.",
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "oauthClientId": {
+                  "description": "Pre-registered OAuth client identifier, when configured.",
+                  "type": "string"
+                },
+                "hasHeaders": {
+                  "type": "boolean",
+                  "description": "Whether any request headers are configured."
+                },
+                "headerNames": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "description": "Configured header name."
+                  },
+                  "description": "Names of configured request headers. Header values are never returned."
+                },
+                "hasOauthClientSecret": {
+                  "type": "boolean",
+                  "description": "Whether an OAuth client secret is stored. The value is never returned."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "transport",
+                "enabled",
+                "createdAt",
+                "updatedAt",
+                "hasHeaders",
+                "headerNames",
+                "hasOauthClientSecret"
+              ],
+              "additionalProperties": false,
+              "id": "V2McpServer",
+              "title": "MCP server",
+              "description": "Public MCP server configuration without write-only credential values."
+            }
+          }
+        }
+      }
+    }
+  }
+}

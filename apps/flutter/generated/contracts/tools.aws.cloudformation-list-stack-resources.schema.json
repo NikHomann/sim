@@ -1,0 +1,116 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-list-stack-resources.ts",
+  "contracts": {
+    "awsCloudformationListStackResourcesContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/list-stack-resources",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stackName": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "stackName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "resources": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "logicalResourceId": {
+                        "type": "string"
+                      },
+                      "physicalResourceId": {
+                        "type": "string"
+                      },
+                      "resourceType": {
+                        "type": "string"
+                      },
+                      "resourceStatus": {
+                        "type": "string"
+                      },
+                      "resourceStatusReason": {
+                        "type": "string"
+                      },
+                      "lastUpdatedTimestamp": {
+                        "type": "number"
+                      },
+                      "driftInformation": {
+                        "anyOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "stackResourceDriftStatus": {
+                                "type": "string"
+                              },
+                              "lastCheckTimestamp": {
+                                "type": "number"
+                              }
+                            },
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "logicalResourceId",
+                      "resourceType",
+                      "resourceStatus",
+                      "driftInformation"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "resources"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

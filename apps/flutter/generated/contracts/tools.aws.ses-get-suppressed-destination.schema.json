@@ -1,0 +1,91 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-get-suppressed-destination.ts",
+  "contracts": {
+    "awsSesGetSuppressedDestinationContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/get-suppressed-destination",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "emailAddress": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "emailAddress"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "emailAddress": {
+              "type": "string"
+            },
+            "reason": {
+              "type": "string"
+            },
+            "lastUpdateTime": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "messageId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "feedbackId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "emailAddress",
+            "reason",
+            "lastUpdateTime",
+            "messageId",
+            "feedbackId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

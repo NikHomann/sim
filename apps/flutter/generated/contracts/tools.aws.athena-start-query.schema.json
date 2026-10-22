@@ -1,0 +1,101 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/athena-start-query.ts",
+  "contracts": {
+    "awsAthenaStartQueryContract": {
+      "method": "POST",
+      "path": "/api/tools/athena/start-query",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queryString": {
+            "type": "string",
+            "minLength": 1
+          },
+          "database": {
+            "type": "string"
+          },
+          "catalog": {
+            "type": "string"
+          },
+          "outputLocation": {
+            "type": "string"
+          },
+          "workGroup": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[a-zA-Z0-9._-]+$"
+          },
+          "executionParameters": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          },
+          "resultReuseEnabled": {
+            "type": "boolean"
+          },
+          "resultReuseMaxAgeInMinutes": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 10080
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "queryString",
+          "workGroup",
+          "resultReuseMaxAgeInMinutes"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "queryExecutionId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "queryExecutionId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

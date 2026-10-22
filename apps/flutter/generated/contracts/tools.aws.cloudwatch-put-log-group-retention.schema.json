@@ -1,0 +1,87 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudwatch-put-log-group-retention.ts",
+  "contracts": {
+    "awsCloudwatchPutLogGroupRetentionContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudwatch/put-log-group-retention",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "logGroupName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "retentionInDays": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "logGroupName",
+          "retentionInDays"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "logGroupName": {
+                  "type": "string"
+                },
+                "retentionInDays": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "success",
+                "logGroupName",
+                "retentionInDays"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,114 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/chat.ts",
+  "contracts": {
+    "v2ChatContract": {
+      "method": "POST",
+      "path": "/api/v2/chat",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Workspace the conversation runs in."
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200000,
+            "description": "The message to send to Sim."
+          },
+          "conversationId": {
+            "description": "Conversation to continue; a new one starts when omitted.",
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "effort": {
+            "description": "Model effort for this turn; defaults to the deployment default (high).",
+            "type": "string",
+            "enum": [
+              "low",
+              "medium",
+              "high",
+              "xhigh",
+              "max"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "message"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "content": {
+                  "type": "string"
+                },
+                "conversationId": {
+                  "type": "string"
+                },
+                "model": {
+                  "type": "string",
+                  "description": "Identifier of the agent that produced the reply."
+                },
+                "tokens": {
+                  "type": "object",
+                  "properties": {
+                    "prompt": {
+                      "type": "number"
+                    },
+                    "completion": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                "cost": {},
+                "toolCalls": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {}
+                  }
+                }
+              },
+              "required": [
+                "content",
+                "conversationId",
+                "model"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

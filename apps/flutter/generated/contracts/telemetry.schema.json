@@ -1,0 +1,57 @@
+{
+  "source": "apps/sim/lib/api/contracts/telemetry.ts",
+  "contracts": {
+    "telemetryContract": {
+      "method": "POST",
+      "path": "/api/telemetry",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": [
+              "page_view",
+              "feature_usage",
+              "performance",
+              "error",
+              "workflow",
+              "consent",
+              "batch"
+            ]
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "category",
+          "action"
+        ],
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "forwarded": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success",
+            "forwarded"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

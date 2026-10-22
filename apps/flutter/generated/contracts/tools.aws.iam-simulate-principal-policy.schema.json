@@ -1,0 +1,281 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/iam-simulate-principal-policy.ts",
+  "contracts": {
+    "awsIamSimulatePrincipalPolicyContract": {
+      "method": "POST",
+      "path": "/api/tools/iam/simulate-principal-policy",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "policySourceArn": {
+            "type": "string",
+            "minLength": 20,
+            "maxLength": 2048
+          },
+          "actionNames": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resourceArns": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "contextEntries": {
+            "anyOf": [
+              {
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "contextKeyName": {
+                      "type": "string",
+                      "minLength": 5,
+                      "maxLength": 256
+                    },
+                    "contextKeyValues": {
+                      "minItems": 1,
+                      "maxItems": 64,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "contextKeyType": {
+                      "type": "string",
+                      "enum": [
+                        "binary",
+                        "binaryList",
+                        "boolean",
+                        "booleanList",
+                        "date",
+                        "dateList",
+                        "ip",
+                        "ipList",
+                        "numeric",
+                        "numericList",
+                        "string",
+                        "stringList"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "contextKeyName",
+                    "contextKeyValues",
+                    "contextKeyType"
+                  ]
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxResults": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "marker": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[\\u0020-\\u00FF]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "policySourceArn",
+          "actionNames"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "evaluationResults": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "evalActionName": {
+                    "type": "string"
+                  },
+                  "evalResourceName": {
+                    "type": "string"
+                  },
+                  "evalDecision": {
+                    "type": "string"
+                  },
+                  "matchedStatements": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "sourcePolicyId": {
+                          "type": "string"
+                        },
+                        "sourcePolicyType": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "sourcePolicyId",
+                        "sourcePolicyType"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "missingContextValues": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "permissionsBoundaryAllowed": {
+                    "anyOf": [
+                      {
+                        "type": "boolean"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "resourceSpecificResults": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "evalResourceName": {
+                          "type": "string"
+                        },
+                        "evalResourceDecision": {
+                          "type": "string"
+                        },
+                        "matchedStatements": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "sourcePolicyId": {
+                                "type": "string"
+                              },
+                              "sourcePolicyType": {
+                                "type": "string"
+                              }
+                            },
+                            "required": [
+                              "sourcePolicyId",
+                              "sourcePolicyType"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "missingContextValues": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        },
+                        "permissionsBoundaryAllowed": {
+                          "anyOf": [
+                            {
+                              "type": "boolean"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "evalResourceName",
+                        "evalResourceDecision",
+                        "matchedStatements",
+                        "missingContextValues",
+                        "permissionsBoundaryAllowed"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "evalActionName",
+                  "evalResourceName",
+                  "evalDecision",
+                  "matchedStatements",
+                  "missingContextValues",
+                  "permissionsBoundaryAllowed",
+                  "resourceSpecificResults"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "isTruncated": {
+              "type": "boolean"
+            },
+            "marker": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "count": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "evaluationResults",
+            "isTruncated",
+            "marker",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

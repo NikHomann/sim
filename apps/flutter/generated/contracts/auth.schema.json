@@ -1,0 +1,546 @@
+{
+  "source": "apps/sim/lib/api/contracts/auth.ts",
+  "contracts": {
+    "deleteSsoProviderContract": {
+      "method": "DELETE",
+      "path": "/api/auth/sso/providers/[providerId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "providerId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "providerId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "providerId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getAuthProvidersContract": {
+      "method": "GET",
+      "path": "/api/auth/providers",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "githubAvailable": {
+              "type": "boolean"
+            },
+            "googleAvailable": {
+              "type": "boolean"
+            },
+            "microsoftAvailable": {
+              "type": "boolean"
+            },
+            "registrationDisabled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "githubAvailable",
+            "googleAvailable",
+            "microsoftAvailable",
+            "registrationDisabled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listSsoProvidersContract": {
+      "method": "GET",
+      "path": "/api/auth/sso/providers",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "providers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "providerId": {
+                    "type": "string"
+                  },
+                  "domain": {
+                    "type": "string"
+                  },
+                  "issuer": {
+                    "type": "string"
+                  },
+                  "oidcConfig": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "samlConfig": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "userId": {
+                    "type": "string"
+                  },
+                  "organizationId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "jitProvisioningEnabled": {
+                    "type": "boolean"
+                  },
+                  "domainKey": {
+                    "type": "string"
+                  },
+                  "domainVerified": {
+                    "type": "boolean"
+                  },
+                  "isPrimary": {
+                    "type": "boolean"
+                  },
+                  "providerType": {
+                    "type": "string",
+                    "enum": [
+                      "oidc",
+                      "saml"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "providerId",
+                  "domain",
+                  "issuer",
+                  "oidcConfig",
+                  "samlConfig",
+                  "userId",
+                  "organizationId",
+                  "jitProvisioningEnabled",
+                  "domainKey",
+                  "domainVerified",
+                  "isPrimary",
+                  "providerType"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "providers"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "resolveSsoProviderContract": {
+      "method": "POST",
+      "path": "/api/auth/sso/resolve",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "maxLength": 320,
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "providerId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "providerId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "providerId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "setPrimarySsoProviderContract": {
+      "method": "PATCH",
+      "path": "/api/auth/sso/providers/[providerId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "providerId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "providerId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "isPrimary": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "isPrimary"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "providerId": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "providerId"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "ssoRegistrationContract": {
+      "method": "POST",
+      "path": "/api/auth/sso/register",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "providerType": {
+                "type": "string",
+                "const": "oidc"
+              },
+              "providerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "issuer": {
+                "type": "string",
+                "format": "uri"
+              },
+              "domain": {
+                "type": "string",
+                "minLength": 1
+              },
+              "jitProvisioningEnabled": {
+                "default": true,
+                "type": "boolean"
+              },
+              "mapping": {
+                "default": {
+                  "id": "sub",
+                  "email": "email",
+                  "name": "name",
+                  "image": "picture"
+                },
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "default": "sub",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "default": "email",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "name": {
+                    "default": "name",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "image": {
+                    "default": "picture",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  }
+                }
+              },
+              "clientId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "clientSecret": {
+                "type": "string",
+                "minLength": 1
+              },
+              "scopes": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
+              },
+              "pkce": {
+                "default": true,
+                "type": "boolean"
+              },
+              "authorizationEndpoint": {
+                "type": "string",
+                "format": "uri"
+              },
+              "tokenEndpoint": {
+                "type": "string",
+                "format": "uri"
+              },
+              "userInfoEndpoint": {
+                "type": "string",
+                "format": "uri"
+              },
+              "skipUserInfoEndpoint": {
+                "default": false,
+                "type": "boolean"
+              },
+              "jwksEndpoint": {
+                "type": "string",
+                "format": "uri"
+              },
+              "orgId": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "providerType",
+              "providerId",
+              "issuer",
+              "domain",
+              "clientId",
+              "clientSecret",
+              "orgId"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "providerType": {
+                "type": "string",
+                "const": "saml"
+              },
+              "providerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "issuer": {
+                "type": "string",
+                "format": "uri"
+              },
+              "domain": {
+                "type": "string",
+                "minLength": 1
+              },
+              "jitProvisioningEnabled": {
+                "default": true,
+                "type": "boolean"
+              },
+              "mapping": {
+                "default": {
+                  "id": "sub",
+                  "email": "email",
+                  "name": "name",
+                  "image": "picture"
+                },
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "default": "sub",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "email": {
+                    "default": "email",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "name": {
+                    "default": "name",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "image": {
+                    "default": "picture",
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255
+                  }
+                }
+              },
+              "entryPoint": {
+                "type": "string",
+                "format": "uri"
+              },
+              "cert": {
+                "type": "string",
+                "minLength": 1
+              },
+              "callbackUrl": {
+                "type": "string",
+                "format": "uri"
+              },
+              "audience": {
+                "type": "string"
+              },
+              "wantAssertionsSigned": {
+                "type": "boolean"
+              },
+              "signatureAlgorithm": {
+                "type": "string"
+              },
+              "digestAlgorithm": {
+                "type": "string"
+              },
+              "identifierFormat": {
+                "type": "string"
+              },
+              "idpMetadata": {
+                "type": "string"
+              },
+              "orgId": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "providerType",
+              "providerId",
+              "issuer",
+              "domain",
+              "entryPoint",
+              "cert",
+              "orgId"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "providerId": {
+              "type": "string"
+            },
+            "providerType": {
+              "type": "string",
+              "enum": [
+                "oidc",
+                "saml"
+              ]
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "providerId",
+            "providerType",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

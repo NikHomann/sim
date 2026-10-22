@@ -1,0 +1,1047 @@
+{
+  "source": "apps/sim/lib/api/contracts/invitations.ts",
+  "contracts": {
+    "acceptInvitationContract": {
+      "method": "POST",
+      "path": "/api/invitations/[id]/accept",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disclosedWorkspaceIds": {
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "disclosedOutcome": {
+            "type": "string",
+            "enum": [
+              "will-join",
+              "already-member",
+              "external",
+              "blocked"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "redirectPath": {
+              "type": "string"
+            },
+            "invitation": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "organization",
+                    "workspace"
+                  ]
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "acceptedWorkspaceIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "organizationId",
+                "acceptedWorkspaceIds"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "redirectPath",
+            "invitation"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "batchWorkspaceInvitationsContract": {
+      "method": "POST",
+      "path": "/api/workspaces/invitations/batch",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceIds": {
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "description": "Unique workspace identifier."
+            }
+          },
+          "emails": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "permission": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "write",
+              "read"
+            ]
+          },
+          "membership": {
+            "type": "string",
+            "enum": [
+              "member",
+              "admin",
+              "external"
+            ]
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceIds",
+          "emails"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "description": "Whether every recipient succeeded. Inspect failed even when the HTTP response is successful."
+            },
+            "successful": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Email addresses that received a pending invitation."
+            },
+            "added": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              },
+              "description": "Existing organization members granted workspace access immediately."
+            },
+            "failed": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string",
+                    "description": "Recipient whose operation failed."
+                  },
+                  "error": {
+                    "type": "string",
+                    "description": "Reason the invitation or access grant could not be completed."
+                  }
+                },
+                "required": [
+                  "email",
+                  "error"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Failures for individual recipients. Earlier successful recipients remain committed."
+            },
+            "invitations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Invitation identifier, or direct-grant result identifier when instantAdd is true."
+                  },
+                  "email": {
+                    "type": "string",
+                    "description": "Recipient email address."
+                  },
+                  "workspaceIds": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Workspaces included in this invitation or direct grant."
+                  },
+                  "permission": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "write",
+                      "read"
+                    ],
+                    "description": "Workspace permission offered or granted."
+                  },
+                  "membershipIntent": {
+                    "type": "string",
+                    "enum": [
+                      "internal",
+                      "external"
+                    ],
+                    "description": "Whether the recipient joins the organization or receives only workspace access."
+                  },
+                  "instantAdd": {
+                    "description": "Whether access was granted immediately without a pending invitation.",
+                    "type": "boolean"
+                  },
+                  "outcome": {
+                    "description": "Result when reconciling access for an existing user.",
+                    "type": "string",
+                    "enum": [
+                      "added",
+                      "updated",
+                      "unchanged"
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "email",
+                  "workspaceIds",
+                  "permission",
+                  "membershipIntent"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Invitation and immediate-access results for successful recipients."
+            }
+          },
+          "required": [
+            "success",
+            "successful",
+            "added",
+            "failed",
+            "invitations"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "cancelInvitationContract": {
+      "method": "DELETE",
+      "path": "/api/invitations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "invitationCancelled": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success",
+            "invitationCancelled"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "getInvitationContract": {
+      "method": "GET",
+      "path": "/api/invitations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "invitation": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "organization",
+                    "workspace"
+                  ]
+                },
+                "email": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "organizationName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "membershipIntent": {
+                  "type": "string",
+                  "enum": [
+                    "internal",
+                    "external"
+                  ]
+                },
+                "role": {
+                  "type": "string"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "expiresAt": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "inviterName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inviterEmail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "grants": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workspaceId": {
+                        "type": "string"
+                      },
+                      "workspaceName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "workspaceLogoUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "workspaceId",
+                      "workspaceName",
+                      "permission"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "id",
+                "kind",
+                "email",
+                "organizationId",
+                "organizationName",
+                "membershipIntent",
+                "role",
+                "status",
+                "expiresAt",
+                "createdAt",
+                "inviterName",
+                "inviterEmail",
+                "grants"
+              ],
+              "additionalProperties": false
+            },
+            "joinPreview": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "outcome": {
+                      "type": "string",
+                      "enum": [
+                        "will-join",
+                        "already-member",
+                        "external",
+                        "blocked"
+                      ]
+                    },
+                    "organizationName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "workspacesToMove": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "workspaceIdsToMove": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "outcome",
+                    "organizationName",
+                    "workspacesToMove",
+                    "workspaceIdsToMove"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "invitation",
+            "joinPreview"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listMyInvitationsContract": {
+      "method": "GET",
+      "path": "/api/invitations",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "invitations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "organization",
+                      "workspace"
+                    ]
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "organizationId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "organizationName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "membershipIntent": {
+                    "type": "string",
+                    "enum": [
+                      "internal",
+                      "external"
+                    ]
+                  },
+                  "role": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "expiresAt": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "inviterName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "inviterEmail": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "grants": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "workspaceId": {
+                          "type": "string"
+                        },
+                        "workspaceName": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "workspaceLogoUrl": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "permission": {
+                          "type": "string",
+                          "enum": [
+                            "admin",
+                            "write",
+                            "read"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "workspaceId",
+                        "workspaceName",
+                        "permission"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "joinPreview": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "outcome": {
+                            "type": "string",
+                            "enum": [
+                              "will-join",
+                              "already-member",
+                              "external",
+                              "blocked"
+                            ]
+                          },
+                          "organizationName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "workspacesToMove": {
+                            "maxItems": 500,
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "workspaceIdsToMove": {
+                            "maxItems": 500,
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          }
+                        },
+                        "required": [
+                          "outcome",
+                          "organizationName",
+                          "workspacesToMove",
+                          "workspaceIdsToMove"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "kind",
+                  "email",
+                  "organizationId",
+                  "organizationName",
+                  "membershipIntent",
+                  "role",
+                  "status",
+                  "expiresAt",
+                  "createdAt",
+                  "inviterName",
+                  "inviterEmail",
+                  "grants",
+                  "joinPreview"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "invitations"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listWorkspaceInvitationsContract": {
+      "method": "GET",
+      "path": "/api/workspaces/invitations",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "invitations": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "workspaceId": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "token": {
+                    "type": "string"
+                  },
+                  "permission": {
+                    "type": "string",
+                    "enum": [
+                      "admin",
+                      "write",
+                      "read"
+                    ]
+                  },
+                  "membershipIntent": {
+                    "type": "string",
+                    "enum": [
+                      "internal",
+                      "external"
+                    ]
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "workspaceId",
+                  "email",
+                  "permission",
+                  "status",
+                  "createdAt"
+                ],
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "invitations"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "rejectInvitationContract": {
+      "method": "POST",
+      "path": "/api/invitations/[id]/reject",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disclosedWorkspaceIds": {
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "disclosedOutcome": {
+            "type": "string",
+            "enum": [
+              "will-join",
+              "already-member",
+              "external",
+              "blocked"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "removeWorkspaceMemberContract": {
+      "method": "DELETE",
+      "path": "/api/workspaces/members/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "resendInvitationContract": {
+      "method": "POST",
+      "path": "/api/invitations/[id]/resend",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateInvitationContract": {
+      "method": "PATCH",
+      "path": "/api/invitations/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "role": {
+            "type": "string",
+            "enum": [
+              "admin",
+              "member"
+            ]
+          },
+          "grants": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "permission": {
+                  "type": "string",
+                  "enum": [
+                    "admin",
+                    "write",
+                    "read"
+                  ]
+                }
+              },
+              "required": [
+                "workspaceId",
+                "permission"
+              ]
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,915 @@
+{
+  "source": "apps/sim/lib/api/contracts/knowledge/search.ts",
+  "contracts": {
+    "internalKnowledgeSearchContract": {
+      "method": "POST",
+      "path": "/api/knowledge/search",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "allOf": [
+          {
+            "type": "object",
+            "properties": {
+              "knowledgeBaseIds": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
+              },
+              "query": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "topK": {
+                "default": 10,
+                "anyOf": [
+                  {
+                    "type": "number",
+                    "minimum": 1,
+                    "maximum": 100
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "tagFilters": {
+                "anyOf": [
+                  {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "tagName": {
+                          "type": "string"
+                        },
+                        "tagSlot": {
+                          "type": "string"
+                        },
+                        "fieldType": {
+                          "type": "string",
+                          "enum": [
+                            "text",
+                            "number",
+                            "date",
+                            "boolean"
+                          ]
+                        },
+                        "operator": {
+                          "default": "eq",
+                          "type": "string"
+                        },
+                        "value": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            },
+                            {
+                              "type": "boolean"
+                            }
+                          ]
+                        },
+                        "valueTo": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "number"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "tagName",
+                        "value"
+                      ]
+                    }
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "searchMode": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "enum": [
+                      "vector",
+                      "hybrid"
+                    ]
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "rerankerEnabled": {
+                "default": false,
+                "type": "boolean"
+              },
+              "rerankerModel": {
+                "default": "rerank-v4.0-fast",
+                "type": "string",
+                "enum": [
+                  "rerank-v4.0-pro",
+                  "rerank-v4.0-fast",
+                  "rerank-v3.5"
+                ]
+              },
+              "rerankerInputCount": {
+                "anyOf": [
+                  {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 100
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "rerankerApiKey": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "knowledgeBaseIds"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "workflowId": {
+                "type": "string"
+              },
+              "skipUsageBilling": {
+                "type": "boolean"
+              },
+              "__resolvedSecretTraceProvenance": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "number",
+                    "const": 1,
+                    "description": "Secret provenance format version."
+                  },
+                  "complete": {
+                    "type": "boolean",
+                    "description": "Whether the provenance trace is complete."
+                  },
+                  "entries": {
+                    "maxItems": 10000,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "encryptedValue": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 8388608,
+                          "description": "Encrypted secret value carried across the trusted execution boundary."
+                        },
+                        "name": {
+                          "description": "Optional source secret name.",
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 1024
+                        }
+                      },
+                      "required": [
+                        "encryptedValue"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Encrypted secret provenance entries."
+                  },
+                  "scope": {
+                    "description": "Authorization scope bound to the encrypted provenance.",
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024,
+                        "description": "User scope for the encrypted provenance."
+                      },
+                      "workspaceId": {
+                        "description": "Optional workspace scope for the encrypted provenance.",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 1024
+                      }
+                    },
+                    "required": [
+                      "userId"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "version",
+                  "complete",
+                  "entries"
+                ],
+                "additionalProperties": false
+              }
+            }
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "documentId": {
+                        "type": "string"
+                      },
+                      "documentName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "sourceUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "chunkIndex": {
+                        "type": "number"
+                      },
+                      "metadata": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string"
+                        },
+                        "additionalProperties": {}
+                      },
+                      "similarity": {
+                        "type": "number",
+                        "description": "Cosine similarity between the query embedding and the chunk (1 - cosine distance), in every search mode; 1 for tag-only matches. In hybrid mode this is not the ordering key — see rankScore."
+                      },
+                      "rankScore": {
+                        "type": "number",
+                        "description": "The score results are ordered by, descending: the reciprocal-rank-fusion score in hybrid mode (a sum of 1/(60 + rank) per retrieval leg), the cosine similarity in vector mode, or rerankerScore when a reranker ordered the results."
+                      },
+                      "rank": {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991,
+                        "description": "1-based position in the returned order."
+                      },
+                      "rerankerScore": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "documentId",
+                      "documentName",
+                      "sourceUrl",
+                      "content",
+                      "chunkIndex",
+                      "metadata",
+                      "similarity",
+                      "rankScore",
+                      "rank"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "query": {
+                  "type": "string"
+                },
+                "knowledgeBaseIds": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "knowledgeBaseId": {
+                  "type": "string"
+                },
+                "topK": {
+                  "type": "number"
+                },
+                "totalResults": {
+                  "type": "number"
+                },
+                "cost": {
+                  "type": "object",
+                  "properties": {
+                    "input": {
+                      "type": "number"
+                    },
+                    "output": {
+                      "type": "number"
+                    },
+                    "total": {
+                      "type": "number"
+                    },
+                    "tokens": {
+                      "type": "object",
+                      "properties": {
+                        "prompt": {
+                          "type": "number"
+                        },
+                        "completion": {
+                          "type": "number"
+                        },
+                        "total": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "prompt",
+                        "completion",
+                        "total"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "model": {
+                      "type": "string"
+                    },
+                    "pricing": {
+                      "type": "object",
+                      "properties": {
+                        "input": {
+                          "type": "number"
+                        },
+                        "output": {
+                          "type": "number"
+                        },
+                        "updatedAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "input",
+                        "output"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "rerankerCost": {
+                      "type": "number"
+                    },
+                    "rerankerModel": {
+                      "type": "string"
+                    },
+                    "rerankerSearchUnits": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "input",
+                    "output",
+                    "total",
+                    "tokens",
+                    "model",
+                    "pricing"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "results",
+                "query",
+                "knowledgeBaseIds",
+                "knowledgeBaseId",
+                "topK",
+                "totalResults"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "searchWorkspaceKnowledgeContract": {
+      "method": "POST",
+      "path": "/api/knowledge/search",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "filters": {
+            "type": "object",
+            "properties": {
+              "startDate": {
+                "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "endDate": {
+                "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "sortBy": {
+                "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                "type": "string",
+                "enum": [
+                  "relevance",
+                  "newest",
+                  "oldest"
+                ]
+              },
+              "source": {
+                "description": "Connector type or upload source; narrows the selected search scope.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "modifiedAfter": {
+                "description": "ISO datetime; restricts results to documents modified after this time.",
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "modifiedBefore": {
+                "description": "ISO datetime; restricts results to documents modified before this time.",
+                "type": "string",
+                "format": "date-time",
+                "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+              },
+              "documentIds": {
+                "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                "minItems": 1,
+                "maxItems": 20,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4000
+                }
+              }
+            }
+          },
+          "query": {
+            "default": "",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "topK": {
+            "default": 20,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "nativeQueries": {
+            "minItems": 1,
+            "maxItems": 9,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "provider": {
+                  "type": "string",
+                  "enum": [
+                    "google_drive",
+                    "gmail",
+                    "google_meet",
+                    "zoom",
+                    "google_calendar",
+                    "slack",
+                    "jira",
+                    "confluence",
+                    "github",
+                    "gitlab",
+                    "linear",
+                    "lucid",
+                    "hubspot",
+                    "fireflies",
+                    "granola",
+                    "notion",
+                    "coda"
+                  ]
+                },
+                "query": {
+                  "type": "string",
+                  "maxLength": 2000
+                },
+                "accountId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "issues",
+                    "code",
+                    "repositories",
+                    "commits",
+                    "merge_requests",
+                    "wiki",
+                    "contacts",
+                    "companies",
+                    "deals",
+                    "tickets",
+                    "lucidchart",
+                    "lucidspark",
+                    "transcript",
+                    "smart_notes",
+                    "meeting"
+                  ]
+                },
+                "project": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 300
+                },
+                "browse": {
+                  "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                  "type": "string",
+                  "enum": [
+                    "folder",
+                    "private",
+                    "shared",
+                    "favorites",
+                    "recent"
+                  ]
+                },
+                "cursor": {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                "termClauses": {
+                  "maxItems": 10,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 500
+                  }
+                },
+                "modifiers": {
+                  "type": "string",
+                  "maxLength": 1000
+                },
+                "keywordOnly": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "provider",
+                "query"
+              ],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "live": {
+                  "type": "object",
+                  "properties": {
+                    "backend": {
+                      "type": "string",
+                      "const": "live"
+                    },
+                    "accounts": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "accountId": {
+                            "type": "string"
+                          },
+                          "provider": {
+                            "type": "string",
+                            "enum": [
+                              "google_drive",
+                              "gmail",
+                              "google_meet",
+                              "zoom",
+                              "google_calendar",
+                              "slack",
+                              "jira",
+                              "confluence",
+                              "github",
+                              "gitlab",
+                              "linear",
+                              "lucid",
+                              "hubspot",
+                              "fireflies",
+                              "granola",
+                              "notion",
+                              "coda"
+                            ]
+                          },
+                          "queryIndex": {
+                            "type": "integer",
+                            "minimum": 0,
+                            "maximum": 9007199254740991
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "ok",
+                              "partial",
+                              "reconnect",
+                              "rate_limited",
+                              "unavailable",
+                              "timeout"
+                            ]
+                          },
+                          "message": {
+                            "type": "string"
+                          },
+                          "nextCursor": {
+                            "type": "string"
+                          },
+                          "folders": {
+                            "maxItems": 10,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string"
+                                },
+                                "name": {
+                                  "type": "string"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "retryAfterSeconds": {
+                            "type": "number"
+                          }
+                        },
+                        "required": [
+                          "accountId",
+                          "provider",
+                          "displayName",
+                          "status"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "guidance": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "backend",
+                    "accounts",
+                    "guidance"
+                  ],
+                  "additionalProperties": false
+                },
+                "query": {
+                  "type": "string"
+                },
+                "results": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "documentId": {
+                        "type": "string"
+                      },
+                      "knowledgeBaseId": {
+                        "type": "string"
+                      },
+                      "knowledgeBaseName": {
+                        "type": "string"
+                      },
+                      "documentName": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "sourceUrl": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "connectorType": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "sourceModifiedAt": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "sourceDate": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "sourceContainerName": {
+                        "type": "string"
+                      },
+                      "sourceContainerUrl": {
+                        "type": "string"
+                      },
+                      "sourceDateType": {
+                        "type": "string",
+                        "enum": [
+                          "event_start",
+                          "message",
+                          "modified"
+                        ]
+                      },
+                      "author": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "content": {
+                        "type": "string"
+                      },
+                      "chunkIndex": {
+                        "type": "number"
+                      },
+                      "similarity": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "documentId",
+                      "knowledgeBaseId",
+                      "knowledgeBaseName",
+                      "documentName",
+                      "sourceUrl",
+                      "connectorType",
+                      "sourceModifiedAt",
+                      "author",
+                      "content",
+                      "chunkIndex",
+                      "similarity"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "retrieval": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "complete",
+                        "partial"
+                      ]
+                    },
+                    "timedOutLegs": {
+                      "maxItems": 3,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "enum": [
+                          "vector",
+                          "keyword",
+                          "tags"
+                        ]
+                      }
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "timedOutLegs"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "query",
+                "results",
+                "retrieval"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

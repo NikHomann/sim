@@ -1,0 +1,628 @@
+{
+  "source": "apps/sim/lib/api/contracts/inbox.ts",
+  "contracts": {
+    "addInboxSenderContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/inbox/senders",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "email": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "label": {
+            "type": "string",
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "email"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sender": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string"
+                },
+                "label": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "string"
+                },
+                "addedBy": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "email",
+                "label",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "sender"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getInboxConfigContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/inbox",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "address": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "secretScope": {
+              "type": "string",
+              "enum": [
+                "all",
+                "selected"
+              ]
+            },
+            "mountedSecrets": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            },
+            "entitled": {
+              "type": "boolean"
+            },
+            "taskStats": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "number"
+                },
+                "completed": {
+                  "type": "number"
+                },
+                "processing": {
+                  "type": "number"
+                },
+                "failed": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "total",
+                "completed",
+                "processing",
+                "failed"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "enabled",
+            "address",
+            "secretScope",
+            "mountedSecrets",
+            "entitled",
+            "taskStats"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listInboxSendersContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/inbox/senders",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "senders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "email",
+                  "label",
+                  "createdAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "workspaceMembers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "email": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "isAutoAllowed": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "email",
+                  "name",
+                  "isAutoAllowed"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "senders",
+            "workspaceMembers"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listInboxTasksContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/inbox/tasks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string",
+            "enum": [
+              "all",
+              "received",
+              "processing",
+              "completed",
+              "failed",
+              "rejected"
+            ]
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "number"
+          }
+        },
+        "required": [
+          "limit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "tasks": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "fromEmail": {
+                    "type": "string"
+                  },
+                  "fromName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "subject": {
+                    "type": "string"
+                  },
+                  "bodyPreview": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "received",
+                      "processing",
+                      "completed",
+                      "failed",
+                      "rejected"
+                    ]
+                  },
+                  "hasAttachments": {
+                    "type": "boolean"
+                  },
+                  "resultSummary": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "errorMessage": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "rejectionReason": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "chatId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "completedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "fromEmail",
+                  "fromName",
+                  "subject",
+                  "bodyPreview",
+                  "status",
+                  "hasAttachments",
+                  "resultSummary",
+                  "errorMessage",
+                  "rejectionReason",
+                  "chatId",
+                  "createdAt",
+                  "completedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "limit": {
+                  "type": "number"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                },
+                "nextCursor": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "limit",
+                "hasMore",
+                "nextCursor"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "tasks",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "removeInboxSenderContract": {
+      "method": "DELETE",
+      "path": "/api/workspaces/[id]/inbox/senders",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "senderId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "senderId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "ok": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "ok"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateInboxConfigContract": {
+      "method": "PATCH",
+      "path": "/api/workspaces/[id]/inbox",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "enabled": {
+            "type": "boolean"
+          },
+          "username": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64
+          },
+          "secretScope": {
+            "type": "string",
+            "enum": [
+              "all",
+              "selected"
+            ]
+          },
+          "mountedSecrets": {
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "address": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "providerId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "secretScope": {
+              "type": "string",
+              "enum": [
+                "all",
+                "selected"
+              ]
+            },
+            "mountedSecrets": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              }
+            }
+          },
+          "required": [
+            "enabled",
+            "address",
+            "secretScope",
+            "mountedSecrets"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

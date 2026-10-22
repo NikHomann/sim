@@ -1,0 +1,3262 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/admin/dashboard-workspaces.ts",
+  "contracts": {
+    "adminDashboardRetryWorkspaceMoveFollowUpContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/dashboard/workspaces/[id]/move-operations/[operationId]/follow-up-jobs/[jobId]/retry",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operationId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "jobId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id",
+          "operationId",
+          "jobId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "destinationOrganizationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "expectedOwnerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "destinationOrganizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "workspace": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    },
+                    "workspaceMode": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "organizationName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "billedAccountUserId": {
+                      "type": "string"
+                    },
+                    "archived": {
+                      "type": "boolean"
+                    },
+                    "ineligibleReason": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail",
+                    "workspaceMode",
+                    "organizationId",
+                    "organizationName",
+                    "billedAccountUserId",
+                    "archived"
+                  ],
+                  "additionalProperties": false
+                },
+                "sourceOrganization": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "ownerId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerName": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerEmail": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "ownerId",
+                        "ownerName",
+                        "ownerEmail"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "destinationOrganization": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail"
+                  ],
+                  "additionalProperties": false
+                },
+                "collaborators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "organizationMember": {
+                        "type": "boolean"
+                      },
+                      "sourceOrganizationMember": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "userId",
+                      "name",
+                      "email",
+                      "permission",
+                      "organizationMember",
+                      "sourceOrganizationMember"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "invitations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "membershipIntent": {
+                        "type": "string",
+                        "enum": [
+                          "internal",
+                          "external"
+                        ]
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "workspaceGrantCount": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email",
+                      "membershipIntent",
+                      "permission",
+                      "workspaceGrantCount"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "sourceOrganizationImpact": {
+                  "type": "object",
+                  "properties": {
+                    "unpublishedCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "sourceOrgElsewhereUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage",
+                          "sourceOrgElsewhereUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "inboundCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "blockingForkEdges": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "workspaceId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "organizationId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "parent",
+                              "child"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "workspaceId",
+                          "name",
+                          "organizationId",
+                          "direction"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "detachedPermissionGroups": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "permissionGroupId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "permissionGroupId",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "strippedRetentionRules": {
+                      "type": "object",
+                      "properties": {
+                        "piiRedactionRules": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "retentionOverrides": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "piiRedactionRules",
+                        "retentionOverrides"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "retainedCollaboratorCaps": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "sourceOrgLimitDollars": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "userId",
+                          "email",
+                          "sourceOrgLimitDollars"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "brandingChanges": {
+                      "type": "boolean"
+                    },
+                    "truncated": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "customBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "inboundCustomBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "permissionGroups": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "collaboratorCaps": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "forkEdges": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "credentials": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "environmentVariableKeys": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "customBlocks",
+                            "inboundCustomBlocks",
+                            "permissionGroups",
+                            "collaboratorCaps",
+                            "forkEdges",
+                            "credentials",
+                            "environmentVariableKeys"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "unpublishedCustomBlocks",
+                    "inboundCustomBlocks",
+                    "blockingForkEdges",
+                    "detachedPermissionGroups",
+                    "strippedRetentionRules",
+                    "retainedCollaboratorCaps",
+                    "brandingChanges",
+                    "truncated"
+                  ],
+                  "additionalProperties": false
+                },
+                "credentials": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "backedBySourceOrgMember": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "displayName",
+                          "type",
+                          "backedBySourceOrgMember"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "credentialGroupCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "environmentVariableKeys": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "byokKeyCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedCredentials": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedEnvironmentVariableKeys": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "credentialGroupCount",
+                    "environmentVariableKeys",
+                    "byokKeyCount",
+                    "truncatedCredentials",
+                    "truncatedEnvironmentVariableKeys"
+                  ],
+                  "additionalProperties": false
+                },
+                "entitlements": {
+                  "type": "object",
+                  "properties": {
+                    "sourceIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "destinationIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "capabilitiesLost": {
+                      "maxItems": 50,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "sourceIsEnterprise",
+                    "destinationIsEnterprise",
+                    "capabilitiesLost"
+                  ],
+                  "additionalProperties": false
+                },
+                "blockers": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "notices": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warning": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "operationId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "followUpJobs": {
+                  "type": "object",
+                  "properties": {
+                    "selected": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "completed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "pending": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "failedCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "failed": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "eventId": {
+                            "type": "string"
+                          },
+                          "invitationId": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "eventId",
+                          "invitationId",
+                          "error"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "selected",
+                    "completed",
+                    "pending",
+                    "failedCount",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "workspace",
+                "sourceOrganization",
+                "destinationOrganization",
+                "collaborators",
+                "invitations",
+                "sourceOrganizationImpact",
+                "credentials",
+                "entitlements",
+                "blockers",
+                "notices",
+                "warning",
+                "operationId",
+                "followUpJobs"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminDashboardWorkspaceMoveContract": {
+      "method": "POST",
+      "path": "/api/v1/admin/dashboard/workspaces/[id]/move",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "operationId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "destinationOrganizationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "expectedOwnerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "operationId",
+          "destinationOrganizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "workspace": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    },
+                    "workspaceMode": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "organizationName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "billedAccountUserId": {
+                      "type": "string"
+                    },
+                    "archived": {
+                      "type": "boolean"
+                    },
+                    "ineligibleReason": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail",
+                    "workspaceMode",
+                    "organizationId",
+                    "organizationName",
+                    "billedAccountUserId",
+                    "archived"
+                  ],
+                  "additionalProperties": false
+                },
+                "sourceOrganization": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "ownerId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerName": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerEmail": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "ownerId",
+                        "ownerName",
+                        "ownerEmail"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "destinationOrganization": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail"
+                  ],
+                  "additionalProperties": false
+                },
+                "collaborators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "organizationMember": {
+                        "type": "boolean"
+                      },
+                      "sourceOrganizationMember": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "userId",
+                      "name",
+                      "email",
+                      "permission",
+                      "organizationMember",
+                      "sourceOrganizationMember"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "invitations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "membershipIntent": {
+                        "type": "string",
+                        "enum": [
+                          "internal",
+                          "external"
+                        ]
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "workspaceGrantCount": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email",
+                      "membershipIntent",
+                      "permission",
+                      "workspaceGrantCount"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "sourceOrganizationImpact": {
+                  "type": "object",
+                  "properties": {
+                    "unpublishedCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "sourceOrgElsewhereUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage",
+                          "sourceOrgElsewhereUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "inboundCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "blockingForkEdges": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "workspaceId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "organizationId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "parent",
+                              "child"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "workspaceId",
+                          "name",
+                          "organizationId",
+                          "direction"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "detachedPermissionGroups": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "permissionGroupId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "permissionGroupId",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "strippedRetentionRules": {
+                      "type": "object",
+                      "properties": {
+                        "piiRedactionRules": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "retentionOverrides": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "piiRedactionRules",
+                        "retentionOverrides"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "retainedCollaboratorCaps": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "sourceOrgLimitDollars": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "userId",
+                          "email",
+                          "sourceOrgLimitDollars"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "brandingChanges": {
+                      "type": "boolean"
+                    },
+                    "truncated": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "customBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "inboundCustomBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "permissionGroups": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "collaboratorCaps": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "forkEdges": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "credentials": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "environmentVariableKeys": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "customBlocks",
+                            "inboundCustomBlocks",
+                            "permissionGroups",
+                            "collaboratorCaps",
+                            "forkEdges",
+                            "credentials",
+                            "environmentVariableKeys"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "unpublishedCustomBlocks",
+                    "inboundCustomBlocks",
+                    "blockingForkEdges",
+                    "detachedPermissionGroups",
+                    "strippedRetentionRules",
+                    "retainedCollaboratorCaps",
+                    "brandingChanges",
+                    "truncated"
+                  ],
+                  "additionalProperties": false
+                },
+                "credentials": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "backedBySourceOrgMember": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "displayName",
+                          "type",
+                          "backedBySourceOrgMember"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "credentialGroupCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "environmentVariableKeys": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "byokKeyCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedCredentials": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedEnvironmentVariableKeys": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "credentialGroupCount",
+                    "environmentVariableKeys",
+                    "byokKeyCount",
+                    "truncatedCredentials",
+                    "truncatedEnvironmentVariableKeys"
+                  ],
+                  "additionalProperties": false
+                },
+                "entitlements": {
+                  "type": "object",
+                  "properties": {
+                    "sourceIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "destinationIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "capabilitiesLost": {
+                      "maxItems": 50,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "sourceIsEnterprise",
+                    "destinationIsEnterprise",
+                    "capabilitiesLost"
+                  ],
+                  "additionalProperties": false
+                },
+                "blockers": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "notices": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warning": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "operationId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "followUpJobs": {
+                  "type": "object",
+                  "properties": {
+                    "selected": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "completed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "pending": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "failedCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "failed": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "eventId": {
+                            "type": "string"
+                          },
+                          "invitationId": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "eventId",
+                          "invitationId",
+                          "error"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "selected",
+                    "completed",
+                    "pending",
+                    "failedCount",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "workspace",
+                "sourceOrganization",
+                "destinationOrganization",
+                "collaborators",
+                "invitations",
+                "sourceOrganizationImpact",
+                "credentials",
+                "entitlements",
+                "blockers",
+                "notices",
+                "warning",
+                "operationId",
+                "followUpJobs"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminDashboardWorkspaceMoveOperationContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/workspaces/[id]/move-operations/[operationId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "operationId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "id",
+          "operationId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "destinationOrganizationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "expectedOwnerId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "destinationOrganizationId",
+          "expectedOwnerId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "workspace": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    },
+                    "workspaceMode": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "organizationName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "billedAccountUserId": {
+                      "type": "string"
+                    },
+                    "archived": {
+                      "type": "boolean"
+                    },
+                    "ineligibleReason": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail",
+                    "workspaceMode",
+                    "organizationId",
+                    "organizationName",
+                    "billedAccountUserId",
+                    "archived"
+                  ],
+                  "additionalProperties": false
+                },
+                "sourceOrganization": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "ownerId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerName": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerEmail": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "ownerId",
+                        "ownerName",
+                        "ownerEmail"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "destinationOrganization": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail"
+                  ],
+                  "additionalProperties": false
+                },
+                "collaborators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "organizationMember": {
+                        "type": "boolean"
+                      },
+                      "sourceOrganizationMember": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "userId",
+                      "name",
+                      "email",
+                      "permission",
+                      "organizationMember",
+                      "sourceOrganizationMember"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "invitations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "membershipIntent": {
+                        "type": "string",
+                        "enum": [
+                          "internal",
+                          "external"
+                        ]
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "workspaceGrantCount": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email",
+                      "membershipIntent",
+                      "permission",
+                      "workspaceGrantCount"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "sourceOrganizationImpact": {
+                  "type": "object",
+                  "properties": {
+                    "unpublishedCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "sourceOrgElsewhereUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage",
+                          "sourceOrgElsewhereUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "inboundCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "blockingForkEdges": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "workspaceId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "organizationId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "parent",
+                              "child"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "workspaceId",
+                          "name",
+                          "organizationId",
+                          "direction"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "detachedPermissionGroups": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "permissionGroupId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "permissionGroupId",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "strippedRetentionRules": {
+                      "type": "object",
+                      "properties": {
+                        "piiRedactionRules": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "retentionOverrides": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "piiRedactionRules",
+                        "retentionOverrides"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "retainedCollaboratorCaps": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "sourceOrgLimitDollars": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "userId",
+                          "email",
+                          "sourceOrgLimitDollars"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "brandingChanges": {
+                      "type": "boolean"
+                    },
+                    "truncated": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "customBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "inboundCustomBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "permissionGroups": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "collaboratorCaps": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "forkEdges": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "credentials": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "environmentVariableKeys": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "customBlocks",
+                            "inboundCustomBlocks",
+                            "permissionGroups",
+                            "collaboratorCaps",
+                            "forkEdges",
+                            "credentials",
+                            "environmentVariableKeys"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "unpublishedCustomBlocks",
+                    "inboundCustomBlocks",
+                    "blockingForkEdges",
+                    "detachedPermissionGroups",
+                    "strippedRetentionRules",
+                    "retainedCollaboratorCaps",
+                    "brandingChanges",
+                    "truncated"
+                  ],
+                  "additionalProperties": false
+                },
+                "credentials": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "backedBySourceOrgMember": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "displayName",
+                          "type",
+                          "backedBySourceOrgMember"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "credentialGroupCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "environmentVariableKeys": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "byokKeyCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedCredentials": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedEnvironmentVariableKeys": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "credentialGroupCount",
+                    "environmentVariableKeys",
+                    "byokKeyCount",
+                    "truncatedCredentials",
+                    "truncatedEnvironmentVariableKeys"
+                  ],
+                  "additionalProperties": false
+                },
+                "entitlements": {
+                  "type": "object",
+                  "properties": {
+                    "sourceIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "destinationIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "capabilitiesLost": {
+                      "maxItems": 50,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "sourceIsEnterprise",
+                    "destinationIsEnterprise",
+                    "capabilitiesLost"
+                  ],
+                  "additionalProperties": false
+                },
+                "blockers": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "notices": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warning": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "operationId": {
+                  "type": "string",
+                  "format": "uuid",
+                  "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                },
+                "followUpJobs": {
+                  "type": "object",
+                  "properties": {
+                    "selected": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "completed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "pending": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "failedCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "failed": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "eventId": {
+                            "type": "string"
+                          },
+                          "invitationId": {
+                            "type": "string"
+                          },
+                          "error": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "eventId",
+                          "invitationId",
+                          "error"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "selected",
+                    "completed",
+                    "pending",
+                    "failedCount",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "workspace",
+                "sourceOrganization",
+                "destinationOrganization",
+                "collaborators",
+                "invitations",
+                "sourceOrganizationImpact",
+                "credentials",
+                "entitlements",
+                "blockers",
+                "notices",
+                "warning",
+                "operationId",
+                "followUpJobs"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminDashboardWorkspacePreflightContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/workspaces/[id]/preflight",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "destinationOrganizationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "destinationOrganizationId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "workspace": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    },
+                    "workspaceMode": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "organizationName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "billedAccountUserId": {
+                      "type": "string"
+                    },
+                    "archived": {
+                      "type": "boolean"
+                    },
+                    "ineligibleReason": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail",
+                    "workspaceMode",
+                    "organizationId",
+                    "organizationName",
+                    "billedAccountUserId",
+                    "archived"
+                  ],
+                  "additionalProperties": false
+                },
+                "sourceOrganization": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "ownerId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerName": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "ownerEmail": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "ownerId",
+                        "ownerName",
+                        "ownerEmail"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "destinationOrganization": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "ownerId": {
+                      "type": "string"
+                    },
+                    "ownerName": {
+                      "type": "string"
+                    },
+                    "ownerEmail": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "ownerId",
+                    "ownerName",
+                    "ownerEmail"
+                  ],
+                  "additionalProperties": false
+                },
+                "collaborators": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "userId": {
+                        "type": "string"
+                      },
+                      "name": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "organizationMember": {
+                        "type": "boolean"
+                      },
+                      "sourceOrganizationMember": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "userId",
+                      "name",
+                      "email",
+                      "permission",
+                      "organizationMember",
+                      "sourceOrganizationMember"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "invitations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "email": {
+                        "type": "string"
+                      },
+                      "membershipIntent": {
+                        "type": "string",
+                        "enum": [
+                          "internal",
+                          "external"
+                        ]
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ]
+                      },
+                      "workspaceGrantCount": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email",
+                      "membershipIntent",
+                      "permission",
+                      "workspaceGrantCount"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "sourceOrganizationImpact": {
+                  "type": "object",
+                  "properties": {
+                    "unpublishedCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "sourceOrgElsewhereUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage",
+                          "sourceOrgElsewhereUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "inboundCustomBlocks": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "movingWorkspaceUsage": {
+                            "type": "object",
+                            "properties": {
+                              "live": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              },
+                              "deployed": {
+                                "type": "integer",
+                                "minimum": 0,
+                                "maximum": 9007199254740991
+                              }
+                            },
+                            "required": [
+                              "live",
+                              "deployed"
+                            ],
+                            "additionalProperties": false
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "type",
+                          "name",
+                          "movingWorkspaceUsage"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "blockingForkEdges": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "workspaceId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "organizationId": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "parent",
+                              "child"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "workspaceId",
+                          "name",
+                          "organizationId",
+                          "direction"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "detachedPermissionGroups": {
+                      "maxItems": 500,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "permissionGroupId": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "permissionGroupId",
+                          "name"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "strippedRetentionRules": {
+                      "type": "object",
+                      "properties": {
+                        "piiRedactionRules": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "retentionOverrides": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "piiRedactionRules",
+                        "retentionOverrides"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "retainedCollaboratorCaps": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "userId": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string"
+                          },
+                          "sourceOrgLimitDollars": {
+                            "anyOf": [
+                              {
+                                "type": "number"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "required": [
+                          "userId",
+                          "email",
+                          "sourceOrgLimitDollars"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "brandingChanges": {
+                      "type": "boolean"
+                    },
+                    "truncated": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "customBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "inboundCustomBlocks": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "permissionGroups": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "collaboratorCaps": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "forkEdges": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "credentials": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "environmentVariableKeys": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            }
+                          },
+                          "required": [
+                            "customBlocks",
+                            "inboundCustomBlocks",
+                            "permissionGroups",
+                            "collaboratorCaps",
+                            "forkEdges",
+                            "credentials",
+                            "environmentVariableKeys"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "unpublishedCustomBlocks",
+                    "inboundCustomBlocks",
+                    "blockingForkEdges",
+                    "detachedPermissionGroups",
+                    "strippedRetentionRules",
+                    "retainedCollaboratorCaps",
+                    "brandingChanges",
+                    "truncated"
+                  ],
+                  "additionalProperties": false
+                },
+                "credentials": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "displayName": {
+                            "type": "string"
+                          },
+                          "type": {
+                            "type": "string"
+                          },
+                          "backedBySourceOrgMember": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "displayName",
+                          "type",
+                          "backedBySourceOrgMember"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "credentialGroupCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "environmentVariableKeys": {
+                      "maxItems": 1000,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    "byokKeyCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedCredentials": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "truncatedEnvironmentVariableKeys": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "credentialGroupCount",
+                    "environmentVariableKeys",
+                    "byokKeyCount",
+                    "truncatedCredentials",
+                    "truncatedEnvironmentVariableKeys"
+                  ],
+                  "additionalProperties": false
+                },
+                "entitlements": {
+                  "type": "object",
+                  "properties": {
+                    "sourceIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "destinationIsEnterprise": {
+                      "type": "boolean"
+                    },
+                    "capabilitiesLost": {
+                      "maxItems": 50,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "sourceIsEnterprise",
+                    "destinationIsEnterprise",
+                    "capabilitiesLost"
+                  ],
+                  "additionalProperties": false
+                },
+                "blockers": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "notices": {
+                  "maxItems": 20,
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "warning": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "workspace",
+                "sourceOrganization",
+                "destinationOrganization",
+                "collaborators",
+                "invitations",
+                "sourceOrganizationImpact",
+                "credentials",
+                "entitlements",
+                "blockers",
+                "notices",
+                "warning"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "adminDashboardWorkspaceSearchContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/dashboard/workspaces",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "search": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "limit": {
+            "default": 20,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 50
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "search",
+          "limit",
+          "offset"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "ownerId": {
+                    "type": "string"
+                  },
+                  "ownerName": {
+                    "type": "string"
+                  },
+                  "ownerEmail": {
+                    "type": "string"
+                  },
+                  "workspaceMode": {
+                    "type": "string"
+                  },
+                  "organizationId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "organizationName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "billedAccountUserId": {
+                    "type": "string"
+                  },
+                  "archived": {
+                    "type": "boolean"
+                  },
+                  "ineligibleReason": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "ownerId",
+                  "ownerName",
+                  "ownerEmail",
+                  "workspaceMode",
+                  "organizationId",
+                  "organizationName",
+                  "billedAccountUserId",
+                  "archived"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "number"
+                },
+                "limit": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "total",
+                "limit",
+                "offset",
+                "hasMore"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

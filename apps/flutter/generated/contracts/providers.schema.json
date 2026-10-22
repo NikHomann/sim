@@ -1,0 +1,705 @@
+{
+  "source": "apps/sim/lib/api/contracts/providers.ts",
+  "contracts": {
+    "getBaseProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/base/models",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getBasetenProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/baseten/models",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getFireworksProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/fireworks/models",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getLitellmProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/litellm/models",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOllamaCloudProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/ollama-cloud/models",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOllamaProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/ollama/models",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOpenRouterEmbeddingModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/openrouter/embeddings/models",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOpenRouterProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/openrouter/models",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getTogetherProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/together/models",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getVllmProviderModelsContract": {
+      "method": "GET",
+      "path": "/api/providers/vllm/models",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "models": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "modelInfo": {
+              "type": "object",
+              "propertyNames": {
+                "type": "string"
+              },
+              "additionalProperties": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "contextLength": {
+                    "type": "number"
+                  },
+                  "supportsStructuredOutputs": {
+                    "type": "boolean"
+                  },
+                  "supportsTools": {
+                    "type": "boolean"
+                  },
+                  "pricing": {
+                    "type": "object",
+                    "properties": {
+                      "input": {
+                        "type": "number"
+                      },
+                      "output": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "input",
+                      "output"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "models"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

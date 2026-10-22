@@ -1,0 +1,430 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ssm-send-command.ts",
+  "contracts": {
+    "awsSsmSendCommandContract": {
+      "method": "POST",
+      "path": "/api/tools/ssm/send-command",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "documentName": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_\\-.:/]{3,128}$"
+          },
+          "documentVersion": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(\\$LATEST|\\$DEFAULT|[1-9][0-9]*)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "instanceIds": {
+            "anyOf": [
+              {
+                "maxItems": 50,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^(i-(\\w{8}|\\w{17})|mi-\\w{17})$"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "targets": {
+            "anyOf": [
+              {
+                "maxItems": 5,
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "Key": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "Values": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "required": [
+                    "Key",
+                    "Values"
+                  ]
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "comment": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "parameters": {
+            "anyOf": [
+              {
+                "type": "object",
+                "propertyNames": {
+                  "type": "string"
+                },
+                "additionalProperties": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "executionTimeoutSeconds": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 30,
+                "maximum": 2592000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxConcurrency": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 7,
+                "pattern": "^([1-9][0-9]*|[1-9][0-9]%|[1-9]%|100%)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxErrors": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 7,
+                "pattern": "^([1-9][0-9]*|[0]|[1-9][0-9]%|[0-9]%|100%)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "outputS3BucketName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 3,
+                "maxLength": 63
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "outputS3KeyPrefix": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 500
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "serviceRoleArn": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "documentName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "commandId": {
+              "type": "string"
+            },
+            "documentName": {
+              "type": "string"
+            },
+            "documentVersion": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "comment": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "status": {
+              "type": "string"
+            },
+            "statusDetails": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "requestedDateTime": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "expiresAfter": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "instanceIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "targets": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "key": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "key",
+                  "values"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "maxConcurrency": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "maxErrors": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "targetCount": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "completedCount": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "errorCount": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "deliveryTimedOutCount": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "executionTimeoutSeconds": {
+              "anyOf": [
+                {
+                  "type": "number"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "outputS3BucketName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "outputS3KeyPrefix": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "outputS3Region": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "serviceRole": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "commandId",
+            "documentName",
+            "documentVersion",
+            "comment",
+            "status",
+            "statusDetails",
+            "requestedDateTime",
+            "expiresAfter",
+            "instanceIds",
+            "targets",
+            "maxConcurrency",
+            "maxErrors",
+            "targetCount",
+            "completedCount",
+            "errorCount",
+            "deliveryTimedOutCount",
+            "executionTimeoutSeconds",
+            "outputS3BucketName",
+            "outputS3KeyPrefix",
+            "outputS3Region",
+            "serviceRole"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1447 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/file.ts",
+  "contracts": {
+    "fileManageContract": {
+      "method": "POST",
+      "path": "/api/tools/file/manage",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "workspaceId": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "write"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "folderPath": {
+                "$ref": "#/$defs/FolderPathInput"
+              },
+              "content": {
+                "type": "string"
+              },
+              "fileInput": {},
+              "contentType": {
+                "type": "string"
+              },
+              "overwrite": {
+                "type": "boolean"
+              },
+              "expectedRevision": {
+                "description": "Revision from an earlier read or write; the write is refused if content moved on.",
+                "type": "string",
+                "minLength": 1
+              },
+              "__privateSecretProvenance": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "number",
+                    "const": 1,
+                    "description": "Private provenance bundle format version."
+                  },
+                  "complete": {
+                    "type": "boolean",
+                    "description": "Whether the private provenance bundle is complete."
+                  },
+                  "selections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096,
+                          "description": "Selection key carrying provenance."
+                        },
+                        "provenance": {
+                          "type": "object",
+                          "properties": {
+                            "version": {
+                              "type": "number",
+                              "const": 1,
+                              "description": "Secret provenance format version."
+                            },
+                            "complete": {
+                              "type": "boolean",
+                              "description": "Whether the provenance trace is complete."
+                            },
+                            "entries": {
+                              "maxItems": 10000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "encryptedValue": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 8388608,
+                                    "description": "Encrypted secret value carried across the trusted execution boundary."
+                                  },
+                                  "name": {
+                                    "description": "Optional source secret name.",
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 1024
+                                  }
+                                },
+                                "required": [
+                                  "encryptedValue"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "description": "Encrypted secret provenance entries."
+                            },
+                            "scope": {
+                              "description": "Authorization scope bound to the encrypted provenance.",
+                              "type": "object",
+                              "properties": {
+                                "userId": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024,
+                                  "description": "User scope for the encrypted provenance."
+                                },
+                                "workspaceId": {
+                                  "description": "Optional workspace scope for the encrypted provenance.",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                }
+                              },
+                              "required": [
+                                "userId"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "version",
+                            "complete",
+                            "entries"
+                          ],
+                          "additionalProperties": false,
+                          "description": "Encrypted provenance for this selection."
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "provenance"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Selections and their encrypted provenance."
+                  }
+                },
+                "required": [
+                  "version",
+                  "complete",
+                  "selections"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "append"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileName": {
+                "type": "string",
+                "minLength": 1
+              },
+              "folderPath": {
+                "$ref": "#/$defs/FolderPathInput"
+              },
+              "folderPaths": {
+                "minItems": 1,
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/FolderPathInput"
+                }
+              },
+              "includeSubfolders": {
+                "type": "boolean"
+              },
+              "content": {
+                "type": "string"
+              },
+              "__privateSecretProvenance": {
+                "type": "object",
+                "properties": {
+                  "version": {
+                    "type": "number",
+                    "const": 1,
+                    "description": "Private provenance bundle format version."
+                  },
+                  "complete": {
+                    "type": "boolean",
+                    "description": "Whether the private provenance bundle is complete."
+                  },
+                  "selections": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096,
+                          "description": "Selection key carrying provenance."
+                        },
+                        "provenance": {
+                          "type": "object",
+                          "properties": {
+                            "version": {
+                              "type": "number",
+                              "const": 1,
+                              "description": "Secret provenance format version."
+                            },
+                            "complete": {
+                              "type": "boolean",
+                              "description": "Whether the provenance trace is complete."
+                            },
+                            "entries": {
+                              "maxItems": 10000,
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "encryptedValue": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 8388608,
+                                    "description": "Encrypted secret value carried across the trusted execution boundary."
+                                  },
+                                  "name": {
+                                    "description": "Optional source secret name.",
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "maxLength": 1024
+                                  }
+                                },
+                                "required": [
+                                  "encryptedValue"
+                                ],
+                                "additionalProperties": false
+                              },
+                              "description": "Encrypted secret provenance entries."
+                            },
+                            "scope": {
+                              "description": "Authorization scope bound to the encrypted provenance.",
+                              "type": "object",
+                              "properties": {
+                                "userId": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024,
+                                  "description": "User scope for the encrypted provenance."
+                                },
+                                "workspaceId": {
+                                  "description": "Optional workspace scope for the encrypted provenance.",
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 1024
+                                }
+                              },
+                              "required": [
+                                "userId"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "required": [
+                            "version",
+                            "complete",
+                            "entries"
+                          ],
+                          "additionalProperties": false,
+                          "description": "Encrypted provenance for this selection."
+                        }
+                      },
+                      "required": [
+                        "key",
+                        "provenance"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "description": "Selections and their encrypted provenance."
+                  }
+                },
+                "required": [
+                  "version",
+                  "complete",
+                  "selections"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "operation",
+              "fileName",
+              "content"
+            ]
+          },
+          {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "edit"
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "folderPath": {
+                    "$ref": "#/$defs/FolderPathInput"
+                  },
+                  "folderPaths": {
+                    "minItems": 1,
+                    "maxItems": 64,
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/FolderPathInput"
+                    }
+                  },
+                  "includeSubfolders": {
+                    "type": "boolean"
+                  },
+                  "expectedRevision": {
+                    "description": "Revision from an earlier read or write; the write is refused if content moved on.",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "mode": {
+                    "type": "string",
+                    "const": "search_replace"
+                  },
+                  "search": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "replaceAll": {
+                    "type": "boolean"
+                  },
+                  "__privateSecretProvenance": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "number",
+                        "const": 1,
+                        "description": "Private provenance bundle format version."
+                      },
+                      "complete": {
+                        "type": "boolean",
+                        "description": "Whether the private provenance bundle is complete."
+                      },
+                      "selections": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096,
+                              "description": "Selection key carrying provenance."
+                            },
+                            "provenance": {
+                              "type": "object",
+                              "properties": {
+                                "version": {
+                                  "type": "number",
+                                  "const": 1,
+                                  "description": "Secret provenance format version."
+                                },
+                                "complete": {
+                                  "type": "boolean",
+                                  "description": "Whether the provenance trace is complete."
+                                },
+                                "entries": {
+                                  "maxItems": 10000,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "encryptedValue": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 8388608,
+                                        "description": "Encrypted secret value carried across the trusted execution boundary."
+                                      },
+                                      "name": {
+                                        "description": "Optional source secret name.",
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    },
+                                    "required": [
+                                      "encryptedValue"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "description": "Encrypted secret provenance entries."
+                                },
+                                "scope": {
+                                  "description": "Authorization scope bound to the encrypted provenance.",
+                                  "type": "object",
+                                  "properties": {
+                                    "userId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024,
+                                      "description": "User scope for the encrypted provenance."
+                                    },
+                                    "workspaceId": {
+                                      "description": "Optional workspace scope for the encrypted provenance.",
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024
+                                    }
+                                  },
+                                  "required": [
+                                    "userId"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "version",
+                                "complete",
+                                "entries"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Encrypted provenance for this selection."
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "provenance"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "description": "Selections and their encrypted provenance."
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "complete",
+                      "selections"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "operation",
+                  "fileName",
+                  "mode",
+                  "search",
+                  "content"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "edit"
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "folderPath": {
+                    "$ref": "#/$defs/FolderPathInput"
+                  },
+                  "folderPaths": {
+                    "minItems": 1,
+                    "maxItems": 64,
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/FolderPathInput"
+                    }
+                  },
+                  "includeSubfolders": {
+                    "type": "boolean"
+                  },
+                  "expectedRevision": {
+                    "description": "Revision from an earlier read or write; the write is refused if content moved on.",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "mode": {
+                    "type": "string",
+                    "const": "replace_between"
+                  },
+                  "beforeAnchor": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "afterAnchor": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "content": {
+                    "type": "string"
+                  },
+                  "occurrence": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "__privateSecretProvenance": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "number",
+                        "const": 1,
+                        "description": "Private provenance bundle format version."
+                      },
+                      "complete": {
+                        "type": "boolean",
+                        "description": "Whether the private provenance bundle is complete."
+                      },
+                      "selections": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096,
+                              "description": "Selection key carrying provenance."
+                            },
+                            "provenance": {
+                              "type": "object",
+                              "properties": {
+                                "version": {
+                                  "type": "number",
+                                  "const": 1,
+                                  "description": "Secret provenance format version."
+                                },
+                                "complete": {
+                                  "type": "boolean",
+                                  "description": "Whether the provenance trace is complete."
+                                },
+                                "entries": {
+                                  "maxItems": 10000,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "encryptedValue": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 8388608,
+                                        "description": "Encrypted secret value carried across the trusted execution boundary."
+                                      },
+                                      "name": {
+                                        "description": "Optional source secret name.",
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    },
+                                    "required": [
+                                      "encryptedValue"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "description": "Encrypted secret provenance entries."
+                                },
+                                "scope": {
+                                  "description": "Authorization scope bound to the encrypted provenance.",
+                                  "type": "object",
+                                  "properties": {
+                                    "userId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024,
+                                      "description": "User scope for the encrypted provenance."
+                                    },
+                                    "workspaceId": {
+                                      "description": "Optional workspace scope for the encrypted provenance.",
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024
+                                    }
+                                  },
+                                  "required": [
+                                    "userId"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "version",
+                                "complete",
+                                "entries"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Encrypted provenance for this selection."
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "provenance"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "description": "Selections and their encrypted provenance."
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "complete",
+                      "selections"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "operation",
+                  "fileName",
+                  "mode",
+                  "beforeAnchor",
+                  "afterAnchor",
+                  "content"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "edit"
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "folderPath": {
+                    "$ref": "#/$defs/FolderPathInput"
+                  },
+                  "folderPaths": {
+                    "minItems": 1,
+                    "maxItems": 64,
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/FolderPathInput"
+                    }
+                  },
+                  "includeSubfolders": {
+                    "type": "boolean"
+                  },
+                  "expectedRevision": {
+                    "description": "Revision from an earlier read or write; the write is refused if content moved on.",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "mode": {
+                    "type": "string",
+                    "const": "insert_after"
+                  },
+                  "anchor": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "content": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "occurrence": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "__privateSecretProvenance": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "number",
+                        "const": 1,
+                        "description": "Private provenance bundle format version."
+                      },
+                      "complete": {
+                        "type": "boolean",
+                        "description": "Whether the private provenance bundle is complete."
+                      },
+                      "selections": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096,
+                              "description": "Selection key carrying provenance."
+                            },
+                            "provenance": {
+                              "type": "object",
+                              "properties": {
+                                "version": {
+                                  "type": "number",
+                                  "const": 1,
+                                  "description": "Secret provenance format version."
+                                },
+                                "complete": {
+                                  "type": "boolean",
+                                  "description": "Whether the provenance trace is complete."
+                                },
+                                "entries": {
+                                  "maxItems": 10000,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "encryptedValue": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 8388608,
+                                        "description": "Encrypted secret value carried across the trusted execution boundary."
+                                      },
+                                      "name": {
+                                        "description": "Optional source secret name.",
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    },
+                                    "required": [
+                                      "encryptedValue"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "description": "Encrypted secret provenance entries."
+                                },
+                                "scope": {
+                                  "description": "Authorization scope bound to the encrypted provenance.",
+                                  "type": "object",
+                                  "properties": {
+                                    "userId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024,
+                                      "description": "User scope for the encrypted provenance."
+                                    },
+                                    "workspaceId": {
+                                      "description": "Optional workspace scope for the encrypted provenance.",
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024
+                                    }
+                                  },
+                                  "required": [
+                                    "userId"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "version",
+                                "complete",
+                                "entries"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Encrypted provenance for this selection."
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "provenance"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "description": "Selections and their encrypted provenance."
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "complete",
+                      "selections"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "operation",
+                  "fileName",
+                  "mode",
+                  "anchor",
+                  "content"
+                ]
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "operation": {
+                    "type": "string",
+                    "const": "edit"
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "fileName": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "folderPath": {
+                    "$ref": "#/$defs/FolderPathInput"
+                  },
+                  "folderPaths": {
+                    "minItems": 1,
+                    "maxItems": 64,
+                    "type": "array",
+                    "items": {
+                      "$ref": "#/$defs/FolderPathInput"
+                    }
+                  },
+                  "includeSubfolders": {
+                    "type": "boolean"
+                  },
+                  "expectedRevision": {
+                    "description": "Revision from an earlier read or write; the write is refused if content moved on.",
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "mode": {
+                    "type": "string",
+                    "const": "delete_between"
+                  },
+                  "startAnchor": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "endAnchor": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "occurrence": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 9007199254740991
+                  },
+                  "__privateSecretProvenance": {
+                    "type": "object",
+                    "properties": {
+                      "version": {
+                        "type": "number",
+                        "const": 1,
+                        "description": "Private provenance bundle format version."
+                      },
+                      "complete": {
+                        "type": "boolean",
+                        "description": "Whether the private provenance bundle is complete."
+                      },
+                      "selections": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "key": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4096,
+                              "description": "Selection key carrying provenance."
+                            },
+                            "provenance": {
+                              "type": "object",
+                              "properties": {
+                                "version": {
+                                  "type": "number",
+                                  "const": 1,
+                                  "description": "Secret provenance format version."
+                                },
+                                "complete": {
+                                  "type": "boolean",
+                                  "description": "Whether the provenance trace is complete."
+                                },
+                                "entries": {
+                                  "maxItems": 10000,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "encryptedValue": {
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 8388608,
+                                        "description": "Encrypted secret value carried across the trusted execution boundary."
+                                      },
+                                      "name": {
+                                        "description": "Optional source secret name.",
+                                        "type": "string",
+                                        "minLength": 1,
+                                        "maxLength": 1024
+                                      }
+                                    },
+                                    "required": [
+                                      "encryptedValue"
+                                    ],
+                                    "additionalProperties": false
+                                  },
+                                  "description": "Encrypted secret provenance entries."
+                                },
+                                "scope": {
+                                  "description": "Authorization scope bound to the encrypted provenance.",
+                                  "type": "object",
+                                  "properties": {
+                                    "userId": {
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024,
+                                      "description": "User scope for the encrypted provenance."
+                                    },
+                                    "workspaceId": {
+                                      "description": "Optional workspace scope for the encrypted provenance.",
+                                      "type": "string",
+                                      "minLength": 1,
+                                      "maxLength": 1024
+                                    }
+                                  },
+                                  "required": [
+                                    "userId"
+                                  ],
+                                  "additionalProperties": false
+                                }
+                              },
+                              "required": [
+                                "version",
+                                "complete",
+                                "entries"
+                              ],
+                              "additionalProperties": false,
+                              "description": "Encrypted provenance for this selection."
+                            }
+                          },
+                          "required": [
+                            "key",
+                            "provenance"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "description": "Selections and their encrypted provenance."
+                      }
+                    },
+                    "required": [
+                      "version",
+                      "complete",
+                      "selections"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "operation",
+                  "fileName",
+                  "mode",
+                  "startAnchor",
+                  "endAnchor"
+                ]
+              }
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "get"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileInput": {}
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "move"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "folderPath": {
+                "$ref": "#/$defs/FolderPathInput"
+              },
+              "targetFolder": {
+                "default": "",
+                "type": "string"
+              }
+            },
+            "required": [
+              "operation",
+              "fileId"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "manage_sharing"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileInput": {},
+              "isActive": {
+                "type": "boolean"
+              },
+              "authType": {
+                "type": "string",
+                "enum": [
+                  "public",
+                  "password",
+                  "email",
+                  "sso"
+                ]
+              },
+              "password": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1024
+              },
+              "allowedEmails": {
+                "maxItems": 200,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "required": [
+              "operation",
+              "isActive"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "read"
+              },
+              "folderPaths": {
+                "minItems": 1,
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/FolderPathInput"
+                }
+              },
+              "includeSubfolders": {
+                "type": "boolean"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
+              },
+              "fileInput": {}
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "content"
+              },
+              "folderPaths": {
+                "minItems": 1,
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/FolderPathInput"
+                }
+              },
+              "includeSubfolders": {
+                "type": "boolean"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
+              },
+              "fileInput": {},
+              "offset": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 9007199254740991
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "compress"
+              },
+              "folderPaths": {
+                "minItems": 1,
+                "maxItems": 64,
+                "type": "array",
+                "items": {
+                  "$ref": "#/$defs/FolderPathInput"
+                }
+              },
+              "includeSubfolders": {
+                "type": "boolean"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileId": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "minItems": 1,
+                    "maxItems": 1000,
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  }
+                ]
+              },
+              "fileInput": {},
+              "archiveName": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "decompress"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "fileInput": {}
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "list"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "$ref": "#/$defs/FolderPathInput"
+              },
+              "recursive": {
+                "type": "boolean"
+              },
+              "depth": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 64
+              },
+              "search": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000
+              }
+            },
+            "required": [
+              "operation"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "create_folder"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "$ref": "#/$defs/NonRootFolderPathInput"
+              }
+            },
+            "required": [
+              "operation",
+              "path"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "update_folder"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "$ref": "#/$defs/NonRootFolderPathInput"
+              },
+              "destinationPath": {
+                "$ref": "#/$defs/NonRootFolderPathInput"
+              }
+            },
+            "required": [
+              "operation",
+              "path",
+              "destinationPath"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "delete_folder"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "path": {
+                "$ref": "#/$defs/NonRootFolderPathInput"
+              },
+              "recursive": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "operation",
+              "path"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation": {
+                "type": "string",
+                "const": "restore_folder"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "folderId": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "operation",
+              "folderId"
+            ]
+          }
+        ],
+        "$defs": {
+          "FolderPathInput": {
+            "id": "FolderPathInput",
+            "title": "Folder path input",
+            "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+            "maxLength": 4096,
+            "type": "string"
+          },
+          "NonRootFolderPathInput": {
+            "id": "NonRootFolderPathInput",
+            "title": "Non-root folder path input",
+            "description": "Non-root folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+            "maxLength": 4096,
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "output": {},
+            "error": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "data": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

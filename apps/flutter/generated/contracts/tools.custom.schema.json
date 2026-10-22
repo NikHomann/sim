@@ -1,0 +1,207 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/custom.ts",
+  "contracts": {
+    "deleteCustomToolContract": {
+      "method": "DELETE",
+      "path": "/api/tools/custom",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "settings",
+              "tool_input"
+            ]
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listCustomToolsContract": {
+      "method": "GET",
+      "path": "/api/tools/custom",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string"
+          },
+          "workflowId": {
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "upsertCustomToolsContract": {
+      "method": "POST",
+      "path": "/api/tools/custom",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tools": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "title": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "const": "function"
+                    },
+                    "function": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "description": {
+                          "type": "string"
+                        },
+                        "parameters": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string"
+                            },
+                            "properties": {
+                              "type": "object",
+                              "propertyNames": {
+                                "type": "string"
+                              },
+                              "additionalProperties": {}
+                            },
+                            "required": {
+                              "type": "array",
+                              "items": {
+                                "type": "string"
+                              }
+                            }
+                          },
+                          "required": [
+                            "type",
+                            "properties"
+                          ],
+                          "additionalProperties": {}
+                        }
+                      },
+                      "required": [
+                        "name",
+                        "parameters"
+                      ],
+                      "additionalProperties": {}
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "function"
+                  ],
+                  "additionalProperties": {}
+                },
+                "code": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "title",
+                "schema",
+                "code"
+              ]
+            }
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "settings",
+              "tool_input"
+            ]
+          }
+        },
+        "required": [
+          "tools"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

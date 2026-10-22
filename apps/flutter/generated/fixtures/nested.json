@@ -1,0 +1,1624 @@
+{
+  "name": "nested",
+  "description": "note, forEach loop containing a parallel containing a locked function, while loop",
+  "state": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "chat"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "note": {
+        "id": "note",
+        "type": "note",
+        "name": "Note 1",
+        "position": {
+          "x": 0,
+          "y": 300
+        },
+        "subBlocks": {
+          "content": {
+            "id": "content",
+            "type": "long-input",
+            "value": "# Pipeline\n\nRuns **nightly**."
+          },
+          "color": {
+            "id": "color",
+            "type": "short-input",
+            "value": "#F59E0B"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "loop": {
+        "id": "loop",
+        "type": "loop",
+        "name": "Loop 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "loopType": "forEach",
+          "collection": "<start.input>",
+          "width": 900,
+          "height": 500,
+          "type": "loop"
+        }
+      },
+      "parallel": {
+        "id": "parallel",
+        "type": "parallel",
+        "name": "Parallel 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "parentId": "loop",
+          "extent": "parent",
+          "parallelType": "count",
+          "count": 2,
+          "width": 500,
+          "height": 300,
+          "type": "parallel"
+        }
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <loop.currentItem>"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": true,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "parentId": "parallel",
+          "extent": "parent"
+        },
+        "locked": true
+      },
+      "while": {
+        "id": "while",
+        "type": "loop",
+        "name": "Loop 2",
+        "position": {
+          "x": 1400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "loopType": "while",
+          "whileCondition": "<function1.result> < 10",
+          "width": 500,
+          "height": 300,
+          "type": "loop"
+        }
+      }
+    },
+    "edges": [
+      {
+        "id": "edge-start-source-loop-target",
+        "source": "start",
+        "target": "loop",
+        "sourceHandle": "source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-loop-loop-start-source-parallel-target",
+        "source": "loop",
+        "target": "parallel",
+        "sourceHandle": "loop-start-source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-parallel-parallel-start-source-function-target",
+        "source": "parallel",
+        "target": "function",
+        "sourceHandle": "parallel-start-source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-loop-loop-end-source-while-target",
+        "source": "loop",
+        "target": "while",
+        "sourceHandle": "loop-end-source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      }
+    ],
+    "loops": {
+      "loop": {
+        "id": "loop",
+        "nodes": [
+          "parallel"
+        ],
+        "iterations": 5,
+        "loopType": "forEach",
+        "enabled": true,
+        "forEachItems": "<start.input>",
+        "whileCondition": "",
+        "doWhileCondition": ""
+      },
+      "while": {
+        "id": "while",
+        "nodes": [],
+        "iterations": 5,
+        "loopType": "while",
+        "enabled": true,
+        "forEachItems": "",
+        "whileCondition": "<function1.result> < 10",
+        "doWhileCondition": ""
+      }
+    },
+    "parallels": {
+      "parallel": {
+        "id": "parallel",
+        "nodes": [
+          "function"
+        ],
+        "count": 2,
+        "parallelType": "count",
+        "batchSize": 20,
+        "enabled": true
+      }
+    }
+  },
+  "serialized": {
+    "version": "1.0",
+    "blocks": [
+      {
+        "id": "start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "config": {
+          "params": {
+            "startWorkflow": "chat"
+          }
+        },
+        "inputs": {
+          "input": "json"
+        },
+        "outputs": {},
+        "metadata": {
+          "id": "starter",
+          "name": "Start",
+          "description": "Start workflow",
+          "category": "blocks",
+          "color": "#2FB3FF"
+        },
+        "enabled": true
+      },
+      {
+        "id": "note",
+        "position": {
+          "x": 0,
+          "y": 300
+        },
+        "config": {
+          "params": {
+            "content": "# Pipeline\n\nRuns **nightly**.",
+            "color": "#F59E0B"
+          }
+        },
+        "inputs": {
+          "content": "string"
+        },
+        "outputs": {},
+        "metadata": {
+          "id": "note",
+          "name": "Note 1",
+          "description": "Add contextual annotations directly onto the workflow canvas.",
+          "category": "blocks",
+          "color": "#F59E0B"
+        },
+        "enabled": true
+      },
+      {
+        "id": "loop",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "config": {
+          "tool": "",
+          "params": {
+            "loopType": "forEach",
+            "collection": "<start.input>",
+            "width": 900,
+            "height": 500,
+            "type": "loop"
+          }
+        },
+        "inputs": {},
+        "outputs": {},
+        "metadata": {
+          "id": "loop",
+          "name": "Loop 1",
+          "description": "Loop container",
+          "category": "subflow",
+          "color": "#3b82f6"
+        },
+        "enabled": true
+      },
+      {
+        "id": "parallel",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "config": {
+          "tool": "",
+          "params": {
+            "parentId": "loop",
+            "extent": "parent",
+            "parallelType": "count",
+            "count": 2,
+            "width": 500,
+            "height": 300,
+            "type": "parallel"
+          }
+        },
+        "inputs": {},
+        "outputs": {},
+        "metadata": {
+          "id": "parallel",
+          "name": "Parallel 1",
+          "description": "Parallel container",
+          "category": "subflow",
+          "color": "#8b5cf6"
+        },
+        "enabled": true
+      },
+      {
+        "id": "function",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "config": {
+          "tool": "function_execute",
+          "params": {
+            "language": "javascript",
+            "code": "return <loop.currentItem>",
+            "advancedMode": true
+          }
+        },
+        "inputs": {
+          "code": "string",
+          "language": "string",
+          "timeout": "number",
+          "sandboxId": "string",
+          "secretScope": "string",
+          "mountedSecrets": "json"
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "metadata": {
+          "id": "function",
+          "name": "Function 1",
+          "description": "Run custom logic",
+          "category": "blocks",
+          "color": "#FF402F"
+        },
+        "enabled": true
+      },
+      {
+        "id": "while",
+        "position": {
+          "x": 1400,
+          "y": 0
+        },
+        "config": {
+          "tool": "",
+          "params": {
+            "loopType": "while",
+            "whileCondition": "<function1.result> < 10",
+            "width": 500,
+            "height": 300,
+            "type": "loop"
+          }
+        },
+        "inputs": {},
+        "outputs": {},
+        "metadata": {
+          "id": "loop",
+          "name": "Loop 2",
+          "description": "Loop container",
+          "category": "subflow",
+          "color": "#3b82f6"
+        },
+        "enabled": true
+      }
+    ],
+    "connections": [
+      {
+        "source": "start",
+        "target": "loop",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "loop",
+        "target": "parallel",
+        "sourceHandle": "loop-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "parallel",
+        "target": "function",
+        "sourceHandle": "parallel-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "loop",
+        "target": "while",
+        "sourceHandle": "loop-end-source",
+        "targetHandle": "target"
+      }
+    ],
+    "loops": {
+      "loop": {
+        "id": "loop",
+        "nodes": [
+          "parallel"
+        ],
+        "iterations": 5,
+        "loopType": "forEach",
+        "enabled": true,
+        "forEachItems": "<start.input>",
+        "whileCondition": "",
+        "doWhileCondition": ""
+      },
+      "while": {
+        "id": "while",
+        "nodes": [],
+        "iterations": 5,
+        "loopType": "while",
+        "enabled": true,
+        "forEachItems": "",
+        "whileCondition": "<function1.result> < 10",
+        "doWhileCondition": ""
+      }
+    },
+    "parallels": {
+      "parallel": {
+        "id": "parallel",
+        "nodes": [
+          "function"
+        ],
+        "count": 2,
+        "parallelType": "count",
+        "batchSize": 20,
+        "enabled": true
+      }
+    }
+  },
+  "serializedRequiredValidation": {
+    "ok": true,
+    "serialized": {
+      "version": "1.0",
+      "blocks": [
+        {
+          "id": "start",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "config": {
+            "params": {
+              "startWorkflow": "chat"
+            }
+          },
+          "inputs": {
+            "input": "json"
+          },
+          "outputs": {},
+          "metadata": {
+            "id": "starter",
+            "name": "Start",
+            "description": "Start workflow",
+            "category": "blocks",
+            "color": "#2FB3FF"
+          },
+          "enabled": true
+        },
+        {
+          "id": "note",
+          "position": {
+            "x": 0,
+            "y": 300
+          },
+          "config": {
+            "params": {
+              "content": "# Pipeline\n\nRuns **nightly**.",
+              "color": "#F59E0B"
+            }
+          },
+          "inputs": {
+            "content": "string"
+          },
+          "outputs": {},
+          "metadata": {
+            "id": "note",
+            "name": "Note 1",
+            "description": "Add contextual annotations directly onto the workflow canvas.",
+            "category": "blocks",
+            "color": "#F59E0B"
+          },
+          "enabled": true
+        },
+        {
+          "id": "loop",
+          "position": {
+            "x": 400,
+            "y": 0
+          },
+          "config": {
+            "tool": "",
+            "params": {
+              "loopType": "forEach",
+              "collection": "<start.input>",
+              "width": 900,
+              "height": 500,
+              "type": "loop"
+            }
+          },
+          "inputs": {},
+          "outputs": {},
+          "metadata": {
+            "id": "loop",
+            "name": "Loop 1",
+            "description": "Loop container",
+            "category": "subflow",
+            "color": "#3b82f6"
+          },
+          "enabled": true
+        },
+        {
+          "id": "parallel",
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "config": {
+            "tool": "",
+            "params": {
+              "parentId": "loop",
+              "extent": "parent",
+              "parallelType": "count",
+              "count": 2,
+              "width": 500,
+              "height": 300,
+              "type": "parallel"
+            }
+          },
+          "inputs": {},
+          "outputs": {},
+          "metadata": {
+            "id": "parallel",
+            "name": "Parallel 1",
+            "description": "Parallel container",
+            "category": "subflow",
+            "color": "#8b5cf6"
+          },
+          "enabled": true
+        },
+        {
+          "id": "function",
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "config": {
+            "tool": "function_execute",
+            "params": {
+              "language": "javascript",
+              "code": "return <loop.currentItem>",
+              "advancedMode": true
+            }
+          },
+          "inputs": {
+            "code": "string",
+            "language": "string",
+            "timeout": "number",
+            "sandboxId": "string",
+            "secretScope": "string",
+            "mountedSecrets": "json"
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "metadata": {
+            "id": "function",
+            "name": "Function 1",
+            "description": "Run custom logic",
+            "category": "blocks",
+            "color": "#FF402F"
+          },
+          "enabled": true
+        },
+        {
+          "id": "while",
+          "position": {
+            "x": 1400,
+            "y": 0
+          },
+          "config": {
+            "tool": "",
+            "params": {
+              "loopType": "while",
+              "whileCondition": "<function1.result> < 10",
+              "width": 500,
+              "height": 300,
+              "type": "loop"
+            }
+          },
+          "inputs": {},
+          "outputs": {},
+          "metadata": {
+            "id": "loop",
+            "name": "Loop 2",
+            "description": "Loop container",
+            "category": "subflow",
+            "color": "#3b82f6"
+          },
+          "enabled": true
+        }
+      ],
+      "connections": [
+        {
+          "source": "start",
+          "target": "loop",
+          "sourceHandle": "source",
+          "targetHandle": "target"
+        },
+        {
+          "source": "loop",
+          "target": "parallel",
+          "sourceHandle": "loop-start-source",
+          "targetHandle": "target"
+        },
+        {
+          "source": "parallel",
+          "target": "function",
+          "sourceHandle": "parallel-start-source",
+          "targetHandle": "target"
+        },
+        {
+          "source": "loop",
+          "target": "while",
+          "sourceHandle": "loop-end-source",
+          "targetHandle": "target"
+        }
+      ],
+      "loops": {
+        "loop": {
+          "id": "loop",
+          "nodes": [
+            "parallel"
+          ],
+          "iterations": 5,
+          "loopType": "forEach",
+          "enabled": true,
+          "forEachItems": "<start.input>",
+          "whileCondition": "",
+          "doWhileCondition": ""
+        },
+        "while": {
+          "id": "while",
+          "nodes": [],
+          "iterations": 5,
+          "loopType": "while",
+          "enabled": true,
+          "forEachItems": "",
+          "whileCondition": "<function1.result> < 10",
+          "doWhileCondition": ""
+        }
+      },
+      "parallels": {
+        "parallel": {
+          "id": "parallel",
+          "nodes": [
+            "function"
+          ],
+          "count": 2,
+          "parallelType": "count",
+          "batchSize": 20,
+          "enabled": true
+        }
+      }
+    }
+  },
+  "deserialized": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "chat"
+          },
+          "inputFormat": {
+            "id": "inputFormat",
+            "type": "input-format",
+            "value": null
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "note": {
+        "id": "note",
+        "type": "note",
+        "name": "Note 1",
+        "position": {
+          "x": 0,
+          "y": 300
+        },
+        "subBlocks": {
+          "content": {
+            "id": "content",
+            "type": "long-input",
+            "value": "# Pipeline\n\nRuns **nightly**."
+          },
+          "color": {
+            "id": "color",
+            "type": "short-input",
+            "value": "#F59E0B"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "loop": {
+        "id": "loop",
+        "type": "loop",
+        "name": "Loop 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "data": {
+          "loopType": "forEach",
+          "collection": "<start.input>",
+          "width": 900,
+          "height": 500,
+          "type": "loop"
+        }
+      },
+      "parallel": {
+        "id": "parallel",
+        "type": "parallel",
+        "name": "Parallel 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "data": {
+          "parentId": "loop",
+          "extent": "parent",
+          "parallelType": "count",
+          "count": 2,
+          "width": 500,
+          "height": 300,
+          "type": "parallel"
+        }
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <loop.currentItem>"
+          },
+          "sandboxId": {
+            "id": "sandboxId",
+            "type": "combobox",
+            "value": null
+          },
+          "secretScope": {
+            "id": "secretScope",
+            "type": "dropdown",
+            "value": null
+          },
+          "mountedSecrets": {
+            "id": "mountedSecrets",
+            "type": "dropdown",
+            "value": null
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": true
+      },
+      "while": {
+        "id": "while",
+        "type": "loop",
+        "name": "Loop 2",
+        "position": {
+          "x": 1400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "data": {
+          "loopType": "while",
+          "whileCondition": "<function1.result> < 10",
+          "width": 500,
+          "height": 300,
+          "type": "loop"
+        }
+      }
+    },
+    "edges": [
+      {
+        "id": "636a1fa2-eeed-44ad-972d-12d6b318c6c6",
+        "source": "start",
+        "target": "loop",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "d481625a-00dc-4538-950e-ae47d6ff104f",
+        "source": "loop",
+        "target": "parallel",
+        "sourceHandle": "loop-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "98ac7596-5fb7-4ab7-95bf-11e2a3304c89",
+        "source": "parallel",
+        "target": "function",
+        "sourceHandle": "parallel-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "f6364461-d5bb-4e8f-9f48-a0e8a468ce9f",
+        "source": "loop",
+        "target": "while",
+        "sourceHandle": "loop-end-source",
+        "targetHandle": "target"
+      }
+    ]
+  },
+  "loops": {
+    "loop": {
+      "id": "loop",
+      "nodes": [
+        "parallel"
+      ],
+      "iterations": 5,
+      "loopType": "forEach",
+      "enabled": true,
+      "forEachItems": "<start.input>",
+      "whileCondition": "",
+      "doWhileCondition": ""
+    },
+    "while": {
+      "id": "while",
+      "nodes": [],
+      "iterations": 5,
+      "loopType": "while",
+      "enabled": true,
+      "forEachItems": "",
+      "whileCondition": "<function1.result> < 10",
+      "doWhileCondition": ""
+    }
+  },
+  "parallels": {
+    "parallel": {
+      "id": "parallel",
+      "nodes": [
+        "function"
+      ],
+      "count": 2,
+      "parallelType": "count",
+      "batchSize": 20,
+      "enabled": true
+    }
+  },
+  "fieldIssues": {
+    "function": {
+      "params": {
+        "language": "javascript",
+        "code": "return <loop.currentItem>"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "note": {
+      "params": {
+        "content": "# Pipeline\n\nRuns **nightly**.",
+        "color": "#F59E0B"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "start": {
+      "params": {
+        "startWorkflow": "chat"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    }
+  },
+  "diff": {
+    "proposed": {
+      "blocks": {
+        "start": {
+          "id": "start",
+          "type": "starter",
+          "name": "Start",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "subBlocks": {
+            "startWorkflow": {
+              "id": "startWorkflow",
+              "type": "dropdown",
+              "value": "chat"
+            }
+          },
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "note": {
+          "id": "note",
+          "type": "note",
+          "name": "Note 1",
+          "position": {
+            "x": 0,
+            "y": 300
+          },
+          "subBlocks": {
+            "content": {
+              "id": "content",
+              "type": "long-input",
+              "value": "# Pipeline\n\nRuns **nightly**."
+            },
+            "color": {
+              "id": "color",
+              "type": "short-input",
+              "value": "#F59E0B"
+            }
+          },
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 70,
+            "measuredWidth": 320
+          }
+        },
+        "loop": {
+          "id": "loop",
+          "type": "loop",
+          "name": "Loop 1",
+          "position": {
+            "x": 400,
+            "y": 0
+          },
+          "subBlocks": {},
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "loopType": "forEach",
+            "collection": "<start.input>",
+            "width": 900,
+            "height": 500,
+            "type": "loop"
+          }
+        },
+        "parallel": {
+          "id": "parallel",
+          "type": "parallel",
+          "name": "Parallel 1",
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "subBlocks": {},
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "parentId": "loop",
+            "extent": "parent",
+            "parallelType": "count",
+            "count": 2,
+            "width": 500,
+            "height": 300,
+            "type": "parallel"
+          }
+        },
+        "function": {
+          "id": "function",
+          "type": "function",
+          "name": "Function 1",
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "subBlocks": {
+            "language": {
+              "id": "language",
+              "type": "dropdown",
+              "value": "javascript"
+            },
+            "code": {
+              "id": "code",
+              "type": "code",
+              "value": "return <loop.currentItem>"
+            }
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "enabled": false,
+          "horizontalHandles": true,
+          "advancedMode": true,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "parentId": "parallel",
+            "extent": "parent"
+          },
+          "locked": true
+        },
+        "while": {
+          "id": "while",
+          "type": "loop",
+          "name": "Loop 2",
+          "position": {
+            "x": 1400,
+            "y": 0
+          },
+          "subBlocks": {},
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "loopType": "while",
+            "whileCondition": "<function1.result> < 10",
+            "width": 500,
+            "height": 300,
+            "type": "loop"
+          }
+        },
+        "22222222-2222-4222-8222-222222222222": {
+          "id": "22222222-2222-4222-8222-222222222222",
+          "type": "note",
+          "name": "Note 2",
+          "position": {
+            "x": 0,
+            "y": 600
+          },
+          "subBlocks": {
+            "content": {
+              "id": "content",
+              "type": "long-input",
+              "value": "Added by the diff fixture"
+            }
+          },
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {}
+        }
+      },
+      "edges": [
+        {
+          "id": "edge-start-source-loop-target",
+          "source": "start",
+          "target": "loop",
+          "sourceHandle": "source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-loop-loop-start-source-parallel-target",
+          "source": "loop",
+          "target": "parallel",
+          "sourceHandle": "loop-start-source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-parallel-parallel-start-source-function-target",
+          "source": "parallel",
+          "target": "function",
+          "sourceHandle": "parallel-start-source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-loop-loop-end-source-while-target",
+          "source": "loop",
+          "target": "while",
+          "sourceHandle": "loop-end-source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        }
+      ],
+      "loops": {
+        "loop": {
+          "id": "loop",
+          "nodes": [
+            "parallel"
+          ],
+          "iterations": 5,
+          "loopType": "forEach",
+          "enabled": true,
+          "forEachItems": "<start.input>",
+          "whileCondition": "",
+          "doWhileCondition": ""
+        },
+        "while": {
+          "id": "while",
+          "nodes": [],
+          "iterations": 5,
+          "loopType": "while",
+          "enabled": true,
+          "forEachItems": "",
+          "whileCondition": "<function1.result> < 10",
+          "doWhileCondition": ""
+        }
+      },
+      "parallels": {
+        "parallel": {
+          "id": "parallel",
+          "nodes": [
+            "function"
+          ],
+          "count": 2,
+          "parallelType": "count",
+          "batchSize": 20,
+          "enabled": true
+        }
+      }
+    },
+    "result": {
+      "success": true,
+      "diff": {
+        "proposedState": {
+          "blocks": {
+            "start": {
+              "id": "start",
+              "type": "starter",
+              "name": "Start",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "subBlocks": {
+                "startWorkflow": {
+                  "id": "startWorkflow",
+                  "type": "dropdown",
+                  "value": "chat"
+                }
+              },
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            },
+            "note": {
+              "id": "note",
+              "type": "note",
+              "name": "Note 1",
+              "position": {
+                "x": 0,
+                "y": 300
+              },
+              "subBlocks": {
+                "content": {
+                  "id": "content",
+                  "type": "long-input",
+                  "value": "# Pipeline\n\nRuns **nightly**."
+                },
+                "color": {
+                  "id": "color",
+                  "type": "short-input",
+                  "value": "#F59E0B"
+                }
+              },
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 70,
+              "layout": {
+                "measuredHeight": 70,
+                "measuredWidth": 320
+              }
+            },
+            "loop": {
+              "id": "loop",
+              "type": "loop",
+              "name": "Loop 1",
+              "position": {
+                "x": 400,
+                "y": 0
+              },
+              "subBlocks": {},
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 712,
+                "measuredWidth": 850
+              },
+              "data": {
+                "loopType": "forEach",
+                "collection": "<start.input>",
+                "width": 850,
+                "height": 712,
+                "type": "loop"
+              }
+            },
+            "parallel": {
+              "id": "parallel",
+              "type": "parallel",
+              "name": "Parallel 1",
+              "position": {
+                "x": 80,
+                "y": 80
+              },
+              "subBlocks": {},
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 412,
+                "measuredWidth": 550
+              },
+              "data": {
+                "parentId": "loop",
+                "extent": "parent",
+                "parallelType": "count",
+                "count": 2,
+                "width": 550,
+                "height": 412,
+                "type": "parallel"
+              }
+            },
+            "function": {
+              "id": "function",
+              "type": "function",
+              "name": "Function 1",
+              "position": {
+                "x": 80,
+                "y": 80
+              },
+              "subBlocks": {
+                "language": {
+                  "id": "language",
+                  "type": "dropdown",
+                  "value": "javascript"
+                },
+                "code": {
+                  "id": "code",
+                  "type": "code",
+                  "value": "return <loop.currentItem>"
+                }
+              },
+              "outputs": {
+                "result": {
+                  "type": "json",
+                  "description": "Structured result emitted by the executed code"
+                },
+                "stdout": {
+                  "type": "string",
+                  "description": "Console log output and debug messages from function execution"
+                },
+                "files": {
+                  "type": "file[]",
+                  "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+                }
+              },
+              "enabled": false,
+              "horizontalHandles": true,
+              "advancedMode": true,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              },
+              "data": {
+                "parentId": "parallel",
+                "extent": "parent"
+              },
+              "locked": true,
+              "is_diff": "edited"
+            },
+            "while": {
+              "id": "while",
+              "type": "loop",
+              "name": "Loop 2",
+              "position": {
+                "x": 1430,
+                "y": 0
+              },
+              "subBlocks": {},
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              },
+              "data": {
+                "loopType": "while",
+                "whileCondition": "<function1.result> < 10",
+                "width": 500,
+                "height": 300,
+                "type": "loop"
+              }
+            },
+            "22222222-2222-4222-8222-222222222222": {
+              "id": "22222222-2222-4222-8222-222222222222",
+              "type": "note",
+              "name": "Note 2",
+              "position": {
+                "x": 0,
+                "y": 600
+              },
+              "subBlocks": {
+                "content": {
+                  "id": "content",
+                  "type": "long-input",
+                  "value": "Added by the diff fixture"
+                }
+              },
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 0,
+              "layout": {},
+              "is_diff": "new"
+            }
+          },
+          "edges": [
+            {
+              "id": "c360c72c-b5c9-4311-9aa6-426d06afb7f0",
+              "source": "start",
+              "target": "loop",
+              "sourceHandle": "source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "0e0d11d2-187b-4e5d-9ce5-39288641217f",
+              "source": "loop",
+              "target": "parallel",
+              "sourceHandle": "loop-start-source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "0788c695-d8a9-4b75-a35e-d66486ebb374",
+              "source": "parallel",
+              "target": "function",
+              "sourceHandle": "parallel-start-source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "9a39290b-2a19-422e-839b-41f39faa1665",
+              "source": "loop",
+              "target": "while",
+              "sourceHandle": "loop-end-source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            }
+          ],
+          "loops": {
+            "loop": {
+              "id": "loop",
+              "nodes": [
+                "parallel"
+              ],
+              "iterations": 5,
+              "loopType": "forEach",
+              "enabled": true,
+              "forEachItems": "<start.input>",
+              "whileCondition": "",
+              "doWhileCondition": ""
+            },
+            "while": {
+              "id": "while",
+              "nodes": [],
+              "iterations": 5,
+              "loopType": "while",
+              "enabled": true,
+              "forEachItems": "",
+              "whileCondition": "<function1.result> < 10",
+              "doWhileCondition": ""
+            }
+          },
+          "parallels": {
+            "parallel": {
+              "id": "parallel",
+              "nodes": [
+                "function"
+              ],
+              "count": 2,
+              "parallelType": "count",
+              "batchSize": 20,
+              "enabled": true
+            }
+          },
+          "lastSaved": 1792576837625
+        },
+        "diffAnalysis": {
+          "new_blocks": [
+            "22222222-2222-4222-8222-222222222222"
+          ],
+          "edited_blocks": [
+            "function"
+          ],
+          "deleted_blocks": [],
+          "field_diffs": {
+            "function": {
+              "changed_fields": [
+                "enabled"
+              ],
+              "unchanged_fields": [
+                "type",
+                "name",
+                "triggerMode",
+                "horizontalHandles",
+                "parentId",
+                "language",
+                "code"
+              ]
+            }
+          },
+          "edge_diff": {
+            "new_edges": [],
+            "deleted_edges": [],
+            "unchanged_edges": [
+              "start-source-loop-target",
+              "loop-loop-start-source-parallel-target",
+              "parallel-parallel-start-source-function-target",
+              "loop-loop-end-source-while-target"
+            ]
+          }
+        },
+        "metadata": {
+          "source": "workflow_state",
+          "timestamp": 1792576837626
+        }
+      }
+    }
+  }
+}

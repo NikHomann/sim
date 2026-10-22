@@ -1,0 +1,4297 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/workspace-fork.ts",
+  "contracts": {
+    "v2ForkWorkspaceContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Display name of the workflow or workspace.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "copy": {
+            "description": "Explicit resource selections to copy into the new fork; omitted resource kinds are not copied.",
+            "type": "object",
+            "properties": {
+              "files": {
+                "description": "Workspace file IDs to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "description": "Source table identifiers whose schemas and rows are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "knowledgeBases": {
+                "description": "Source knowledge base identifiers whose documents and content are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "description": "Source custom tool identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "description": "Source skill identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "description": "External MCP server identifiers to copy; OAuth connections require authorization in the destination.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "workflowMcpServers": {
+                "description": "Workflow-publishing MCP server identifiers to copy as empty configuration shells.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "requestId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Stable client request ID. Reuse it with identical inputs after an uncertain response; changed inputs return 409. A new ID can apply another operation."
+          },
+          "previewFingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Fingerprint returned by a preview with the same choices. A changed plan returns 409; preview again. The example hash is illustrative; use the actual preview value."
+          }
+        },
+        "required": [
+          "requestId",
+          "previewFingerprint"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkspaceOperationReport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceOperationReport": {
+              "type": "object",
+              "properties": {
+                "operationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Durable operation identifier to use for polling."
+                },
+                "requestId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Client request ID used to commit this operation. Reuse identical mutation inputs with this ID after an uncertain response."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Explicit current workspace scope."
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "workflow_import",
+                    "workspace_fork",
+                    "workspace_push",
+                    "workspace_pull"
+                  ],
+                  "description": "Type of committed workspace operation."
+                },
+                "applied": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "The business transaction committed, including when follow-up work fails."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "processing",
+                    "completed",
+                    "completed_with_warnings",
+                    "requires_configuration",
+                    "failed"
+                  ],
+                  "description": "Operation status; failed follow-up work does not undo the committed transaction."
+                },
+                "resourceIds": {
+                  "maxItems": 5000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "description": "Identifiers of resources created or changed by the committed operation."
+                },
+                "issues": {
+                  "maxItems": 2000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Stable machine-readable issue code."
+                      },
+                      "message": {
+                        "type": "string",
+                        "maxLength": 2048,
+                        "description": "Human-readable explanation of the issue."
+                      },
+                      "workflowId": {
+                        "description": "Workflow affected by this issue or deployment attempt.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "blockId": {
+                        "description": "Source block identifier before graph ID regeneration.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "subBlockKey": {
+                        "description": "Registered source field key, including the tool index for nested Agent fields.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Structured warnings, missing configuration, and follow-up failures."
+                },
+                "idMap": {
+                  "description": "Source graph identifiers mapped to the imported identifiers.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deploymentOperationIds": {
+                  "description": "Exact deployment attempts admitted by the workspace operation.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deployments": {
+                  "description": "Readiness of the exact admitted deployment attempts.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "operationId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Durable operation identifier to use for polling."
+                      },
+                      "workflowId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Workflow affected by this issue or deployment attempt."
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991,
+                        "description": "Deployment version number for this admitted attempt."
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "preparing",
+                          "activating",
+                          "active",
+                          "failed",
+                          "superseded"
+                        ],
+                        "description": "Status of this exact admitted deployment attempt."
+                      },
+                      "ready": {
+                        "type": "boolean",
+                        "description": "Whether this exact deployment attempt is active and all required components are ready."
+                      },
+                      "pendingComponents": {
+                        "maxItems": 32,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 128
+                        },
+                        "description": "Deployment components that have not finished becoming ready."
+                      }
+                    },
+                    "required": [
+                      "operationId",
+                      "workflowId",
+                      "version",
+                      "status",
+                      "ready",
+                      "pendingComponents"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "triggerUrlChanges": {
+                  "description": "Public trigger paths changed by this sync, with the affected workflow names.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Name of the workflow whose public trigger path stops serving."
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Public trigger path that stops serving after this sync."
+                      }
+                    },
+                    "required": [
+                      "workflowName",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "backgroundWorkId": {
+                  "description": "Workspace activity identifier for resource-copy progress.",
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "copyProgress": {
+                  "description": "Completion status and counts for explicitly selected resource copies.",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "completed",
+                        "failed"
+                      ],
+                      "description": "Background resource-copy status."
+                    },
+                    "copied": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources copied successfully."
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources that failed to copy."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "copied",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "operationId",
+                "requestId",
+                "workspaceId",
+                "kind",
+                "applied",
+                "status",
+                "resourceIds",
+                "issues"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceOperationReport",
+              "title": "Workspace operation receipt",
+              "description": "Committed operation receipt, resource copies, and exact deployment readiness."
+            }
+          }
+        }
+      }
+    },
+    "v2GetWorkspaceForkAvailabilityContract": {
+      "method": "GET",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/availability",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/GetWorkspaceForkAvailabilityResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "GetWorkspaceForkAvailabilityResult": {
+              "type": "object",
+              "properties": {
+                "available": {
+                  "type": "boolean",
+                  "description": "Whether this deployment and workspace plan enable forking."
+                }
+              },
+              "required": [
+                "available"
+              ],
+              "additionalProperties": false,
+              "id": "GetWorkspaceForkAvailabilityResult",
+              "title": "Get workspace fork availability result",
+              "description": "Fork feature availability for this workspace."
+            }
+          }
+        }
+      }
+    },
+    "v2GetWorkspaceForkLineageContract": {
+      "method": "GET",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/lineage",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/GetWorkspaceForkLineageResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "GetWorkspaceForkLineageResult": {
+              "type": "object",
+              "properties": {
+                "current": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Resource identifier."
+                    },
+                    "name": {
+                      "type": "string",
+                      "maxLength": 1024,
+                      "description": "Display name of the workflow or workspace."
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Owning organization, or null for a personal workspace."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "organizationId"
+                  ],
+                  "additionalProperties": false,
+                  "description": "The current workspace lineage node."
+                },
+                "parent": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Resource identifier."
+                        },
+                        "name": {
+                          "type": "string",
+                          "maxLength": 1024,
+                          "description": "Display name of the workflow or workspace."
+                        },
+                        "organizationId": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Owning organization, or null for a personal workspace."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "organizationId"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "The live parent workspace, or null when this workspace is not a fork."
+                }
+              },
+              "required": [
+                "current",
+                "parent"
+              ],
+              "additionalProperties": false,
+              "id": "GetWorkspaceForkLineageResult",
+              "title": "Get workspace fork lineage result",
+              "description": "Current workspace and its active parent."
+            }
+          }
+        }
+      }
+    },
+    "v2GetWorkspaceForkMappingsContract": {
+      "method": "GET",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/mappings",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "push",
+              "pull"
+            ],
+            "description": "Push means current to other; pull means other to current, independent of parent/child orientation."
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum items to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "sortBy": {
+            "default": "id",
+            "description": "Supported stable sort key for this collection.",
+            "type": "string",
+            "enum": [
+              "id"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc"
+            ]
+          }
+        },
+        "required": [
+          "otherWorkspaceId",
+          "direction"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/GetWorkspaceForkMappingsResult"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "GetWorkspaceForkMappingsResult": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource type stored on the canonical parent/child edge."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Authorized destination identifier, or null to clear the mapping."
+                },
+                "id": {
+                  "type": "string",
+                  "maxLength": 256,
+                  "description": "Resource identifier."
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId",
+                "id"
+              ],
+              "additionalProperties": false,
+              "id": "GetWorkspaceForkMappingsResult",
+              "title": "Get workspace fork mappings result",
+              "description": "A saved directional mapping entry."
+            }
+          }
+        }
+      }
+    },
+    "v2ListWorkspaceForkChildrenContract": {
+      "method": "GET",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/children",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "description": "Maximum items to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Supported stable sort key for this collection.",
+            "type": "string",
+            "enum": [
+              "createdAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "desc"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ListWorkspaceForkChildrenResult"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ListWorkspaceForkChildrenResult": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Resource identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "maxLength": 1024,
+                  "description": "Display name of the workflow or workspace."
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Owning organization, or null for a personal workspace."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "organizationId",
+                "createdAt"
+              ],
+              "additionalProperties": false,
+              "id": "ListWorkspaceForkChildrenResult",
+              "title": "List workspace fork children result",
+              "description": "An active direct child workspace."
+            }
+          }
+        }
+      }
+    },
+    "v2ListWorkspaceForkResourcesContract": {
+      "method": "GET",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/resources",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "description": "Maximum items to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "files",
+              "tables",
+              "knowledgeBases",
+              "customTools",
+              "skills",
+              "mcpServers",
+              "workflowMcpServers"
+            ],
+            "description": "Kind of source resource to list for copy selection."
+          },
+          "sortBy": {
+            "default": "id",
+            "description": "Supported stable sort key for this collection.",
+            "type": "string",
+            "enum": [
+              "id"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc"
+            ]
+          }
+        },
+        "required": [
+          "kind"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ListWorkspaceForkResourcesResult"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ListWorkspaceForkResourcesResult": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "maxLength": 4096,
+                  "description": "Resource identifier."
+                },
+                "label": {
+                  "type": "string",
+                  "maxLength": 1024,
+                  "description": "Human-readable resource label."
+                },
+                "folderId": {
+                  "description": "Containing folder identifier, or null at the workspace root.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "folderName": {
+                  "description": "Containing folder name, or null at the workspace root.",
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "label"
+              ],
+              "additionalProperties": false,
+              "id": "ListWorkspaceForkResourcesResult",
+              "title": "List workspace fork resources result",
+              "description": "A copyable resource candidate."
+            }
+          }
+        }
+      }
+    },
+    "v2PreviewWorkspaceForkContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/preview",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "description": "Display name of the workflow or workspace.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "copy": {
+            "description": "Explicit resource selections to copy into the new fork; omitted resource kinds are not copied.",
+            "type": "object",
+            "properties": {
+              "files": {
+                "description": "Workspace file IDs to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "description": "Source table identifiers whose schemas and rows are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "knowledgeBases": {
+                "description": "Source knowledge base identifiers whose documents and content are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "description": "Source custom tool identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "description": "Source skill identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "description": "External MCP server identifiers to copy; OAuth connections require authorization in the destination.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "workflowMcpServers": {
+                "description": "Workflow-publishing MCP server identifiers to copy as empty configuration shells.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkspaceForkPreview"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceForkPreview": {
+              "type": "object",
+              "properties": {
+                "previewFingerprint": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$",
+                  "description": "Fingerprint to submit when applying this preview with the same choices. Preview again after changing a choice."
+                },
+                "sourceWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Canonical workspace the workflows and resources are copied from."
+                },
+                "workflows": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sourceWorkflowId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Workflow identifier in the source workspace."
+                      },
+                      "name": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the workflow or workspace."
+                      }
+                    },
+                    "required": [
+                      "sourceWorkflowId",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Eligible workflows and their planned actions."
+                },
+                "selectedResourceCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of resources explicitly selected for copying."
+                },
+                "draftOnly": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "True because fork creation produces undeployed drafts."
+                }
+              },
+              "required": [
+                "previewFingerprint",
+                "sourceWorkspaceId",
+                "workflows",
+                "selectedResourceCount",
+                "draftOnly"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceForkPreview",
+              "title": "Workspace fork preview",
+              "description": "Read-only fork plan and fingerprint."
+            }
+          }
+        }
+      }
+    },
+    "v2PreviewWorkspacePullContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/pull/preview",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          },
+          "mappings": {
+            "description": "Proposed mapping entries addressed by resource type and `sourceId`. Preview does not save them; apply commits them with the sync.",
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource type stored on the canonical parent/child edge."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Authorized destination identifier, or null to clear the mapping."
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "dependentValues": {
+            "description": "Destination-specific choices addressed by source workflow ID, source block ID, and field key. Omission keeps saved overrides; an explicit empty array clears them.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Block identifier in the source workflow."
+                },
+                "subBlockKey": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "description": "Registered source field key, including the tool index for nested Agent fields."
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 65536,
+                  "description": "Destination value for the registered dependent field."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "subBlockKey",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "copyResources": {
+            "description": "Explicit source resources to copy before syncing the workflows.",
+            "type": "object",
+            "properties": {
+              "knowledgeBases": {
+                "description": "Source knowledge base identifiers whose documents and content are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "description": "Source table identifiers whose schemas and rows are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "description": "Source custom tool identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "description": "Source skill identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "files": {
+                "description": "Workspace file storage keys to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "description": "External MCP server identifiers to copy; OAuth connections require authorization in the destination.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "dropReferences": {
+            "description": "Source-deleted references explicitly acknowledged for removal; live source references cannot be dropped.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "credential",
+                    "env-var",
+                    "knowledge-base",
+                    "knowledge-document",
+                    "table",
+                    "file",
+                    "file-folder",
+                    "mcp-server",
+                    "custom-tool",
+                    "custom-block",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource or operation kind."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                }
+              },
+              "required": [
+                "kind",
+                "sourceId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "triggerMappings": {
+            "description": "Public trigger path choices from preview.triggerSlots, addressed by source workflow and block IDs. Duplicate or unavailable choices are rejected.",
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Source trigger block identifier from the sync preview."
+                },
+                "adoptPath": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "An adoptable path offered for this trigger, or null to allocate a new path."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "adoptPath"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "otherWorkspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkspaceSyncPreview"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceSyncPreview": {
+              "type": "object",
+              "properties": {
+                "previewFingerprint": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$",
+                  "description": "Fingerprint to submit when applying this preview with the same choices. Preview again after changing a choice."
+                },
+                "sourceWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Canonical workspace the workflows and resources are copied from."
+                },
+                "targetWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Canonical workspace receiving the changes."
+                },
+                "ready": {
+                  "type": "boolean",
+                  "description": "Whether required bindings, configuration, and sync blockers are resolved. This does not mean the target is already deployed."
+                },
+                "workflows": {
+                  "maxItems": 2000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "create",
+                          "replace",
+                          "archive"
+                        ],
+                        "description": "Planned workflow creation, replacement, or archival."
+                      },
+                      "sourceWorkflowId": {
+                        "description": "Workflow identifier in the source workspace.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "targetWorkflowId": {
+                        "description": "Existing target workflow identifier; absent when apply will create a new target.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the workflow or workspace."
+                      },
+                      "comparison": {
+                        "description": "Last successfully synced source deployment compared with the source deployment pinned by this preview. Absent for archive actions.",
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "status": {
+                                "type": "string",
+                                "const": "available",
+                                "description": "Both exact source snapshots are available."
+                              },
+                              "base": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Source deployment last successfully synced to this destination."
+                              },
+                              "target": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Pinned source deployment that this sync would copy."
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "base",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "status": {
+                                "type": "string",
+                                "const": "unavailable",
+                                "description": "The source baseline cannot be compared."
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "new_workflow",
+                                  "no_baseline",
+                                  "missing_baseline"
+                                ],
+                                "description": "New destination workflow, no recorded successful sync, or deleted baseline snapshot."
+                              },
+                              "target": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Pinned source deployment that this sync would copy."
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "reason",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Eligible workflows and their planned actions."
+                },
+                "unresolvedBindings": {
+                  "maxItems": 10000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Resource or operation kind."
+                      },
+                      "sourceId": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Source resource identifier in the canonical source workspace."
+                      },
+                      "blockName": {
+                        "description": "Display name of the affected source block.",
+                        "type": "string",
+                        "maxLength": 1024
+                      },
+                      "reason": {
+                        "description": "Structured explanation of the unresolved binding.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "sourceId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Source references that still require destination mappings or explicit copy choices."
+                },
+                "configuration": {
+                  "maxItems": 10000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sourceWorkflowId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Workflow identifier in the source workspace."
+                      },
+                      "sourceBlockId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Block identifier in the source workflow."
+                      },
+                      "subBlockKey": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Registered source field key, including the tool index for nested Agent fields."
+                      },
+                      "title": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Human-readable configuration field label."
+                      },
+                      "required": {
+                        "type": "boolean",
+                        "description": "Whether the reference or configuration is required for this operation."
+                      },
+                      "currentValue": {
+                        "type": "string",
+                        "maxLength": 65536,
+                        "description": "Persisted sync override or proposed override; empty when neither is configured."
+                      },
+                      "multiSelect": {
+                        "description": "Whether the field accepts comma-separated selections.",
+                        "type": "boolean"
+                      },
+                      "selectorKey": {
+                        "description": "Registered selector key for discovering this field’s options.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "discoveryWorkspaceId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Workspace scope for selector discovery: source for a parent being copied, otherwise destination."
+                      },
+                      "context": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "maxLength": 256
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "maxLength": 4096
+                        },
+                        "description": "Allowlisted selector dependencies scoped to discoveryWorkspaceId."
+                      },
+                      "parentKind": {
+                        "type": "string",
+                        "enum": [
+                          "credential",
+                          "env-var",
+                          "knowledge-base",
+                          "knowledge-document",
+                          "table",
+                          "file",
+                          "file-folder",
+                          "mcp-server",
+                          "custom-tool",
+                          "custom-block",
+                          "skill",
+                          "sandbox"
+                        ],
+                        "description": "Resource kind that owns this dependent configuration."
+                      },
+                      "parentSourceId": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Source identifier of the parent resource being mapped."
+                      },
+                      "parentContextKey": {
+                        "description": "Selector context key supplied by the mapped parent resource.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "sourceWorkflowId",
+                      "sourceBlockId",
+                      "subBlockKey",
+                      "title",
+                      "required",
+                      "currentValue",
+                      "discoveryWorkspaceId",
+                      "context",
+                      "parentKind",
+                      "parentSourceId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Dependent fields that may need destination-specific values."
+                },
+                "excludedTargets": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Resource identifier."
+                      },
+                      "name": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the workflow or workspace."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Target workflows explicitly excluded from sync."
+                },
+                "triggerSlots": {
+                  "maxItems": 10000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sourceWorkflowId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Workflow identifier in the source workspace."
+                      },
+                      "sourceBlockId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256,
+                        "description": "Stable source trigger block identifier to use in trigger mappings."
+                      },
+                      "blockName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the source trigger block."
+                      },
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the source workflow."
+                      },
+                      "ownPath": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Existing target trigger path, preserved automatically and not configurable."
+                      },
+                      "adoptablePaths": {
+                        "maxItems": 1000,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "description": "Retiring paths in the same target workflow with a compatible trigger provider."
+                      },
+                      "defaultAdoptPath": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Default adoption when ownPath is null; null then allocates a new path."
+                      }
+                    },
+                    "required": [
+                      "sourceWorkflowId",
+                      "sourceBlockId",
+                      "blockName",
+                      "workflowName",
+                      "ownPath",
+                      "adoptablePaths",
+                      "defaultAdoptPath"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Source triggers and the target paths available for explicit adoption choices."
+                },
+                "triggerUrlChanges": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Name of the affected workflow."
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Public trigger path that stops serving after this sync."
+                      }
+                    },
+                    "required": [
+                      "workflowName",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Retiring target trigger URLs no arriving trigger adopts."
+                }
+              },
+              "required": [
+                "previewFingerprint",
+                "sourceWorkspaceId",
+                "targetWorkspaceId",
+                "ready",
+                "workflows",
+                "unresolvedBindings",
+                "configuration",
+                "excludedTargets",
+                "triggerSlots",
+                "triggerUrlChanges"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceSyncPreview",
+              "title": "Workspace sync preview",
+              "description": "Read-only sync actions, bindings, configuration, and trigger-path choices."
+            }
+          }
+        }
+      }
+    },
+    "v2PreviewWorkspacePushContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/push/preview",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          },
+          "mappings": {
+            "description": "Proposed mapping entries addressed by resource type and `sourceId`. Preview does not save them; apply commits them with the sync.",
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource type stored on the canonical parent/child edge."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Authorized destination identifier, or null to clear the mapping."
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "dependentValues": {
+            "description": "Destination-specific choices addressed by source workflow ID, source block ID, and field key. Omission keeps saved overrides; an explicit empty array clears them.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Block identifier in the source workflow."
+                },
+                "subBlockKey": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "description": "Registered source field key, including the tool index for nested Agent fields."
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 65536,
+                  "description": "Destination value for the registered dependent field."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "subBlockKey",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "copyResources": {
+            "description": "Explicit source resources to copy before syncing the workflows.",
+            "type": "object",
+            "properties": {
+              "knowledgeBases": {
+                "description": "Source knowledge base identifiers whose documents and content are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "description": "Source table identifiers whose schemas and rows are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "description": "Source custom tool identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "description": "Source skill identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "files": {
+                "description": "Workspace file storage keys to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "description": "External MCP server identifiers to copy; OAuth connections require authorization in the destination.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "dropReferences": {
+            "description": "Source-deleted references explicitly acknowledged for removal; live source references cannot be dropped.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "credential",
+                    "env-var",
+                    "knowledge-base",
+                    "knowledge-document",
+                    "table",
+                    "file",
+                    "file-folder",
+                    "mcp-server",
+                    "custom-tool",
+                    "custom-block",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource or operation kind."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                }
+              },
+              "required": [
+                "kind",
+                "sourceId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "triggerMappings": {
+            "description": "Public trigger path choices from preview.triggerSlots, addressed by source workflow and block IDs. Duplicate or unavailable choices are rejected.",
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Source trigger block identifier from the sync preview."
+                },
+                "adoptPath": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "An adoptable path offered for this trigger, or null to allocate a new path."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "adoptPath"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "otherWorkspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkspaceSyncPreview"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceSyncPreview": {
+              "type": "object",
+              "properties": {
+                "previewFingerprint": {
+                  "type": "string",
+                  "pattern": "^[a-f0-9]{64}$",
+                  "description": "Fingerprint to submit when applying this preview with the same choices. Preview again after changing a choice."
+                },
+                "sourceWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Canonical workspace the workflows and resources are copied from."
+                },
+                "targetWorkspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Canonical workspace receiving the changes."
+                },
+                "ready": {
+                  "type": "boolean",
+                  "description": "Whether required bindings, configuration, and sync blockers are resolved. This does not mean the target is already deployed."
+                },
+                "workflows": {
+                  "maxItems": 2000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "create",
+                          "replace",
+                          "archive"
+                        ],
+                        "description": "Planned workflow creation, replacement, or archival."
+                      },
+                      "sourceWorkflowId": {
+                        "description": "Workflow identifier in the source workspace.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "targetWorkflowId": {
+                        "description": "Existing target workflow identifier; absent when apply will create a new target.",
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "name": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the workflow or workspace."
+                      },
+                      "comparison": {
+                        "description": "Last successfully synced source deployment compared with the source deployment pinned by this preview. Absent for archive actions.",
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "status": {
+                                "type": "string",
+                                "const": "available",
+                                "description": "Both exact source snapshots are available."
+                              },
+                              "base": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Source deployment last successfully synced to this destination."
+                              },
+                              "target": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Pinned source deployment that this sync would copy."
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "base",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "status": {
+                                "type": "string",
+                                "const": "unavailable",
+                                "description": "The source baseline cannot be compared."
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "new_workflow",
+                                  "no_baseline",
+                                  "missing_baseline"
+                                ],
+                                "description": "New destination workflow, no recorded successful sync, or deleted baseline snapshot."
+                              },
+                              "target": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Pinned source deployment that this sync would copy."
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "reason",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "action",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Eligible workflows and their planned actions."
+                },
+                "unresolvedBindings": {
+                  "maxItems": 10000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "kind": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Resource or operation kind."
+                      },
+                      "sourceId": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Source resource identifier in the canonical source workspace."
+                      },
+                      "blockName": {
+                        "description": "Display name of the affected source block.",
+                        "type": "string",
+                        "maxLength": 1024
+                      },
+                      "reason": {
+                        "description": "Structured explanation of the unresolved binding.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "kind",
+                      "sourceId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Source references that still require destination mappings or explicit copy choices."
+                },
+                "configuration": {
+                  "maxItems": 10000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sourceWorkflowId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Workflow identifier in the source workspace."
+                      },
+                      "sourceBlockId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Block identifier in the source workflow."
+                      },
+                      "subBlockKey": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Registered source field key, including the tool index for nested Agent fields."
+                      },
+                      "title": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Human-readable configuration field label."
+                      },
+                      "required": {
+                        "type": "boolean",
+                        "description": "Whether the reference or configuration is required for this operation."
+                      },
+                      "currentValue": {
+                        "type": "string",
+                        "maxLength": 65536,
+                        "description": "Persisted sync override or proposed override; empty when neither is configured."
+                      },
+                      "multiSelect": {
+                        "description": "Whether the field accepts comma-separated selections.",
+                        "type": "boolean"
+                      },
+                      "selectorKey": {
+                        "description": "Registered selector key for discovering this field’s options.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "discoveryWorkspaceId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Workspace scope for selector discovery: source for a parent being copied, otherwise destination."
+                      },
+                      "context": {
+                        "type": "object",
+                        "propertyNames": {
+                          "type": "string",
+                          "maxLength": 256
+                        },
+                        "additionalProperties": {
+                          "type": "string",
+                          "maxLength": 4096
+                        },
+                        "description": "Allowlisted selector dependencies scoped to discoveryWorkspaceId."
+                      },
+                      "parentKind": {
+                        "type": "string",
+                        "enum": [
+                          "credential",
+                          "env-var",
+                          "knowledge-base",
+                          "knowledge-document",
+                          "table",
+                          "file",
+                          "file-folder",
+                          "mcp-server",
+                          "custom-tool",
+                          "custom-block",
+                          "skill",
+                          "sandbox"
+                        ],
+                        "description": "Resource kind that owns this dependent configuration."
+                      },
+                      "parentSourceId": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Source identifier of the parent resource being mapped."
+                      },
+                      "parentContextKey": {
+                        "description": "Selector context key supplied by the mapped parent resource.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "sourceWorkflowId",
+                      "sourceBlockId",
+                      "subBlockKey",
+                      "title",
+                      "required",
+                      "currentValue",
+                      "discoveryWorkspaceId",
+                      "context",
+                      "parentKind",
+                      "parentSourceId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Dependent fields that may need destination-specific values."
+                },
+                "excludedTargets": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Resource identifier."
+                      },
+                      "name": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the workflow or workspace."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Target workflows explicitly excluded from sync."
+                },
+                "triggerSlots": {
+                  "maxItems": 10000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "sourceWorkflowId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "description": "Workflow identifier in the source workspace."
+                      },
+                      "sourceBlockId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 256,
+                        "description": "Stable source trigger block identifier to use in trigger mappings."
+                      },
+                      "blockName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the source trigger block."
+                      },
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Display name of the source workflow."
+                      },
+                      "ownPath": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Existing target trigger path, preserved automatically and not configurable."
+                      },
+                      "adoptablePaths": {
+                        "maxItems": 1000,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4096
+                        },
+                        "description": "Retiring paths in the same target workflow with a compatible trigger provider."
+                      },
+                      "defaultAdoptPath": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "maxLength": 4096
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Default adoption when ownPath is null; null then allocates a new path."
+                      }
+                    },
+                    "required": [
+                      "sourceWorkflowId",
+                      "sourceBlockId",
+                      "blockName",
+                      "workflowName",
+                      "ownPath",
+                      "adoptablePaths",
+                      "defaultAdoptPath"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Source triggers and the target paths available for explicit adoption choices."
+                },
+                "triggerUrlChanges": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Name of the affected workflow."
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Public trigger path that stops serving after this sync."
+                      }
+                    },
+                    "required": [
+                      "workflowName",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Retiring target trigger URLs no arriving trigger adopts."
+                }
+              },
+              "required": [
+                "previewFingerprint",
+                "sourceWorkspaceId",
+                "targetWorkspaceId",
+                "ready",
+                "workflows",
+                "unresolvedBindings",
+                "configuration",
+                "excludedTargets",
+                "triggerSlots",
+                "triggerUrlChanges"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceSyncPreview",
+              "title": "Workspace sync preview",
+              "description": "Read-only sync actions, bindings, configuration, and trigger-path choices."
+            }
+          }
+        }
+      }
+    },
+    "v2PullWorkspaceContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/pull",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          },
+          "mappings": {
+            "description": "Proposed mapping entries addressed by resource type and `sourceId`. Preview does not save them; apply commits them with the sync.",
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource type stored on the canonical parent/child edge."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Authorized destination identifier, or null to clear the mapping."
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "dependentValues": {
+            "description": "Destination-specific choices addressed by source workflow ID, source block ID, and field key. Omission keeps saved overrides; an explicit empty array clears them.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Block identifier in the source workflow."
+                },
+                "subBlockKey": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "description": "Registered source field key, including the tool index for nested Agent fields."
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 65536,
+                  "description": "Destination value for the registered dependent field."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "subBlockKey",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "copyResources": {
+            "description": "Explicit source resources to copy before syncing the workflows.",
+            "type": "object",
+            "properties": {
+              "knowledgeBases": {
+                "description": "Source knowledge base identifiers whose documents and content are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "description": "Source table identifiers whose schemas and rows are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "description": "Source custom tool identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "description": "Source skill identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "files": {
+                "description": "Workspace file storage keys to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "description": "External MCP server identifiers to copy; OAuth connections require authorization in the destination.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "dropReferences": {
+            "description": "Source-deleted references explicitly acknowledged for removal; live source references cannot be dropped.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "credential",
+                    "env-var",
+                    "knowledge-base",
+                    "knowledge-document",
+                    "table",
+                    "file",
+                    "file-folder",
+                    "mcp-server",
+                    "custom-tool",
+                    "custom-block",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource or operation kind."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                }
+              },
+              "required": [
+                "kind",
+                "sourceId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "triggerMappings": {
+            "description": "Public trigger path choices from preview.triggerSlots, addressed by source workflow and block IDs. Duplicate or unavailable choices are rejected.",
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Source trigger block identifier from the sync preview."
+                },
+                "adoptPath": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "An adoptable path offered for this trigger, or null to allocate a new path."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "adoptPath"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "requestId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Stable client request ID. Reuse it with identical inputs after an uncertain response; changed inputs return 409. A new ID can apply another operation."
+          },
+          "previewFingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Fingerprint returned by a preview with the same choices. A changed plan returns 409; preview again. The example hash is illustrative; use the actual preview value."
+          },
+          "confirm": {
+            "type": "boolean",
+            "const": true,
+            "description": "Confirm replacement of mapped target drafts and archival of mapped targets whose sources were deleted or archived."
+          }
+        },
+        "required": [
+          "otherWorkspaceId",
+          "requestId",
+          "previewFingerprint",
+          "confirm"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkspaceOperationReport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceOperationReport": {
+              "type": "object",
+              "properties": {
+                "operationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Durable operation identifier to use for polling."
+                },
+                "requestId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Client request ID used to commit this operation. Reuse identical mutation inputs with this ID after an uncertain response."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Explicit current workspace scope."
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "workflow_import",
+                    "workspace_fork",
+                    "workspace_push",
+                    "workspace_pull"
+                  ],
+                  "description": "Type of committed workspace operation."
+                },
+                "applied": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "The business transaction committed, including when follow-up work fails."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "processing",
+                    "completed",
+                    "completed_with_warnings",
+                    "requires_configuration",
+                    "failed"
+                  ],
+                  "description": "Operation status; failed follow-up work does not undo the committed transaction."
+                },
+                "resourceIds": {
+                  "maxItems": 5000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "description": "Identifiers of resources created or changed by the committed operation."
+                },
+                "issues": {
+                  "maxItems": 2000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Stable machine-readable issue code."
+                      },
+                      "message": {
+                        "type": "string",
+                        "maxLength": 2048,
+                        "description": "Human-readable explanation of the issue."
+                      },
+                      "workflowId": {
+                        "description": "Workflow affected by this issue or deployment attempt.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "blockId": {
+                        "description": "Source block identifier before graph ID regeneration.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "subBlockKey": {
+                        "description": "Registered source field key, including the tool index for nested Agent fields.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Structured warnings, missing configuration, and follow-up failures."
+                },
+                "idMap": {
+                  "description": "Source graph identifiers mapped to the imported identifiers.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deploymentOperationIds": {
+                  "description": "Exact deployment attempts admitted by the workspace operation.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deployments": {
+                  "description": "Readiness of the exact admitted deployment attempts.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "operationId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Durable operation identifier to use for polling."
+                      },
+                      "workflowId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Workflow affected by this issue or deployment attempt."
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991,
+                        "description": "Deployment version number for this admitted attempt."
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "preparing",
+                          "activating",
+                          "active",
+                          "failed",
+                          "superseded"
+                        ],
+                        "description": "Status of this exact admitted deployment attempt."
+                      },
+                      "ready": {
+                        "type": "boolean",
+                        "description": "Whether this exact deployment attempt is active and all required components are ready."
+                      },
+                      "pendingComponents": {
+                        "maxItems": 32,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 128
+                        },
+                        "description": "Deployment components that have not finished becoming ready."
+                      }
+                    },
+                    "required": [
+                      "operationId",
+                      "workflowId",
+                      "version",
+                      "status",
+                      "ready",
+                      "pendingComponents"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "triggerUrlChanges": {
+                  "description": "Public trigger paths changed by this sync, with the affected workflow names.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Name of the workflow whose public trigger path stops serving."
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Public trigger path that stops serving after this sync."
+                      }
+                    },
+                    "required": [
+                      "workflowName",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "backgroundWorkId": {
+                  "description": "Workspace activity identifier for resource-copy progress.",
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "copyProgress": {
+                  "description": "Completion status and counts for explicitly selected resource copies.",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "completed",
+                        "failed"
+                      ],
+                      "description": "Background resource-copy status."
+                    },
+                    "copied": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources copied successfully."
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources that failed to copy."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "copied",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "operationId",
+                "requestId",
+                "workspaceId",
+                "kind",
+                "applied",
+                "status",
+                "resourceIds",
+                "issues"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceOperationReport",
+              "title": "Workspace operation receipt",
+              "description": "Committed operation receipt, resource copies, and exact deployment readiness."
+            }
+          }
+        }
+      }
+    },
+    "v2PushWorkspaceContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/push",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          },
+          "mappings": {
+            "description": "Proposed mapping entries addressed by resource type and `sourceId`. Preview does not save them; apply commits them with the sync.",
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource type stored on the canonical parent/child edge."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Authorized destination identifier, or null to clear the mapping."
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "dependentValues": {
+            "description": "Destination-specific choices addressed by source workflow ID, source block ID, and field key. Omission keeps saved overrides; an explicit empty array clears them.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Block identifier in the source workflow."
+                },
+                "subBlockKey": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 1024,
+                  "description": "Registered source field key, including the tool index for nested Agent fields."
+                },
+                "value": {
+                  "type": "string",
+                  "maxLength": 65536,
+                  "description": "Destination value for the registered dependent field."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "subBlockKey",
+                "value"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "copyResources": {
+            "description": "Explicit source resources to copy before syncing the workflows.",
+            "type": "object",
+            "properties": {
+              "knowledgeBases": {
+                "description": "Source knowledge base identifiers whose documents and content are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "description": "Source table identifiers whose schemas and rows are copied.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "description": "Source custom tool identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "description": "Source skill identifiers to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "files": {
+                "description": "Workspace file storage keys to copy.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "description": "External MCP server identifiers to copy; OAuth connections require authorization in the destination.",
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            },
+            "additionalProperties": false
+          },
+          "dropReferences": {
+            "description": "Source-deleted references explicitly acknowledged for removal; live source references cannot be dropped.",
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "credential",
+                    "env-var",
+                    "knowledge-base",
+                    "knowledge-document",
+                    "table",
+                    "file",
+                    "file-folder",
+                    "mcp-server",
+                    "custom-tool",
+                    "custom-block",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource or operation kind."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                }
+              },
+              "required": [
+                "kind",
+                "sourceId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "triggerMappings": {
+            "description": "Public trigger path choices from preview.triggerSlots, addressed by source workflow and block IDs. Duplicate or unavailable choices are rejected.",
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceWorkflowId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Workflow identifier in the source workspace."
+                },
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Source trigger block identifier from the sync preview."
+                },
+                "adoptPath": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "An adoptable path offered for this trigger, or null to allocate a new path."
+                }
+              },
+              "required": [
+                "sourceWorkflowId",
+                "sourceBlockId",
+                "adoptPath"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "requestId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Stable client request ID. Reuse it with identical inputs after an uncertain response; changed inputs return 409. A new ID can apply another operation."
+          },
+          "previewFingerprint": {
+            "type": "string",
+            "pattern": "^[a-f0-9]{64}$",
+            "description": "Fingerprint returned by a preview with the same choices. A changed plan returns 409; preview again. The example hash is illustrative; use the actual preview value."
+          },
+          "confirm": {
+            "type": "boolean",
+            "const": true,
+            "description": "Confirm replacement of mapped target drafts and archival of mapped targets whose sources were deleted or archived."
+          }
+        },
+        "required": [
+          "otherWorkspaceId",
+          "requestId",
+          "previewFingerprint",
+          "confirm"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkspaceOperationReport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkspaceOperationReport": {
+              "type": "object",
+              "properties": {
+                "operationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256,
+                  "description": "Durable operation identifier to use for polling."
+                },
+                "requestId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Client request ID used to commit this operation. Reuse identical mutation inputs with this ID after an uncertain response."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Explicit current workspace scope."
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "workflow_import",
+                    "workspace_fork",
+                    "workspace_push",
+                    "workspace_pull"
+                  ],
+                  "description": "Type of committed workspace operation."
+                },
+                "applied": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "The business transaction committed, including when follow-up work fails."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "processing",
+                    "completed",
+                    "completed_with_warnings",
+                    "requires_configuration",
+                    "failed"
+                  ],
+                  "description": "Operation status; failed follow-up work does not undo the committed transaction."
+                },
+                "resourceIds": {
+                  "maxItems": 5000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  },
+                  "description": "Identifiers of resources created or changed by the committed operation."
+                },
+                "issues": {
+                  "maxItems": 2000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Stable machine-readable issue code."
+                      },
+                      "message": {
+                        "type": "string",
+                        "maxLength": 2048,
+                        "description": "Human-readable explanation of the issue."
+                      },
+                      "workflowId": {
+                        "description": "Workflow affected by this issue or deployment attempt.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "blockId": {
+                        "description": "Source block identifier before graph ID regeneration.",
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "subBlockKey": {
+                        "description": "Registered source field key, including the tool index for nested Agent fields.",
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "required": [
+                      "code",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Structured warnings, missing configuration, and follow-up failures."
+                },
+                "idMap": {
+                  "description": "Source graph identifiers mapped to the imported identifiers.",
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "additionalProperties": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deploymentOperationIds": {
+                  "description": "Exact deployment attempts admitted by the workspace operation.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "deployments": {
+                  "description": "Readiness of the exact admitted deployment attempts.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "operationId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Durable operation identifier to use for polling."
+                      },
+                      "workflowId": {
+                        "type": "string",
+                        "maxLength": 256,
+                        "description": "Workflow affected by this issue or deployment attempt."
+                      },
+                      "version": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 9007199254740991,
+                        "description": "Deployment version number for this admitted attempt."
+                      },
+                      "status": {
+                        "type": "string",
+                        "enum": [
+                          "preparing",
+                          "activating",
+                          "active",
+                          "failed",
+                          "superseded"
+                        ],
+                        "description": "Status of this exact admitted deployment attempt."
+                      },
+                      "ready": {
+                        "type": "boolean",
+                        "description": "Whether this exact deployment attempt is active and all required components are ready."
+                      },
+                      "pendingComponents": {
+                        "maxItems": 32,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "maxLength": 128
+                        },
+                        "description": "Deployment components that have not finished becoming ready."
+                      }
+                    },
+                    "required": [
+                      "operationId",
+                      "workflowId",
+                      "version",
+                      "status",
+                      "ready",
+                      "pendingComponents"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "triggerUrlChanges": {
+                  "description": "Public trigger paths changed by this sync, with the affected workflow names.",
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "workflowName": {
+                        "type": "string",
+                        "maxLength": 1024,
+                        "description": "Name of the workflow whose public trigger path stops serving."
+                      },
+                      "path": {
+                        "type": "string",
+                        "maxLength": 4096,
+                        "description": "Public trigger path that stops serving after this sync."
+                      }
+                    },
+                    "required": [
+                      "workflowName",
+                      "path"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "backgroundWorkId": {
+                  "description": "Workspace activity identifier for resource-copy progress.",
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "copyProgress": {
+                  "description": "Completion status and counts for explicitly selected resource copies.",
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "completed",
+                        "failed"
+                      ],
+                      "description": "Background resource-copy status."
+                    },
+                    "copied": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources copied successfully."
+                    },
+                    "failed": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of resources that failed to copy."
+                    }
+                  },
+                  "required": [
+                    "status",
+                    "copied",
+                    "failed"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "operationId",
+                "requestId",
+                "workspaceId",
+                "kind",
+                "applied",
+                "status",
+                "resourceIds",
+                "issues"
+              ],
+              "additionalProperties": false,
+              "id": "WorkspaceOperationReport",
+              "title": "Workspace operation receipt",
+              "description": "Committed operation receipt, resource copies, and exact deployment readiness."
+            }
+          }
+        }
+      }
+    },
+    "v2RollbackWorkspaceForkContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/rollback",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          }
+        },
+        "required": [
+          "otherWorkspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/RollbackWorkspaceForkResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "RollbackWorkspaceForkResult": {
+              "type": "object",
+              "properties": {
+                "restored": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Workflows restored to their prior deployed version."
+                },
+                "archived": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Workflows created by the sync and now archived."
+                },
+                "unarchived": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Previously archived workflows restored by rollback."
+                },
+                "skipped": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Snapshot workflows no longer available to restore."
+                },
+                "pendingActivations": {
+                  "maxItems": 1000,
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "description": "Workflows whose restored deployment is still activating."
+                }
+              },
+              "required": [
+                "restored",
+                "archived",
+                "unarchived",
+                "skipped",
+                "pendingActivations"
+              ],
+              "additionalProperties": false,
+              "id": "RollbackWorkspaceForkResult",
+              "title": "Rollback workspace fork result",
+              "description": "Workflow restoration and pending-activation counts."
+            }
+          }
+        }
+      }
+    },
+    "v2UnlinkWorkspaceForkContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/unlink",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          }
+        },
+        "required": [
+          "otherWorkspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/UnlinkWorkspaceForkResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "UnlinkWorkspaceForkResult": {
+              "type": "object",
+              "properties": {
+                "unlinked": {
+                  "type": "boolean",
+                  "description": "Whether the fork edge was removed."
+                }
+              },
+              "required": [
+                "unlinked"
+              ],
+              "additionalProperties": false,
+              "id": "UnlinkWorkspaceForkResult",
+              "title": "Unlink workspace fork result",
+              "description": "Fork-edge removal acknowledgment."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateWorkspaceForkExclusionsContract": {
+      "method": "PUT",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/exclusions",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowIds": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Workflow identifiers in the current workspace."
+          },
+          "forkSyncExcluded": {
+            "type": "boolean",
+            "description": "Whether the named workflows should be skipped as sync sources and targets."
+          }
+        },
+        "required": [
+          "workflowIds",
+          "forkSyncExcluded"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/UpdateWorkspaceForkExclusionsResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "UpdateWorkspaceForkExclusionsResult": {
+              "type": "object",
+              "properties": {
+                "updated": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of records changed."
+                }
+              },
+              "required": [
+                "updated"
+              ],
+              "additionalProperties": false,
+              "id": "UpdateWorkspaceForkExclusionsResult",
+              "title": "Update workspace fork exclusions result",
+              "description": "Count of changed workflow exclusion flags."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateWorkspaceForkMappingsContract": {
+      "method": "PUT",
+      "path": "/api/v2/workspaces/[workspaceId]/fork/mappings",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Explicit current workspace scope."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace on the other side of the direct fork edge."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "push",
+              "pull"
+            ],
+            "description": "Push means current to other; pull means other to current, independent of parent/child orientation."
+          },
+          "mappings": {
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ],
+                  "description": "Resource type stored on the canonical parent/child edge."
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 4096,
+                  "description": "Source resource identifier in the canonical source workspace."
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Authorized destination identifier, or null to clear the mapping."
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId"
+              ],
+              "additionalProperties": false
+            },
+            "description": "Mapping entries addressed by resource type and `sourceId`. `targetId: null` clears a mapping."
+          }
+        },
+        "required": [
+          "otherWorkspaceId",
+          "direction",
+          "mappings"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/UpdateWorkspaceForkMappingsResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "UpdateWorkspaceForkMappingsResult": {
+              "type": "object",
+              "properties": {
+                "updated": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of records changed."
+                }
+              },
+              "required": [
+                "updated"
+              ],
+              "additionalProperties": false,
+              "id": "UpdateWorkspaceForkMappingsResult",
+              "title": "Update workspace fork mappings result",
+              "description": "Count of changed mapping records."
+            }
+          }
+        }
+      }
+    }
+  }
+}

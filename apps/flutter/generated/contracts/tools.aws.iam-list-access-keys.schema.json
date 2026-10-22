@@ -1,0 +1,135 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/iam-list-access-keys.ts",
+  "contracts": {
+    "awsIamListAccessKeysContract": {
+      "method": "POST",
+      "path": "/api/tools/iam/list-access-keys",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[\\w+=,.@-]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maxItems": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 1000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "marker": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "pattern": "^[\\u0020-\\u00FF]+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "accessKeys": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "accessKeyId": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "createDate": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "accessKeyId",
+                  "userName",
+                  "status",
+                  "createDate"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "isTruncated": {
+              "type": "boolean"
+            },
+            "marker": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "count": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "accessKeys",
+            "isTruncated",
+            "marker",
+            "count"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

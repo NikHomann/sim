@@ -1,0 +1,58 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/sqs-delete-message.ts",
+  "contracts": {
+    "awsSqsDeleteMessageContract": {
+      "method": "POST",
+      "path": "/api/tools/sqs/delete-message",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queueUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "receiptHandle": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "queueUrl",
+          "receiptHandle"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

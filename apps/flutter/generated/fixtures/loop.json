@@ -1,0 +1,1631 @@
+{
+  "name": "loop",
+  "description": "for-loop container with two children and an exit edge",
+  "state": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "loop": {
+        "id": "loop",
+        "type": "loop",
+        "name": "Loop 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "loopType": "for",
+          "count": 3,
+          "width": 500,
+          "height": 300,
+          "type": "loop"
+        }
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <loop.index>"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "parentId": "loop",
+          "extent": "parent"
+        }
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 380,
+          "y": 80
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"user\",\"content\":\"<function1.result>\"}]"
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "parentId": "loop",
+          "extent": "parent"
+        }
+      },
+      "after": {
+        "id": "after",
+        "type": "function",
+        "name": "Function 2",
+        "position": {
+          "x": 1000,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "python"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <loop.results>"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "edges": [
+      {
+        "id": "edge-start-source-loop-target",
+        "source": "start",
+        "target": "loop",
+        "sourceHandle": "source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-loop-loop-start-source-function-target",
+        "source": "loop",
+        "target": "function",
+        "sourceHandle": "loop-start-source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-function-source-agent-target",
+        "source": "function",
+        "target": "agent",
+        "sourceHandle": "source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-loop-loop-end-source-after-target",
+        "source": "loop",
+        "target": "after",
+        "sourceHandle": "loop-end-source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      }
+    ],
+    "loops": {
+      "loop": {
+        "id": "loop",
+        "nodes": [
+          "function",
+          "agent"
+        ],
+        "iterations": 3,
+        "loopType": "for",
+        "enabled": true,
+        "forEachItems": "",
+        "whileCondition": "",
+        "doWhileCondition": ""
+      }
+    },
+    "parallels": {}
+  },
+  "serialized": {
+    "version": "1.0",
+    "blocks": [
+      {
+        "id": "start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "config": {
+          "params": {
+            "startWorkflow": "manual"
+          }
+        },
+        "inputs": {
+          "input": "json"
+        },
+        "outputs": {},
+        "metadata": {
+          "id": "starter",
+          "name": "Start",
+          "description": "Start workflow",
+          "category": "blocks",
+          "color": "#2FB3FF"
+        },
+        "enabled": true
+      },
+      {
+        "id": "loop",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "config": {
+          "tool": "",
+          "params": {
+            "loopType": "for",
+            "count": 3,
+            "width": 500,
+            "height": 300,
+            "type": "loop"
+          }
+        },
+        "inputs": {},
+        "outputs": {},
+        "metadata": {
+          "id": "loop",
+          "name": "Loop 1",
+          "description": "Loop container",
+          "category": "subflow",
+          "color": "#3b82f6"
+        },
+        "enabled": true
+      },
+      {
+        "id": "function",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "config": {
+          "tool": "function_execute",
+          "params": {
+            "language": "javascript",
+            "code": "return <loop.index>"
+          }
+        },
+        "inputs": {
+          "code": "string",
+          "language": "string",
+          "timeout": "number",
+          "sandboxId": "string",
+          "secretScope": "string",
+          "mountedSecrets": "json"
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "metadata": {
+          "id": "function",
+          "name": "Function 1",
+          "description": "Run custom logic",
+          "category": "blocks",
+          "color": "#FF402F"
+        },
+        "enabled": true
+      },
+      {
+        "id": "agent",
+        "position": {
+          "x": 380,
+          "y": 80
+        },
+        "config": {
+          "tool": "openai",
+          "params": {
+            "model": "gpt-5.1",
+            "messages": "[{\"id\":\"m1\",\"role\":\"user\",\"content\":\"<function1.result>\"}]"
+          }
+        },
+        "inputs": {
+          "evaluationState": "string",
+          "evaluationQuestions": "json",
+          "messages": "json",
+          "files": "array",
+          "memoryType": "string",
+          "conversationId": "string",
+          "slidingWindowSize": "string",
+          "slidingWindowTokens": "string",
+          "model": "string",
+          "apiKey": "string",
+          "azureEndpoint": "string",
+          "azureApiVersion": "string",
+          "vertexCredential": "string",
+          "vertexProject": "string",
+          "vertexLocation": "string",
+          "bedrockAccessKeyId": "string",
+          "bedrockSecretKey": "string",
+          "bedrockRegion": "string",
+          "responseFormat": "json",
+          "temperature": "number",
+          "maxTokens": "number",
+          "reasoningEffort": "string",
+          "verbosity": "string",
+          "thinkingLevel": "string",
+          "promptCaching": "boolean",
+          "fallbackModels": "json",
+          "tools": "json",
+          "skills": "json"
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "metadata": {
+          "id": "agent",
+          "name": "Agent 1",
+          "description": "Build an agent",
+          "category": "blocks",
+          "color": "var(--brand)"
+        },
+        "enabled": true
+      },
+      {
+        "id": "after",
+        "position": {
+          "x": 1000,
+          "y": 0
+        },
+        "config": {
+          "tool": "function_execute",
+          "params": {
+            "language": "python",
+            "code": "return <loop.results>"
+          }
+        },
+        "inputs": {
+          "code": "string",
+          "language": "string",
+          "timeout": "number",
+          "sandboxId": "string",
+          "secretScope": "string",
+          "mountedSecrets": "json"
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "metadata": {
+          "id": "function",
+          "name": "Function 2",
+          "description": "Run custom logic",
+          "category": "blocks",
+          "color": "#FF402F"
+        },
+        "enabled": true
+      }
+    ],
+    "connections": [
+      {
+        "source": "start",
+        "target": "loop",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "loop",
+        "target": "function",
+        "sourceHandle": "loop-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "function",
+        "target": "agent",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "loop",
+        "target": "after",
+        "sourceHandle": "loop-end-source",
+        "targetHandle": "target"
+      }
+    ],
+    "loops": {
+      "loop": {
+        "id": "loop",
+        "nodes": [
+          "function",
+          "agent"
+        ],
+        "iterations": 3,
+        "loopType": "for",
+        "enabled": true,
+        "forEachItems": "",
+        "whileCondition": "",
+        "doWhileCondition": ""
+      }
+    },
+    "parallels": {}
+  },
+  "serializedRequiredValidation": {
+    "ok": false,
+    "error": "Agent 1 is missing required fields: API Key"
+  },
+  "deserialized": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          },
+          "inputFormat": {
+            "id": "inputFormat",
+            "type": "input-format",
+            "value": null
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "loop": {
+        "id": "loop",
+        "type": "loop",
+        "name": "Loop 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "data": {
+          "loopType": "for",
+          "count": 3,
+          "width": 500,
+          "height": 300,
+          "type": "loop"
+        }
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <loop.index>"
+          },
+          "sandboxId": {
+            "id": "sandboxId",
+            "type": "combobox",
+            "value": null
+          },
+          "secretScope": {
+            "id": "secretScope",
+            "type": "dropdown",
+            "value": null
+          },
+          "mountedSecrets": {
+            "id": "mountedSecrets",
+            "type": "dropdown",
+            "value": null
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 380,
+          "y": 80
+        },
+        "subBlocks": {
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"user\",\"content\":\"<function1.result>\"}]"
+          },
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          },
+          "vertexCredential": {
+            "id": "vertexCredential",
+            "type": "oauth-input",
+            "value": null
+          },
+          "vertexManualCredential": {
+            "id": "vertexManualCredential",
+            "type": "short-input",
+            "value": null
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": null
+          },
+          "azureEndpoint": {
+            "id": "azureEndpoint",
+            "type": "short-input",
+            "value": null
+          },
+          "azureApiVersion": {
+            "id": "azureApiVersion",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexProject": {
+            "id": "vertexProject",
+            "type": "short-input",
+            "value": null
+          },
+          "vertexLocation": {
+            "id": "vertexLocation",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockAccessKeyId": {
+            "id": "bedrockAccessKeyId",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockSecretKey": {
+            "id": "bedrockSecretKey",
+            "type": "short-input",
+            "value": null
+          },
+          "bedrockRegion": {
+            "id": "bedrockRegion",
+            "type": "short-input",
+            "value": null
+          },
+          "evaluationState": {
+            "id": "evaluationState",
+            "type": "long-input",
+            "value": null
+          },
+          "evaluationQuestions": {
+            "id": "evaluationQuestions",
+            "type": "code",
+            "value": null
+          },
+          "attachmentFiles": {
+            "id": "attachmentFiles",
+            "type": "file-upload",
+            "value": null
+          },
+          "files": {
+            "id": "files",
+            "type": "short-input",
+            "value": null
+          },
+          "reasoningEffort": {
+            "id": "reasoningEffort",
+            "type": "combobox",
+            "value": null
+          },
+          "verbosity": {
+            "id": "verbosity",
+            "type": "combobox",
+            "value": null
+          },
+          "thinkingLevel": {
+            "id": "thinkingLevel",
+            "type": "combobox",
+            "value": null
+          },
+          "promptCaching": {
+            "id": "promptCaching",
+            "type": "switch",
+            "value": null
+          },
+          "tools": {
+            "id": "tools",
+            "type": "tool-input",
+            "value": null
+          },
+          "skills": {
+            "id": "skills",
+            "type": "skill-input",
+            "value": null
+          },
+          "memoryType": {
+            "id": "memoryType",
+            "type": "dropdown",
+            "value": null
+          },
+          "conversationId": {
+            "id": "conversationId",
+            "type": "short-input",
+            "value": null
+          },
+          "slidingWindowSize": {
+            "id": "slidingWindowSize",
+            "type": "short-input",
+            "value": null
+          },
+          "slidingWindowTokens": {
+            "id": "slidingWindowTokens",
+            "type": "short-input",
+            "value": null
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": null
+          },
+          "maxTokens": {
+            "id": "maxTokens",
+            "type": "short-input",
+            "value": null
+          },
+          "responseFormat": {
+            "id": "responseFormat",
+            "type": "code",
+            "value": null
+          },
+          "previousInteractionId": {
+            "id": "previousInteractionId",
+            "type": "short-input",
+            "value": null
+          },
+          "fallbackModels": {
+            "id": "fallbackModels",
+            "type": "model-fallback-list",
+            "value": null
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "after": {
+        "id": "after",
+        "type": "function",
+        "name": "Function 2",
+        "position": {
+          "x": 1000,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "python"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <loop.results>"
+          },
+          "sandboxId": {
+            "id": "sandboxId",
+            "type": "combobox",
+            "value": null
+          },
+          "secretScope": {
+            "id": "secretScope",
+            "type": "dropdown",
+            "value": null
+          },
+          "mountedSecrets": {
+            "id": "mountedSecrets",
+            "type": "dropdown",
+            "value": null
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      }
+    },
+    "edges": [
+      {
+        "id": "2c85f573-3667-4e9f-9708-d9358fced6d7",
+        "source": "start",
+        "target": "loop",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "1a5c2da8-ee57-45d4-83e3-e605844f0eff",
+        "source": "loop",
+        "target": "function",
+        "sourceHandle": "loop-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "9774cc58-d949-4a6c-bcc0-e698821b6feb",
+        "source": "function",
+        "target": "agent",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "15bb0c4a-fe59-4f8a-aed0-cc56396b4664",
+        "source": "loop",
+        "target": "after",
+        "sourceHandle": "loop-end-source",
+        "targetHandle": "target"
+      }
+    ]
+  },
+  "loops": {
+    "loop": {
+      "id": "loop",
+      "nodes": [
+        "function",
+        "agent"
+      ],
+      "iterations": 3,
+      "loopType": "for",
+      "enabled": true,
+      "forEachItems": "",
+      "whileCondition": "",
+      "doWhileCondition": ""
+    }
+  },
+  "parallels": {},
+  "fieldIssues": {
+    "after": {
+      "params": {
+        "language": "python",
+        "code": "return <loop.results>"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "agent": {
+      "params": {
+        "model": "gpt-5.1",
+        "messages": "[{\"id\":\"m1\",\"role\":\"user\",\"content\":\"<function1.result>\"}]"
+      },
+      "issues": {
+        "missingRequiredFields": [
+          "API Key"
+        ],
+        "inactiveModeValues": []
+      }
+    },
+    "function": {
+      "params": {
+        "language": "javascript",
+        "code": "return <loop.index>"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "start": {
+      "params": {
+        "startWorkflow": "manual"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    }
+  },
+  "diff": {
+    "proposed": {
+      "blocks": {
+        "start": {
+          "id": "start",
+          "type": "starter",
+          "name": "Start",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "subBlocks": {
+            "startWorkflow": {
+              "id": "startWorkflow",
+              "type": "dropdown",
+              "value": "manual"
+            }
+          },
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "loop": {
+          "id": "loop",
+          "type": "loop",
+          "name": "Loop 1",
+          "position": {
+            "x": 400,
+            "y": 0
+          },
+          "subBlocks": {},
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "loopType": "for",
+            "count": 3,
+            "width": 500,
+            "height": 300,
+            "type": "loop"
+          }
+        },
+        "function": {
+          "id": "function",
+          "type": "function",
+          "name": "Function 1",
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "subBlocks": {
+            "language": {
+              "id": "language",
+              "type": "dropdown",
+              "value": "javascript"
+            },
+            "code": {
+              "id": "code",
+              "type": "code",
+              "value": "return <loop.index>"
+            }
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "parentId": "loop",
+            "extent": "parent"
+          }
+        },
+        "agent": {
+          "id": "agent",
+          "type": "agent",
+          "name": "Agent 1",
+          "position": {
+            "x": 380,
+            "y": 80
+          },
+          "subBlocks": {
+            "model": {
+              "id": "model",
+              "type": "combobox",
+              "value": "gpt-5.1"
+            },
+            "messages": {
+              "id": "messages",
+              "type": "messages-input",
+              "value": "[{\"id\":\"m1\",\"role\":\"user\",\"content\":\"<function1.result>\"}]"
+            }
+          },
+          "outputs": {
+            "answers": {
+              "type": "json",
+              "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+              "condition": {
+                "field": "model",
+                "value": [
+                  "jev-latest",
+                  "jev-1.13.0",
+                  "jev-preview"
+                ],
+                "allowReference": true
+              }
+            },
+            "content": {
+              "type": "string",
+              "description": "Generated response content"
+            },
+            "model": {
+              "type": "string",
+              "description": "Model used for generation"
+            },
+            "tokens": {
+              "type": "json",
+              "description": "Token usage statistics"
+            },
+            "toolCalls": {
+              "type": "json",
+              "description": "Tool calls made"
+            },
+            "providerTiming": {
+              "type": "json",
+              "description": "Provider timing information"
+            },
+            "cost": {
+              "type": "json",
+              "description": "Cost of the API call"
+            },
+            "interactionId": {
+              "type": "string",
+              "description": "Interaction ID for multi-turn deep research follow-ups",
+              "condition": {
+                "field": "model",
+                "value": [
+                  "deep-research-pro-preview-12-2025",
+                  "vertex/deep-research-pro-preview-12-2025"
+                ]
+              }
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "parentId": "loop",
+            "extent": "parent"
+          }
+        },
+        "after": {
+          "id": "after",
+          "type": "function",
+          "name": "Summary",
+          "position": {
+            "x": 1000,
+            "y": 0
+          },
+          "subBlocks": {
+            "language": {
+              "id": "language",
+              "type": "dropdown",
+              "value": "python"
+            },
+            "code": {
+              "id": "code",
+              "type": "code",
+              "value": "return <loop.results>"
+            }
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {},
+          "data": {
+            "parentId": "loop",
+            "extent": "parent"
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "edge-start-source-loop-target",
+          "source": "start",
+          "target": "loop",
+          "sourceHandle": "source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-loop-loop-start-source-function-target",
+          "source": "loop",
+          "target": "function",
+          "sourceHandle": "loop-start-source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-function-source-agent-target",
+          "source": "function",
+          "target": "agent",
+          "sourceHandle": "source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-agent-source-after-target",
+          "source": "agent",
+          "target": "after",
+          "sourceHandle": "source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        }
+      ],
+      "loops": {
+        "loop": {
+          "id": "loop",
+          "nodes": [
+            "function",
+            "agent",
+            "after"
+          ],
+          "iterations": 3,
+          "loopType": "for",
+          "enabled": true,
+          "forEachItems": "",
+          "whileCondition": "",
+          "doWhileCondition": ""
+        }
+      },
+      "parallels": {}
+    },
+    "result": {
+      "success": true,
+      "diff": {
+        "proposedState": {
+          "blocks": {
+            "start": {
+              "id": "start",
+              "type": "starter",
+              "name": "Start",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "subBlocks": {
+                "startWorkflow": {
+                  "id": "startWorkflow",
+                  "type": "dropdown",
+                  "value": "manual"
+                }
+              },
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            },
+            "loop": {
+              "id": "loop",
+              "type": "loop",
+              "name": "Loop 1",
+              "position": {
+                "x": 400,
+                "y": 0
+              },
+              "subBlocks": {},
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 468,
+                "measuredWidth": 1253
+              },
+              "data": {
+                "loopType": "for",
+                "count": 3,
+                "width": 1253,
+                "height": 468,
+                "type": "loop"
+              }
+            },
+            "function": {
+              "id": "function",
+              "type": "function",
+              "name": "Function 1",
+              "position": {
+                "x": 80,
+                "y": 80
+              },
+              "subBlocks": {
+                "language": {
+                  "id": "language",
+                  "type": "dropdown",
+                  "value": "javascript"
+                },
+                "code": {
+                  "id": "code",
+                  "type": "code",
+                  "value": "return <loop.index>"
+                }
+              },
+              "outputs": {
+                "result": {
+                  "type": "json",
+                  "description": "Structured result emitted by the executed code"
+                },
+                "stdout": {
+                  "type": "string",
+                  "description": "Console log output and debug messages from function execution"
+                },
+                "files": {
+                  "type": "file[]",
+                  "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              },
+              "data": {
+                "parentId": "loop",
+                "extent": "parent"
+              }
+            },
+            "agent": {
+              "id": "agent",
+              "type": "agent",
+              "name": "Agent 1",
+              "position": {
+                "x": 380,
+                "y": 80
+              },
+              "subBlocks": {
+                "model": {
+                  "id": "model",
+                  "type": "combobox",
+                  "value": "gpt-5.1"
+                },
+                "messages": {
+                  "id": "messages",
+                  "type": "messages-input",
+                  "value": "[{\"id\":\"m1\",\"role\":\"user\",\"content\":\"<function1.result>\"}]"
+                }
+              },
+              "outputs": {
+                "answers": {
+                  "type": "json",
+                  "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+                  "condition": {
+                    "field": "model",
+                    "value": [
+                      "jev-latest",
+                      "jev-1.13.0",
+                      "jev-preview"
+                    ],
+                    "allowReference": true
+                  }
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Generated response content"
+                },
+                "model": {
+                  "type": "string",
+                  "description": "Model used for generation"
+                },
+                "tokens": {
+                  "type": "json",
+                  "description": "Token usage statistics"
+                },
+                "toolCalls": {
+                  "type": "json",
+                  "description": "Tool calls made"
+                },
+                "providerTiming": {
+                  "type": "json",
+                  "description": "Provider timing information"
+                },
+                "cost": {
+                  "type": "json",
+                  "description": "Cost of the API call"
+                },
+                "interactionId": {
+                  "type": "string",
+                  "description": "Interaction ID for multi-turn deep research follow-ups",
+                  "condition": {
+                    "field": "model",
+                    "value": [
+                      "deep-research-pro-preview-12-2025",
+                      "vertex/deep-research-pro-preview-12-2025"
+                    ]
+                  }
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              },
+              "data": {
+                "parentId": "loop",
+                "extent": "parent"
+              }
+            },
+            "d9d2ae62-9f1a-4334-9cb0-edfce9a6b2cd": {
+              "id": "d9d2ae62-9f1a-4334-9cb0-edfce9a6b2cd",
+              "type": "function",
+              "name": "Summary",
+              "position": {
+                "x": 783,
+                "y": 48
+              },
+              "subBlocks": {
+                "language": {
+                  "id": "language",
+                  "type": "dropdown",
+                  "value": "python"
+                },
+                "code": {
+                  "id": "code",
+                  "type": "code",
+                  "value": "return <loop.results>"
+                }
+              },
+              "outputs": {
+                "result": {
+                  "type": "json",
+                  "description": "Structured result emitted by the executed code"
+                },
+                "stdout": {
+                  "type": "string",
+                  "description": "Console log output and debug messages from function execution"
+                },
+                "files": {
+                  "type": "file[]",
+                  "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 0,
+              "layout": {},
+              "data": {
+                "parentId": "loop",
+                "extent": "parent"
+              },
+              "is_diff": "new"
+            }
+          },
+          "edges": [
+            {
+              "id": "44a965ed-85c2-4565-b9ee-67b36119ec88",
+              "source": "start",
+              "target": "loop",
+              "sourceHandle": "source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "8002ea8c-8fe8-4074-85fa-5a82a0e26876",
+              "source": "loop",
+              "target": "function",
+              "sourceHandle": "loop-start-source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "656ce63e-3195-4dfb-b042-cde3c6d550c2",
+              "source": "function",
+              "target": "agent",
+              "sourceHandle": "source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "d59d42ac-5c0d-4667-bd13-c89a20f99c51",
+              "source": "agent",
+              "target": "d9d2ae62-9f1a-4334-9cb0-edfce9a6b2cd",
+              "sourceHandle": "source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            }
+          ],
+          "loops": {
+            "loop": {
+              "id": "loop",
+              "nodes": [
+                "function",
+                "agent",
+                "d9d2ae62-9f1a-4334-9cb0-edfce9a6b2cd"
+              ],
+              "iterations": 3,
+              "loopType": "for",
+              "enabled": true,
+              "forEachItems": "",
+              "whileCondition": "",
+              "doWhileCondition": ""
+            }
+          },
+          "parallels": {},
+          "lastSaved": 1792576837612
+        },
+        "diffAnalysis": {
+          "new_blocks": [
+            "d9d2ae62-9f1a-4334-9cb0-edfce9a6b2cd"
+          ],
+          "edited_blocks": [],
+          "deleted_blocks": [
+            "after"
+          ],
+          "edge_diff": {
+            "new_edges": [
+              "agent-source-d9d2ae62-9f1a-4334-9cb0-edfce9a6b2cd-target"
+            ],
+            "deleted_edges": [
+              "loop-loop-end-source-after-target"
+            ],
+            "unchanged_edges": [
+              "start-source-loop-target",
+              "loop-loop-start-source-function-target",
+              "function-source-agent-target"
+            ]
+          }
+        },
+        "metadata": {
+          "source": "workflow_state",
+          "timestamp": 1792576837616
+        }
+      }
+    }
+  }
+}

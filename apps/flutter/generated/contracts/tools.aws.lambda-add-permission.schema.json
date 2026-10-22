@@ -1,0 +1,120 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/lambda-add-permission.ts",
+  "contracts": {
+    "awsLambdaAddPermissionContract": {
+      "method": "POST",
+      "path": "/api/tools/lambda/add-permission",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "functionName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "statementId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100,
+            "pattern": "^[a-zA-Z0-9-_]+$"
+          },
+          "action": {
+            "type": "string",
+            "minLength": 1,
+            "pattern": "^(lambda:[*]|lambda:[a-zA-Z]+|[*])$"
+          },
+          "principal": {
+            "type": "string",
+            "minLength": 1
+          },
+          "sourceArn": {
+            "type": "string"
+          },
+          "sourceAccount": {
+            "type": "string"
+          },
+          "principalOrgId": {
+            "type": "string"
+          },
+          "eventSourceToken": {
+            "type": "string"
+          },
+          "functionUrlAuthType": {
+            "type": "string",
+            "enum": [
+              "NONE",
+              "AWS_IAM"
+            ]
+          },
+          "qualifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "revisionId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "functionName",
+          "statementId",
+          "action",
+          "principal"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "statement": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "statement"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <!--
+    The Flutter port is always served under the same origin as the Next app at the
+    /app/ prefix (docs/port/00-plan.md section 3). The base href is fixed here instead of
+    using $FLUTTER_BASE_HREF so `flutter run` (which has no --base-href) also works behind
+    tools/dev_proxy.mjs.
+  -->
+  <base href="/app/">
+
+  <meta charset="UTF-8">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="Sim">
+  <meta name="color-scheme" content="light dark">
+  <meta name="theme-color" content="#ffffff" media="(prefers-color-scheme: light)">
+  <meta name="theme-color" content="#0c0c0c" media="(prefers-color-scheme: dark)">
+
+  <link rel="icon" type="image/png" href="favicon.png"/>
+
+  <title>Sim</title>
+  <link rel="manifest" href="manifest.json">
+  <style>
+    html, body { margin: 0; padding: 0; height: 100%; background: #fefefe; }
+    @media (prefers-color-scheme: dark) { html, body { background: #1b1b1b; } }
+  </style>
+</head>
+<body>
+  <script src="flutter_bootstrap.js" async></script>
+</body>
+</html>

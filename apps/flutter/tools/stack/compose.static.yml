@@ -1,0 +1,15 @@
+# Optional third overlay: serve a host-built bundle instead of building docker/flutter.Dockerfile.
+#
+#   flutter build web --base-href /app/ --profile    (from apps/flutter)
+#   tools/stack/up.ps1 -StaticWeb apps/flutter/build/web
+#
+# Paths are relative to the Compose project directory (the repo root, which up.ps1 passes with
+# --project-directory). Compose 2.15 cannot drop the `build:` key from the base overlay, so the
+# plain Caddy image is named here and up.ps1 passes --no-build so the pulled image is used as is.
+
+services:
+  caddy:
+    image: caddy:2.10.0-alpine
+    volumes:
+      - ./docker/caddy/Caddyfile:/etc/caddy/Caddyfile:ro
+      - ${SIM_FLUTTER_WEB_DIR:-./apps/flutter/build/web}:/srv/app:ro

@@ -1,0 +1,193 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ssm-get-document.ts",
+  "contracts": {
+    "awsSsmGetDocumentContract": {
+      "method": "POST",
+      "path": "/api/tools/ssm/get-document",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "name": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_\\-.:/]{3,128}$"
+          },
+          "documentVersion": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^(\\$LATEST|\\$DEFAULT|[1-9][0-9]*)$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "versionName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^[a-zA-Z0-9_\\-.]{1,128}$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "documentFormat": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "YAML",
+                  "JSON",
+                  "TEXT"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "name": {
+              "type": "string"
+            },
+            "displayName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "createdDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "versionName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "documentVersion": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "status": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "statusInformation": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "content": {
+              "type": "string"
+            },
+            "documentType": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "documentFormat": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "reviewStatus": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "name",
+            "displayName",
+            "createdDate",
+            "versionName",
+            "documentVersion",
+            "status",
+            "statusInformation",
+            "content",
+            "documentType",
+            "documentFormat",
+            "reviewStatus"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

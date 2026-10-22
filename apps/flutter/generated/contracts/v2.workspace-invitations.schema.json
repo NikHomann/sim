@@ -1,0 +1,207 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/workspace-invitations.ts",
+  "contracts": {
+    "v2CreateWorkspaceInvitationsContract": {
+      "method": "POST",
+      "path": "/api/v2/workspaces/[workspaceId]/invitations",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "emails": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 320,
+              "format": "email",
+              "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+            },
+            "description": "Email addresses to invite. Each address is processed separately; inspect failed for unsuccessful recipients."
+          },
+          "permission": {
+            "default": "read",
+            "description": "Workspace permission to grant. Existing workspace access is preserved.",
+            "type": "string",
+            "enum": [
+              "admin",
+              "write",
+              "read"
+            ]
+          },
+          "membership": {
+            "default": "member",
+            "description": "Organization membership: member or admin uses a seat when billing is enabled. External grants workspace access only and requires an eligible paid account when billing is enabled. Existing members of another organization remain external.",
+            "type": "string",
+            "enum": [
+              "member",
+              "admin",
+              "external"
+            ]
+          }
+        },
+        "required": [
+          "emails"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2WorkspaceInvitationBatch"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2WorkspaceInvitationBatch": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "description": "Whether every recipient succeeded. Inspect failed even when the HTTP response is successful."
+                },
+                "successful": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Email addresses that received a pending invitation."
+                },
+                "added": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Existing organization members granted workspace access immediately."
+                },
+                "failed": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "description": "Recipient whose operation failed."
+                      },
+                      "error": {
+                        "type": "string",
+                        "description": "Reason the invitation or access grant could not be completed."
+                      }
+                    },
+                    "required": [
+                      "email",
+                      "error"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Failures for individual recipients. Earlier successful recipients remain committed."
+                },
+                "invitations": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "Invitation identifier, or direct-grant result identifier when instantAdd is true."
+                      },
+                      "email": {
+                        "type": "string",
+                        "description": "Recipient email address."
+                      },
+                      "workspaceIds": {
+                        "type": "array",
+                        "items": {
+                          "type": "string"
+                        },
+                        "description": "Workspaces included in this invitation or direct grant."
+                      },
+                      "permission": {
+                        "type": "string",
+                        "enum": [
+                          "admin",
+                          "write",
+                          "read"
+                        ],
+                        "description": "Workspace permission offered or granted."
+                      },
+                      "membershipIntent": {
+                        "type": "string",
+                        "enum": [
+                          "internal",
+                          "external"
+                        ],
+                        "description": "Whether the recipient joins the organization or receives only workspace access."
+                      },
+                      "instantAdd": {
+                        "description": "Whether access was granted immediately without a pending invitation.",
+                        "type": "boolean"
+                      },
+                      "outcome": {
+                        "description": "Result when reconciling access for an existing user.",
+                        "type": "string",
+                        "enum": [
+                          "added",
+                          "updated",
+                          "unchanged"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email",
+                      "workspaceIds",
+                      "permission",
+                      "membershipIntent"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Invitation and immediate-access results for successful recipients."
+                }
+              },
+              "required": [
+                "success",
+                "successful",
+                "added",
+                "failed",
+                "invitations"
+              ],
+              "additionalProperties": false,
+              "id": "V2WorkspaceInvitationBatch"
+            }
+          }
+        }
+      }
+    }
+  }
+}

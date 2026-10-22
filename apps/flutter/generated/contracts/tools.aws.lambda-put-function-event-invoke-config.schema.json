@@ -1,0 +1,176 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/lambda-put-function-event-invoke-config.ts",
+  "contracts": {
+    "awsLambdaPutFunctionEventInvokeConfigContract": {
+      "method": "POST",
+      "path": "/api/tools/lambda/put-function-event-invoke-config",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "functionName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "qualifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "maximumRetryAttempts": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+          },
+          "maximumEventAgeInSeconds": {
+            "type": "integer",
+            "minimum": 60,
+            "maximum": 21600
+          },
+          "onSuccessDestination": {
+            "type": "string"
+          },
+          "onFailureDestination": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "functionName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "eventInvokeConfig": {
+                  "type": "object",
+                  "properties": {
+                    "functionArn": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastModified": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "maximumRetryAttempts": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "maximumEventAgeInSeconds": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "destinationConfig": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "onSuccessDestination": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            },
+                            "onFailureDestination": {
+                              "anyOf": [
+                                {
+                                  "type": "string"
+                                },
+                                {
+                                  "type": "null"
+                                }
+                              ]
+                            }
+                          },
+                          "required": [
+                            "onSuccessDestination",
+                            "onFailureDestination"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "functionArn",
+                    "lastModified",
+                    "maximumRetryAttempts",
+                    "maximumEventAgeInSeconds",
+                    "destinationConfig"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "eventInvokeConfig"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

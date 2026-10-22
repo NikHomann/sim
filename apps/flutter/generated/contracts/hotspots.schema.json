@@ -1,0 +1,363 @@
+{
+  "source": "apps/sim/lib/api/contracts/hotspots.ts",
+  "contracts": {
+    "guardrailsMaskBatchContract": {
+      "method": "POST",
+      "path": "/api/guardrails/mask-batch",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "texts": {
+            "maxItems": 100000,
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "entityTypes": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "language": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "customPatterns": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "regex": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "replacement": {
+                  "type": "string",
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "name",
+                "regex",
+                "replacement"
+              ]
+            }
+          }
+        },
+        "required": [
+          "texts",
+          "entityTypes"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "masked": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "masked"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "guardrailsPiiValidateContract": {
+      "method": "POST",
+      "path": "/api/guardrails/pii/validate",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "text": {
+            "type": "string",
+            "maxLength": 10000000
+          },
+          "entityTypes": {
+            "maxItems": 200,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "block",
+              "mask"
+            ]
+          },
+          "language": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 20
+          },
+          "customPatterns": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "maxLength": 100
+                },
+                "regex": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512
+                },
+                "replacement": {
+                  "type": "string",
+                  "maxLength": 100
+                }
+              },
+              "required": [
+                "name",
+                "regex",
+                "replacement"
+              ]
+            }
+          }
+        },
+        "required": [
+          "text",
+          "entityTypes",
+          "mode"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "passed": {
+              "type": "boolean"
+            },
+            "error": {
+              "type": "string",
+              "maxLength": 1000
+            },
+            "detectedEntities": {
+              "maxItems": 10000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "start": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "end": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 9007199254740991
+                  },
+                  "score": {
+                    "type": "number",
+                    "minimum": 0,
+                    "maximum": 1
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 10000000
+                  }
+                },
+                "required": [
+                  "type",
+                  "start",
+                  "end",
+                  "score",
+                  "text"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "maskedText": {
+              "type": "string",
+              "maxLength": 10000000
+            }
+          },
+          "required": [
+            "passed",
+            "detectedEntities"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "wandGenerateContract": {
+      "method": "POST",
+      "path": "/api/wand",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "systemPrompt": {
+            "type": "string"
+          },
+          "stream": {
+            "default": false,
+            "type": "boolean"
+          },
+          "history": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "assistant",
+                    "system"
+                  ]
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ]
+            }
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "generationType": {
+            "type": "string"
+          },
+          "wandContext": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "prompt"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "propertyNames": {
+            "type": "string"
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "wandGenerateStreamContract": {
+      "method": "POST",
+      "path": "/api/wand",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "prompt": {
+            "type": "string",
+            "minLength": 1
+          },
+          "systemPrompt": {
+            "type": "string"
+          },
+          "stream": {
+            "type": "boolean",
+            "const": true
+          },
+          "history": {
+            "default": [],
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "role": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "assistant",
+                    "system"
+                  ]
+                },
+                "content": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "role",
+                "content"
+              ]
+            }
+          },
+          "workflowId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "generationType": {
+            "type": "string"
+          },
+          "wandContext": {
+            "default": {},
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "prompt",
+          "stream"
+        ]
+      },
+      "response": {
+        "mode": "stream"
+      }
+    }
+  }
+}

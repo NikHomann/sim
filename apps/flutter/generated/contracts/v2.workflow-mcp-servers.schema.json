@@ -1,0 +1,1027 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/workflow-mcp-servers.ts",
+  "contracts": {
+    "v2CreateWorkflowMcpServerContract": {
+      "method": "POST",
+      "path": "/api/v2/workflow-mcp-servers",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace in which to create the workflow MCP server."
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Server display name, shown to connecting MCP clients."
+          },
+          "description": {
+            "description": "Optional server description.",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "isPublic": {
+            "description": "Whether the server accepts MCP clients without a Sim API key. Defaults to false; a public server lets anyone holding its URL execute the workflows it exposes.",
+            "default": false,
+            "type": "boolean"
+          },
+          "workflowIds": {
+            "description": "Deployed workflows to expose as MCP tools on the new server.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        },
+        "required": [
+          "workspaceId",
+          "name"
+        ],
+        "additionalProperties": false,
+        "id": "CreateWorkflowMcpServerRequest",
+        "title": "Create workflow MCP server request",
+        "description": "A new workflow MCP server and deployed workflows to expose as tools.",
+        "examples": [
+          {
+            "workspaceId": "9f4c2a10-3b7e-4d58-8f6a-2c1d0e5b7a94",
+            "name": "Support agents",
+            "workflowIds": [
+              "3b1f7c92-8d4e-4a6b-9c0d-5e2f8a714b36"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkflowMcpServer"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkflowMcpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique workflow-MCP server identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name, shown to connecting MCP clients."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional server description, or null when unset."
+                },
+                "isPublic": {
+                  "type": "boolean",
+                  "description": "Whether the server answers MCP clients without a Sim API key."
+                },
+                "mcpServerUrl": {
+                  "type": "string",
+                  "description": "MCP client endpoint. Use this returned URL instead of constructing one.",
+                  "examples": [
+                    "https://www.sim.ai/api/mcp/serve/wfmcp_01J8ZK3QW4M6X2R9T7B5C0V2"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was last modified.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "isPublic",
+                "mcpServerUrl",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "WorkflowMcpServer",
+              "title": "Workflow MCP server",
+              "description": "A workflow MCP server exposing deployed workflows as tools."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteWorkflowMcpServerContract": {
+      "method": "DELETE",
+      "path": "/api/v2/workflow-mcp-servers/[serverId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow-MCP server identifier."
+          }
+        },
+        "required": [
+          "serverId"
+        ],
+        "id": "WorkflowMcpServerParams",
+        "title": "Workflow MCP server path parameters",
+        "description": "Workflow-MCP server selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/DeleteWorkflowMcpServerResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "DeleteWorkflowMcpServerResult": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the deleted workflow MCP server."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the workflow MCP server was deleted."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "DeleteWorkflowMcpServerResult",
+              "title": "Delete workflow MCP server result",
+              "description": "Workflow MCP server deletion acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2DeployWorkflowMcpToolContract": {
+      "method": "POST",
+      "path": "/api/v2/workflow-mcp-servers/[serverId]/tools",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow-MCP server identifier."
+          }
+        },
+        "required": [
+          "serverId"
+        ],
+        "id": "WorkflowMcpServerParams",
+        "title": "Workflow MCP server path parameters",
+        "description": "Workflow-MCP server selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Workflow to expose as an MCP tool. It must already be deployed."
+          },
+          "toolName": {
+            "description": "Name MCP clients call. Normalized to the MCP tool-name grammar, and derived from the workflow name when omitted.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          },
+          "toolDescription": {
+            "description": "Description shown to MCP clients. Derived from the workflow name when omitted.",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "parameterDescriptions": {
+            "description": "Per-field description overrides applied to the schema generated from the deployed workflow inputs. A name matching no input field is ignored.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Input field of the deployed workflow to describe."
+                },
+                "description": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 2000,
+                  "description": "Text MCP clients see for that field."
+                }
+              },
+              "required": [
+                "name",
+                "description"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "additionalProperties": false,
+        "id": "DeployWorkflowMcpToolRequest",
+        "title": "Deploy workflow as MCP tool request",
+        "description": "The deployed workflow and tool metadata presented to MCP clients.",
+        "examples": [
+          {
+            "workflowId": "3b1f7c92-8d4e-4a6b-9c0d-5e2f8a714b36",
+            "toolName": "triage_ticket"
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkflowMcpTool"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkflowMcpTool": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique tool identifier."
+                },
+                "serverId": {
+                  "type": "string",
+                  "description": "Server exposing this MCP tool."
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "Workflow this tool executes."
+                },
+                "toolName": {
+                  "type": "string",
+                  "description": "Name an MCP client calls. Derived from the supplied name or the workflow name, normalized to the MCP tool-name grammar."
+                },
+                "toolDescription": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Description shown to MCP clients."
+                },
+                "mcpServerUrl": {
+                  "type": "string",
+                  "description": "Endpoint an MCP client connects to."
+                },
+                "apiEndpoint": {
+                  "type": "string",
+                  "description": "Sim execution endpoint this tool calls through."
+                },
+                "updated": {
+                  "type": "boolean",
+                  "description": "False for a new registration, true when an existing registration for this workflow was replaced. Repeating the operation returns 200 with true instead of a duplicate conflict."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the tool was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the tool was last modified.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "serverId",
+                "workflowId",
+                "toolName",
+                "toolDescription",
+                "mcpServerUrl",
+                "apiEndpoint",
+                "updated",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "WorkflowMcpTool",
+              "title": "Workflow MCP tool",
+              "description": "A deployed workflow exposed as a tool on a workflow MCP server."
+            }
+          }
+        }
+      }
+    },
+    "v2GetWorkflowMcpServerContract": {
+      "method": "GET",
+      "path": "/api/v2/workflow-mcp-servers/[serverId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow-MCP server identifier."
+          }
+        },
+        "required": [
+          "serverId"
+        ],
+        "id": "WorkflowMcpServerParams",
+        "title": "Workflow MCP server path parameters",
+        "description": "Workflow-MCP server selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkflowMcpServer"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkflowMcpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique workflow-MCP server identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name, shown to connecting MCP clients."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional server description, or null when unset."
+                },
+                "isPublic": {
+                  "type": "boolean",
+                  "description": "Whether the server answers MCP clients without a Sim API key."
+                },
+                "mcpServerUrl": {
+                  "type": "string",
+                  "description": "MCP client endpoint. Use this returned URL instead of constructing one.",
+                  "examples": [
+                    "https://www.sim.ai/api/mcp/serve/wfmcp_01J8ZK3QW4M6X2R9T7B5C0V2"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was last modified.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "isPublic",
+                "mcpServerUrl",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "WorkflowMcpServer",
+              "title": "Workflow MCP server",
+              "description": "A workflow MCP server exposing deployed workflows as tools."
+            }
+          }
+        }
+      }
+    },
+    "v2ListWorkflowMcpServersContract": {
+      "method": "GET",
+      "path": "/api/v2/workflow-mcp-servers",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace whose workflow MCP servers to list."
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Field used to sort the result. Do not rely on case-insensitive ordering when sorting by `name`.",
+            "type": "string",
+            "enum": [
+              "name",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum workflow-MCP servers to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false,
+        "id": "ListWorkflowMcpServersQuery",
+        "title": "List workflow MCP servers query",
+        "description": "Workspace scope, ordering, and pagination for workflow MCP servers."
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/WorkflowMcpServerListItem"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            },
+            "toolNamesTruncated": {
+              "type": "boolean",
+              "description": "Whether the page-wide tool-name limit left some inventories incomplete. Use List workflow MCP tools for one server and check its `truncated` flag before treating the inventory as complete. `nextCursor` paginates servers, not tool names."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor",
+            "toolNamesTruncated"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkflowMcpServerListItem": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique workflow-MCP server identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name, shown to connecting MCP clients."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional server description, or null when unset."
+                },
+                "isPublic": {
+                  "type": "boolean",
+                  "description": "Whether the server answers MCP clients without a Sim API key."
+                },
+                "mcpServerUrl": {
+                  "type": "string",
+                  "description": "MCP client endpoint. Use this returned URL instead of constructing one.",
+                  "examples": [
+                    "https://www.sim.ai/api/mcp/serve/wfmcp_01J8ZK3QW4M6X2R9T7B5C0V2"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was last modified.",
+                  "format": "date-time"
+                },
+                "toolCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of returned tool names for this server. It may undercount registrations when the page’s `toolNamesTruncated` flag is true."
+                },
+                "toolNames": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Returned registered tool names, ordered alphabetically. The list may be incomplete when toolNamesTruncated is true."
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "isPublic",
+                "mcpServerUrl",
+                "createdAt",
+                "updatedAt",
+                "toolCount",
+                "toolNames"
+              ],
+              "additionalProperties": false,
+              "id": "WorkflowMcpServerListItem",
+              "title": "Workflow MCP server list item",
+              "description": "A workflow MCP server and its bounded tool-name inventory."
+            }
+          }
+        }
+      }
+    },
+    "v2ListWorkflowMcpToolsContract": {
+      "method": "GET",
+      "path": "/api/v2/workflow-mcp-servers/[serverId]/tools",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow-MCP server identifier."
+          }
+        },
+        "required": [
+          "serverId"
+        ],
+        "id": "WorkflowMcpServerParams",
+        "title": "Workflow MCP server path parameters",
+        "description": "Workflow-MCP server selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/WorkflowMcpToolListItem"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Always `null`. This list has no `cursor` or `limit` parameters; see the operation for inventory limits."
+            },
+            "truncated": {
+              "type": "boolean",
+              "description": "Whether the tool limit left this inventory incomplete. The list is unpaginated and nextCursor remains null even when truncated; an incomplete inventory does not represent every registration."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor",
+            "truncated"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkflowMcpToolListItem": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique tool identifier."
+                },
+                "serverId": {
+                  "type": "string",
+                  "description": "Server exposing this MCP tool."
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "Workflow this tool executes."
+                },
+                "toolName": {
+                  "type": "string",
+                  "description": "Name an MCP client calls. Derived from the supplied name or the workflow name, normalized to the MCP tool-name grammar."
+                },
+                "toolDescription": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Description shown to MCP clients."
+                },
+                "mcpServerUrl": {
+                  "type": "string",
+                  "description": "Endpoint an MCP client connects to."
+                },
+                "apiEndpoint": {
+                  "type": "string",
+                  "description": "Sim execution endpoint this tool calls through."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the tool was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the tool was last modified.",
+                  "format": "date-time"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "inactive"
+                  ],
+                  "description": "Whether MCP clients can call the tool. Undeploying its workflow archives the registration as `inactive`; it cannot be called and its name stays reserved. Redeploying the workflow makes it `active` again. Undeploying an inactive MCP tool permanently removes its registration."
+                }
+              },
+              "required": [
+                "id",
+                "serverId",
+                "workflowId",
+                "toolName",
+                "toolDescription",
+                "mcpServerUrl",
+                "apiEndpoint",
+                "createdAt",
+                "updatedAt",
+                "status"
+              ],
+              "additionalProperties": false,
+              "id": "WorkflowMcpToolListItem",
+              "title": "Workflow MCP tool list item",
+              "description": "A tool registration on a workflow MCP server. Archived registrations are included with `status: \"inactive\"`."
+            }
+          }
+        }
+      }
+    },
+    "v2UndeployWorkflowMcpToolContract": {
+      "method": "DELETE",
+      "path": "/api/v2/workflow-mcp-servers/[serverId]/tools/[workflowId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow-MCP server identifier."
+          },
+          "workflowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Workflow registered as an MCP tool on this server."
+          }
+        },
+        "required": [
+          "serverId",
+          "workflowId"
+        ],
+        "id": "WorkflowMcpToolParams",
+        "title": "Workflow MCP tool path parameters",
+        "description": "Server and workflow selected by the request path. A workflow appears at most once per server, so the pair identifies the tool."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/UndeployWorkflowMcpToolResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "UndeployWorkflowMcpToolResult": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the removed tool."
+                },
+                "serverId": {
+                  "type": "string",
+                  "description": "Server the tool was removed from."
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "Workflow whose MCP tool registration was removed."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the tool was removed."
+                }
+              },
+              "required": [
+                "id",
+                "serverId",
+                "workflowId",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "UndeployWorkflowMcpToolResult",
+              "title": "Undeploy workflow MCP tool result",
+              "description": "Tool removal acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateWorkflowMcpServerContract": {
+      "method": "PATCH",
+      "path": "/api/v2/workflow-mcp-servers/[serverId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "serverId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow-MCP server identifier."
+          }
+        },
+        "required": [
+          "serverId"
+        ],
+        "id": "WorkflowMcpServerParams",
+        "title": "Workflow MCP server path parameters",
+        "description": "Workflow-MCP server selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Server display name, shown to connecting MCP clients."
+          },
+          "description": {
+            "description": "New server description, or null to clear it.",
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "isPublic": {
+            "description": "Whether the server answers MCP clients without a Sim API key.",
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false,
+        "id": "UpdateWorkflowMcpServerRequest",
+        "title": "Update workflow MCP server request",
+        "description": "Server fields to change. Omitted fields remain unchanged; `description: null` clears the description.",
+        "examples": [
+          {
+            "isPublic": true
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/WorkflowMcpServer"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "WorkflowMcpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique workflow-MCP server identifier."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Server display name, shown to connecting MCP clients."
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Optional server description, or null when unset."
+                },
+                "isPublic": {
+                  "type": "boolean",
+                  "description": "Whether the server answers MCP clients without a Sim API key."
+                },
+                "mcpServerUrl": {
+                  "type": "string",
+                  "description": "MCP client endpoint. Use this returned URL instead of constructing one.",
+                  "examples": [
+                    "https://www.sim.ai/api/mcp/serve/wfmcp_01J8ZK3QW4M6X2R9T7B5C0V2"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the server was last modified.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "isPublic",
+                "mcpServerUrl",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "WorkflowMcpServer",
+              "title": "Workflow MCP server",
+              "description": "A workflow MCP server exposing deployed workflows as tools."
+            }
+          }
+        }
+      }
+    }
+  }
+}

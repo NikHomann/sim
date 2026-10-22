@@ -1,0 +1,2271 @@
+{
+  "source": "apps/sim/lib/api/contracts/subscription.ts",
+  "contracts": {
+    "billingSwitchPlanContract": {
+      "method": "POST",
+      "path": "/api/billing/switch-plan",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "targetPlanName": {
+            "type": "string"
+          },
+          "interval": {
+            "type": "string",
+            "enum": [
+              "month",
+              "year"
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "targetPlanName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "plan": {
+              "type": "string"
+            },
+            "interval": {
+              "type": "string",
+              "enum": [
+                "month",
+                "year"
+              ]
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "billingUpdateCostContract": {
+      "method": "POST",
+      "path": "/api/billing/update-cost",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "cost": {
+            "type": "number",
+            "minimum": 0
+          },
+          "model": {
+            "type": "string",
+            "minLength": 1
+          },
+          "inputTokens": {
+            "default": 0,
+            "type": "number",
+            "minimum": 0
+          },
+          "outputTokens": {
+            "default": 0,
+            "type": "number",
+            "minimum": 0
+          },
+          "source": {
+            "default": "copilot",
+            "type": "string",
+            "enum": [
+              "copilot",
+              "workspace-chat",
+              "mcp_copilot",
+              "mothership_block"
+            ]
+          },
+          "idempotencyKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "userId",
+          "cost",
+          "model",
+          "idempotencyKey"
+        ]
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "x-sim-billing-protocol": {
+            "type": "string",
+            "enum": [
+              "attribution-v1",
+              "direct-v1",
+              "legacy-v0"
+            ]
+          },
+          "x-sim-billing-request-id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "x-sim-billing-attribution": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "x-sim-billing-account-decision": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "allOf": [
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "message": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "userId": {
+                      "type": "string"
+                    },
+                    "cost": {
+                      "type": "number"
+                    },
+                    "billingEnabled": {
+                      "type": "boolean"
+                    },
+                    "processedAt": {
+                      "type": "string"
+                    },
+                    "requestId": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "processedAt",
+                    "requestId"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "data"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "usageExceeded": {
+                      "type": "boolean",
+                      "const": false
+                    },
+                    "usageUpgrade": {
+                      "not": {}
+                    }
+                  },
+                  "required": [
+                    "usageExceeded"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "usageExceeded": {
+                      "type": "boolean",
+                      "const": true
+                    },
+                    "usageUpgrade": {
+                      "type": "object",
+                      "properties": {
+                        "reason": {
+                          "type": "string",
+                          "const": "usage_limit"
+                        },
+                        "action": {
+                          "type": "string",
+                          "enum": [
+                            "upgrade_plan",
+                            "increase_limit"
+                          ]
+                        },
+                        "message": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "reason",
+                        "action",
+                        "message"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "usageExceeded",
+                    "usageUpgrade"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          ]
+        }
+      }
+    },
+    "createBillingPortalContract": {
+      "method": "POST",
+      "path": "/api/billing/portal",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "context": {
+            "default": "user",
+            "type": "string",
+            "enum": [
+              "user",
+              "organization"
+            ]
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "returnUrl": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "url": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "url"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getBillingContract": {
+      "method": "GET",
+      "path": "/api/billing",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "context": {
+            "default": "user",
+            "type": "string",
+            "enum": [
+              "user",
+              "organization"
+            ]
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "includeOrg": {
+            "type": "boolean"
+          },
+          "memberLimit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "memberOffset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "context": {
+                  "type": "string"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "enum": [
+                        "individual",
+                        "organization"
+                      ]
+                    },
+                    "plan": {
+                      "type": "string"
+                    },
+                    "currentUsage": {
+                      "type": "number"
+                    },
+                    "usageLimit": {
+                      "type": "number"
+                    },
+                    "percentUsed": {
+                      "type": "number"
+                    },
+                    "isWarning": {
+                      "type": "boolean"
+                    },
+                    "isExceeded": {
+                      "type": "boolean"
+                    },
+                    "daysRemaining": {
+                      "type": "number"
+                    },
+                    "creditBalance": {
+                      "type": "number"
+                    },
+                    "billingInterval": {
+                      "type": "string",
+                      "enum": [
+                        "month",
+                        "year"
+                      ]
+                    },
+                    "isPaid": {
+                      "type": "boolean"
+                    },
+                    "isPro": {
+                      "type": "boolean"
+                    },
+                    "isTeam": {
+                      "type": "boolean"
+                    },
+                    "isEnterprise": {
+                      "type": "boolean"
+                    },
+                    "isOrgScoped": {
+                      "type": "boolean"
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "status": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "seats": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "metadata": {
+                      "anyOf": [
+                        {},
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "stripeSubscriptionId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "periodEnd": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "cancelAtPeriodEnd": {
+                      "type": "boolean"
+                    },
+                    "usage": {
+                      "type": "object",
+                      "properties": {
+                        "current": {
+                          "type": "number"
+                        },
+                        "limit": {
+                          "type": "number"
+                        },
+                        "percentUsed": {
+                          "type": "number"
+                        },
+                        "isWarning": {
+                          "type": "boolean"
+                        },
+                        "isExceeded": {
+                          "type": "boolean"
+                        },
+                        "billingPeriodStart": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "billingPeriodEnd": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "lastPeriodCost": {
+                          "type": "number"
+                        },
+                        "lastPeriodCopilotCost": {
+                          "type": "number"
+                        },
+                        "daysRemaining": {
+                          "type": "number"
+                        },
+                        "copilotCost": {
+                          "type": "number"
+                        }
+                      },
+                      "required": [
+                        "current",
+                        "limit",
+                        "percentUsed",
+                        "isWarning",
+                        "isExceeded",
+                        "billingPeriodStart",
+                        "billingPeriodEnd",
+                        "lastPeriodCost",
+                        "lastPeriodCopilotCost",
+                        "daysRemaining",
+                        "copilotCost"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    "billingBlocked": {
+                      "type": "boolean"
+                    },
+                    "billingBlockedReason": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "payment_failed",
+                            "dispute"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "blockedByOrgOwner": {
+                      "type": "boolean"
+                    },
+                    "upgradeWorkspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Unique workspace identifier."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "organization": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "role": {
+                          "type": "string",
+                          "enum": [
+                            "owner",
+                            "admin",
+                            "member"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "role"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "type",
+                    "plan",
+                    "currentUsage",
+                    "usageLimit",
+                    "percentUsed",
+                    "isWarning",
+                    "isExceeded",
+                    "daysRemaining",
+                    "creditBalance",
+                    "billingInterval",
+                    "isPaid",
+                    "isPro",
+                    "isTeam",
+                    "isEnterprise",
+                    "isOrgScoped",
+                    "organizationId",
+                    "status",
+                    "seats",
+                    "metadata",
+                    "stripeSubscriptionId",
+                    "periodEnd",
+                    "cancelAtPeriodEnd",
+                    "usage",
+                    "billingBlocked",
+                    "billingBlockedReason",
+                    "blockedByOrgOwner",
+                    "upgradeWorkspaceId"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "success",
+                "context",
+                "data"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "context": {
+                  "type": "string",
+                  "const": "organization"
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "organizationId": {
+                      "type": "string"
+                    },
+                    "organizationName": {
+                      "type": "string"
+                    },
+                    "subscriptionState": {
+                      "type": "string",
+                      "enum": [
+                        "active",
+                        "free",
+                        "lapsed"
+                      ]
+                    },
+                    "hasSubscription": {
+                      "type": "boolean"
+                    },
+                    "subscriptionPlan": {
+                      "type": "string"
+                    },
+                    "subscriptionStatus": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "creditBalance": {
+                      "type": "number"
+                    },
+                    "billingInterval": {
+                      "type": "string",
+                      "enum": [
+                        "month",
+                        "year"
+                      ]
+                    },
+                    "cancelAtPeriodEnd": {
+                      "type": "boolean"
+                    },
+                    "totalSeats": {
+                      "type": "number"
+                    },
+                    "usedSeats": {
+                      "type": "number"
+                    },
+                    "seatsCount": {
+                      "type": "number"
+                    },
+                    "totalCurrentUsage": {
+                      "type": "number"
+                    },
+                    "totalUsageLimit": {
+                      "type": "number"
+                    },
+                    "minimumBillingAmount": {
+                      "type": "number"
+                    },
+                    "averageUsagePerMember": {
+                      "type": "number"
+                    },
+                    "billingPeriodStart": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "billingPeriodEnd": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "membersTotal": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "memberPagination": {
+                      "type": "object",
+                      "properties": {
+                        "total": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "limit": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 100
+                        },
+                        "offset": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "hasMore": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "total",
+                        "limit",
+                        "offset",
+                        "hasMore"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "members": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "userId": {
+                            "type": "string"
+                          },
+                          "userName": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "userEmail": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "joinedAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          }
+                        },
+                        "additionalProperties": {}
+                      }
+                    },
+                    "billingBlocked": {
+                      "type": "boolean"
+                    },
+                    "billingBlockedReason": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "payment_failed",
+                            "dispute"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "blockedByOrgOwner": {
+                      "type": "boolean"
+                    },
+                    "upgradeWorkspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Unique workspace identifier."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "organizationId",
+                    "organizationName",
+                    "subscriptionState",
+                    "hasSubscription",
+                    "subscriptionPlan",
+                    "subscriptionStatus",
+                    "creditBalance",
+                    "billingInterval",
+                    "cancelAtPeriodEnd",
+                    "totalSeats",
+                    "usedSeats",
+                    "seatsCount",
+                    "totalCurrentUsage",
+                    "totalUsageLimit",
+                    "minimumBillingAmount",
+                    "averageUsagePerMember",
+                    "billingPeriodStart",
+                    "billingPeriodEnd",
+                    "membersTotal",
+                    "memberPagination",
+                    "members",
+                    "billingBlocked",
+                    "billingBlockedReason",
+                    "blockedByOrgOwner",
+                    "upgradeWorkspaceId"
+                  ],
+                  "additionalProperties": {}
+                },
+                "userRole": {
+                  "type": "string",
+                  "enum": [
+                    "owner",
+                    "admin",
+                    "member"
+                  ]
+                },
+                "billingBlocked": {
+                  "type": "boolean"
+                },
+                "billingBlockedReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "payment_failed",
+                        "dispute"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "blockedByOrgOwner": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "success",
+                "context",
+                "data",
+                "userRole",
+                "billingBlocked",
+                "billingBlockedReason",
+                "blockedByOrgOwner"
+              ],
+              "additionalProperties": {}
+            }
+          ]
+        }
+      }
+    },
+    "getInvoicesContract": {
+      "method": "GET",
+      "path": "/api/billing/invoices",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "context": {
+            "default": "user",
+            "type": "string",
+            "enum": [
+              "user",
+              "organization"
+            ]
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "invoices": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "number": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "created": {
+                    "type": "number"
+                  },
+                  "total": {
+                    "type": "number"
+                  },
+                  "amountPaid": {
+                    "type": "number"
+                  },
+                  "currency": {
+                    "type": "string"
+                  },
+                  "status": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "hostedInvoiceUrl": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "invoicePdf": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "number",
+                  "created",
+                  "total",
+                  "amountPaid",
+                  "currency",
+                  "status",
+                  "description",
+                  "hostedInvoiceUrl",
+                  "invoicePdf"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "hasMore": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "success",
+            "invoices",
+            "hasMore"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getUsageLimitContract": {
+      "method": "GET",
+      "path": "/api/usage",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "context": {
+            "default": "user",
+            "type": "string",
+            "enum": [
+              "user",
+              "organization"
+            ]
+          },
+          "userId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "memberLimit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "memberOffset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "context": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "currentLimit": {
+                      "type": "number"
+                    },
+                    "canEdit": {
+                      "type": "boolean"
+                    },
+                    "minimumLimit": {
+                      "type": "number"
+                    },
+                    "plan": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "scope": {
+                      "type": "string",
+                      "enum": [
+                        "user",
+                        "organization"
+                      ]
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "currentLimit",
+                    "canEdit",
+                    "minimumLimit",
+                    "plan",
+                    "updatedAt",
+                    "scope",
+                    "organizationId"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "success",
+                "context",
+                "userId",
+                "organizationId",
+                "data"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "context": {
+                  "type": "string",
+                  "const": "organization"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "type": "string"
+                },
+                "data": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "organizationId": {
+                          "type": "string"
+                        },
+                        "organizationName": {
+                          "type": "string"
+                        },
+                        "subscriptionState": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "free",
+                            "lapsed"
+                          ]
+                        },
+                        "hasSubscription": {
+                          "type": "boolean"
+                        },
+                        "subscriptionPlan": {
+                          "type": "string"
+                        },
+                        "subscriptionStatus": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "creditBalance": {
+                          "type": "number"
+                        },
+                        "billingInterval": {
+                          "type": "string",
+                          "enum": [
+                            "month",
+                            "year"
+                          ]
+                        },
+                        "cancelAtPeriodEnd": {
+                          "type": "boolean"
+                        },
+                        "totalSeats": {
+                          "type": "number"
+                        },
+                        "usedSeats": {
+                          "type": "number"
+                        },
+                        "seatsCount": {
+                          "type": "number"
+                        },
+                        "totalCurrentUsage": {
+                          "type": "number"
+                        },
+                        "totalUsageLimit": {
+                          "type": "number"
+                        },
+                        "minimumBillingAmount": {
+                          "type": "number"
+                        },
+                        "averageUsagePerMember": {
+                          "type": "number"
+                        },
+                        "billingPeriodStart": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "billingPeriodEnd": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "membersTotal": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "memberPagination": {
+                          "type": "object",
+                          "properties": {
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "limit": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 100
+                            },
+                            "offset": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "hasMore": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "total",
+                            "limit",
+                            "offset",
+                            "hasMore"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "members": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "userId": {
+                                "type": "string"
+                              },
+                              "userName": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "userEmail": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "joinedAt": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "additionalProperties": {}
+                          }
+                        },
+                        "billingBlocked": {
+                          "type": "boolean"
+                        },
+                        "billingBlockedReason": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "payment_failed",
+                                "dispute"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "blockedByOrgOwner": {
+                          "type": "boolean"
+                        },
+                        "upgradeWorkspaceId": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128,
+                              "description": "Unique workspace identifier."
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "organizationId",
+                        "organizationName",
+                        "subscriptionState",
+                        "hasSubscription",
+                        "subscriptionPlan",
+                        "subscriptionStatus",
+                        "creditBalance",
+                        "billingInterval",
+                        "cancelAtPeriodEnd",
+                        "totalSeats",
+                        "usedSeats",
+                        "seatsCount",
+                        "totalCurrentUsage",
+                        "totalUsageLimit",
+                        "minimumBillingAmount",
+                        "averageUsagePerMember",
+                        "billingPeriodStart",
+                        "billingPeriodEnd",
+                        "membersTotal",
+                        "memberPagination",
+                        "members",
+                        "billingBlocked",
+                        "billingBlockedReason",
+                        "blockedByOrgOwner",
+                        "upgradeWorkspaceId"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "success",
+                "context",
+                "userId",
+                "organizationId",
+                "data"
+              ],
+              "additionalProperties": {}
+            }
+          ]
+        }
+      }
+    },
+    "getUserBillingContract": {
+      "method": "GET",
+      "path": "/api/billing",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "context": {
+            "default": "user",
+            "type": "string",
+            "const": "user"
+          },
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "includeOrg": {
+            "type": "boolean"
+          },
+          "memberLimit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "memberOffset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "context": {
+              "type": "string"
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "individual",
+                    "organization"
+                  ]
+                },
+                "plan": {
+                  "type": "string"
+                },
+                "currentUsage": {
+                  "type": "number"
+                },
+                "usageLimit": {
+                  "type": "number"
+                },
+                "percentUsed": {
+                  "type": "number"
+                },
+                "isWarning": {
+                  "type": "boolean"
+                },
+                "isExceeded": {
+                  "type": "boolean"
+                },
+                "daysRemaining": {
+                  "type": "number"
+                },
+                "creditBalance": {
+                  "type": "number"
+                },
+                "billingInterval": {
+                  "type": "string",
+                  "enum": [
+                    "month",
+                    "year"
+                  ]
+                },
+                "isPaid": {
+                  "type": "boolean"
+                },
+                "isPro": {
+                  "type": "boolean"
+                },
+                "isTeam": {
+                  "type": "boolean"
+                },
+                "isEnterprise": {
+                  "type": "boolean"
+                },
+                "isOrgScoped": {
+                  "type": "boolean"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "status": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "seats": {
+                  "anyOf": [
+                    {
+                      "type": "number"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "metadata": {
+                  "anyOf": [
+                    {},
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "stripeSubscriptionId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "periodEnd": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "cancelAtPeriodEnd": {
+                  "type": "boolean"
+                },
+                "usage": {
+                  "type": "object",
+                  "properties": {
+                    "current": {
+                      "type": "number"
+                    },
+                    "limit": {
+                      "type": "number"
+                    },
+                    "percentUsed": {
+                      "type": "number"
+                    },
+                    "isWarning": {
+                      "type": "boolean"
+                    },
+                    "isExceeded": {
+                      "type": "boolean"
+                    },
+                    "billingPeriodStart": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "billingPeriodEnd": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "lastPeriodCost": {
+                      "type": "number"
+                    },
+                    "lastPeriodCopilotCost": {
+                      "type": "number"
+                    },
+                    "daysRemaining": {
+                      "type": "number"
+                    },
+                    "copilotCost": {
+                      "type": "number"
+                    }
+                  },
+                  "required": [
+                    "current",
+                    "limit",
+                    "percentUsed",
+                    "isWarning",
+                    "isExceeded",
+                    "billingPeriodStart",
+                    "billingPeriodEnd",
+                    "lastPeriodCost",
+                    "lastPeriodCopilotCost",
+                    "daysRemaining",
+                    "copilotCost"
+                  ],
+                  "additionalProperties": {}
+                },
+                "billingBlocked": {
+                  "type": "boolean"
+                },
+                "billingBlockedReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "payment_failed",
+                        "dispute"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "blockedByOrgOwner": {
+                  "type": "boolean"
+                },
+                "upgradeWorkspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Unique workspace identifier."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "organization": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "owner",
+                        "admin",
+                        "member"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "role"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "type",
+                "plan",
+                "currentUsage",
+                "usageLimit",
+                "percentUsed",
+                "isWarning",
+                "isExceeded",
+                "daysRemaining",
+                "creditBalance",
+                "billingInterval",
+                "isPaid",
+                "isPro",
+                "isTeam",
+                "isEnterprise",
+                "isOrgScoped",
+                "organizationId",
+                "status",
+                "seats",
+                "metadata",
+                "stripeSubscriptionId",
+                "periodEnd",
+                "cancelAtPeriodEnd",
+                "usage",
+                "billingBlocked",
+                "billingBlockedReason",
+                "blockedByOrgOwner",
+                "upgradeWorkspaceId"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "context",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "getUserUsageLimitContract": {
+      "method": "GET",
+      "path": "/api/usage",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "context": {
+            "default": "user",
+            "type": "string",
+            "const": "user"
+          },
+          "userId": {
+            "type": "string"
+          },
+          "organizationId": {
+            "type": "string"
+          },
+          "memberLimit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "memberOffset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean"
+            },
+            "context": {
+              "type": "string"
+            },
+            "userId": {
+              "type": "string"
+            },
+            "organizationId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "currentLimit": {
+                  "type": "number"
+                },
+                "canEdit": {
+                  "type": "boolean"
+                },
+                "minimumLimit": {
+                  "type": "number"
+                },
+                "plan": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "scope": {
+                  "type": "string",
+                  "enum": [
+                    "user",
+                    "organization"
+                  ]
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "currentLimit",
+                "canEdit",
+                "minimumLimit",
+                "plan",
+                "updatedAt",
+                "scope",
+                "organizationId"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "required": [
+            "success",
+            "context",
+            "userId",
+            "organizationId",
+            "data"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "updateUsageLimitContract": {
+      "method": "PUT",
+      "path": "/api/usage",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "type": "number",
+            "minimum": 0
+          },
+          "context": {
+            "default": "user",
+            "type": "string",
+            "enum": [
+              "user",
+              "organization"
+            ]
+          },
+          "organizationId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "limit"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "context": {
+                  "type": "string"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "data": {
+                  "type": "object",
+                  "properties": {
+                    "currentLimit": {
+                      "type": "number"
+                    },
+                    "canEdit": {
+                      "type": "boolean"
+                    },
+                    "minimumLimit": {
+                      "type": "number"
+                    },
+                    "plan": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "scope": {
+                      "type": "string",
+                      "enum": [
+                        "user",
+                        "organization"
+                      ]
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "currentLimit",
+                    "canEdit",
+                    "minimumLimit",
+                    "plan",
+                    "updatedAt",
+                    "scope",
+                    "organizationId"
+                  ],
+                  "additionalProperties": {}
+                }
+              },
+              "required": [
+                "success",
+                "context",
+                "userId",
+                "organizationId",
+                "data"
+              ],
+              "additionalProperties": {}
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "context": {
+                  "type": "string",
+                  "const": "organization"
+                },
+                "userId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "type": "string"
+                },
+                "data": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "organizationId": {
+                          "type": "string"
+                        },
+                        "organizationName": {
+                          "type": "string"
+                        },
+                        "subscriptionState": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "free",
+                            "lapsed"
+                          ]
+                        },
+                        "hasSubscription": {
+                          "type": "boolean"
+                        },
+                        "subscriptionPlan": {
+                          "type": "string"
+                        },
+                        "subscriptionStatus": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "creditBalance": {
+                          "type": "number"
+                        },
+                        "billingInterval": {
+                          "type": "string",
+                          "enum": [
+                            "month",
+                            "year"
+                          ]
+                        },
+                        "cancelAtPeriodEnd": {
+                          "type": "boolean"
+                        },
+                        "totalSeats": {
+                          "type": "number"
+                        },
+                        "usedSeats": {
+                          "type": "number"
+                        },
+                        "seatsCount": {
+                          "type": "number"
+                        },
+                        "totalCurrentUsage": {
+                          "type": "number"
+                        },
+                        "totalUsageLimit": {
+                          "type": "number"
+                        },
+                        "minimumBillingAmount": {
+                          "type": "number"
+                        },
+                        "averageUsagePerMember": {
+                          "type": "number"
+                        },
+                        "billingPeriodStart": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "billingPeriodEnd": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "membersTotal": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "memberPagination": {
+                          "type": "object",
+                          "properties": {
+                            "total": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "limit": {
+                              "type": "integer",
+                              "minimum": 1,
+                              "maximum": 100
+                            },
+                            "offset": {
+                              "type": "integer",
+                              "minimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "hasMore": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "total",
+                            "limit",
+                            "offset",
+                            "hasMore"
+                          ],
+                          "additionalProperties": false
+                        },
+                        "members": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "userId": {
+                                "type": "string"
+                              },
+                              "userName": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "userEmail": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              },
+                              "joinedAt": {
+                                "anyOf": [
+                                  {
+                                    "type": "string"
+                                  },
+                                  {
+                                    "type": "null"
+                                  }
+                                ]
+                              }
+                            },
+                            "additionalProperties": {}
+                          }
+                        },
+                        "billingBlocked": {
+                          "type": "boolean"
+                        },
+                        "billingBlockedReason": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "payment_failed",
+                                "dispute"
+                              ]
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "blockedByOrgOwner": {
+                          "type": "boolean"
+                        },
+                        "upgradeWorkspaceId": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 128,
+                              "description": "Unique workspace identifier."
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "organizationId",
+                        "organizationName",
+                        "subscriptionState",
+                        "hasSubscription",
+                        "subscriptionPlan",
+                        "subscriptionStatus",
+                        "creditBalance",
+                        "billingInterval",
+                        "cancelAtPeriodEnd",
+                        "totalSeats",
+                        "usedSeats",
+                        "seatsCount",
+                        "totalCurrentUsage",
+                        "totalUsageLimit",
+                        "minimumBillingAmount",
+                        "averageUsagePerMember",
+                        "billingPeriodStart",
+                        "billingPeriodEnd",
+                        "membersTotal",
+                        "memberPagination",
+                        "members",
+                        "billingBlocked",
+                        "billingBlockedReason",
+                        "blockedByOrgOwner",
+                        "upgradeWorkspaceId"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "success",
+                "context",
+                "userId",
+                "organizationId",
+                "data"
+              ],
+              "additionalProperties": {}
+            }
+          ]
+        }
+      }
+    }
+  }
+}

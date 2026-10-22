@@ -1,0 +1,1131 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/file-versions.ts",
+  "contracts": {
+    "v2DeleteFileVersionContract": {
+      "method": "DELETE",
+      "path": "/api/v2/files/[fileId]/versions/[version]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "File identifier."
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the file."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2FileVersionDeleteResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2FileVersionDeleteResult": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "description": "File whose version was deleted."
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version number that was deleted."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "True when the version was removed from history. Stored-content deletion may finish through a background retry."
+                }
+              },
+              "required": [
+                "fileId",
+                "version",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersionDeleteResult",
+              "title": "Delete file version result",
+              "description": "Deletion acknowledgement for one file version."
+            }
+          }
+        }
+      }
+    },
+    "v2DownloadFileVersionContract": {
+      "method": "GET",
+      "path": "/api/v2/files/[fileId]/versions/[version]/content",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "File identifier."
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the file."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "binary"
+      }
+    },
+    "v2GetFileVersionContract": {
+      "method": "GET",
+      "path": "/api/v2/files/[fileId]/versions/[version]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "File identifier."
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the file."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2FileVersion"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2FileVersion": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "description": "File this version belongs to."
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version number, increasing by one per recorded version. Numbers are never reused, so a gap means an older version was removed by retention or deleted.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean",
+                  "description": "Whether this version holds the current content of the file."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Size in bytes of the stored content of this version."
+                },
+                "contentType": {
+                  "type": "string",
+                  "description": "MIME type of the stored content of this version."
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "upload",
+                    "user",
+                    "api",
+                    "copilot",
+                    "workflow",
+                    "collab",
+                    "revert",
+                    "unknown"
+                  ],
+                  "description": "What wrote this version: `upload` (the original upload), `user` (a save in the Sim editor), `api` (an API, CLI, or MCP write), `copilot` (Sim, the agent), `workflow` (a workflow run), `collab` (collaborative editing), `revert` (a revert to an earlier version), or `unknown` (content written before version history existed, or by a writer with no source of its own)."
+                },
+                "authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "User identifier."
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Current email address of the user, or null when the account no longer exists."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Users who wrote this version, in order of first contribution. Empty for actorless writers such as workspace API keys. A collaborative version lists every editor in its window."
+                },
+                "restoredFromVersion": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For a `revert` version, the version whose content it restored; otherwise null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this content became current.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last write folded into this version. Equals `createdAt` unless edits were coalesced into it.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:38:00Z"
+                  ]
+                },
+                "supersededAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when a newer version replaced this one, or null for the current version. Retention ages versions from this time.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "fileId",
+                "version",
+                "isCurrent",
+                "size",
+                "contentType",
+                "source",
+                "authors",
+                "restoredFromVersion",
+                "createdAt",
+                "updatedAt",
+                "supersededAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersion",
+              "title": "File version",
+              "description": "One recorded version of the content of a workspace file."
+            }
+          }
+        }
+      }
+    },
+    "v2ListFileVersionsContract": {
+      "method": "GET",
+      "path": "/api/v2/files/[fileId]/versions",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "File identifier."
+          }
+        },
+        "required": [
+          "fileId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the file."
+          },
+          "sortBy": {
+            "default": "version",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "version"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum versions to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2FileVersion"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2FileVersion": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "description": "File this version belongs to."
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version number, increasing by one per recorded version. Numbers are never reused, so a gap means an older version was removed by retention or deleted.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean",
+                  "description": "Whether this version holds the current content of the file."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Size in bytes of the stored content of this version."
+                },
+                "contentType": {
+                  "type": "string",
+                  "description": "MIME type of the stored content of this version."
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "upload",
+                    "user",
+                    "api",
+                    "copilot",
+                    "workflow",
+                    "collab",
+                    "revert",
+                    "unknown"
+                  ],
+                  "description": "What wrote this version: `upload` (the original upload), `user` (a save in the Sim editor), `api` (an API, CLI, or MCP write), `copilot` (Sim, the agent), `workflow` (a workflow run), `collab` (collaborative editing), `revert` (a revert to an earlier version), or `unknown` (content written before version history existed, or by a writer with no source of its own)."
+                },
+                "authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "User identifier."
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Current email address of the user, or null when the account no longer exists."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Users who wrote this version, in order of first contribution. Empty for actorless writers such as workspace API keys. A collaborative version lists every editor in its window."
+                },
+                "restoredFromVersion": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For a `revert` version, the version whose content it restored; otherwise null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this content became current.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last write folded into this version. Equals `createdAt` unless edits were coalesced into it.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:38:00Z"
+                  ]
+                },
+                "supersededAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when a newer version replaced this one, or null for the current version. Retention ages versions from this time.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "fileId",
+                "version",
+                "isCurrent",
+                "size",
+                "contentType",
+                "source",
+                "authors",
+                "restoredFromVersion",
+                "createdAt",
+                "updatedAt",
+                "supersededAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersion",
+              "title": "File version",
+              "description": "One recorded version of the content of a workspace file."
+            }
+          }
+        }
+      }
+    },
+    "v2ReadFileVersionTextContract": {
+      "method": "GET",
+      "path": "/api/v2/files/[fileId]/versions/[version]/text",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "File identifier."
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the file."
+          },
+          "maxBytes": {
+            "description": "Optional ceiling on the source bytes fed to the parser, lowering but never raising the server limit.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 26214400
+          },
+          "offset": {
+            "description": "First line to return, 1-based; 0 also starts at the first line. Absent starts at the first line.",
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 9007199254740991
+          },
+          "limit": {
+            "description": "How many lines to return from `offset`. Absent reads to the end.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2FileVersionText"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2FileVersionText": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "pattern": "^[A-Za-z0-9_-]+$",
+                  "description": "File the text was extracted from."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "File name, including its extension."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Canonical VFS path of the file that was read: `files/…`, or `uploads/<name>` for a Chat upload."
+                },
+                "type": {
+                  "type": "string",
+                  "description": "Stored MIME type of the source file."
+                },
+                "text": {
+                  "type": "string",
+                  "description": "Extracted text."
+                },
+                "truncated": {
+                  "type": "boolean",
+                  "description": "True when a parser limit stopped extraction before the input was exhausted."
+                },
+                "degraded": {
+                  "type": "boolean",
+                  "description": "True when text extraction did not fully succeed and `text` may be incomplete or synthesized from the raw bytes rather than read from the document. Never treat degraded text as authoritative content."
+                },
+                "degradedReason": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Why extraction degraded, or null when it did not."
+                },
+                "charCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Length of `text` in characters."
+                },
+                "byteCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Source bytes read from storage before extraction."
+                },
+                "lineRange": {
+                  "description": "Present when `offset` or `limit` narrowed the response. `totalLines` is what separates a file that ended from a window that stopped early.",
+                  "type": "object",
+                  "properties": {
+                    "offset": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 9007199254740991,
+                      "description": "First line returned, 1-based."
+                    },
+                    "lineCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Lines returned."
+                    },
+                    "totalLines": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Lines the whole file holds."
+                    },
+                    "totalLinesExact": {
+                      "type": "boolean",
+                      "description": "False when text extraction was truncated, so `totalLines` counts only the extracted prefix and is not the end of the file."
+                    }
+                  },
+                  "required": [
+                    "offset",
+                    "lineCount",
+                    "totalLines",
+                    "totalLinesExact"
+                  ],
+                  "additionalProperties": false
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version the text was extracted from."
+                }
+              },
+              "required": [
+                "fileId",
+                "name",
+                "path",
+                "type",
+                "text",
+                "truncated",
+                "degraded",
+                "degradedReason",
+                "charCount",
+                "byteCount",
+                "version"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersionText",
+              "title": "Extracted file version text",
+              "description": "Text extracted from one version of a workspace file, with extraction-quality flags."
+            }
+          }
+        }
+      }
+    },
+    "v2RevertFileVersionContract": {
+      "method": "POST",
+      "path": "/api/v2/files/[fileId]/versions/[version]/revert",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "fileId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[A-Za-z0-9_-]+$",
+            "description": "File identifier."
+          },
+          "version": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 2147483647,
+            "description": "Version number."
+          }
+        },
+        "required": [
+          "fileId",
+          "version"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the file."
+          },
+          "expectedCurrentVersion": {
+            "description": "Revert only while this is still the current version; otherwise the request fails with `409`. Omit to revert whatever is current. Collaborative edits and repeated workflow writes that fold into the current version keep its number, so prefer `expectedRevision` to guard content.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "expectedRevision": {
+            "description": "Revert only while the file still holds the content this revision names, as returned by Get file metadata or an earlier write; otherwise the request fails with `409`. Unlike a version number, it also catches edits that folded into the current version.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2FileVersionRevertResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2File": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "webUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Canonical absolute URL for opening this resource in the Sim web application."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the workspace root.",
+                  "maxLength": 4096
+                },
+                "uploadedByEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
+                  "description": "Current email address of the uploader.",
+                  "examples": [
+                    "jane@example.com"
+                  ]
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "webUrl",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedByEmail",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2File",
+              "title": "Workspace file",
+              "description": "A workspace file exposed by the public v2 API."
+            },
+            "V2FileVersion": {
+              "type": "object",
+              "properties": {
+                "fileId": {
+                  "type": "string",
+                  "description": "File this version belongs to."
+                },
+                "version": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 2147483647,
+                  "description": "Version number, increasing by one per recorded version. Numbers are never reused, so a gap means an older version was removed by retention or deleted.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "isCurrent": {
+                  "type": "boolean",
+                  "description": "Whether this version holds the current content of the file."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Size in bytes of the stored content of this version."
+                },
+                "contentType": {
+                  "type": "string",
+                  "description": "MIME type of the stored content of this version."
+                },
+                "source": {
+                  "type": "string",
+                  "enum": [
+                    "upload",
+                    "user",
+                    "api",
+                    "copilot",
+                    "workflow",
+                    "collab",
+                    "revert",
+                    "unknown"
+                  ],
+                  "description": "What wrote this version: `upload` (the original upload), `user` (a save in the Sim editor), `api` (an API, CLI, or MCP write), `copilot` (Sim, the agent), `workflow` (a workflow run), `collab` (collaborative editing), `revert` (a revert to an earlier version), or `unknown` (content written before version history existed, or by a writer with no source of its own)."
+                },
+                "authors": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "description": "User identifier."
+                      },
+                      "email": {
+                        "anyOf": [
+                          {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Current email address of the user, or null when the account no longer exists."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "email"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Users who wrote this version, in order of first contribution. Empty for actorless writers such as workspace API keys. A collaborative version lists every editor in its window."
+                },
+                "restoredFromVersion": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 2147483647
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "For a `revert` version, the version whose content it restored; otherwise null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when this content became current.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last write folded into this version. Equals `createdAt` unless edits were coalesced into it.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:38:00Z"
+                  ]
+                },
+                "supersededAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when a newer version replaced this one, or null for the current version. Retention ages versions from this time.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "fileId",
+                "version",
+                "isCurrent",
+                "size",
+                "contentType",
+                "source",
+                "authors",
+                "restoredFromVersion",
+                "createdAt",
+                "updatedAt",
+                "supersededAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersion",
+              "title": "File version",
+              "description": "One recorded version of the content of a workspace file."
+            },
+            "V2FileVersionRevertResult": {
+              "type": "object",
+              "properties": {
+                "reverted": {
+                  "type": "boolean",
+                  "description": "False when the requested version was already current, in which case nothing was written."
+                },
+                "file": {
+                  "$ref": "#/$defs/V2File"
+                },
+                "version": {
+                  "description": "The current version of the file after the revert: a new `revert` version; the requested version when it was already current; or the unchanged current version when its content already matched the requested one.",
+                  "$ref": "#/$defs/V2FileVersion"
+                },
+                "revision": {
+                  "description": "Opaque token for the content the file holds after the revert — the one it just wrote, or the unchanged current content when `reverted` is false. Send it back as `expectedRevision` on the next write.",
+                  "type": "string"
+                }
+              },
+              "required": [
+                "reverted",
+                "file",
+                "version"
+              ],
+              "additionalProperties": false,
+              "id": "V2FileVersionRevertResult",
+              "title": "Revert file version result",
+              "description": "The file and its current version after a revert."
+            }
+          }
+        }
+      }
+    }
+  }
+}

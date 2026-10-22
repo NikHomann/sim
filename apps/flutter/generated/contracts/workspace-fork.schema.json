@@ -1,0 +1,3024 @@
+{
+  "source": "apps/sim/lib/api/contracts/workspace-fork.ts",
+  "contracts": {
+    "forkWorkspaceContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/fork",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "copy": {
+            "type": "object",
+            "properties": {
+              "files": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "knowledgeBases": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "workflowMcpServers": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspace": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "color": {
+                  "type": "string"
+                },
+                "logoUrl": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "ownerId": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "workspaceMode": {
+                  "type": "string",
+                  "enum": [
+                    "personal",
+                    "organization",
+                    "grandfathered_shared"
+                  ]
+                },
+                "role": {
+                  "type": "string"
+                },
+                "membershipId": {
+                  "type": "string"
+                },
+                "permissions": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "admin",
+                        "write",
+                        "read"
+                      ]
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "isOrgAdmin": {
+                  "type": "boolean"
+                },
+                "billedAccountUserId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "allowPersonalApiKeys": {
+                  "type": "boolean"
+                },
+                "storageUsedBytes": {
+                  "type": "number",
+                  "minimum": 0
+                },
+                "inboxEnabled": {
+                  "type": "boolean"
+                },
+                "inboxAddress": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxProviderId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inboxSecretScope": {
+                  "type": "string"
+                },
+                "inboxMountedSecrets": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                },
+                "archivedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "organizationAssignedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "forkSyncNewWorkflowsExcluded": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                },
+                "inviteMembersEnabled": {
+                  "type": "boolean"
+                },
+                "inviteDisabledReason": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "inviteUpgradeRequired": {
+                  "type": "boolean"
+                },
+                "forkedFromWorkspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "ownerId",
+                "organizationId",
+                "workspaceMode"
+              ],
+              "additionalProperties": false
+            },
+            "workflowsCopied": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "workspace",
+            "workflowsCopied"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getForkAvailabilityContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/fork/availability",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "available": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "available"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getForkDiffContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/fork/diff",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "push",
+              "pull"
+            ]
+          }
+        },
+        "required": [
+          "otherWorkspaceId",
+          "direction"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sourceWorkspaceId": {
+              "type": "string"
+            },
+            "targetWorkspaceId": {
+              "type": "string"
+            },
+            "sourceVersions": {
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "deploymentVersionId": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "workflowId",
+                  "deploymentVersionId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "willUpdate": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "willCreate": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "willArchive": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "workflows": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "currentName": {
+                        "type": "string"
+                      },
+                      "otherName": {
+                        "type": "string"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "update",
+                          "create"
+                        ]
+                      },
+                      "sourceWorkflowId": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "comparison": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "status": {
+                                "type": "string",
+                                "const": "available",
+                                "description": "Both exact source snapshots are available."
+                              },
+                              "base": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Source deployment last successfully synced to this destination."
+                              },
+                              "target": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Pinned source deployment that this sync would copy."
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "base",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "status": {
+                                "type": "string",
+                                "const": "unavailable",
+                                "description": "The source baseline cannot be compared."
+                              },
+                              "reason": {
+                                "type": "string",
+                                "enum": [
+                                  "new_workflow",
+                                  "no_baseline",
+                                  "missing_baseline"
+                                ],
+                                "description": "New destination workflow, no recorded successful sync, or deleted baseline snapshot."
+                              },
+                              "target": {
+                                "type": "object",
+                                "properties": {
+                                  "id": {
+                                    "type": "string",
+                                    "minLength": 1,
+                                    "description": "Exact source deployment snapshot identifier."
+                                  },
+                                  "version": {
+                                    "type": "integer",
+                                    "minimum": 1,
+                                    "maximum": 2147483647,
+                                    "description": "Saved version number in the source workflow."
+                                  }
+                                },
+                                "required": [
+                                  "id",
+                                  "version"
+                                ],
+                                "additionalProperties": false,
+                                "description": "Pinned source deployment that this sync would copy."
+                              }
+                            },
+                            "required": [
+                              "status",
+                              "reason",
+                              "target"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "required": [
+                      "currentName",
+                      "otherName",
+                      "action",
+                      "sourceWorkflowId",
+                      "comparison"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "currentName": {
+                        "type": "string"
+                      },
+                      "otherName": {
+                        "type": "string"
+                      },
+                      "action": {
+                        "type": "string",
+                        "const": "archive"
+                      },
+                      "targetWorkflowId": {
+                        "type": "string",
+                        "minLength": 1
+                      }
+                    },
+                    "required": [
+                      "currentName",
+                      "otherName",
+                      "action",
+                      "targetWorkflowId"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "excludedSourceWorkflows": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "excludedTargetWorkflows": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "unmappedRequired": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "credential",
+                      "env-var",
+                      "knowledge-base",
+                      "knowledge-document",
+                      "table",
+                      "file",
+                      "file-folder",
+                      "mcp-server",
+                      "custom-tool",
+                      "custom-block",
+                      "skill",
+                      "sandbox"
+                    ]
+                  },
+                  "sourceId": {
+                    "type": "string"
+                  },
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "blockName": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "sourceId",
+                  "required"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "unmappedOptional": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "credential",
+                      "env-var",
+                      "knowledge-base",
+                      "knowledge-document",
+                      "table",
+                      "file",
+                      "file-folder",
+                      "mcp-server",
+                      "custom-tool",
+                      "custom-block",
+                      "skill",
+                      "sandbox"
+                    ]
+                  },
+                  "sourceId": {
+                    "type": "string"
+                  },
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "blockName": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "sourceId",
+                  "required"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "mcpReauthServerIds": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "inlineSecretSources": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "dependentReconfigs": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "parentKind": {
+                    "type": "string",
+                    "enum": [
+                      "credential",
+                      "knowledge-base",
+                      "table",
+                      "custom-block",
+                      "mcp-server"
+                    ]
+                  },
+                  "parentSourceId": {
+                    "type": "string"
+                  },
+                  "parentContextKey": {
+                    "type": "string"
+                  },
+                  "targetWorkflowId": {
+                    "type": "string"
+                  },
+                  "targetBlockId": {
+                    "type": "string"
+                  },
+                  "blockName": {
+                    "type": "string"
+                  },
+                  "subBlockKey": {
+                    "type": "string"
+                  },
+                  "selectorKey": {
+                    "type": "string"
+                  },
+                  "multiSelect": {
+                    "type": "boolean"
+                  },
+                  "fieldType": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "type": "string"
+                  },
+                  "toolName": {
+                    "type": "string"
+                  },
+                  "dependencyScope": {
+                    "type": "string"
+                  },
+                  "currentValue": {
+                    "type": "string"
+                  },
+                  "sourceValue": {
+                    "type": "string"
+                  },
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "providesContextKey": {
+                    "type": "string"
+                  },
+                  "consumesContextKeys": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "context": {
+                    "type": "object",
+                    "propertyNames": {
+                      "type": "string"
+                    },
+                    "additionalProperties": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "parentKind",
+                  "parentSourceId",
+                  "targetWorkflowId",
+                  "targetBlockId",
+                  "blockName",
+                  "subBlockKey",
+                  "title",
+                  "currentValue",
+                  "sourceValue",
+                  "required",
+                  "consumesContextKeys",
+                  "context"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "resourceUsages": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "parentKind": {
+                    "type": "string",
+                    "enum": [
+                      "credential",
+                      "env-var",
+                      "knowledge-base",
+                      "knowledge-document",
+                      "table",
+                      "file",
+                      "file-folder",
+                      "mcp-server",
+                      "custom-tool",
+                      "custom-block",
+                      "skill",
+                      "sandbox"
+                    ]
+                  },
+                  "parentSourceId": {
+                    "type": "string"
+                  },
+                  "workflows": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "workflowId": {
+                          "type": "string"
+                        },
+                        "workflowName": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "workflowId",
+                        "workflowName"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "parentKind",
+                  "parentSourceId",
+                  "workflows"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "copyableUnmapped": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "knowledge-base",
+                      "table",
+                      "custom-tool",
+                      "skill",
+                      "file",
+                      "mcp-server"
+                    ]
+                  },
+                  "sourceId": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "parentId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "parentLabel": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "referenced": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "sourceId",
+                  "label",
+                  "parentId",
+                  "parentLabel",
+                  "referenced"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "clearedRefs": {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "targetWorkflowId": {
+                        "type": "string"
+                      },
+                      "workflowName": {
+                        "type": "string"
+                      },
+                      "blockId": {
+                        "type": "string"
+                      },
+                      "blockLabel": {
+                        "type": "string"
+                      },
+                      "fieldLabel": {
+                        "type": "string"
+                      },
+                      "sourceId": {
+                        "type": "string"
+                      },
+                      "sourceLabel": {
+                        "type": "string"
+                      },
+                      "cause": {
+                        "type": "string",
+                        "const": "reference"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "credential",
+                          "env-var",
+                          "knowledge-base",
+                          "knowledge-document",
+                          "table",
+                          "file",
+                          "file-folder",
+                          "mcp-server",
+                          "custom-tool",
+                          "custom-block",
+                          "skill",
+                          "sandbox"
+                        ]
+                      },
+                      "sourceDeleted": {
+                        "type": "boolean"
+                      }
+                    },
+                    "required": [
+                      "targetWorkflowId",
+                      "workflowName",
+                      "blockId",
+                      "blockLabel",
+                      "fieldLabel",
+                      "sourceId",
+                      "sourceLabel",
+                      "cause",
+                      "kind",
+                      "sourceDeleted"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "targetWorkflowId": {
+                        "type": "string"
+                      },
+                      "workflowName": {
+                        "type": "string"
+                      },
+                      "blockId": {
+                        "type": "string"
+                      },
+                      "blockLabel": {
+                        "type": "string"
+                      },
+                      "fieldLabel": {
+                        "type": "string"
+                      },
+                      "sourceId": {
+                        "type": "string"
+                      },
+                      "sourceLabel": {
+                        "type": "string"
+                      },
+                      "cause": {
+                        "type": "string",
+                        "const": "workflow"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "const": "workflow"
+                      }
+                    },
+                    "required": [
+                      "targetWorkflowId",
+                      "workflowName",
+                      "blockId",
+                      "blockLabel",
+                      "fieldLabel",
+                      "sourceId",
+                      "sourceLabel",
+                      "cause",
+                      "kind"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "targetWorkflowId": {
+                        "type": "string"
+                      },
+                      "workflowName": {
+                        "type": "string"
+                      },
+                      "blockId": {
+                        "type": "string"
+                      },
+                      "blockLabel": {
+                        "type": "string"
+                      },
+                      "fieldLabel": {
+                        "type": "string"
+                      },
+                      "sourceId": {
+                        "type": "string"
+                      },
+                      "sourceLabel": {
+                        "type": "string"
+                      },
+                      "cause": {
+                        "type": "string",
+                        "const": "dependent"
+                      },
+                      "kind": {
+                        "type": "string",
+                        "enum": [
+                          "credential",
+                          "env-var",
+                          "knowledge-base",
+                          "knowledge-document",
+                          "table",
+                          "file",
+                          "file-folder",
+                          "mcp-server",
+                          "custom-tool",
+                          "custom-block",
+                          "skill",
+                          "sandbox"
+                        ]
+                      },
+                      "parentKind": {
+                        "type": "string",
+                        "enum": [
+                          "credential",
+                          "env-var",
+                          "knowledge-base",
+                          "knowledge-document",
+                          "table",
+                          "file",
+                          "file-folder",
+                          "mcp-server",
+                          "custom-tool",
+                          "custom-block",
+                          "skill",
+                          "sandbox"
+                        ]
+                      },
+                      "parentSourceId": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "targetWorkflowId",
+                      "workflowName",
+                      "blockId",
+                      "blockLabel",
+                      "fieldLabel",
+                      "sourceId",
+                      "sourceLabel",
+                      "cause",
+                      "kind",
+                      "parentKind",
+                      "parentSourceId"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "retiringTriggerUrls": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowName": {
+                    "type": "string",
+                    "maxLength": 1024,
+                    "description": "Name of the workflow whose public trigger path stops serving."
+                  },
+                  "path": {
+                    "type": "string",
+                    "maxLength": 4096,
+                    "description": "Public trigger path that stops serving after this sync."
+                  }
+                },
+                "required": [
+                  "workflowName",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "triggerMappings": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "sourceBlockId": {
+                    "type": "string"
+                  },
+                  "blockName": {
+                    "type": "string"
+                  },
+                  "workflowName": {
+                    "type": "string"
+                  },
+                  "ownPath": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "adoptablePaths": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "defaultAdoptPath": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "sourceBlockId",
+                  "blockName",
+                  "workflowName",
+                  "ownPath",
+                  "adoptablePaths",
+                  "defaultAdoptPath"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "sourceWorkspaceId",
+            "targetWorkspaceId",
+            "sourceVersions",
+            "willUpdate",
+            "willCreate",
+            "willArchive",
+            "workflows",
+            "excludedSourceWorkflows",
+            "excludedTargetWorkflows",
+            "unmappedRequired",
+            "unmappedOptional",
+            "mcpReauthServerIds",
+            "inlineSecretSources",
+            "dependentReconfigs",
+            "resourceUsages",
+            "copyableUnmapped",
+            "clearedRefs",
+            "retiringTriggerUrls",
+            "triggerMappings"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getForkLineageContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/fork/lineage",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "workspaceId": {
+              "type": "string"
+            },
+            "parent": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "viewerAccessible": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "organizationId",
+                    "viewerAccessible"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "children": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string"
+                  },
+                  "organizationId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "viewerAccessible": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "organizationId",
+                  "viewerAccessible",
+                  "createdAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "undoableRun": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "otherWorkspaceId": {
+                      "type": "string"
+                    },
+                    "otherName": {
+                      "type": "string"
+                    },
+                    "direction": {
+                      "type": "string",
+                      "enum": [
+                        "push",
+                        "pull"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "otherWorkspaceId",
+                    "otherName",
+                    "direction"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "forkSyncNewWorkflowsExcluded": {
+              "default": false,
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "workspaceId",
+            "parent",
+            "children",
+            "undoableRun",
+            "forkSyncNewWorkflowsExcluded"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getForkMappingContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/fork/mapping",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "direction": {
+            "default": "push",
+            "type": "string",
+            "enum": [
+              "push",
+              "pull"
+            ]
+          }
+        },
+        "required": [
+          "otherWorkspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "childWorkspaceId": {
+              "type": "string"
+            },
+            "parentWorkspaceId": {
+              "type": "string"
+            },
+            "sourceWorkspaceId": {
+              "type": "string"
+            },
+            "targetWorkspaceId": {
+              "type": "string"
+            },
+            "entries": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "credential",
+                      "env-var",
+                      "knowledge-base",
+                      "knowledge-document",
+                      "table",
+                      "file",
+                      "file-folder",
+                      "mcp-server",
+                      "custom-tool",
+                      "custom-block",
+                      "skill",
+                      "sandbox"
+                    ]
+                  },
+                  "resourceType": {
+                    "type": "string",
+                    "enum": [
+                      "oauth_credential",
+                      "service_account_credential",
+                      "env_var",
+                      "table",
+                      "knowledge_base",
+                      "file",
+                      "file_folder",
+                      "mcp_server",
+                      "custom_block",
+                      "custom_tool",
+                      "skill",
+                      "sandbox"
+                    ]
+                  },
+                  "sourceId": {
+                    "type": "string"
+                  },
+                  "sourceLabel": {
+                    "type": "string"
+                  },
+                  "targetId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "suggested": {
+                    "type": "boolean"
+                  },
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "sourceDeleted": {
+                    "type": "boolean"
+                  },
+                  "candidates": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "label": {
+                          "type": "string"
+                        },
+                        "providerId": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "label"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "candidatesTruncated": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "resourceType",
+                  "sourceId",
+                  "sourceLabel",
+                  "targetId",
+                  "suggested",
+                  "required",
+                  "sourceDeleted",
+                  "candidates",
+                  "candidatesTruncated"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "childWorkspaceId",
+            "parentWorkspaceId",
+            "sourceWorkspaceId",
+            "targetWorkspaceId",
+            "entries"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getForkResourcesContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/fork/resources",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  },
+                  "folderId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "folderName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "label",
+                  "folderId",
+                  "folderName"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "tables": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "knowledgeBases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "customTools": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "skills": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "mcpServers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "workflowMcpServers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "deployedWorkflowCount": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "files",
+            "tables",
+            "knowledgeBases",
+            "customTools",
+            "skills",
+            "mcpServers",
+            "workflowMcpServers",
+            "deployedWorkflowCount"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceBackgroundWorkContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/background-work",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "type": "string"
+          },
+          "limit": {
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "items": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "workspaceId": {
+                    "type": "string"
+                  },
+                  "workflowId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "deployment_side_effects",
+                      "fork_content_copy",
+                      "fork_sync",
+                      "fork_rollback"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "processing",
+                      "completed",
+                      "completed_with_warnings",
+                      "failed"
+                    ]
+                  },
+                  "message": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "metadata": {
+                    "anyOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "actorName": {
+                            "type": "string"
+                          },
+                          "childWorkspaceId": {
+                            "type": "string"
+                          },
+                          "childWorkspaceName": {
+                            "type": "string"
+                          },
+                          "workflowsCopied": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "tables": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "knowledgeBases": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "files": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "skills": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "documents": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "copied": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "failed": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "clearedReferences": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "clearingFailed": {
+                            "type": "boolean"
+                          },
+                          "workflowNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "tableNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "knowledgeBaseNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "fileNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "customToolNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "skillNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "mcpServerNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "workflowMcpServerNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "otherWorkspaceId": {
+                            "type": "string"
+                          },
+                          "otherWorkspaceName": {
+                            "type": "string"
+                          },
+                          "direction": {
+                            "type": "string",
+                            "enum": [
+                              "push",
+                              "pull"
+                            ]
+                          },
+                          "updated": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "created": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "archived": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "redeployed": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "deployFailed": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "deployWarnings": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "restored": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "unarchived": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "removed": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "skipped": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "updatedNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "createdNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "archivedNames": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            }
+                          },
+                          "needsConfiguration": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "workflowName": {
+                                  "type": "string"
+                                },
+                                "blocks": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "workflowName",
+                                "blocks"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "clearedOptional": {
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "workflowName": {
+                                  "type": "string"
+                                },
+                                "blocks": {
+                                  "minItems": 1,
+                                  "type": "array",
+                                  "items": {
+                                    "type": "string"
+                                  }
+                                }
+                              },
+                              "required": [
+                                "workflowName",
+                                "blocks"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "droppedReferences": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          },
+                          "triggerUrlChanges": {
+                            "type": "integer",
+                            "minimum": -9007199254740991,
+                            "maximum": 9007199254740991
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "startedAt": {
+                    "type": "string"
+                  },
+                  "completedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "workspaceId",
+                  "workflowId",
+                  "kind",
+                  "status",
+                  "message",
+                  "error",
+                  "metadata",
+                  "startedAt",
+                  "completedAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "items",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "promoteForkContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/fork/promote",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "push",
+              "pull"
+            ]
+          },
+          "mappings": {
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ]
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId"
+              ]
+            }
+          },
+          "expectedSourceVersions": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "deploymentVersionId": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "workflowId",
+                "deploymentVersionId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "dependentValues": {
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "blockId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "subBlockKey": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "workflowId",
+                "blockId",
+                "subBlockKey",
+                "value"
+              ]
+            }
+          },
+          "copyResources": {
+            "type": "object",
+            "properties": {
+              "knowledgeBases": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "tables": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "customTools": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "skills": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "files": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "mcpServers": {
+                "maxItems": 2000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              }
+            }
+          },
+          "dropReferences": {
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "credential",
+                    "env-var",
+                    "knowledge-base",
+                    "knowledge-document",
+                    "table",
+                    "file",
+                    "file-folder",
+                    "mcp-server",
+                    "custom-tool",
+                    "custom-block",
+                    "skill",
+                    "sandbox"
+                  ]
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "kind",
+                "sourceId"
+              ]
+            }
+          },
+          "triggerMappings": {
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "sourceBlockId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "adoptPath": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "sourceBlockId",
+                "adoptPath"
+              ]
+            }
+          }
+        },
+        "required": [
+          "otherWorkspaceId",
+          "direction"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "promoteRunId": {
+              "type": "string"
+            },
+            "updated": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "created": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "archived": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "redeployed": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "deployFailed": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "deployWarnings": {
+              "default": [],
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "string",
+                "maxLength": 2048
+              }
+            },
+            "unmappedRequired": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "credential",
+                      "env-var",
+                      "knowledge-base",
+                      "knowledge-document",
+                      "table",
+                      "file",
+                      "file-folder",
+                      "mcp-server",
+                      "custom-tool",
+                      "custom-block",
+                      "skill",
+                      "sandbox"
+                    ]
+                  },
+                  "sourceId": {
+                    "type": "string"
+                  },
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "blockName": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "sourceId",
+                  "required"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "blockers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowName": {
+                    "type": "string"
+                  },
+                  "blockLabel": {
+                    "type": "string"
+                  },
+                  "fieldLabel": {
+                    "type": "string"
+                  },
+                  "kind": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "enum": [
+                          "credential",
+                          "env-var",
+                          "knowledge-base",
+                          "knowledge-document",
+                          "table",
+                          "file",
+                          "file-folder",
+                          "mcp-server",
+                          "custom-tool",
+                          "custom-block",
+                          "skill",
+                          "sandbox"
+                        ]
+                      },
+                      {
+                        "type": "string",
+                        "const": "workflow"
+                      }
+                    ]
+                  },
+                  "sourceId": {
+                    "type": "string"
+                  },
+                  "sourceLabel": {
+                    "type": "string"
+                  },
+                  "reason": {
+                    "type": "string",
+                    "enum": [
+                      "unmapped-copyable",
+                      "source-deleted",
+                      "workflow-missing",
+                      "unmapped-custom-block"
+                    ]
+                  }
+                },
+                "required": [
+                  "workflowName",
+                  "blockLabel",
+                  "fieldLabel",
+                  "kind",
+                  "sourceId",
+                  "sourceLabel",
+                  "reason"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "needsConfiguration": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowName": {
+                    "type": "string"
+                  },
+                  "blocks": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "workflowName",
+                  "blocks"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "clearedOptional": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowName": {
+                    "type": "string"
+                  },
+                  "blocks": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  }
+                },
+                "required": [
+                  "workflowName",
+                  "blocks"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "droppedReferences": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "credential",
+                      "env-var",
+                      "knowledge-base",
+                      "knowledge-document",
+                      "table",
+                      "file",
+                      "file-folder",
+                      "mcp-server",
+                      "custom-tool",
+                      "custom-block",
+                      "skill",
+                      "sandbox"
+                    ]
+                  },
+                  "sourceId": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "kind",
+                  "sourceId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "triggerUrlChanges": {
+              "default": [],
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workflowName": {
+                    "type": "string",
+                    "maxLength": 1024,
+                    "description": "Name of the workflow whose public trigger path stops serving."
+                  },
+                  "path": {
+                    "type": "string",
+                    "maxLength": 4096,
+                    "description": "Public trigger path that stops serving after this sync."
+                  }
+                },
+                "required": [
+                  "workflowName",
+                  "path"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "promoteRunId",
+            "updated",
+            "created",
+            "archived",
+            "redeployed",
+            "deployFailed",
+            "deployWarnings",
+            "unmappedRequired",
+            "blockers",
+            "needsConfiguration",
+            "clearedOptional",
+            "droppedReferences",
+            "triggerUrlChanges"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "rollbackForkContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/fork/rollback",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "otherWorkspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "restored": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "archived": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "unarchived": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "skipped": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "pendingActivations": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "required": [
+            "restored",
+            "archived",
+            "unarchived",
+            "skipped",
+            "pendingActivations"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "unlinkForkContract": {
+      "method": "POST",
+      "path": "/api/workspaces/[id]/fork/unlink",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "otherWorkspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "unlinked": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "unlinked"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateForkExcludedWorkflowsContract": {
+      "method": "PUT",
+      "path": "/api/workspaces/[id]/fork/excluded-workflows",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowIds": {
+            "minItems": 1,
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "forkSyncExcluded": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "workflowIds",
+          "forkSyncExcluded"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "updated": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "updated"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateForkMappingContract": {
+      "method": "PUT",
+      "path": "/api/workspaces/[id]/fork/mapping",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "otherWorkspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "direction": {
+            "type": "string",
+            "enum": [
+              "push",
+              "pull"
+            ]
+          },
+          "entries": {
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "oauth_credential",
+                    "service_account_credential",
+                    "env_var",
+                    "table",
+                    "knowledge_base",
+                    "file",
+                    "file_folder",
+                    "mcp_server",
+                    "custom_block",
+                    "custom_tool",
+                    "skill",
+                    "sandbox"
+                  ]
+                },
+                "sourceId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "targetId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "resourceType",
+                "sourceId",
+                "targetId"
+              ]
+            }
+          },
+          "dependentValues": {
+            "maxItems": 2000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "blockId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "subBlockKey": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "value": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "workflowId",
+                "blockId",
+                "subBlockKey",
+                "value"
+              ]
+            }
+          }
+        },
+        "required": [
+          "otherWorkspaceId",
+          "direction",
+          "entries"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "updated": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "success",
+            "updated"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateForkSyncDefaultContract": {
+      "method": "PUT",
+      "path": "/api/workspaces/[id]/fork/sync-default",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "excludeNewWorkflows": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "excludeNewWorkflows"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "excludeNewWorkflows": {
+              "type": "boolean"
+            },
+            "workspacesUpdated": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "excludeNewWorkflows",
+            "workspacesUpdated"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

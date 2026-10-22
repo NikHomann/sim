@@ -1,0 +1,88 @@
+{
+  "source": "apps/sim/lib/api/contracts/contact.ts",
+  "contracts": {
+    "submitContactContract": {
+      "method": "POST",
+      "path": "/api/contact",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 120,
+            "pattern": "^[^\\r\\n]*$"
+          },
+          "email": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 320
+          },
+          "company": {
+            "type": "string",
+            "maxLength": 120
+          },
+          "topic": {
+            "type": "string",
+            "enum": [
+              "general",
+              "support",
+              "integration",
+              "feature_request",
+              "sales",
+              "partnership",
+              "billing",
+              "other"
+            ]
+          },
+          "subject": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "pattern": "^[^\\r\\n]*$"
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 5000
+          },
+          "website": {
+            "type": "string"
+          },
+          "captchaToken": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "name",
+          "email",
+          "topic",
+          "subject",
+          "message"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

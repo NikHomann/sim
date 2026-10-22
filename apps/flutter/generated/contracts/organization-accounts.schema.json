@@ -1,0 +1,3399 @@
+{
+  "source": "apps/sim/lib/api/contracts/organization-accounts.ts",
+  "contracts": {
+    "addOrganizationAccountMcpProviderContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/connected-accounts/mcp-providers",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "fireflies"
+              }
+            },
+            "required": [
+              "connectorId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "granola"
+              }
+            },
+            "required": [
+              "connectorId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "notion"
+              }
+            },
+            "required": [
+              "connectorId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "coda"
+              }
+            },
+            "required": [
+              "connectorId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "hubspot"
+              }
+            },
+            "required": [
+              "connectorId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "lucid"
+              }
+            },
+            "required": [
+              "connectorId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "zoom"
+              }
+            },
+            "required": [
+              "connectorId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "connectorId": {
+                "type": "string",
+                "const": "databricks"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 100
+              },
+              "url": {
+                "type": "string",
+                "maxLength": 2048,
+                "format": "uri"
+              },
+              "oauthClientId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 512
+              },
+              "oauthClientSecret": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              }
+            },
+            "required": [
+              "connectorId",
+              "name",
+              "url",
+              "oauthClientId"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "mcpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "authType": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "managedConnectorId": {
+                  "type": "string",
+                  "enum": [
+                    "fireflies",
+                    "granola",
+                    "databricks",
+                    "coda",
+                    "notion",
+                    "hubspot",
+                    "lucid",
+                    "zoom"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "authType",
+                "enabled",
+                "managedConnectorId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "mcpServer"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "configureOrganizationMcpContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/connected-accounts/databricks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "url": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048,
+            "format": "uri"
+          },
+          "oauthClientId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2048
+          },
+          "oauthClientSecret": {
+            "anyOf": [
+              {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8192
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "url",
+          "oauthClientId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "mcpServer": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "authType": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "enabled": {
+                  "type": "boolean"
+                },
+                "managedConnectorId": {
+                  "type": "string",
+                  "enum": [
+                    "fireflies",
+                    "granola",
+                    "databricks",
+                    "coda",
+                    "notion",
+                    "hubspot",
+                    "lucid",
+                    "zoom"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "description",
+                "authType",
+                "enabled",
+                "managedConnectorId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "mcpServer"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "disconnectPersonalOrganizationAccountContract": {
+      "method": "DELETE",
+      "path": "/api/users/me/organization-accounts/[credentialId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "credentialId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "credentialId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "ensureOrganizationAccountsContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/connected-accounts",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "option": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "enum": [
+                      "gmail",
+                      "google-calendar",
+                      "google-drive",
+                      "google-docs",
+                      "google-forms",
+                      "google-chat",
+                      "google-meet",
+                      "google-sheets",
+                      "microsoft-teams",
+                      "outlook",
+                      "onedrive",
+                      "sharepoint",
+                      "microsoft-excel",
+                      "confluence",
+                      "jira",
+                      "airtable",
+                      "asana",
+                      "attio",
+                      "bitbucket",
+                      "github-repositories",
+                      "box",
+                      "calcom",
+                      "clickup",
+                      "docusign",
+                      "dropbox",
+                      "hubspot",
+                      "linear",
+                      "linkedin",
+                      "monday",
+                      "notion",
+                      "pipedrive",
+                      "salesforce",
+                      "wordpress",
+                      "zoom"
+                    ]
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "required": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "label",
+                  "required"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "provider": {
+                    "type": "string",
+                    "const": "slack"
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 100
+                  },
+                  "required": {
+                    "type": "boolean"
+                  },
+                  "slackBotCredentialId": {
+                    "type": "string",
+                    "format": "uuid",
+                    "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                  }
+                },
+                "required": [
+                  "provider",
+                  "label",
+                  "required"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "credentialGroup": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "null"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "options": {
+                  "maxItems": 35,
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "enum": [
+                              "gmail",
+                              "google-calendar",
+                              "google-drive",
+                              "google-docs",
+                              "google-forms",
+                              "google-chat",
+                              "google-meet",
+                              "google-sheets",
+                              "microsoft-teams",
+                              "outlook",
+                              "onedrive",
+                              "sharepoint",
+                              "microsoft-excel",
+                              "confluence",
+                              "jira",
+                              "airtable",
+                              "asana",
+                              "attio",
+                              "bitbucket",
+                              "github-repositories",
+                              "box",
+                              "calcom",
+                              "clickup",
+                              "docusign",
+                              "dropbox",
+                              "hubspot",
+                              "linear",
+                              "linkedin",
+                              "monday",
+                              "notion",
+                              "pipedrive",
+                              "salesforce",
+                              "wordpress",
+                              "zoom"
+                            ]
+                          },
+                          "label": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "required": {
+                            "type": "boolean"
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "active",
+                              "disabled"
+                            ]
+                          },
+                          "configurationStatus": {
+                            "type": "string",
+                            "enum": [
+                              "not_configured",
+                              "ready",
+                              "needs_update"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "label",
+                          "required",
+                          "id",
+                          "status",
+                          "configurationStatus"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "const": "slack"
+                          },
+                          "label": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "required": {
+                            "type": "boolean"
+                          },
+                          "slackBotCredentialId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "active",
+                              "disabled"
+                            ]
+                          },
+                          "configurationStatus": {
+                            "type": "string",
+                            "enum": [
+                              "not_configured",
+                              "ready",
+                              "needs_update"
+                            ]
+                          },
+                          "requiredScopes": {
+                            "maxItems": 100,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 255
+                            }
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "label",
+                          "required",
+                          "id",
+                          "status",
+                          "configurationStatus"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "mcpServers": {
+                  "maxItems": 50,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                      },
+                      "name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "authType": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "managedConnectorId": {
+                        "type": "string",
+                        "enum": [
+                          "fireflies",
+                          "granola",
+                          "databricks",
+                          "coda",
+                          "notion",
+                          "hubspot",
+                          "lucid",
+                          "zoom"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "description",
+                      "authType",
+                      "enabled",
+                      "managedConnectorId"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "disabled"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "description",
+                "options",
+                "mcpServers",
+                "status",
+                "createdAt",
+                "updatedAt",
+                "organizationId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "credentialGroup"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationAccountWorkspaceAccessContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/connected-accounts/workspace-access",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "revision": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "grants": {
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "access": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "type": "string",
+                            "const": "all"
+                          }
+                        },
+                        "required": [
+                          "mode"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "type": "string",
+                            "const": "selected"
+                          },
+                          "credentialTypes": {
+                            "minItems": 1,
+                            "maxItems": 44,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "oauth:gmail",
+                                "oauth:google-calendar",
+                                "oauth:google-drive",
+                                "oauth:google-docs",
+                                "oauth:google-forms",
+                                "oauth:google-chat",
+                                "oauth:google-meet",
+                                "oauth:google-sheets",
+                                "oauth:microsoft-teams",
+                                "oauth:outlook",
+                                "oauth:onedrive",
+                                "oauth:sharepoint",
+                                "oauth:microsoft-excel",
+                                "oauth:confluence",
+                                "oauth:jira",
+                                "oauth:airtable",
+                                "oauth:asana",
+                                "oauth:attio",
+                                "oauth:bitbucket",
+                                "oauth:github-repositories",
+                                "oauth:box",
+                                "oauth:calcom",
+                                "oauth:clickup",
+                                "oauth:docusign",
+                                "oauth:dropbox",
+                                "oauth:hubspot",
+                                "oauth:linear",
+                                "oauth:linkedin",
+                                "oauth:monday",
+                                "oauth:notion",
+                                "oauth:pipedrive",
+                                "oauth:salesforce",
+                                "oauth:wordpress",
+                                "oauth:zoom",
+                                "oauth:slack",
+                                "mcp:fireflies",
+                                "mcp:granola",
+                                "mcp:databricks",
+                                "mcp:coda",
+                                "mcp:notion",
+                                "mcp:hubspot",
+                                "mcp:lucid",
+                                "mcp:zoom",
+                                "personal_token:gitlab"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "mode",
+                          "credentialTypes"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "workspaceId",
+                  "access"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "credentialTypes": {
+              "maxItems": 44,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "enum": [
+                      "oauth:gmail",
+                      "oauth:google-calendar",
+                      "oauth:google-drive",
+                      "oauth:google-docs",
+                      "oauth:google-forms",
+                      "oauth:google-chat",
+                      "oauth:google-meet",
+                      "oauth:google-sheets",
+                      "oauth:microsoft-teams",
+                      "oauth:outlook",
+                      "oauth:onedrive",
+                      "oauth:sharepoint",
+                      "oauth:microsoft-excel",
+                      "oauth:confluence",
+                      "oauth:jira",
+                      "oauth:airtable",
+                      "oauth:asana",
+                      "oauth:attio",
+                      "oauth:bitbucket",
+                      "oauth:github-repositories",
+                      "oauth:box",
+                      "oauth:calcom",
+                      "oauth:clickup",
+                      "oauth:docusign",
+                      "oauth:dropbox",
+                      "oauth:hubspot",
+                      "oauth:linear",
+                      "oauth:linkedin",
+                      "oauth:monday",
+                      "oauth:notion",
+                      "oauth:pipedrive",
+                      "oauth:salesforce",
+                      "oauth:wordpress",
+                      "oauth:zoom",
+                      "oauth:slack",
+                      "mcp:fireflies",
+                      "mcp:granola",
+                      "mcp:databricks",
+                      "mcp:coda",
+                      "mcp:notion",
+                      "mcp:hubspot",
+                      "mcp:lucid",
+                      "mcp:zoom",
+                      "personal_token:gitlab"
+                    ]
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 256
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "workspaces": {
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  },
+                  "name": {
+                    "type": "string",
+                    "maxLength": 256
+                  }
+                },
+                "required": [
+                  "id",
+                  "name"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "revision",
+            "grants",
+            "credentialTypes",
+            "workspaces"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationAccountsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/connected-accounts",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "credentialGroup": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "workspaceId": {
+                      "type": "null"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "description": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "options": {
+                      "maxItems": 35,
+                      "type": "array",
+                      "items": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "provider": {
+                                "type": "string",
+                                "enum": [
+                                  "gmail",
+                                  "google-calendar",
+                                  "google-drive",
+                                  "google-docs",
+                                  "google-forms",
+                                  "google-chat",
+                                  "google-meet",
+                                  "google-sheets",
+                                  "microsoft-teams",
+                                  "outlook",
+                                  "onedrive",
+                                  "sharepoint",
+                                  "microsoft-excel",
+                                  "confluence",
+                                  "jira",
+                                  "airtable",
+                                  "asana",
+                                  "attio",
+                                  "bitbucket",
+                                  "github-repositories",
+                                  "box",
+                                  "calcom",
+                                  "clickup",
+                                  "docusign",
+                                  "dropbox",
+                                  "hubspot",
+                                  "linear",
+                                  "linkedin",
+                                  "monday",
+                                  "notion",
+                                  "pipedrive",
+                                  "salesforce",
+                                  "wordpress",
+                                  "zoom"
+                                ]
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "active",
+                                  "disabled"
+                                ]
+                              },
+                              "configurationStatus": {
+                                "type": "string",
+                                "enum": [
+                                  "not_configured",
+                                  "ready",
+                                  "needs_update"
+                                ]
+                              }
+                            },
+                            "required": [
+                              "provider",
+                              "label",
+                              "required",
+                              "id",
+                              "status",
+                              "configurationStatus"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "provider": {
+                                "type": "string",
+                                "const": "slack"
+                              },
+                              "label": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 100
+                              },
+                              "required": {
+                                "type": "boolean"
+                              },
+                              "slackBotCredentialId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              },
+                              "id": {
+                                "type": "string",
+                                "minLength": 1
+                              },
+                              "status": {
+                                "type": "string",
+                                "enum": [
+                                  "active",
+                                  "disabled"
+                                ]
+                              },
+                              "configurationStatus": {
+                                "type": "string",
+                                "enum": [
+                                  "not_configured",
+                                  "ready",
+                                  "needs_update"
+                                ]
+                              },
+                              "requiredScopes": {
+                                "maxItems": 100,
+                                "type": "array",
+                                "items": {
+                                  "type": "string",
+                                  "minLength": 1,
+                                  "maxLength": 255
+                                }
+                              }
+                            },
+                            "required": [
+                              "provider",
+                              "label",
+                              "required",
+                              "id",
+                              "status",
+                              "configurationStatus"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      }
+                    },
+                    "mcpServers": {
+                      "maxItems": 50,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 128
+                          },
+                          "name": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "description": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "authType": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "enabled": {
+                            "type": "boolean"
+                          },
+                          "managedConnectorId": {
+                            "type": "string",
+                            "enum": [
+                              "fireflies",
+                              "granola",
+                              "databricks",
+                              "coda",
+                              "notion",
+                              "hubspot",
+                              "lucid",
+                              "zoom"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "description",
+                          "authType",
+                          "enabled",
+                          "managedConnectorId"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "active",
+                        "disabled"
+                      ]
+                    },
+                    "createdAt": {
+                      "type": "string"
+                    },
+                    "updatedAt": {
+                      "type": "string"
+                    },
+                    "organizationId": {
+                      "type": "string",
+                      "minLength": 1
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "workspaceId",
+                    "name",
+                    "description",
+                    "options",
+                    "mcpServers",
+                    "status",
+                    "createdAt",
+                    "updatedAt",
+                    "organizationId"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "availableProviders": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "gmail",
+                  "google-calendar",
+                  "google-drive",
+                  "google-docs",
+                  "google-forms",
+                  "google-chat",
+                  "google-meet",
+                  "google-sheets",
+                  "microsoft-teams",
+                  "outlook",
+                  "onedrive",
+                  "sharepoint",
+                  "microsoft-excel",
+                  "confluence",
+                  "jira",
+                  "airtable",
+                  "asana",
+                  "attio",
+                  "bitbucket",
+                  "github-repositories",
+                  "box",
+                  "calcom",
+                  "clickup",
+                  "docusign",
+                  "dropbox",
+                  "hubspot",
+                  "linear",
+                  "linkedin",
+                  "monday",
+                  "notion",
+                  "pipedrive",
+                  "salesforce",
+                  "wordpress",
+                  "zoom",
+                  "slack"
+                ]
+              }
+            },
+            "availableMcpConnectors": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "enum": [
+                  "fireflies",
+                  "granola",
+                  "databricks",
+                  "coda",
+                  "notion",
+                  "hubspot",
+                  "lucid",
+                  "zoom"
+                ]
+              }
+            },
+            "canManage": {
+              "type": "boolean"
+            },
+            "indexingAvailable": {
+              "type": "boolean"
+            },
+            "viewerMcpAccounts": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "credentialId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "mcpServerId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "needs_reauth"
+                    ]
+                  }
+                },
+                "required": [
+                  "credentialId",
+                  "displayName",
+                  "mcpServerId",
+                  "status"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "viewerAccounts": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "credentialId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "displayName": {
+                    "type": "string",
+                    "maxLength": 512
+                  },
+                  "providerId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "groupId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "optionId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "needs_reauth"
+                    ]
+                  }
+                },
+                "required": [
+                  "credentialId",
+                  "displayName",
+                  "providerId",
+                  "groupId",
+                  "optionId",
+                  "status"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "credentialGroup",
+            "availableProviders",
+            "availableMcpConnectors",
+            "canManage",
+            "indexingAvailable"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getOrganizationDatabricksSetupContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/connected-accounts/databricks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "server": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "url": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 2048
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "oauthClientId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 2048
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "hasOauthClientSecret": {
+                  "type": "boolean"
+                },
+                "enabled": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "id",
+                "name",
+                "url",
+                "oauthClientId",
+                "hasOauthClientSecret",
+                "enabled"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "server"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getWorkspaceOrganizationAccountsContract": {
+      "method": "GET",
+      "path": "/api/workspaces/[id]/organization-accounts",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "organizationId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "organizationName": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "available": {
+              "type": "boolean"
+            },
+            "allowed": {
+              "type": "boolean"
+            },
+            "canManage": {
+              "type": "boolean"
+            },
+            "providers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "mcpProviders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "label": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "label"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "organizationId",
+            "organizationName",
+            "available",
+            "allowed",
+            "canManage",
+            "providers",
+            "mcpProviders"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "inviteOrganizationAccountPeopleContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/connected-accounts/people",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "emails": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 320,
+              "format": "email",
+              "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+            }
+          },
+          "optionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "emails"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "results": {
+              "minItems": 1,
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      "success": {
+                        "type": "boolean",
+                        "const": true
+                      },
+                      "enrollment": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "credentialGroupId": {
+                            "type": "string"
+                          },
+                          "email": {
+                            "type": "string",
+                            "format": "email",
+                            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "invited",
+                              "delivery_failed",
+                              "in_progress",
+                              "completed",
+                              "revoked"
+                            ]
+                          },
+                          "expiresAt": {
+                            "type": "string"
+                          },
+                          "invitedAt": {
+                            "type": "string"
+                          },
+                          "sentAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "completedAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "revokedAt": {
+                            "anyOf": [
+                              {
+                                "type": "string"
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ]
+                          },
+                          "expired": {
+                            "type": "boolean"
+                          },
+                          "createdAt": {
+                            "type": "string"
+                          },
+                          "updatedAt": {
+                            "type": "string"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "credentialGroupId",
+                          "email",
+                          "status",
+                          "expiresAt",
+                          "invitedAt",
+                          "sentAt",
+                          "completedAt",
+                          "revokedAt",
+                          "expired",
+                          "createdAt",
+                          "updatedAt"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "email",
+                      "success",
+                      "enrollment"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                      },
+                      "success": {
+                        "type": "boolean",
+                        "const": false
+                      },
+                      "error": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "email",
+                      "success",
+                      "error"
+                    ],
+                    "additionalProperties": false
+                  }
+                ]
+              }
+            },
+            "sentCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "failedCount": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            }
+          },
+          "required": [
+            "results",
+            "sentCount",
+            "failedCount"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listOrganizationAccountPeopleContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/connected-accounts/people",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 512
+          },
+          "email": {
+            "type": "string",
+            "maxLength": 320
+          },
+          "search": {
+            "type": "string",
+            "maxLength": 320
+          },
+          "optionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "enrollments": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "credentialGroupId": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string",
+                    "format": "email",
+                    "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "invited",
+                      "delivery_failed",
+                      "in_progress",
+                      "completed",
+                      "revoked"
+                    ]
+                  },
+                  "expiresAt": {
+                    "type": "string"
+                  },
+                  "invitedAt": {
+                    "type": "string"
+                  },
+                  "sentAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "completedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "revokedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "expired": {
+                    "type": "boolean"
+                  },
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "updatedAt": {
+                    "type": "string"
+                  },
+                  "connections": {
+                    "maxItems": 108,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "provider": {
+                          "anyOf": [
+                            {
+                              "type": "string",
+                              "enum": [
+                                "gmail",
+                                "google-calendar",
+                                "google-drive",
+                                "google-docs",
+                                "google-forms",
+                                "google-chat",
+                                "google-meet",
+                                "google-sheets",
+                                "microsoft-teams",
+                                "outlook",
+                                "onedrive",
+                                "sharepoint",
+                                "microsoft-excel",
+                                "confluence",
+                                "jira",
+                                "airtable",
+                                "asana",
+                                "attio",
+                                "bitbucket",
+                                "github-repositories",
+                                "box",
+                                "calcom",
+                                "clickup",
+                                "docusign",
+                                "dropbox",
+                                "hubspot",
+                                "linear",
+                                "linkedin",
+                                "monday",
+                                "notion",
+                                "pipedrive",
+                                "salesforce",
+                                "wordpress",
+                                "zoom",
+                                "slack"
+                              ]
+                            },
+                            {
+                              "type": "string",
+                              "const": "gitlab"
+                            }
+                          ]
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "needs_reauth",
+                            "revoked"
+                          ]
+                        },
+                        "count": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "status",
+                        "count"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "mcpConnections": {
+                    "maxItems": 50,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "mcpServerId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 255
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "active",
+                            "needs_reauth",
+                            "revoked"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "mcpServerId",
+                        "name",
+                        "status"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "id",
+                  "credentialGroupId",
+                  "email",
+                  "status",
+                  "expiresAt",
+                  "invitedAt",
+                  "sentAt",
+                  "completedAt",
+                  "revokedAt",
+                  "expired",
+                  "createdAt",
+                  "updatedAt",
+                  "connections",
+                  "mcpConnections"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "enrollments",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listPersonalOrganizationAccountsContract": {
+      "method": "GET",
+      "path": "/api/users/me/organization-accounts",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "cursor": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "accounts": {
+              "maxItems": 50,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "credentialId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "providerId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "kind": {
+                    "type": "string",
+                    "enum": [
+                      "oauth",
+                      "mcp"
+                    ]
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "active",
+                      "needs_reauth",
+                      "revoked"
+                    ]
+                  },
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "organizationName": {
+                    "type": "string"
+                  },
+                  "enrollmentStatus": {
+                    "type": "string",
+                    "enum": [
+                      "invited",
+                      "delivery_failed",
+                      "in_progress",
+                      "completed",
+                      "revoked"
+                    ]
+                  },
+                  "canReconnect": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "credentialId",
+                  "displayName",
+                  "providerId",
+                  "kind",
+                  "status",
+                  "organizationId",
+                  "organizationName",
+                  "enrollmentStatus",
+                  "canReconnect"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "accounts",
+            "nextCursor"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reconnectPersonalOrganizationAccountContract": {
+      "method": "POST",
+      "path": "/api/users/me/organization-accounts/[credentialId]/reconnect",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "credentialId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "credentialId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "oauthCompletionId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "invitationLink": {
+              "type": "string",
+              "format": "uri"
+            },
+            "authorizationUrl": {
+              "type": "string",
+              "maxLength": 8192,
+              "format": "uri"
+            }
+          },
+          "required": [
+            "invitationLink"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "removeOrganizationAccountMcpProviderContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/connected-accounts/mcp-providers/[connectorId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "connectorId": {
+            "type": "string",
+            "enum": [
+              "fireflies",
+              "granola",
+              "databricks",
+              "coda",
+              "notion",
+              "hubspot",
+              "lucid",
+              "zoom"
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "connectorId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "resendOrganizationAccountInvitationContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/connected-accounts/people/[enrollmentId]/resend",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "enrollmentId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "enrollmentId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "optionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "credentialGroupEnrollment": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "credentialGroupId": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "invited",
+                    "delivery_failed",
+                    "in_progress",
+                    "completed",
+                    "revoked"
+                  ]
+                },
+                "expiresAt": {
+                  "type": "string"
+                },
+                "invitedAt": {
+                  "type": "string"
+                },
+                "sentAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revokedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "expired": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "credentialGroupId",
+                "email",
+                "status",
+                "expiresAt",
+                "invitedAt",
+                "sentAt",
+                "completedAt",
+                "revokedAt",
+                "expired",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "credentialGroupEnrollment"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "revokeOrganizationAccountEnrollmentContract": {
+      "method": "DELETE",
+      "path": "/api/organizations/[id]/connected-accounts/people/[enrollmentId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "enrollmentId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "enrollmentId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "credentialGroupEnrollment": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "credentialGroupId": {
+                  "type": "string"
+                },
+                "email": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "invited",
+                    "delivery_failed",
+                    "in_progress",
+                    "completed",
+                    "revoked"
+                  ]
+                },
+                "expiresAt": {
+                  "type": "string"
+                },
+                "invitedAt": {
+                  "type": "string"
+                },
+                "sentAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "revokedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "expired": {
+                  "type": "boolean"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "credentialGroupId",
+                "email",
+                "status",
+                "expiresAt",
+                "invitedAt",
+                "sentAt",
+                "completedAt",
+                "revokedAt",
+                "expired",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "credentialGroupEnrollment"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "startOrganizationAccountConnectionContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/connected-accounts/connect",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "anyOf": [
+          {
+            "type": "object",
+            "properties": {
+              "optionId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "oauthCompletionId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              }
+            },
+            "required": [
+              "optionId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "mcpServerId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "oauthCompletionId": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+              }
+            },
+            "required": [
+              "mcpServerId"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "invitationLink": {
+              "type": "string",
+              "format": "uri"
+            },
+            "authorizationUrl": {
+              "type": "string",
+              "maxLength": 8192,
+              "format": "uri"
+            }
+          },
+          "required": [
+            "invitationLink"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "startOrganizationSlackConfigurationContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/connected-accounts/[groupId]/slack-managed-users",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "groupId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "appId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^A[A-Z0-9]+$"
+          },
+          "teamId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^T[A-Z0-9]+$"
+          },
+          "requiredScopes": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 255
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "authorizationUrl": {
+              "type": "string",
+              "format": "uri"
+            },
+            "state": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "authorizationUrl",
+            "state"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateOrganizationAccountWorkspaceAccessContract": {
+      "method": "PUT",
+      "path": "/api/organizations/[id]/connected-accounts/workspace-access",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "revision": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "maximum": 9007199254740991
+          },
+          "grants": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                },
+                "access": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "const": "all"
+                        }
+                      },
+                      "required": [
+                        "mode"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "mode": {
+                          "type": "string",
+                          "const": "selected"
+                        },
+                        "credentialTypes": {
+                          "minItems": 1,
+                          "maxItems": 44,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "enum": [
+                              "oauth:gmail",
+                              "oauth:google-calendar",
+                              "oauth:google-drive",
+                              "oauth:google-docs",
+                              "oauth:google-forms",
+                              "oauth:google-chat",
+                              "oauth:google-meet",
+                              "oauth:google-sheets",
+                              "oauth:microsoft-teams",
+                              "oauth:outlook",
+                              "oauth:onedrive",
+                              "oauth:sharepoint",
+                              "oauth:microsoft-excel",
+                              "oauth:confluence",
+                              "oauth:jira",
+                              "oauth:airtable",
+                              "oauth:asana",
+                              "oauth:attio",
+                              "oauth:bitbucket",
+                              "oauth:github-repositories",
+                              "oauth:box",
+                              "oauth:calcom",
+                              "oauth:clickup",
+                              "oauth:docusign",
+                              "oauth:dropbox",
+                              "oauth:hubspot",
+                              "oauth:linear",
+                              "oauth:linkedin",
+                              "oauth:monday",
+                              "oauth:notion",
+                              "oauth:pipedrive",
+                              "oauth:salesforce",
+                              "oauth:wordpress",
+                              "oauth:zoom",
+                              "oauth:slack",
+                              "mcp:fireflies",
+                              "mcp:granola",
+                              "mcp:databricks",
+                              "mcp:coda",
+                              "mcp:notion",
+                              "mcp:hubspot",
+                              "mcp:lucid",
+                              "mcp:zoom",
+                              "personal_token:gitlab"
+                            ]
+                          }
+                        }
+                      },
+                      "required": [
+                        "mode",
+                        "credentialTypes"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "workspaceId",
+                "access"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "revision",
+          "grants"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "revision": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "grants": {
+              "maxItems": 1000,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128
+                  },
+                  "access": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "type": "string",
+                            "const": "all"
+                          }
+                        },
+                        "required": [
+                          "mode"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "mode": {
+                            "type": "string",
+                            "const": "selected"
+                          },
+                          "credentialTypes": {
+                            "minItems": 1,
+                            "maxItems": 44,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "enum": [
+                                "oauth:gmail",
+                                "oauth:google-calendar",
+                                "oauth:google-drive",
+                                "oauth:google-docs",
+                                "oauth:google-forms",
+                                "oauth:google-chat",
+                                "oauth:google-meet",
+                                "oauth:google-sheets",
+                                "oauth:microsoft-teams",
+                                "oauth:outlook",
+                                "oauth:onedrive",
+                                "oauth:sharepoint",
+                                "oauth:microsoft-excel",
+                                "oauth:confluence",
+                                "oauth:jira",
+                                "oauth:airtable",
+                                "oauth:asana",
+                                "oauth:attio",
+                                "oauth:bitbucket",
+                                "oauth:github-repositories",
+                                "oauth:box",
+                                "oauth:calcom",
+                                "oauth:clickup",
+                                "oauth:docusign",
+                                "oauth:dropbox",
+                                "oauth:hubspot",
+                                "oauth:linear",
+                                "oauth:linkedin",
+                                "oauth:monday",
+                                "oauth:notion",
+                                "oauth:pipedrive",
+                                "oauth:salesforce",
+                                "oauth:wordpress",
+                                "oauth:zoom",
+                                "oauth:slack",
+                                "mcp:fireflies",
+                                "mcp:granola",
+                                "mcp:databricks",
+                                "mcp:coda",
+                                "mcp:notion",
+                                "mcp:hubspot",
+                                "mcp:lucid",
+                                "mcp:zoom",
+                                "personal_token:gitlab"
+                              ]
+                            }
+                          }
+                        },
+                        "required": [
+                          "mode",
+                          "credentialTypes"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "workspaceId",
+                  "access"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "revision",
+            "grants"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateOrganizationAccountsContract": {
+      "method": "PATCH",
+      "path": "/api/organizations/[id]/connected-accounts/[groupId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "groupId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128
+          }
+        },
+        "required": [
+          "id",
+          "groupId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "options": {
+            "maxItems": 35,
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "enum": [
+                        "gmail",
+                        "google-calendar",
+                        "google-drive",
+                        "google-docs",
+                        "google-forms",
+                        "google-chat",
+                        "google-meet",
+                        "google-sheets",
+                        "microsoft-teams",
+                        "outlook",
+                        "onedrive",
+                        "sharepoint",
+                        "microsoft-excel",
+                        "confluence",
+                        "jira",
+                        "airtable",
+                        "asana",
+                        "attio",
+                        "bitbucket",
+                        "github-repositories",
+                        "box",
+                        "calcom",
+                        "clickup",
+                        "docusign",
+                        "dropbox",
+                        "hubspot",
+                        "linear",
+                        "linkedin",
+                        "monday",
+                        "notion",
+                        "pipedrive",
+                        "salesforce",
+                        "wordpress",
+                        "zoom"
+                      ]
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  },
+                  "required": [
+                    "provider",
+                    "label",
+                    "required"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "provider": {
+                      "type": "string",
+                      "const": "slack"
+                    },
+                    "label": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 100
+                    },
+                    "required": {
+                      "type": "boolean"
+                    },
+                    "slackBotCredentialId": {
+                      "type": "string",
+                      "format": "uuid",
+                      "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                    },
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128
+                    }
+                  },
+                  "required": [
+                    "provider",
+                    "label",
+                    "required"
+                  ],
+                  "additionalProperties": false
+                }
+              ]
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "active",
+              "disabled"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "credentialGroup": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "type": "null"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "options": {
+                  "maxItems": 35,
+                  "type": "array",
+                  "items": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "enum": [
+                              "gmail",
+                              "google-calendar",
+                              "google-drive",
+                              "google-docs",
+                              "google-forms",
+                              "google-chat",
+                              "google-meet",
+                              "google-sheets",
+                              "microsoft-teams",
+                              "outlook",
+                              "onedrive",
+                              "sharepoint",
+                              "microsoft-excel",
+                              "confluence",
+                              "jira",
+                              "airtable",
+                              "asana",
+                              "attio",
+                              "bitbucket",
+                              "github-repositories",
+                              "box",
+                              "calcom",
+                              "clickup",
+                              "docusign",
+                              "dropbox",
+                              "hubspot",
+                              "linear",
+                              "linkedin",
+                              "monday",
+                              "notion",
+                              "pipedrive",
+                              "salesforce",
+                              "wordpress",
+                              "zoom"
+                            ]
+                          },
+                          "label": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "required": {
+                            "type": "boolean"
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "active",
+                              "disabled"
+                            ]
+                          },
+                          "configurationStatus": {
+                            "type": "string",
+                            "enum": [
+                              "not_configured",
+                              "ready",
+                              "needs_update"
+                            ]
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "label",
+                          "required",
+                          "id",
+                          "status",
+                          "configurationStatus"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "const": "slack"
+                          },
+                          "label": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "required": {
+                            "type": "boolean"
+                          },
+                          "slackBotCredentialId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1
+                          },
+                          "status": {
+                            "type": "string",
+                            "enum": [
+                              "active",
+                              "disabled"
+                            ]
+                          },
+                          "configurationStatus": {
+                            "type": "string",
+                            "enum": [
+                              "not_configured",
+                              "ready",
+                              "needs_update"
+                            ]
+                          },
+                          "requiredScopes": {
+                            "maxItems": 100,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 255
+                            }
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "label",
+                          "required",
+                          "id",
+                          "status",
+                          "configurationStatus"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ]
+                  }
+                },
+                "mcpServers": {
+                  "maxItems": 50,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128
+                      },
+                      "name": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "description": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ]
+                      },
+                      "authType": {
+                        "type": "string",
+                        "minLength": 1
+                      },
+                      "enabled": {
+                        "type": "boolean"
+                      },
+                      "managedConnectorId": {
+                        "type": "string",
+                        "enum": [
+                          "fireflies",
+                          "granola",
+                          "databricks",
+                          "coda",
+                          "notion",
+                          "hubspot",
+                          "lucid",
+                          "zoom"
+                        ]
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "description",
+                      "authType",
+                      "enabled",
+                      "managedConnectorId"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "active",
+                    "disabled"
+                  ]
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "name",
+                "description",
+                "options",
+                "mcpServers",
+                "status",
+                "createdAt",
+                "updatedAt",
+                "organizationId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "credentialGroup"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

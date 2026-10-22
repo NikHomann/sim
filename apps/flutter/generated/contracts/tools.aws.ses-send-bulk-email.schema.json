@@ -1,0 +1,126 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-send-bulk-email.ts",
+  "contracts": {
+    "awsSesSendBulkEmailContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/send-bulk-email",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "fromAddress": {
+            "type": "string",
+            "format": "email",
+            "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+          },
+          "templateName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "destinations": {
+            "type": "string",
+            "minLength": 1
+          },
+          "defaultTemplateData": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "configurationSetName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "fromAddress",
+          "templateName",
+          "destinations"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "results": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "messageId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "status": {
+                    "type": "string"
+                  },
+                  "error": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "messageId",
+                  "status",
+                  "error"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "successCount": {
+              "type": "number"
+            },
+            "failureCount": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "results",
+            "successCount",
+            "failureCount"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

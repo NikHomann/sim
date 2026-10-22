@@ -1,0 +1,80 @@
+{
+  "currentWorkflowId": "wf-1",
+  "blocks": {
+    "start-1": {
+      "id": "start-1",
+      "type": "starter",
+      "name": "Start",
+      "position": { "x": 0, "y": 0 },
+      "subBlocks": {
+        "inputFormat": { "id": "inputFormat", "type": "input-format", "value": [{ "name": "query", "type": "string" }] },
+        "startWorkflow": { "id": "startWorkflow", "type": "dropdown", "value": "manual" },
+        "webhookId": { "id": "webhookId", "type": "short-input", "value": null }
+      },
+      "outputs": { "input": "any", "response": { "type": "json", "description": "Payload" } },
+      "enabled": true,
+      "horizontalHandles": true,
+      "layout": { "measuredWidth": 250, "measuredHeight": 96.5 }
+    },
+    "agent-1": {
+      "id": "agent-1",
+      "type": "agent",
+      "name": "Agent 1",
+      "position": { "x": 400.5, "y": -20 },
+      "subBlocks": {
+        "model": { "id": "model", "type": "combobox", "value": "gpt-4o" },
+        "messages": { "id": "messages", "type": "messages-input", "value": [{ "role": "system", "content": "Hi <start.input>" }] },
+        "tools": { "id": "tools", "type": "tool-input", "value": [] }
+      },
+      "outputs": { "content": "string", "tokens": "json" },
+      "enabled": false,
+      "errorEnabled": true,
+      "retry": { "enabled": true, "maxTries": 3, "waitBetweenTriesMs": 1000 },
+      "advancedMode": false,
+      "triggerMode": false,
+      "locked": true,
+      "height": 180,
+      "data": { "parentId": "loop-1", "extent": "parent", "canonicalModes": { "credential": "advanced" }, "futureFlag": 1 },
+      "someFutureKey": { "nested": true }
+    },
+    "loop-1": {
+      "id": "loop-1",
+      "type": "loop",
+      "name": "Loop 1",
+      "position": { "x": 300, "y": -100 },
+      "subBlocks": {},
+      "outputs": {},
+      "enabled": true,
+      "data": { "width": 500, "height": 300, "loopType": "forEach", "collection": ["a", "b"], "count": 5, "type": "loop" }
+    },
+    "parallel-1": {
+      "id": "parallel-1",
+      "type": "parallel",
+      "name": "Parallel 1",
+      "position": { "x": 900, "y": 0 },
+      "subBlocks": {},
+      "outputs": {},
+      "enabled": true,
+      "data": { "width": 500, "height": 300, "parallelType": "count", "count": 3, "batchSize": 2, "type": "parallel" }
+    }
+  },
+  "edges": [
+    { "id": "e1", "source": "start-1", "target": "loop-1", "sourceHandle": "source", "targetHandle": "target", "type": "default", "data": {} },
+    { "id": "e2", "source": "loop-1", "target": "parallel-1", "sourceHandle": "loop-end-source", "targetHandle": "target", "selected": true, "animated": false }
+  ],
+  "loops": {
+    "loop-1": { "id": "loop-1", "nodes": ["agent-1"], "iterations": 5, "loopType": "forEach", "forEachItems": ["a", "b"], "whileCondition": "", "doWhileCondition": "", "enabled": true }
+  },
+  "parallels": {
+    "parallel-1": { "id": "parallel-1", "nodes": [], "count": 3, "parallelType": "count", "batchSize": 2, "enabled": true, "locked": false }
+  },
+  "variables": {
+    "v1": { "id": "v1", "name": "limit", "type": "number", "value": 10 },
+    "v2": { "id": "v2", "name": "cfg", "type": "object", "value": { "a": [1, 2] } }
+  },
+  "lastSaved": 1730000000000,
+  "lastUpdate": 1730000000001,
+  "metadata": { "name": "Fixture", "description": "hand-copied", "exportedAt": "2026-10-21T00:00:00.000Z" },
+  "dragStartPosition": { "id": "agent-1", "x": 1, "y": 2, "parentId": null },
+  "unknownTopLevel": "kept"
+}

@@ -1,0 +1,402 @@
+{
+  "source": "apps/sim/lib/api/contracts/enterprise-owner-claims.ts",
+  "contracts": {
+    "acceptEnterpriseOwnerClaimContract": {
+      "method": "POST",
+      "path": "/api/enterprise-owner-claims/[id]/accept",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          },
+          "disclosedWorkspaceIds": {
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "disclosedCreatesDefaultWorkspace": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "token",
+          "disclosedWorkspaceIds",
+          "disclosedCreatesDefaultWorkspace"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "claim": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "ownerEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+                },
+                "organizationName": {
+                  "type": "string"
+                },
+                "organizationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "provisioningOperationId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "stage": {
+                  "type": "string",
+                  "enum": [
+                    "owner_email",
+                    "owner_acceptance",
+                    "activation",
+                    "stripe_provisioning",
+                    "complete"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "sending",
+                    "awaiting_owner",
+                    "activating",
+                    "provisioning",
+                    "applied",
+                    "failed",
+                    "expired",
+                    "revoked"
+                  ]
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "expiresAt": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string"
+                },
+                "updatedAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "ownerEmail",
+                "organizationName",
+                "organizationId",
+                "provisioningOperationId",
+                "stage",
+                "status",
+                "error",
+                "expiresAt",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false
+            },
+            "redirectPath": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "success",
+            "claim",
+            "redirectPath"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getEnterpriseOwnerClaimContract": {
+      "method": "GET",
+      "path": "/api/enterprise-owner-claims/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "id": {
+              "type": "string"
+            },
+            "ownerEmail": {
+              "type": "string",
+              "format": "email",
+              "pattern": "^(?!\\.)(?!.*\\.\\.)([A-Za-z0-9_'+\\-\\.]*)[A-Za-z0-9_+-]@([A-Za-z0-9][A-Za-z0-9\\-]*\\.)+[A-Za-z]{2,}$"
+            },
+            "organizationName": {
+              "type": "string"
+            },
+            "organizationId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "provisioningOperationId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "stage": {
+              "type": "string",
+              "enum": [
+                "owner_email",
+                "owner_acceptance",
+                "activation",
+                "stripe_provisioning",
+                "complete"
+              ]
+            },
+            "status": {
+              "type": "string",
+              "enum": [
+                "sending",
+                "awaiting_owner",
+                "activating",
+                "provisioning",
+                "applied",
+                "failed",
+                "expired",
+                "revoked"
+              ]
+            },
+            "error": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "expiresAt": {
+              "type": "string"
+            },
+            "createdAt": {
+              "type": "string"
+            },
+            "updatedAt": {
+              "type": "string"
+            },
+            "invoiceAmountUsd": {
+              "type": "number",
+              "exclusiveMinimum": 0
+            },
+            "billingInterval": {
+              "type": "string",
+              "enum": [
+                "month",
+                "year"
+              ]
+            },
+            "seats": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "maximum": 9007199254740991
+            },
+            "invitations": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "workspacePreview": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "workspacesToMove": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "archived": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "id",
+                          "name",
+                          "archived"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "createsDefaultWorkspace": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "workspacesToMove",
+                    "createsDefaultWorkspace"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "acceptanceReview": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "canAccept": {
+                      "type": "boolean"
+                    },
+                    "reason": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "requiredSeats": {
+                      "anyOf": [
+                        {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "canAccept",
+                    "reason",
+                    "requiredSeats"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "id",
+            "ownerEmail",
+            "organizationName",
+            "organizationId",
+            "provisioningOperationId",
+            "stage",
+            "status",
+            "error",
+            "expiresAt",
+            "createdAt",
+            "updatedAt",
+            "invoiceAmountUsd",
+            "billingInterval",
+            "seats",
+            "invitations",
+            "workspacePreview",
+            "acceptanceReview"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

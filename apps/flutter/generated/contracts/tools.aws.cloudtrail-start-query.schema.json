@@ -1,0 +1,105 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudtrail-start-query.ts",
+  "contracts": {
+    "awsCloudtrailStartQueryContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudtrail/start-query",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queryStatement": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "queryAlias": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256,
+            "pattern": "^[a-zA-Z][a-zA-Z0-9._-]*$"
+          },
+          "queryParameters": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 1024
+            }
+          },
+          "deliveryS3Uri": {
+            "type": "string",
+            "maxLength": 1024,
+            "pattern": "^s3:\\/\\/[a-z0-9][.\\-a-z0-9]{1,61}[a-z0-9](\\/.*)?$"
+          },
+          "eventDataStoreOwnerAccountId": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 16,
+            "pattern": "^\\d+$"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "queryId": {
+                  "type": "string"
+                },
+                "eventDataStoreOwnerAccountId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "queryId",
+                "eventDataStoreOwnerAccountId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,95 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudtrail-cancel-query.ts",
+  "contracts": {
+    "awsCloudtrailCancelQueryContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudtrail/cancel-query",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queryId": {
+            "type": "string",
+            "pattern": "^[a-f0-9-]{36}$"
+          },
+          "eventDataStoreOwnerAccountId": {
+            "type": "string",
+            "minLength": 12,
+            "maxLength": 16,
+            "pattern": "^\\d+$"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "queryId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "queryId": {
+                  "type": "string"
+                },
+                "queryStatus": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "eventDataStoreOwnerAccountId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "queryId",
+                "queryStatus",
+                "eventDataStoreOwnerAccountId"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

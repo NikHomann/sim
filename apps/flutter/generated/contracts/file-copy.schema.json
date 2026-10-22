@@ -1,0 +1,412 @@
+{
+  "source": "apps/sim/lib/api/contracts/file-copy.ts",
+  "contracts": {
+    "copyFileItemsContract": {
+      "method": "POST",
+      "path": "/api/files/copy",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "source": {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "type": "object",
+                "properties": {
+                  "entityType": {
+                    "type": "string",
+                    "enum": [
+                      "workspace",
+                      "project"
+                    ],
+                    "description": "Resource scope that owns these files."
+                  },
+                  "entityId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "description": "Identifier of the owning workspace or Project."
+                  }
+                },
+                "required": [
+                  "entityType",
+                  "entityId"
+                ],
+                "additionalProperties": false,
+                "description": "Owner from which to read the selected files and folders."
+              },
+              "fileIds": {
+                "default": [],
+                "description": "Identifiers of individual files to copy.",
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              },
+              "folderIds": {
+                "default": [],
+                "description": "Identifiers of folders to copy with their active descendants and files.",
+                "maxItems": 1000,
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 200
+                }
+              }
+            },
+            "required": [
+              "owner"
+            ],
+            "additionalProperties": false,
+            "description": "Selection to read under the source owner."
+          },
+          "destination": {
+            "type": "object",
+            "properties": {
+              "owner": {
+                "type": "object",
+                "properties": {
+                  "entityType": {
+                    "type": "string",
+                    "enum": [
+                      "workspace",
+                      "project"
+                    ],
+                    "description": "Resource scope that owns these files."
+                  },
+                  "entityId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200,
+                    "description": "Identifier of the owning workspace or Project."
+                  }
+                },
+                "required": [
+                  "entityType",
+                  "entityId"
+                ],
+                "additionalProperties": false,
+                "description": "Owner in which to create the copied files and folders."
+              },
+              "folderId": {
+                "default": null,
+                "description": "Existing destination folder identifier. Omit or use null for the owner root.",
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "owner"
+            ],
+            "additionalProperties": false,
+            "description": "Destination requiring file write access."
+          }
+        },
+        "required": [
+          "source",
+          "destination"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the new file."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the copied file, including its extension."
+                  },
+                  "size": {
+                    "type": "number",
+                    "description": "Current content size in bytes."
+                  },
+                  "type": {
+                    "type": "string",
+                    "description": "MIME type of the copied file."
+                  },
+                  "width": {
+                    "description": "Known image width in pixels, when available.",
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "height": {
+                    "description": "Known image height in pixels, when available.",
+                    "anyOf": [
+                      {
+                        "type": "integer",
+                        "exclusiveMinimum": 0,
+                        "maximum": 9007199254740991
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "uploadedBy": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "User who performed the copy, when available."
+                  },
+                  "folderId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Containing folder identifier, or null at the owner root."
+                  },
+                  "folderPath": {
+                    "description": "Containing folder path, or null at the owner root.",
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "deletedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Archive time, or null for an active file."
+                  },
+                  "uploadedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "Time the new file was created."
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "Time the file metadata last changed."
+                  },
+                  "contentUpdatedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Time the current file content was written."
+                  },
+                  "revision": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Current content revision for subsequent edits."
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project"
+                        ],
+                        "description": "Resource scope that owns these files."
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "Identifier of the owning workspace or Project."
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Canonical destination owner of the copied file."
+                  }
+                },
+                "required": [
+                  "id",
+                  "name",
+                  "size",
+                  "type",
+                  "uploadedBy",
+                  "folderId",
+                  "deletedAt",
+                  "uploadedAt",
+                  "updatedAt",
+                  "contentUpdatedAt",
+                  "revision",
+                  "owner"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Created files with new identities."
+            },
+            "folders": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "description": "Identifier of the new folder."
+                  },
+                  "userId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "User who performed the copy, when available."
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Name of the copied folder."
+                  },
+                  "parentId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Parent folder identifier, or null at the owner root."
+                  },
+                  "path": {
+                    "type": "string",
+                    "description": "Path of the copied folder within its owner."
+                  },
+                  "sortOrder": {
+                    "type": "number",
+                    "description": "Display ordering value within the parent folder."
+                  },
+                  "deletedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Archive time, or null for an active folder."
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "Time the new folder was created."
+                  },
+                  "updatedAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "Time the folder metadata last changed."
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project"
+                        ],
+                        "description": "Resource scope that owns these files."
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200,
+                        "description": "Identifier of the owning workspace or Project."
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false,
+                    "description": "Canonical destination owner of the copied folder."
+                  }
+                },
+                "required": [
+                  "id",
+                  "userId",
+                  "name",
+                  "parentId",
+                  "path",
+                  "sortOrder",
+                  "deletedAt",
+                  "createdAt",
+                  "updatedAt",
+                  "owner"
+                ],
+                "additionalProperties": false
+              },
+              "description": "Created folders in their new hierarchy."
+            }
+          },
+          "required": [
+            "files",
+            "folders"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,79 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/sqs-set-queue-attributes.ts",
+  "contracts": {
+    "awsSqsSetQueueAttributesContract": {
+      "method": "POST",
+      "path": "/api/tools/sqs/set-queue-attributes",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "queueUrl": {
+            "type": "string",
+            "minLength": 1
+          },
+          "attributes": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "enum": [
+                "ContentBasedDeduplication",
+                "DeduplicationScope",
+                "DelaySeconds",
+                "FifoThroughputLimit",
+                "KmsDataKeyReusePeriodSeconds",
+                "KmsMasterKeyId",
+                "MaximumMessageSize",
+                "MessageRetentionPeriod",
+                "Policy",
+                "ReceiveMessageWaitTimeSeconds",
+                "RedriveAllowPolicy",
+                "RedrivePolicy",
+                "SqsManagedSseEnabled",
+                "VisibilityTimeout"
+              ]
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "queueUrl",
+          "attributes"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "message"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

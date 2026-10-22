@@ -1,0 +1,2928 @@
+{
+  "source": "apps/sim/lib/api/contracts/copilot.ts",
+  "contracts": {
+    "addCopilotChatResourceContract": {
+      "method": "POST",
+      "path": "/api/copilot/chat/resources",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "resource": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "search",
+                  "sources",
+                  "table",
+                  "file",
+                  "dashboard",
+                  "test",
+                  "workflow",
+                  "knowledgebase",
+                  "folder",
+                  "filefolder",
+                  "task",
+                  "log",
+                  "integration"
+                ]
+              },
+              "id": {
+                "type": "string",
+                "minLength": 1
+              },
+              "owner": {
+                "type": "object",
+                "properties": {
+                  "entityType": {
+                    "type": "string",
+                    "enum": [
+                      "workspace",
+                      "project",
+                      "organization",
+                      "user"
+                    ]
+                  },
+                  "entityId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "entityType",
+                  "entityId"
+                ],
+                "additionalProperties": false
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "workspaceName": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "path": {
+                "type": "string"
+              },
+              "viewId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "executionId": {
+                "type": "string"
+              },
+              "search": {
+                "type": "object",
+                "properties": {
+                  "query": {
+                    "type": "string",
+                    "maxLength": 2000
+                  },
+                  "scope": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "organization"
+                          },
+                          "organizationId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "organizationId"
+                        ]
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "workspace"
+                          },
+                          "workspaceId": {
+                            "type": "string",
+                            "format": "uuid",
+                            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "workspaceId"
+                        ]
+                      }
+                    ]
+                  },
+                  "filters": {
+                    "type": "object",
+                    "properties": {
+                      "startDate": {
+                        "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "endDate": {
+                        "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "sortBy": {
+                        "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                        "type": "string",
+                        "enum": [
+                          "relevance",
+                          "newest",
+                          "oldest"
+                        ]
+                      },
+                      "source": {
+                        "description": "Connector type or upload source; narrows the selected search scope.",
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 100
+                      },
+                      "modifiedAfter": {
+                        "description": "ISO datetime; restricts results to documents modified after this time.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "modifiedBefore": {
+                        "description": "ISO datetime; restricts results to documents modified before this time.",
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                      },
+                      "documentIds": {
+                        "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                        "minItems": 1,
+                        "maxItems": 20,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 4000
+                        }
+                      }
+                    }
+                  },
+                  "topK": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "maximum": 50
+                  },
+                  "nativeQueries": {
+                    "minItems": 1,
+                    "maxItems": 9,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "provider": {
+                          "type": "string",
+                          "enum": [
+                            "google_drive",
+                            "gmail",
+                            "google_meet",
+                            "zoom",
+                            "google_calendar",
+                            "slack",
+                            "jira",
+                            "confluence",
+                            "github",
+                            "gitlab",
+                            "linear",
+                            "lucid",
+                            "hubspot",
+                            "fireflies",
+                            "granola",
+                            "notion",
+                            "coda"
+                          ]
+                        },
+                        "query": {
+                          "type": "string",
+                          "maxLength": 2000
+                        },
+                        "accountId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 200
+                        },
+                        "kind": {
+                          "type": "string",
+                          "enum": [
+                            "issues",
+                            "code",
+                            "repositories",
+                            "commits",
+                            "merge_requests",
+                            "wiki",
+                            "contacts",
+                            "companies",
+                            "deals",
+                            "tickets",
+                            "lucidchart",
+                            "lucidspark",
+                            "transcript",
+                            "smart_notes",
+                            "meeting"
+                          ]
+                        },
+                        "project": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 300
+                        },
+                        "browse": {
+                          "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                          "type": "string",
+                          "enum": [
+                            "folder",
+                            "private",
+                            "shared",
+                            "favorites",
+                            "recent"
+                          ]
+                        },
+                        "cursor": {
+                          "type": "string",
+                          "maxLength": 4000
+                        },
+                        "termClauses": {
+                          "maxItems": 10,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "maxLength": 500
+                          }
+                        },
+                        "modifiers": {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        "keywordOnly": {
+                          "type": "boolean"
+                        }
+                      },
+                      "required": [
+                        "provider",
+                        "query"
+                      ],
+                      "additionalProperties": false
+                    }
+                  }
+                },
+                "required": [
+                  "query",
+                  "scope"
+                ]
+              },
+              "sources": {
+                "type": "object",
+                "properties": {
+                  "messageId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  },
+                  "requestId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 200
+                  }
+                },
+                "required": [
+                  "messageId"
+                ]
+              },
+              "title": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "type",
+              "id",
+              "title"
+            ]
+          },
+          "clearViewId": {
+            "type": "boolean",
+            "const": true
+          }
+        },
+        "required": [
+          "chatId",
+          "resource"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "search",
+                      "sources",
+                      "table",
+                      "file",
+                      "dashboard",
+                      "test",
+                      "workflow",
+                      "knowledgebase",
+                      "folder",
+                      "filefolder",
+                      "task",
+                      "log",
+                      "integration"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project",
+                          "organization",
+                          "user"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  },
+                  "workspaceName": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "viewId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "executionId": {
+                    "type": "string"
+                  },
+                  "search": {
+                    "type": "object",
+                    "properties": {
+                      "query": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "organization"
+                              },
+                              "organizationId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "organizationId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "workspace"
+                              },
+                              "workspaceId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "filters": {
+                        "type": "object",
+                        "properties": {
+                          "startDate": {
+                            "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "endDate": {
+                            "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "sortBy": {
+                            "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                            "type": "string",
+                            "enum": [
+                              "relevance",
+                              "newest",
+                              "oldest"
+                            ]
+                          },
+                          "source": {
+                            "description": "Connector type or upload source; narrows the selected search scope.",
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "modifiedAfter": {
+                            "description": "ISO datetime; restricts results to documents modified after this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "modifiedBefore": {
+                            "description": "ISO datetime; restricts results to documents modified before this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "documentIds": {
+                            "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4000
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "topK": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50
+                      },
+                      "nativeQueries": {
+                        "minItems": 1,
+                        "maxItems": 9,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "provider": {
+                              "type": "string",
+                              "enum": [
+                                "google_drive",
+                                "gmail",
+                                "google_meet",
+                                "zoom",
+                                "google_calendar",
+                                "slack",
+                                "jira",
+                                "confluence",
+                                "github",
+                                "gitlab",
+                                "linear",
+                                "lucid",
+                                "hubspot",
+                                "fireflies",
+                                "granola",
+                                "notion",
+                                "coda"
+                              ]
+                            },
+                            "query": {
+                              "type": "string",
+                              "maxLength": 2000
+                            },
+                            "accountId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "issues",
+                                "code",
+                                "repositories",
+                                "commits",
+                                "merge_requests",
+                                "wiki",
+                                "contacts",
+                                "companies",
+                                "deals",
+                                "tickets",
+                                "lucidchart",
+                                "lucidspark",
+                                "transcript",
+                                "smart_notes",
+                                "meeting"
+                              ]
+                            },
+                            "project": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300
+                            },
+                            "browse": {
+                              "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                              "type": "string",
+                              "enum": [
+                                "folder",
+                                "private",
+                                "shared",
+                                "favorites",
+                                "recent"
+                              ]
+                            },
+                            "cursor": {
+                              "type": "string",
+                              "maxLength": 4000
+                            },
+                            "termClauses": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "maxLength": 500
+                              }
+                            },
+                            "modifiers": {
+                              "type": "string",
+                              "maxLength": 1000
+                            },
+                            "keywordOnly": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "provider",
+                            "query"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "query",
+                      "scope"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sources": {
+                    "type": "object",
+                    "properties": {
+                      "messageId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "requestId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "messageId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "copilotChatAbortContract": {
+      "method": "POST",
+      "path": "/api/copilot/chat/abort",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "streamId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chatId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "streamId"
+        ]
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "traceparent": {
+            "type": "string",
+            "maxLength": 512
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "aborted": {
+              "type": "boolean"
+            },
+            "settled": {
+              "type": "boolean"
+            },
+            "forceReleased": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "aborted",
+            "settled"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "copilotChatSteerContract": {
+      "method": "POST",
+      "path": "/api/copilot/chat/steer",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "streamId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chatId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "steeringId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 32768
+          }
+        },
+        "required": [
+          "streamId",
+          "chatId",
+          "steeringId",
+          "content"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "ok": {
+              "type": "boolean"
+            },
+            "queued": {
+              "type": "boolean"
+            },
+            "goStatus": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "ok",
+            "queued"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "copilotChatStopContract": {
+      "method": "POST",
+      "path": "/api/copilot/chat/stop",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string"
+          },
+          "streamId": {
+            "type": "string"
+          },
+          "content": {
+            "default": "",
+            "type": "string"
+          },
+          "contentBlocks": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "enum": [
+                        "session",
+                        "text",
+                        "tool",
+                        "span",
+                        "resource",
+                        "run",
+                        "error",
+                        "complete"
+                      ]
+                    },
+                    {
+                      "type": "string",
+                      "const": "task"
+                    }
+                  ]
+                },
+                "lane": {
+                  "type": "string",
+                  "enum": [
+                    "main",
+                    "subagent"
+                  ]
+                },
+                "agent": {
+                  "type": "string"
+                },
+                "channel": {
+                  "type": "string",
+                  "enum": [
+                    "assistant",
+                    "thinking"
+                  ]
+                },
+                "phase": {
+                  "type": "string",
+                  "enum": [
+                    "call",
+                    "args_delta",
+                    "result"
+                  ]
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "subagent",
+                    "structured_result",
+                    "subagent_result"
+                  ]
+                },
+                "lifecycle": {
+                  "type": "string",
+                  "enum": [
+                    "start",
+                    "end"
+                  ]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "complete",
+                    "error",
+                    "cancelled"
+                  ]
+                },
+                "content": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "toolCall": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "state": {
+                      "type": "string",
+                      "enum": [
+                        "success",
+                        "error",
+                        "cancelled",
+                        "skipped",
+                        "rejected",
+                        "pending",
+                        "executing",
+                        "awaiting_approval",
+                        "interrupted"
+                      ]
+                    },
+                    "activityDescription": {
+                      "type": "string"
+                    },
+                    "params": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "success": {
+                          "type": "boolean"
+                        },
+                        "output": {},
+                        "error": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "success"
+                      ]
+                    },
+                    "error": {
+                      "type": "string"
+                    },
+                    "calledBy": {
+                      "type": "string"
+                    },
+                    "durationMs": {
+                      "type": "number"
+                    },
+                    "display": {
+                      "type": "object",
+                      "properties": {
+                        "title": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "state"
+                  ]
+                },
+                "task": {
+                  "type": "object",
+                  "properties": {
+                    "taskId": {
+                      "type": "string"
+                    },
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "timer",
+                        "workflow_run"
+                      ]
+                    },
+                    "target": {
+                      "type": "object",
+                      "propertyNames": {
+                        "type": "string"
+                      },
+                      "additionalProperties": {}
+                    },
+                    "note": {
+                      "type": "string"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "completed",
+                        "failed",
+                        "stopped",
+                        "expired"
+                      ]
+                    },
+                    "summary": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "taskId",
+                    "kind",
+                    "target",
+                    "note"
+                  ]
+                },
+                "timestamp": {
+                  "type": "number"
+                },
+                "endedAt": {
+                  "type": "number"
+                },
+                "error": {
+                  "type": "string"
+                },
+                "parentToolCallId": {
+                  "type": "string"
+                },
+                "spanId": {
+                  "type": "string"
+                },
+                "parentSpanId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type"
+              ]
+            }
+          },
+          "requestId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "chatId",
+          "streamId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "copilotChatStreamContract": {
+      "method": "GET",
+      "path": "/api/copilot/chat/stream",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "streamId": {
+            "default": "",
+            "type": "string"
+          },
+          "after": {
+            "default": "",
+            "type": "string"
+          },
+          "batch": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "ring",
+              "log"
+            ]
+          }
+        }
+      },
+      "response": {
+        "mode": "stream"
+      }
+    },
+    "copilotConfirmContract": {
+      "method": "POST",
+      "path": "/api/copilot/confirm",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "toolCallId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "executionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "background",
+              "success",
+              "error",
+              "cancelled"
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "data": {}
+        },
+        "required": [
+          "toolCallId",
+          "status"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "message": {
+              "type": "string"
+            },
+            "toolCallId": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "message",
+            "toolCallId",
+            "status"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "copilotToolPermissionContract": {
+      "method": "POST",
+      "path": "/api/copilot/tool-permission",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "decisions": {
+            "minItems": 1,
+            "maxItems": 50,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "toolCallId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "decision": {
+                  "type": "string",
+                  "enum": [
+                    "allow",
+                    "allow_chat",
+                    "always_allow",
+                    "skip"
+                  ]
+                }
+              },
+              "required": [
+                "toolCallId",
+                "decision"
+              ]
+            }
+          }
+        },
+        "required": [
+          "decisions"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "results": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "toolCallId": {
+                    "type": "string"
+                  },
+                  "decision": {
+                    "type": "string",
+                    "enum": [
+                      "allow",
+                      "allow_chat",
+                      "always_allow",
+                      "skip"
+                    ]
+                  },
+                  "applied": {
+                    "type": "boolean"
+                  }
+                },
+                "required": [
+                  "toolCallId",
+                  "decision",
+                  "applied"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "results"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createWorkflowCopilotChatContract": {
+      "method": "POST",
+      "path": "/api/copilot/chats",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "workflowId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId",
+          "workflowId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "id": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "success",
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteCopilotApiKeyContract": {
+      "method": "DELETE",
+      "path": "/api/copilot/api-keys",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteCopilotChatContract": {
+      "method": "DELETE",
+      "path": "/api/copilot/chat/delete",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "chatId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            }
+          },
+          "required": [
+            "success"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "generateCopilotApiKeyContract": {
+      "method": "POST",
+      "path": "/api/copilot/api-keys/generate",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "key": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "apiKey": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "apiKey"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "key"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listCopilotApiKeysContract": {
+      "method": "GET",
+      "path": "/api/copilot/api-keys",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "keys": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "displayKey": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "createdAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "lastUsed": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "displayKey",
+                  "name",
+                  "createdAt",
+                  "lastUsed"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "keys"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listCopilotChatsContract": {
+      "method": "GET",
+      "path": "/api/copilot/chats",
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "chats": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "title": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "workflowId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "workspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "activeStreamId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "updatedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "title",
+                  "activeStreamId",
+                  "updatedAt"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "chats"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "removeCopilotChatResourceContract": {
+      "method": "DELETE",
+      "path": "/api/copilot/chat/resources",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "owner": {
+            "type": "object",
+            "properties": {
+              "entityType": {
+                "type": "string",
+                "enum": [
+                  "workspace",
+                  "project",
+                  "organization",
+                  "user"
+                ]
+              },
+              "entityId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 200
+              }
+            },
+            "required": [
+              "entityType",
+              "entityId"
+            ],
+            "additionalProperties": false
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "resourceType": {
+            "type": "string",
+            "enum": [
+              "search",
+              "sources",
+              "table",
+              "file",
+              "dashboard",
+              "test",
+              "workflow",
+              "knowledgebase",
+              "folder",
+              "filefolder",
+              "task",
+              "log",
+              "integration"
+            ]
+          },
+          "resourceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "chatId": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "resourceType",
+          "resourceId",
+          "chatId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "search",
+                      "sources",
+                      "table",
+                      "file",
+                      "dashboard",
+                      "test",
+                      "workflow",
+                      "knowledgebase",
+                      "folder",
+                      "filefolder",
+                      "task",
+                      "log",
+                      "integration"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project",
+                          "organization",
+                          "user"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  },
+                  "workspaceName": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "viewId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "executionId": {
+                    "type": "string"
+                  },
+                  "search": {
+                    "type": "object",
+                    "properties": {
+                      "query": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "organization"
+                              },
+                              "organizationId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "organizationId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "workspace"
+                              },
+                              "workspaceId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "filters": {
+                        "type": "object",
+                        "properties": {
+                          "startDate": {
+                            "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "endDate": {
+                            "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "sortBy": {
+                            "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                            "type": "string",
+                            "enum": [
+                              "relevance",
+                              "newest",
+                              "oldest"
+                            ]
+                          },
+                          "source": {
+                            "description": "Connector type or upload source; narrows the selected search scope.",
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "modifiedAfter": {
+                            "description": "ISO datetime; restricts results to documents modified after this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "modifiedBefore": {
+                            "description": "ISO datetime; restricts results to documents modified before this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "documentIds": {
+                            "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4000
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "topK": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50
+                      },
+                      "nativeQueries": {
+                        "minItems": 1,
+                        "maxItems": 9,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "provider": {
+                              "type": "string",
+                              "enum": [
+                                "google_drive",
+                                "gmail",
+                                "google_meet",
+                                "zoom",
+                                "google_calendar",
+                                "slack",
+                                "jira",
+                                "confluence",
+                                "github",
+                                "gitlab",
+                                "linear",
+                                "lucid",
+                                "hubspot",
+                                "fireflies",
+                                "granola",
+                                "notion",
+                                "coda"
+                              ]
+                            },
+                            "query": {
+                              "type": "string",
+                              "maxLength": 2000
+                            },
+                            "accountId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "issues",
+                                "code",
+                                "repositories",
+                                "commits",
+                                "merge_requests",
+                                "wiki",
+                                "contacts",
+                                "companies",
+                                "deals",
+                                "tickets",
+                                "lucidchart",
+                                "lucidspark",
+                                "transcript",
+                                "smart_notes",
+                                "meeting"
+                              ]
+                            },
+                            "project": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300
+                            },
+                            "browse": {
+                              "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                              "type": "string",
+                              "enum": [
+                                "folder",
+                                "private",
+                                "shared",
+                                "favorites",
+                                "recent"
+                              ]
+                            },
+                            "cursor": {
+                              "type": "string",
+                              "maxLength": 4000
+                            },
+                            "termClauses": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "maxLength": 500
+                              }
+                            },
+                            "modifiers": {
+                              "type": "string",
+                              "maxLength": 1000
+                            },
+                            "keywordOnly": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "provider",
+                            "query"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "query",
+                      "scope"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sources": {
+                    "type": "object",
+                    "properties": {
+                      "messageId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "requestId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "messageId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "resources"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "reorderCopilotChatResourcesContract": {
+      "method": "PATCH",
+      "path": "/api/copilot/chat/resources",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string"
+          },
+          "resources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "enum": [
+                    "search",
+                    "sources",
+                    "table",
+                    "file",
+                    "dashboard",
+                    "test",
+                    "workflow",
+                    "knowledgebase",
+                    "folder",
+                    "filefolder",
+                    "task",
+                    "log",
+                    "integration"
+                  ]
+                },
+                "id": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "owner": {
+                  "type": "object",
+                  "properties": {
+                    "entityType": {
+                      "type": "string",
+                      "enum": [
+                        "workspace",
+                        "project",
+                        "organization",
+                        "user"
+                      ]
+                    },
+                    "entityId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "entityType",
+                    "entityId"
+                  ],
+                  "additionalProperties": false
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Unique workspace identifier."
+                },
+                "workspaceName": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "path": {
+                  "type": "string"
+                },
+                "viewId": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "executionId": {
+                  "type": "string"
+                },
+                "search": {
+                  "type": "object",
+                  "properties": {
+                    "query": {
+                      "type": "string",
+                      "maxLength": 2000
+                    },
+                    "scope": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "organization"
+                            },
+                            "organizationId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "organizationId"
+                          ]
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "workspace"
+                            },
+                            "workspaceId": {
+                              "type": "string",
+                              "format": "uuid",
+                              "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "workspaceId"
+                          ]
+                        }
+                      ]
+                    },
+                    "filters": {
+                      "type": "object",
+                      "properties": {
+                        "startDate": {
+                          "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "endDate": {
+                          "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "sortBy": {
+                          "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                          "type": "string",
+                          "enum": [
+                            "relevance",
+                            "newest",
+                            "oldest"
+                          ]
+                        },
+                        "source": {
+                          "description": "Connector type or upload source; narrows the selected search scope.",
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 100
+                        },
+                        "modifiedAfter": {
+                          "description": "ISO datetime; restricts results to documents modified after this time.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "modifiedBefore": {
+                          "description": "ISO datetime; restricts results to documents modified before this time.",
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                        },
+                        "documentIds": {
+                          "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                          "minItems": 1,
+                          "maxItems": 20,
+                          "type": "array",
+                          "items": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 4000
+                          }
+                        }
+                      }
+                    },
+                    "topK": {
+                      "type": "integer",
+                      "minimum": 1,
+                      "maximum": 50
+                    },
+                    "nativeQueries": {
+                      "minItems": 1,
+                      "maxItems": 9,
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "provider": {
+                            "type": "string",
+                            "enum": [
+                              "google_drive",
+                              "gmail",
+                              "google_meet",
+                              "zoom",
+                              "google_calendar",
+                              "slack",
+                              "jira",
+                              "confluence",
+                              "github",
+                              "gitlab",
+                              "linear",
+                              "lucid",
+                              "hubspot",
+                              "fireflies",
+                              "granola",
+                              "notion",
+                              "coda"
+                            ]
+                          },
+                          "query": {
+                            "type": "string",
+                            "maxLength": 2000
+                          },
+                          "accountId": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 200
+                          },
+                          "kind": {
+                            "type": "string",
+                            "enum": [
+                              "issues",
+                              "code",
+                              "repositories",
+                              "commits",
+                              "merge_requests",
+                              "wiki",
+                              "contacts",
+                              "companies",
+                              "deals",
+                              "tickets",
+                              "lucidchart",
+                              "lucidspark",
+                              "transcript",
+                              "smart_notes",
+                              "meeting"
+                            ]
+                          },
+                          "project": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 300
+                          },
+                          "browse": {
+                            "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                            "type": "string",
+                            "enum": [
+                              "folder",
+                              "private",
+                              "shared",
+                              "favorites",
+                              "recent"
+                            ]
+                          },
+                          "cursor": {
+                            "type": "string",
+                            "maxLength": 4000
+                          },
+                          "termClauses": {
+                            "maxItems": 10,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "maxLength": 500
+                            }
+                          },
+                          "modifiers": {
+                            "type": "string",
+                            "maxLength": 1000
+                          },
+                          "keywordOnly": {
+                            "type": "boolean"
+                          }
+                        },
+                        "required": [
+                          "provider",
+                          "query"
+                        ],
+                        "additionalProperties": false
+                      }
+                    }
+                  },
+                  "required": [
+                    "query",
+                    "scope"
+                  ]
+                },
+                "sources": {
+                  "type": "object",
+                  "properties": {
+                    "messageId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    },
+                    "requestId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 200
+                    }
+                  },
+                  "required": [
+                    "messageId"
+                  ]
+                },
+                "title": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "type",
+                "id",
+                "title"
+              ]
+            }
+          }
+        },
+        "required": [
+          "chatId",
+          "resources"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "search",
+                      "sources",
+                      "table",
+                      "file",
+                      "dashboard",
+                      "test",
+                      "workflow",
+                      "knowledgebase",
+                      "folder",
+                      "filefolder",
+                      "task",
+                      "log",
+                      "integration"
+                    ]
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "owner": {
+                    "type": "object",
+                    "properties": {
+                      "entityType": {
+                        "type": "string",
+                        "enum": [
+                          "workspace",
+                          "project",
+                          "organization",
+                          "user"
+                        ]
+                      },
+                      "entityId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "entityType",
+                      "entityId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  },
+                  "workspaceName": {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "viewId": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "executionId": {
+                    "type": "string"
+                  },
+                  "search": {
+                    "type": "object",
+                    "properties": {
+                      "query": {
+                        "type": "string",
+                        "maxLength": 2000
+                      },
+                      "scope": {
+                        "oneOf": [
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "organization"
+                              },
+                              "organizationId": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 200
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "organizationId"
+                            ],
+                            "additionalProperties": false
+                          },
+                          {
+                            "type": "object",
+                            "properties": {
+                              "kind": {
+                                "type": "string",
+                                "const": "workspace"
+                              },
+                              "workspaceId": {
+                                "type": "string",
+                                "format": "uuid",
+                                "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+                              }
+                            },
+                            "required": [
+                              "kind",
+                              "workspaceId"
+                            ],
+                            "additionalProperties": false
+                          }
+                        ]
+                      },
+                      "filters": {
+                        "type": "object",
+                        "properties": {
+                          "startDate": {
+                            "description": "Live search: inclusive lower date bound. For a specific day or bounded date range, always supply endDate too, including exact-title lookups; startDate alone means an open-ended \"since\" search. Calendar, Google Meet, Zoom, Fireflies and Granola use event or meeting start; Gmail/Slack use message time; other sources use modification time. Include the user’s timezone offset.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "endDate": {
+                            "description": "Live search: exclusive upper date bound. Include this with startDate whenever the request names a specific day or bounded range, even if the title uniquely identifies a result. For whole days, startDate is local midnight on the first included day and endDate is local midnight after the final included day. Preserve the timezone offset at each boundary.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "sortBy": {
+                            "description": "Live search ordering by relevance or the provider date used by startDate/endDate. Date sorting covers retrieved results; inspect partial coverage before claiming latest or earliest overall. Without search terms or dates, newest or oldest lists items up to now.",
+                            "type": "string",
+                            "enum": [
+                              "relevance",
+                              "newest",
+                              "oldest"
+                            ]
+                          },
+                          "source": {
+                            "description": "Connector type or upload source; narrows the selected search scope.",
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 100
+                          },
+                          "modifiedAfter": {
+                            "description": "ISO datetime; restricts results to documents modified after this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "modifiedBefore": {
+                            "description": "ISO datetime; restricts results to documents modified before this time.",
+                            "type": "string",
+                            "format": "date-time",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z|([+-](?:[01]\\d|2[0-3]):[0-5]\\d)))$"
+                          },
+                          "documentIds": {
+                            "description": "Document IDs returned by search or selected by the user; narrows retrieval to these documents.",
+                            "minItems": 1,
+                            "maxItems": 20,
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 4000
+                            }
+                          }
+                        },
+                        "additionalProperties": false
+                      },
+                      "topK": {
+                        "type": "integer",
+                        "minimum": 1,
+                        "maximum": 50
+                      },
+                      "nativeQueries": {
+                        "minItems": 1,
+                        "maxItems": 9,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "provider": {
+                              "type": "string",
+                              "enum": [
+                                "google_drive",
+                                "gmail",
+                                "google_meet",
+                                "zoom",
+                                "google_calendar",
+                                "slack",
+                                "jira",
+                                "confluence",
+                                "github",
+                                "gitlab",
+                                "linear",
+                                "lucid",
+                                "hubspot",
+                                "fireflies",
+                                "granola",
+                                "notion",
+                                "coda"
+                              ]
+                            },
+                            "query": {
+                              "type": "string",
+                              "maxLength": 2000
+                            },
+                            "accountId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 200
+                            },
+                            "kind": {
+                              "type": "string",
+                              "enum": [
+                                "issues",
+                                "code",
+                                "repositories",
+                                "commits",
+                                "merge_requests",
+                                "wiki",
+                                "contacts",
+                                "companies",
+                                "deals",
+                                "tickets",
+                                "lucidchart",
+                                "lucidspark",
+                                "transcript",
+                                "smart_notes",
+                                "meeting"
+                              ]
+                            },
+                            "project": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 300
+                            },
+                            "browse": {
+                              "description": "Queryless discovery: Lucid folder lists one folder page (omit project for root; otherwise use a returned numeric folder ID). Notion private/shared list sidebar pages, favorites lists pinned pages, recent lists recently viewed pages, not recently modified pages. These lists are not an exhaustive workspace inventory. Follow the returned cursor with the same account, browse mode, project, filters and topK.",
+                              "type": "string",
+                              "enum": [
+                                "folder",
+                                "private",
+                                "shared",
+                                "favorites",
+                                "recent"
+                              ]
+                            },
+                            "cursor": {
+                              "type": "string",
+                              "maxLength": 4000
+                            },
+                            "termClauses": {
+                              "maxItems": 10,
+                              "type": "array",
+                              "items": {
+                                "type": "string",
+                                "maxLength": 500
+                              }
+                            },
+                            "modifiers": {
+                              "type": "string",
+                              "maxLength": 1000
+                            },
+                            "keywordOnly": {
+                              "type": "boolean"
+                            }
+                          },
+                          "required": [
+                            "provider",
+                            "query"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "query",
+                      "scope"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "sources": {
+                    "type": "object",
+                    "properties": {
+                      "messageId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      },
+                      "requestId": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 200
+                      }
+                    },
+                    "required": [
+                      "messageId"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "title": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "type",
+                  "id",
+                  "title"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "success",
+            "resources"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "submitCopilotFeedbackContract": {
+      "method": "POST",
+      "path": "/api/copilot/feedback",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "chatId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "userQuery": {
+            "type": "string",
+            "minLength": 1
+          },
+          "agentResponse": {
+            "type": "string",
+            "minLength": 1
+          },
+          "isPositiveFeedback": {
+            "type": "boolean"
+          },
+          "feedback": {
+            "type": "string"
+          },
+          "workflowYaml": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "chatId",
+          "userQuery",
+          "agentResponse",
+          "isPositiveFeedback"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "feedbackId": {
+              "type": "string"
+            },
+            "message": {
+              "type": "string"
+            },
+            "metadata": {
+              "type": "object",
+              "properties": {
+                "requestId": {
+                  "type": "string"
+                },
+                "duration": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "requestId",
+                "duration"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "feedbackId",
+            "message",
+            "metadata"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "validateCopilotApiKeyContract": {
+      "method": "POST",
+      "path": "/api/copilot/api-keys/validate",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "purpose": {
+            "default": "new-turn",
+            "type": "string",
+            "enum": [
+              "new-turn",
+              "continuation",
+              "cancellation"
+            ]
+          },
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "organizationId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "chatId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          }
+        },
+        "required": [
+          "userId"
+        ]
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "x-sim-billing-account-decision": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "x-sim-billing-protocol": {
+            "type": "string",
+            "enum": [
+              "attribution-v1",
+              "direct-v1",
+              "legacy-v0"
+            ]
+          },
+          "x-sim-billing-request-id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          },
+          "x-sim-billing-attribution": {
+            "type": "string",
+            "maxLength": 8192
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "status": [
+          200,
+          402
+        ],
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "isEnterprise": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "isEnterprise"
+          ],
+          "additionalProperties": false
+        },
+        "statusSchemas": {
+          "200": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "type": "object",
+            "properties": {
+              "isEnterprise": {
+                "type": "boolean"
+              }
+            },
+            "required": [
+              "isEnterprise"
+            ],
+            "additionalProperties": false
+          },
+          "402": {
+            "$schema": "https://json-schema.org/draft/2020-12/schema",
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "const": "USAGE_LIMIT_EXCEEDED"
+                  },
+                  "error": {
+                    "type": "string"
+                  },
+                  "usageUpgrade": {
+                    "type": "object",
+                    "properties": {
+                      "reason": {
+                        "type": "string",
+                        "const": "usage_limit"
+                      },
+                      "action": {
+                        "type": "string",
+                        "enum": [
+                          "upgrade_plan",
+                          "increase_limit"
+                        ]
+                      },
+                      "message": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "reason",
+                      "action",
+                      "message"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "code",
+                  "error",
+                  "usageUpgrade"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "code": {
+                    "type": "string",
+                    "const": "BILLING_BLOCKED"
+                  },
+                  "error": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "code",
+                  "error"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        }
+      },
+      "error": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "error": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 500
+          },
+          "details": {
+            "type": "array",
+            "items": {}
+          }
+        },
+        "required": [
+          "error"
+        ],
+        "additionalProperties": false
+      }
+    },
+    "validateCopilotByokContract": {
+      "method": "POST",
+      "path": "/api/copilot/byok/validate",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "userId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId",
+          "userId"
+        ]
+      },
+      "response": {
+        "mode": "empty"
+      }
+    }
+  }
+}

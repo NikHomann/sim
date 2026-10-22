@@ -1,0 +1,147 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-get-pipeline-execution.ts",
+  "contracts": {
+    "awsCodepipelineGetPipelineExecutionContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/get-pipeline-execution",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          },
+          "pipelineExecutionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName",
+          "pipelineExecutionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "pipelineExecutionId": {
+                  "type": "string"
+                },
+                "pipelineName": {
+                  "type": "string"
+                },
+                "pipelineVersion": {
+                  "type": "number"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "statusSummary": {
+                  "type": "string"
+                },
+                "executionMode": {
+                  "type": "string"
+                },
+                "executionType": {
+                  "type": "string"
+                },
+                "triggerType": {
+                  "type": "string"
+                },
+                "triggerDetail": {
+                  "type": "string"
+                },
+                "artifactRevisions": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "revisionId": {
+                        "type": "string"
+                      },
+                      "revisionSummary": {
+                        "type": "string"
+                      },
+                      "revisionUrl": {
+                        "type": "string"
+                      },
+                      "created": {
+                        "type": "number"
+                      }
+                    },
+                    "required": [
+                      "name"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "variables": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "resolvedValue": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "name",
+                      "resolvedValue"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "pipelineExecutionId",
+                "pipelineName",
+                "status",
+                "artifactRevisions",
+                "variables"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

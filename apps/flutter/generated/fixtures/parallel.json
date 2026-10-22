@@ -1,0 +1,1449 @@
+{
+  "name": "parallel",
+  "description": "collection parallel with a child, exit edge and a disabled block",
+  "state": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "parallel": {
+        "id": "parallel",
+        "type": "parallel",
+        "name": "Parallel 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "parallelType": "collection",
+          "collection": "<start.input>",
+          "batchSize": 50,
+          "width": 500,
+          "height": 300,
+          "type": "parallel"
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/items/<parallel.currentItem>"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "GET"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "data": {
+          "parentId": "parallel",
+          "extent": "parent"
+        }
+      },
+      "after": {
+        "id": "after",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 1000,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <parallel.results>"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "disabled": {
+        "id": "disabled",
+        "type": "function",
+        "name": "Function 2",
+        "position": {
+          "x": 1000,
+          "y": 300
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": ""
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": false,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "edges": [
+      {
+        "id": "edge-start-source-parallel-target",
+        "source": "start",
+        "target": "parallel",
+        "sourceHandle": "source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-parallel-parallel-start-source-api-target",
+        "source": "parallel",
+        "target": "api",
+        "sourceHandle": "parallel-start-source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-parallel-parallel-end-source-after-target",
+        "source": "parallel",
+        "target": "after",
+        "sourceHandle": "parallel-end-source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      },
+      {
+        "id": "edge-after-source-disabled-target",
+        "source": "after",
+        "target": "disabled",
+        "sourceHandle": "source",
+        "targetHandle": "target",
+        "type": "workflowEdge"
+      }
+    ],
+    "loops": {},
+    "parallels": {
+      "parallel": {
+        "id": "parallel",
+        "nodes": [
+          "api"
+        ],
+        "distribution": "<start.input>",
+        "count": 5,
+        "parallelType": "collection",
+        "batchSize": 20,
+        "enabled": true
+      }
+    }
+  },
+  "serialized": {
+    "version": "1.0",
+    "blocks": [
+      {
+        "id": "start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "config": {
+          "params": {
+            "startWorkflow": "manual"
+          }
+        },
+        "inputs": {
+          "input": "json"
+        },
+        "outputs": {},
+        "metadata": {
+          "id": "starter",
+          "name": "Start",
+          "description": "Start workflow",
+          "category": "blocks",
+          "color": "#2FB3FF"
+        },
+        "enabled": true
+      },
+      {
+        "id": "parallel",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "config": {
+          "tool": "",
+          "params": {
+            "parallelType": "collection",
+            "collection": "<start.input>",
+            "batchSize": 50,
+            "width": 500,
+            "height": 300,
+            "type": "parallel"
+          }
+        },
+        "inputs": {},
+        "outputs": {},
+        "metadata": {
+          "id": "parallel",
+          "name": "Parallel 1",
+          "description": "Parallel container",
+          "category": "subflow",
+          "color": "#8b5cf6"
+        },
+        "enabled": true
+      },
+      {
+        "id": "api",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "config": {
+          "tool": "http_request",
+          "params": {
+            "url": "https://example.com/items/<parallel.currentItem>",
+            "method": "GET"
+          }
+        },
+        "inputs": {
+          "url": "string",
+          "method": "string",
+          "headers": "json",
+          "body": "json",
+          "params": "json",
+          "timeout": "number",
+          "retries": "number",
+          "retryDelayMs": "number",
+          "retryMaxDelayMs": "number",
+          "retryNonIdempotent": "boolean",
+          "redirectPolicyVersion": "string",
+          "sendCredentialsOnCrossOriginRedirect": "boolean",
+          "proxyUrl": "string"
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "metadata": {
+          "id": "api",
+          "name": "API 1",
+          "description": "Use any API",
+          "category": "blocks",
+          "color": "#2F55FF"
+        },
+        "enabled": true
+      },
+      {
+        "id": "after",
+        "position": {
+          "x": 1000,
+          "y": 0
+        },
+        "config": {
+          "tool": "function_execute",
+          "params": {
+            "language": "javascript",
+            "code": "return <parallel.results>"
+          }
+        },
+        "inputs": {
+          "code": "string",
+          "language": "string",
+          "timeout": "number",
+          "sandboxId": "string",
+          "secretScope": "string",
+          "mountedSecrets": "json"
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "metadata": {
+          "id": "function",
+          "name": "Function 1",
+          "description": "Run custom logic",
+          "category": "blocks",
+          "color": "#FF402F"
+        },
+        "enabled": true
+      },
+      {
+        "id": "disabled",
+        "position": {
+          "x": 1000,
+          "y": 300
+        },
+        "config": {
+          "tool": "function_execute",
+          "params": {
+            "language": "javascript",
+            "code": ""
+          }
+        },
+        "inputs": {
+          "code": "string",
+          "language": "string",
+          "timeout": "number",
+          "sandboxId": "string",
+          "secretScope": "string",
+          "mountedSecrets": "json"
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "metadata": {
+          "id": "function",
+          "name": "Function 2",
+          "description": "Run custom logic",
+          "category": "blocks",
+          "color": "#FF402F"
+        },
+        "enabled": false
+      }
+    ],
+    "connections": [
+      {
+        "source": "start",
+        "target": "parallel",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "parallel",
+        "target": "api",
+        "sourceHandle": "parallel-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "parallel",
+        "target": "after",
+        "sourceHandle": "parallel-end-source",
+        "targetHandle": "target"
+      },
+      {
+        "source": "after",
+        "target": "disabled",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      }
+    ],
+    "loops": {},
+    "parallels": {
+      "parallel": {
+        "id": "parallel",
+        "nodes": [
+          "api"
+        ],
+        "distribution": "<start.input>",
+        "count": 5,
+        "parallelType": "collection",
+        "batchSize": 20,
+        "enabled": true
+      }
+    }
+  },
+  "serializedRequiredValidation": {
+    "ok": true,
+    "serialized": {
+      "version": "1.0",
+      "blocks": [
+        {
+          "id": "start",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "config": {
+            "params": {
+              "startWorkflow": "manual"
+            }
+          },
+          "inputs": {
+            "input": "json"
+          },
+          "outputs": {},
+          "metadata": {
+            "id": "starter",
+            "name": "Start",
+            "description": "Start workflow",
+            "category": "blocks",
+            "color": "#2FB3FF"
+          },
+          "enabled": true
+        },
+        {
+          "id": "parallel",
+          "position": {
+            "x": 400,
+            "y": 0
+          },
+          "config": {
+            "tool": "",
+            "params": {
+              "parallelType": "collection",
+              "collection": "<start.input>",
+              "batchSize": 50,
+              "width": 500,
+              "height": 300,
+              "type": "parallel"
+            }
+          },
+          "inputs": {},
+          "outputs": {},
+          "metadata": {
+            "id": "parallel",
+            "name": "Parallel 1",
+            "description": "Parallel container",
+            "category": "subflow",
+            "color": "#8b5cf6"
+          },
+          "enabled": true
+        },
+        {
+          "id": "api",
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "config": {
+            "tool": "http_request",
+            "params": {
+              "url": "https://example.com/items/<parallel.currentItem>",
+              "method": "GET"
+            }
+          },
+          "inputs": {
+            "url": "string",
+            "method": "string",
+            "headers": "json",
+            "body": "json",
+            "params": "json",
+            "timeout": "number",
+            "retries": "number",
+            "retryDelayMs": "number",
+            "retryMaxDelayMs": "number",
+            "retryNonIdempotent": "boolean",
+            "redirectPolicyVersion": "string",
+            "sendCredentialsOnCrossOriginRedirect": "boolean",
+            "proxyUrl": "string"
+          },
+          "outputs": {
+            "data": {
+              "type": "json",
+              "description": "API response data (JSON, text, or other formats)"
+            },
+            "status": {
+              "type": "number",
+              "description": "HTTP status code (200, 404, 500, etc.)"
+            },
+            "headers": {
+              "type": "json",
+              "description": "HTTP response headers as key-value pairs"
+            }
+          },
+          "metadata": {
+            "id": "api",
+            "name": "API 1",
+            "description": "Use any API",
+            "category": "blocks",
+            "color": "#2F55FF"
+          },
+          "enabled": true
+        },
+        {
+          "id": "after",
+          "position": {
+            "x": 1000,
+            "y": 0
+          },
+          "config": {
+            "tool": "function_execute",
+            "params": {
+              "language": "javascript",
+              "code": "return <parallel.results>"
+            }
+          },
+          "inputs": {
+            "code": "string",
+            "language": "string",
+            "timeout": "number",
+            "sandboxId": "string",
+            "secretScope": "string",
+            "mountedSecrets": "json"
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "metadata": {
+            "id": "function",
+            "name": "Function 1",
+            "description": "Run custom logic",
+            "category": "blocks",
+            "color": "#FF402F"
+          },
+          "enabled": true
+        },
+        {
+          "id": "disabled",
+          "position": {
+            "x": 1000,
+            "y": 300
+          },
+          "config": {
+            "tool": "function_execute",
+            "params": {
+              "language": "javascript",
+              "code": ""
+            }
+          },
+          "inputs": {
+            "code": "string",
+            "language": "string",
+            "timeout": "number",
+            "sandboxId": "string",
+            "secretScope": "string",
+            "mountedSecrets": "json"
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "metadata": {
+            "id": "function",
+            "name": "Function 2",
+            "description": "Run custom logic",
+            "category": "blocks",
+            "color": "#FF402F"
+          },
+          "enabled": false
+        }
+      ],
+      "connections": [
+        {
+          "source": "start",
+          "target": "parallel",
+          "sourceHandle": "source",
+          "targetHandle": "target"
+        },
+        {
+          "source": "parallel",
+          "target": "api",
+          "sourceHandle": "parallel-start-source",
+          "targetHandle": "target"
+        },
+        {
+          "source": "parallel",
+          "target": "after",
+          "sourceHandle": "parallel-end-source",
+          "targetHandle": "target"
+        },
+        {
+          "source": "after",
+          "target": "disabled",
+          "sourceHandle": "source",
+          "targetHandle": "target"
+        }
+      ],
+      "loops": {},
+      "parallels": {
+        "parallel": {
+          "id": "parallel",
+          "nodes": [
+            "api"
+          ],
+          "distribution": "<start.input>",
+          "count": 5,
+          "parallelType": "collection",
+          "batchSize": 20,
+          "enabled": true
+        }
+      }
+    }
+  },
+  "deserialized": {
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          },
+          "inputFormat": {
+            "id": "inputFormat",
+            "type": "input-format",
+            "value": null
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "parallel": {
+        "id": "parallel",
+        "type": "parallel",
+        "name": "Parallel 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {},
+        "outputs": {},
+        "enabled": true,
+        "data": {
+          "parallelType": "collection",
+          "collection": "<start.input>",
+          "batchSize": 50,
+          "width": 500,
+          "height": 300,
+          "type": "parallel"
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 80,
+          "y": 80
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/items/<parallel.currentItem>"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "GET"
+          },
+          "params": {
+            "id": "params",
+            "type": "table",
+            "value": null
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": null
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": null
+          },
+          "timeout": {
+            "id": "timeout",
+            "type": "short-input",
+            "value": null
+          },
+          "retries": {
+            "id": "retries",
+            "type": "short-input",
+            "value": null
+          },
+          "retryDelayMs": {
+            "id": "retryDelayMs",
+            "type": "short-input",
+            "value": null
+          },
+          "retryMaxDelayMs": {
+            "id": "retryMaxDelayMs",
+            "type": "short-input",
+            "value": null
+          },
+          "retryNonIdempotent": {
+            "id": "retryNonIdempotent",
+            "type": "switch",
+            "value": null
+          },
+          "redirectPolicyVersion": {
+            "id": "redirectPolicyVersion",
+            "type": "short-input",
+            "value": null
+          },
+          "sendCredentialsOnCrossOriginRedirect": {
+            "id": "sendCredentialsOnCrossOriginRedirect",
+            "type": "switch",
+            "value": null
+          },
+          "proxyUrl": {
+            "id": "proxyUrl",
+            "type": "short-input",
+            "value": null
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "after": {
+        "id": "after",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 1000,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return <parallel.results>"
+          },
+          "sandboxId": {
+            "id": "sandboxId",
+            "type": "combobox",
+            "value": null
+          },
+          "secretScope": {
+            "id": "secretScope",
+            "type": "dropdown",
+            "value": null
+          },
+          "mountedSecrets": {
+            "id": "mountedSecrets",
+            "type": "dropdown",
+            "value": null
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      },
+      "disabled": {
+        "id": "disabled",
+        "type": "function",
+        "name": "Function 2",
+        "position": {
+          "x": 1000,
+          "y": 300
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": ""
+          },
+          "sandboxId": {
+            "id": "sandboxId",
+            "type": "combobox",
+            "value": null
+          },
+          "secretScope": {
+            "id": "secretScope",
+            "type": "dropdown",
+            "value": null
+          },
+          "mountedSecrets": {
+            "id": "mountedSecrets",
+            "type": "dropdown",
+            "value": null
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "triggerMode": false,
+        "advancedMode": false
+      }
+    },
+    "edges": [
+      {
+        "id": "c4982bb3-a453-46c4-a370-65675829c66e",
+        "source": "start",
+        "target": "parallel",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "c2df117f-a61e-4ea8-9ae1-76248a05772e",
+        "source": "parallel",
+        "target": "api",
+        "sourceHandle": "parallel-start-source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "2f82cc52-4d28-42bd-9957-8cc91d7acf48",
+        "source": "parallel",
+        "target": "after",
+        "sourceHandle": "parallel-end-source",
+        "targetHandle": "target"
+      },
+      {
+        "id": "344011e3-3819-43f9-9c5c-baaa56460854",
+        "source": "after",
+        "target": "disabled",
+        "sourceHandle": "source",
+        "targetHandle": "target"
+      }
+    ]
+  },
+  "loops": {},
+  "parallels": {
+    "parallel": {
+      "id": "parallel",
+      "nodes": [
+        "api"
+      ],
+      "distribution": "<start.input>",
+      "count": 5,
+      "parallelType": "collection",
+      "batchSize": 20,
+      "enabled": true
+    }
+  },
+  "fieldIssues": {
+    "after": {
+      "params": {
+        "language": "javascript",
+        "code": "return <parallel.results>"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "api": {
+      "params": {
+        "url": "https://example.com/items/<parallel.currentItem>",
+        "method": "GET"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "disabled": {
+      "params": {
+        "language": "javascript",
+        "code": ""
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    },
+    "start": {
+      "params": {
+        "startWorkflow": "manual"
+      },
+      "issues": {
+        "missingRequiredFields": [],
+        "inactiveModeValues": []
+      }
+    }
+  },
+  "diff": {
+    "proposed": {
+      "blocks": {
+        "start": {
+          "id": "start",
+          "type": "starter",
+          "name": "Start",
+          "position": {
+            "x": 0,
+            "y": 0
+          },
+          "subBlocks": {
+            "startWorkflow": {
+              "id": "startWorkflow",
+              "type": "dropdown",
+              "value": "manual"
+            }
+          },
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        },
+        "parallel": {
+          "id": "parallel",
+          "type": "parallel",
+          "name": "Parallel 1",
+          "position": {
+            "x": 400,
+            "y": 0
+          },
+          "subBlocks": {},
+          "outputs": {},
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "parallelType": "collection",
+            "collection": "<start.input>",
+            "batchSize": 5,
+            "width": 500,
+            "height": 300,
+            "type": "parallel"
+          }
+        },
+        "api": {
+          "id": "api",
+          "type": "api",
+          "name": "API 1",
+          "position": {
+            "x": 80,
+            "y": 80
+          },
+          "subBlocks": {
+            "url": {
+              "id": "url",
+              "type": "short-input",
+              "value": "https://example.com/items/<parallel.currentItem>"
+            },
+            "method": {
+              "id": "method",
+              "type": "dropdown",
+              "value": "GET"
+            }
+          },
+          "outputs": {
+            "data": {
+              "type": "json",
+              "description": "API response data (JSON, text, or other formats)"
+            },
+            "status": {
+              "type": "number",
+              "description": "HTTP status code (200, 404, 500, etc.)"
+            },
+            "headers": {
+              "type": "json",
+              "description": "HTTP response headers as key-value pairs"
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          },
+          "data": {
+            "parentId": "parallel",
+            "extent": "parent"
+          }
+        },
+        "after": {
+          "id": "after",
+          "type": "function",
+          "name": "Function 1",
+          "position": {
+            "x": 1000,
+            "y": 0
+          },
+          "subBlocks": {
+            "language": {
+              "id": "language",
+              "type": "dropdown",
+              "value": "javascript"
+            },
+            "code": {
+              "id": "code",
+              "type": "code",
+              "value": "return <parallel.results>"
+            }
+          },
+          "outputs": {
+            "result": {
+              "type": "json",
+              "description": "Structured result emitted by the executed code"
+            },
+            "stdout": {
+              "type": "string",
+              "description": "Console log output and debug messages from function execution"
+            },
+            "files": {
+              "type": "file[]",
+              "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+            }
+          },
+          "enabled": true,
+          "horizontalHandles": true,
+          "advancedMode": false,
+          "triggerMode": false,
+          "height": 0,
+          "layout": {
+            "measuredHeight": 48,
+            "measuredWidth": 250
+          }
+        }
+      },
+      "edges": [
+        {
+          "id": "edge-start-source-parallel-target",
+          "source": "start",
+          "target": "parallel",
+          "sourceHandle": "source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-parallel-parallel-start-source-api-target",
+          "source": "parallel",
+          "target": "api",
+          "sourceHandle": "parallel-start-source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        },
+        {
+          "id": "edge-parallel-parallel-end-source-after-target",
+          "source": "parallel",
+          "target": "after",
+          "sourceHandle": "parallel-end-source",
+          "targetHandle": "target",
+          "type": "workflowEdge"
+        }
+      ],
+      "loops": {},
+      "parallels": {
+        "parallel": {
+          "id": "parallel",
+          "nodes": [
+            "api"
+          ],
+          "distribution": "<start.input>",
+          "count": 5,
+          "parallelType": "collection",
+          "batchSize": 5,
+          "enabled": true
+        }
+      }
+    },
+    "result": {
+      "success": true,
+      "diff": {
+        "proposedState": {
+          "blocks": {
+            "start": {
+              "id": "start",
+              "type": "starter",
+              "name": "Start",
+              "position": {
+                "x": 0,
+                "y": 0
+              },
+              "subBlocks": {
+                "startWorkflow": {
+                  "id": "startWorkflow",
+                  "type": "dropdown",
+                  "value": "manual"
+                }
+              },
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            },
+            "parallel": {
+              "id": "parallel",
+              "type": "parallel",
+              "name": "Parallel 1",
+              "position": {
+                "x": 400,
+                "y": 0
+              },
+              "subBlocks": {},
+              "outputs": {},
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              },
+              "data": {
+                "parallelType": "collection",
+                "collection": "<start.input>",
+                "batchSize": 5,
+                "width": 500,
+                "height": 300,
+                "type": "parallel"
+              }
+            },
+            "api": {
+              "id": "api",
+              "type": "api",
+              "name": "API 1",
+              "position": {
+                "x": 80,
+                "y": 80
+              },
+              "subBlocks": {
+                "url": {
+                  "id": "url",
+                  "type": "short-input",
+                  "value": "https://example.com/items/<parallel.currentItem>"
+                },
+                "method": {
+                  "id": "method",
+                  "type": "dropdown",
+                  "value": "GET"
+                }
+              },
+              "outputs": {
+                "data": {
+                  "type": "json",
+                  "description": "API response data (JSON, text, or other formats)"
+                },
+                "status": {
+                  "type": "number",
+                  "description": "HTTP status code (200, 404, 500, etc.)"
+                },
+                "headers": {
+                  "type": "json",
+                  "description": "HTTP response headers as key-value pairs"
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              },
+              "data": {
+                "parentId": "parallel",
+                "extent": "parent"
+              }
+            },
+            "after": {
+              "id": "after",
+              "type": "function",
+              "name": "Function 1",
+              "position": {
+                "x": 1000,
+                "y": 0
+              },
+              "subBlocks": {
+                "language": {
+                  "id": "language",
+                  "type": "dropdown",
+                  "value": "javascript"
+                },
+                "code": {
+                  "id": "code",
+                  "type": "code",
+                  "value": "return <parallel.results>"
+                }
+              },
+              "outputs": {
+                "result": {
+                  "type": "json",
+                  "description": "Structured result emitted by the executed code"
+                },
+                "stdout": {
+                  "type": "string",
+                  "description": "Console log output and debug messages from function execution"
+                },
+                "files": {
+                  "type": "file[]",
+                  "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+                }
+              },
+              "enabled": true,
+              "horizontalHandles": true,
+              "advancedMode": false,
+              "triggerMode": false,
+              "height": 48,
+              "layout": {
+                "measuredHeight": 48,
+                "measuredWidth": 250
+              }
+            }
+          },
+          "edges": [
+            {
+              "id": "22608748-4c34-4db4-9317-149590de6c47",
+              "source": "start",
+              "target": "parallel",
+              "sourceHandle": "source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "20b470d3-8be0-4a5c-90aa-f177a38ae2d7",
+              "source": "parallel",
+              "target": "api",
+              "sourceHandle": "parallel-start-source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            },
+            {
+              "id": "d1b83de4-ecc6-4d43-8060-6cec5e76e5bd",
+              "source": "parallel",
+              "target": "after",
+              "sourceHandle": "parallel-end-source",
+              "targetHandle": "target",
+              "type": "workflowEdge"
+            }
+          ],
+          "loops": {},
+          "parallels": {
+            "parallel": {
+              "id": "parallel",
+              "nodes": [
+                "api"
+              ],
+              "distribution": "<start.input>",
+              "count": 5,
+              "parallelType": "collection",
+              "batchSize": 5,
+              "enabled": true
+            }
+          },
+          "lastSaved": 1792576837618
+        },
+        "diffAnalysis": {
+          "new_blocks": [],
+          "edited_blocks": [],
+          "deleted_blocks": [
+            "disabled"
+          ],
+          "edge_diff": {
+            "new_edges": [],
+            "deleted_edges": [
+              "after-source-disabled-target"
+            ],
+            "unchanged_edges": [
+              "start-source-parallel-target",
+              "parallel-parallel-start-source-api-target",
+              "parallel-parallel-end-source-after-target"
+            ]
+          }
+        },
+        "metadata": {
+          "source": "workflow_state",
+          "timestamp": 1792576837619
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2849 @@
+{
+  "source": "apps/sim/lib/api/contracts/upload-sessions.ts",
+  "contracts": {
+    "abortInternalFileUploadContract": {
+      "method": "DELETE",
+      "path": "/api/files/uploads/[uploadId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "uploadId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "uploadId"
+        ]
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upload-token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Signed upload control token returned when the upload session was created."
+          }
+        },
+        "required": [
+          "upload-token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "workspace_file"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/V2File"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "profile_picture"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "workspace_logo"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "organization_logo"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "mothership_attachment"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "execution_attachment"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "url": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "context": {
+                              "type": "string",
+                              "const": "execution"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "size",
+                            "type",
+                            "url",
+                            "key",
+                            "context"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2File": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "webUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Canonical absolute URL for opening this resource in the Sim web application."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the workspace root.",
+                  "maxLength": 4096
+                },
+                "uploadedByEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
+                  "description": "Current email address of the uploader.",
+                  "examples": [
+                    "jane@example.com"
+                  ]
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "webUrl",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedByEmail",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2File",
+              "title": "Workspace file",
+              "description": "A workspace file exposed by the public v2 API."
+            }
+          }
+        }
+      }
+    },
+    "completeInternalFileUploadContract": {
+      "method": "POST",
+      "path": "/api/files/uploads/[uploadId]/complete",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "uploadId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "uploadId"
+        ]
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upload-token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Signed upload control token returned when the upload session was created."
+          }
+        },
+        "required": [
+          "upload-token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "workspace_file"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "$ref": "#/$defs/V2File"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "profile_picture"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "workspace_logo"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "organization_logo"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "mothership_attachment"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "path": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            }
+                          },
+                          "required": [
+                            "path",
+                            "key",
+                            "name",
+                            "size",
+                            "type"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "uploading",
+                        "completing",
+                        "finalizing",
+                        "completed",
+                        "failed",
+                        "aborting",
+                        "aborted",
+                        "expired"
+                      ]
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "contentType": {
+                      "type": "string"
+                    },
+                    "expiresAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    "error": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "purpose": {
+                      "type": "string",
+                      "const": "execution_attachment"
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "result": {
+                      "anyOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "id": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "name": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "size": {
+                              "type": "integer",
+                              "exclusiveMinimum": 0,
+                              "maximum": 9007199254740991
+                            },
+                            "type": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "url": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "key": {
+                              "type": "string",
+                              "minLength": 1
+                            },
+                            "context": {
+                              "type": "string",
+                              "const": "execution"
+                            }
+                          },
+                          "required": [
+                            "id",
+                            "name",
+                            "size",
+                            "type",
+                            "url",
+                            "key",
+                            "context"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "status",
+                    "name",
+                    "contentType",
+                    "expiresAt",
+                    "error",
+                    "purpose",
+                    "size",
+                    "result"
+                  ],
+                  "additionalProperties": false
+                }
+              ],
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2File": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "webUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Canonical absolute URL for opening this resource in the Sim web application."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the workspace root.",
+                  "maxLength": 4096
+                },
+                "uploadedByEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
+                  "description": "Current email address of the uploader.",
+                  "examples": [
+                    "jane@example.com"
+                  ]
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "webUrl",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedByEmail",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2File",
+              "title": "Workspace file",
+              "description": "A workspace file exposed by the public v2 API."
+            }
+          }
+        }
+      }
+    },
+    "createInternalFileUploadContract": {
+      "method": "POST",
+      "path": "/api/files/uploads",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "purpose": {
+                "type": "string",
+                "const": "workspace_file"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "contentType": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 5368709120
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "folderId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              }
+            },
+            "required": [
+              "purpose",
+              "name",
+              "contentType",
+              "size",
+              "workspaceId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "purpose": {
+                "type": "string",
+                "const": "profile_picture"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "contentType": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5242880
+              }
+            },
+            "required": [
+              "purpose",
+              "name",
+              "contentType",
+              "size"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "purpose": {
+                "type": "string",
+                "const": "workspace_logo"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "contentType": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5242880
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              }
+            },
+            "required": [
+              "purpose",
+              "name",
+              "contentType",
+              "size",
+              "workspaceId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "purpose": {
+                "type": "string",
+                "const": "organization_logo"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "contentType": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5242880
+              },
+              "organizationId": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "purpose",
+              "name",
+              "contentType",
+              "size",
+              "organizationId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "purpose": {
+                "type": "string",
+                "const": "mothership_attachment"
+              },
+              "requestMode": {
+                "type": "string",
+                "enum": [
+                  "agent",
+                  "assistant",
+                  "plan"
+                ]
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "contentType": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5368709120
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "organizationId": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "purpose",
+              "name",
+              "contentType",
+              "size"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "purpose": {
+                "type": "string",
+                "const": "execution_attachment"
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "contentType": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 104857600
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "workflowId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "executionId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "pattern": "^[A-Za-z0-9._:-]+$"
+              }
+            },
+            "required": [
+              "purpose",
+              "name",
+              "contentType",
+              "size",
+              "workspaceId",
+              "workflowId",
+              "executionId"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "session": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "uploading",
+                            "completing",
+                            "finalizing",
+                            "completed",
+                            "failed",
+                            "aborting",
+                            "aborted",
+                            "expired"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "error": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "const": "workspace_file"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "result": {
+                          "anyOf": [
+                            {
+                              "$ref": "#/$defs/V2File"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "name",
+                        "contentType",
+                        "expiresAt",
+                        "error",
+                        "purpose",
+                        "size",
+                        "result"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "uploading",
+                            "completing",
+                            "finalizing",
+                            "completed",
+                            "failed",
+                            "aborting",
+                            "aborted",
+                            "expired"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "error": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "const": "profile_picture"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "result": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "size": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "path",
+                                "key",
+                                "name",
+                                "size",
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "name",
+                        "contentType",
+                        "expiresAt",
+                        "error",
+                        "purpose",
+                        "size",
+                        "result"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "uploading",
+                            "completing",
+                            "finalizing",
+                            "completed",
+                            "failed",
+                            "aborting",
+                            "aborted",
+                            "expired"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "error": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "const": "workspace_logo"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "result": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "size": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "path",
+                                "key",
+                                "name",
+                                "size",
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "name",
+                        "contentType",
+                        "expiresAt",
+                        "error",
+                        "purpose",
+                        "size",
+                        "result"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "uploading",
+                            "completing",
+                            "finalizing",
+                            "completed",
+                            "failed",
+                            "aborting",
+                            "aborted",
+                            "expired"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "error": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "const": "organization_logo"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "result": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "size": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "path",
+                                "key",
+                                "name",
+                                "size",
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "name",
+                        "contentType",
+                        "expiresAt",
+                        "error",
+                        "purpose",
+                        "size",
+                        "result"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "uploading",
+                            "completing",
+                            "finalizing",
+                            "completed",
+                            "failed",
+                            "aborting",
+                            "aborted",
+                            "expired"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "error": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "const": "mothership_attachment"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "result": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "path": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "size": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "minLength": 1
+                                }
+                              },
+                              "required": [
+                                "path",
+                                "key",
+                                "name",
+                                "size",
+                                "type"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "name",
+                        "contentType",
+                        "expiresAt",
+                        "error",
+                        "purpose",
+                        "size",
+                        "result"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "uploading",
+                            "completing",
+                            "finalizing",
+                            "completed",
+                            "failed",
+                            "aborting",
+                            "aborted",
+                            "expired"
+                          ]
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "contentType": {
+                          "type": "string"
+                        },
+                        "expiresAt": {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        "error": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        },
+                        "purpose": {
+                          "type": "string",
+                          "const": "execution_attachment"
+                        },
+                        "size": {
+                          "type": "integer",
+                          "exclusiveMinimum": 0,
+                          "maximum": 9007199254740991
+                        },
+                        "result": {
+                          "anyOf": [
+                            {
+                              "type": "object",
+                              "properties": {
+                                "id": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "name": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "size": {
+                                  "type": "integer",
+                                  "exclusiveMinimum": 0,
+                                  "maximum": 9007199254740991
+                                },
+                                "type": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "key": {
+                                  "type": "string",
+                                  "minLength": 1
+                                },
+                                "context": {
+                                  "type": "string",
+                                  "const": "execution"
+                                }
+                              },
+                              "required": [
+                                "id",
+                                "name",
+                                "size",
+                                "type",
+                                "url",
+                                "key",
+                                "context"
+                              ],
+                              "additionalProperties": false
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "status",
+                        "name",
+                        "contentType",
+                        "expiresAt",
+                        "error",
+                        "purpose",
+                        "size",
+                        "result"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ]
+                },
+                "uploadToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "transfer": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/V2PutUploadTransfer"
+                    },
+                    {
+                      "$ref": "#/$defs/V2MultipartUploadTransfer"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "session",
+                "uploadToken",
+                "transfer"
+              ],
+              "additionalProperties": false,
+              "description": "Response data."
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2File": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique file identifier.",
+                  "examples": [
+                    "wf_V1StGXR8z5jdHi6BmyT91"
+                  ]
+                },
+                "webUrl": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Canonical absolute URL for opening this resource in the Sim web application."
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Original file name.",
+                  "examples": [
+                    "data.csv"
+                  ]
+                },
+                "size": {
+                  "type": "number",
+                  "minimum": 0,
+                  "description": "Size in bytes of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source, not the rendered document, so it does not predict how many bytes downloading the file returns.",
+                  "examples": [
+                    1024
+                  ]
+                },
+                "type": {
+                  "type": "string",
+                  "description": "MIME type of the stored file. For a generated document (docx, pptx, pdf, xlsx) this is the generation source type, not the rendered document type a download serves.",
+                  "examples": [
+                    "text/csv"
+                  ]
+                },
+                "key": {
+                  "type": "string",
+                  "description": "Storage key for the file.",
+                  "examples": [
+                    "workspace/example/data.csv"
+                  ]
+                },
+                "folderPath": {
+                  "type": "string",
+                  "title": "Folder path",
+                  "description": "Canonical containing-folder path. `/` is the workspace root.",
+                  "maxLength": 4096
+                },
+                "uploadedByEmail": {
+                  "type": "string",
+                  "format": "email",
+                  "pattern": "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$",
+                  "description": "Current email address of the uploader.",
+                  "examples": [
+                    "jane@example.com"
+                  ]
+                },
+                "uploadedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the file was uploaded.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp of the last content or metadata write.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-15T10:30:00Z"
+                  ]
+                },
+                "deletedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 timestamp when the file was archived by deleting it, or null while the file is active. Only an archived-scope file list returns files with a non-null value.",
+                  "format": "date-time",
+                  "examples": [
+                    "2026-01-16T09:00:00Z"
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "webUrl",
+                "name",
+                "size",
+                "type",
+                "key",
+                "folderPath",
+                "uploadedByEmail",
+                "uploadedAt",
+                "updatedAt",
+                "deletedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2File",
+              "title": "Workspace file",
+              "description": "A workspace file exposed by the public v2 API."
+            },
+            "V2PutUploadTransfer": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "const": "put",
+                  "description": "Upload strategy discriminator."
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Signed URL to which the file bytes are uploaded. Upload bytes with `PUT` and exactly the supplied headers; never construct or modify the signed URL. Treat any `2xx` as success. Sim-hosted URLs return an empty `204` and v2 JSON errors. Object-storage URLs may return `200` or `201` and provider-specific errors, often XML."
+                },
+                "headers": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Headers that must be included with the upload request."
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 expiration time for this signed URL. This is the URL's own expiry and is normally earlier than the upload session's expiresAt: the session stays open for later part, status, completion, and abort requests, but the bytes must be uploaded before this time. Once it passes, the storage provider rejects the upload and a new upload session must be created."
+                }
+              },
+              "required": [
+                "method",
+                "url",
+                "headers",
+                "expiresAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2PutUploadTransfer",
+              "title": "Direct upload transfer",
+              "description": "Instructions for uploading bytes to one signed URL."
+            },
+            "V2MultipartUploadTransfer": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "const": "multipart",
+                  "description": "Upload strategy discriminator."
+                },
+                "partSize": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Required size of each non-final part in bytes."
+                },
+                "partCount": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 640,
+                  "description": "Total number of upload parts."
+                }
+              },
+              "required": [
+                "method",
+                "partSize",
+                "partCount"
+              ],
+              "additionalProperties": false,
+              "id": "V2MultipartUploadTransfer",
+              "title": "Multipart upload transfer",
+              "description": "Instructions for splitting bytes into a multipart upload."
+            }
+          }
+        }
+      }
+    },
+    "createInternalFileUploadPartUrlsContract": {
+      "method": "POST",
+      "path": "/api/files/uploads/[uploadId]/parts",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "uploadId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "uploadId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "partNumbers": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "description": "Multipart part numbers for which signed URLs should be created."
+          }
+        },
+        "required": [
+          "partNumbers"
+        ],
+        "additionalProperties": false
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upload-token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Signed upload control token returned when the upload session was created."
+          }
+        },
+        "required": [
+          "upload-token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PartUrlsData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2UploadPartUrl": {
+              "type": "object",
+              "properties": {
+                "partNumber": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "Multipart part number."
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Signed URL for this upload part. Upload bytes with `PUT` and exactly the supplied headers; never construct or modify the signed URL. Treat any `2xx` as success. Sim-hosted URLs return an empty `204` and v2 JSON errors. Object-storage URLs may return `200` or `201` and provider-specific errors, often XML. Do not retain part `ETag` values; after every part succeeds, call the completion endpoint without a request body."
+                },
+                "headers": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Headers that must be included with the part upload."
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 expiration time for the signed URL."
+                }
+              },
+              "required": [
+                "partNumber",
+                "url",
+                "headers",
+                "expiresAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2UploadPartUrl",
+              "title": "Upload part URL",
+              "description": "A signed URL and required headers for one multipart upload part."
+            },
+            "V2PartUrlsData": {
+              "type": "object",
+              "properties": {
+                "parts": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2UploadPartUrl"
+                  },
+                  "description": "Signed URLs for requested parts."
+                }
+              },
+              "required": [
+                "parts"
+              ],
+              "additionalProperties": false,
+              "id": "V2PartUrlsData",
+              "title": "Upload part URLs",
+              "description": "Signed transfer URLs for the requested multipart upload parts."
+            }
+          }
+        }
+      }
+    },
+    "localPutUploadContract": {
+      "method": "PUT",
+      "path": "/api/v2/uploads/[uploadId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "uploadId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "uploadId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upload-token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Signed upload control token returned when the upload session was created."
+          }
+        },
+        "required": [
+          "upload-token"
+        ]
+      },
+      "response": {
+        "mode": "empty",
+        "status": 204
+      }
+    },
+    "localUploadPartContract": {
+      "method": "PUT",
+      "path": "/api/v2/uploads/[uploadId]/parts/[partNumber]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "uploadId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "partNumber": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "uploadId",
+          "partNumber"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "token": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "token"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "empty",
+        "status": 204
+      }
+    }
+  }
+}

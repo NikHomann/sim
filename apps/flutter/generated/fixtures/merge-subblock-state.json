@@ -1,0 +1,2955 @@
+[
+  {
+    "name": "override",
+    "description": "a value present in the map replaces the structure value",
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "values": {
+      "agent": {
+        "model": "gpt-5.1"
+      }
+    },
+    "result": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "gpt-5.1"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    }
+  },
+  {
+    "name": "null-clears",
+    "description": "null in the map clears an existing subblock value",
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "values": {
+      "agent": {
+        "model": null
+      }
+    },
+    "result": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": null
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    }
+  },
+  {
+    "name": "null-missing-ignored",
+    "description": "null never creates an entry for a subblock absent from the structure",
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "values": {
+      "agent": {
+        "webhookId": null
+      }
+    },
+    "result": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    }
+  },
+  {
+    "name": "undefined-ignored",
+    "description": "undefined is \"no value recorded\" and never overrides",
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "values": {
+      "agent": {}
+    },
+    "result": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    }
+  },
+  {
+    "name": "structureless-added",
+    "description": "a non-null value for a missing subblock is added with the default shape",
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "values": {
+      "api": {
+        "triggerPath": "/hooks/abc"
+      }
+    },
+    "result": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          },
+          "triggerPath": {
+            "id": "triggerPath",
+            "type": "short-input",
+            "value": "/hooks/abc"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    }
+  },
+  {
+    "name": "block-filter",
+    "description": "only the requested block is merged when blockId is given",
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "values": {
+      "agent": {
+        "model": "gpt-5.1"
+      },
+      "function": {
+        "code": "return 0"
+      }
+    },
+    "blockId": "function",
+    "result": {
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return 0"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      }
+    }
+  },
+  {
+    "name": "unknown-block-ignored",
+    "description": "values for a block id not in the structure are dropped",
+    "blocks": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    },
+    "values": {
+      "ghost": {
+        "model": "gpt-5.1"
+      }
+    },
+    "result": {
+      "start": {
+        "id": "start",
+        "type": "starter",
+        "name": "Start",
+        "position": {
+          "x": 0,
+          "y": 0
+        },
+        "subBlocks": {
+          "startWorkflow": {
+            "id": "startWorkflow",
+            "type": "dropdown",
+            "value": "manual"
+          }
+        },
+        "outputs": {},
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "agent": {
+        "id": "agent",
+        "type": "agent",
+        "name": "Agent 1",
+        "position": {
+          "x": 400,
+          "y": 0
+        },
+        "subBlocks": {
+          "model": {
+            "id": "model",
+            "type": "combobox",
+            "value": "claude-sonnet-5-5"
+          },
+          "messages": {
+            "id": "messages",
+            "type": "messages-input",
+            "value": "[{\"id\":\"m1\",\"role\":\"system\",\"content\":\"You are concise.\"},{\"id\":\"m2\",\"role\":\"user\",\"content\":\"<start.input>\"}]"
+          },
+          "apiKey": {
+            "id": "apiKey",
+            "type": "short-input",
+            "value": "{{ANTHROPIC_API_KEY}}"
+          },
+          "temperature": {
+            "id": "temperature",
+            "type": "slider",
+            "value": 0.3
+          }
+        },
+        "outputs": {
+          "answers": {
+            "type": "json",
+            "description": "Evaluation answers keyed by question ID: choice, score, or noul, with probabilities and confidence where applicable",
+            "condition": {
+              "field": "model",
+              "value": [
+                "jev-latest",
+                "jev-1.13.0",
+                "jev-preview"
+              ],
+              "allowReference": true
+            }
+          },
+          "content": {
+            "type": "string",
+            "description": "Generated response content"
+          },
+          "model": {
+            "type": "string",
+            "description": "Model used for generation"
+          },
+          "tokens": {
+            "type": "json",
+            "description": "Token usage statistics"
+          },
+          "toolCalls": {
+            "type": "json",
+            "description": "Tool calls made"
+          },
+          "providerTiming": {
+            "type": "json",
+            "description": "Provider timing information"
+          },
+          "cost": {
+            "type": "json",
+            "description": "Cost of the API call"
+          },
+          "interactionId": {
+            "type": "string",
+            "description": "Interaction ID for multi-turn deep research follow-ups",
+            "condition": {
+              "field": "model",
+              "value": [
+                "deep-research-pro-preview-12-2025",
+                "vertex/deep-research-pro-preview-12-2025"
+              ]
+            }
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      },
+      "function": {
+        "id": "function",
+        "type": "function",
+        "name": "Function 1",
+        "position": {
+          "x": 800,
+          "y": 0
+        },
+        "subBlocks": {
+          "language": {
+            "id": "language",
+            "type": "dropdown",
+            "value": "javascript"
+          },
+          "code": {
+            "id": "code",
+            "type": "code",
+            "value": "return { text: <agent1.content> }"
+          }
+        },
+        "outputs": {
+          "result": {
+            "type": "json",
+            "description": "Structured result emitted by the executed code"
+          },
+          "stdout": {
+            "type": "string",
+            "description": "Console log output and debug messages from function execution"
+          },
+          "files": {
+            "type": "file[]",
+            "description": "Files the code wrote to /tmp/sim/outputs, ready to attach or upload downstream"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {},
+        "errorEnabled": true,
+        "retry": {
+          "enabled": true,
+          "maxTries": 3,
+          "waitBetweenTriesMs": 1000
+        }
+      },
+      "api": {
+        "id": "api",
+        "type": "api",
+        "name": "API 1",
+        "position": {
+          "x": 1200,
+          "y": 0
+        },
+        "subBlocks": {
+          "url": {
+            "id": "url",
+            "type": "short-input",
+            "value": "https://example.com/hook"
+          },
+          "method": {
+            "id": "method",
+            "type": "dropdown",
+            "value": "POST"
+          },
+          "headers": {
+            "id": "headers",
+            "type": "table",
+            "value": [
+              {
+                "id": "h1",
+                "cells": {
+                  "Key": "Content-Type",
+                  "Value": "application/json"
+                }
+              }
+            ]
+          },
+          "body": {
+            "id": "body",
+            "type": "code",
+            "value": "<function1.text>"
+          }
+        },
+        "outputs": {
+          "data": {
+            "type": "json",
+            "description": "API response data (JSON, text, or other formats)"
+          },
+          "status": {
+            "type": "number",
+            "description": "HTTP status code (200, 404, 500, etc.)"
+          },
+          "headers": {
+            "type": "json",
+            "description": "HTTP response headers as key-value pairs"
+          }
+        },
+        "enabled": true,
+        "horizontalHandles": true,
+        "advancedMode": false,
+        "triggerMode": false,
+        "height": 0,
+        "layout": {}
+      }
+    }
+  }
+]

@@ -1,0 +1,357 @@
+{
+  "source": "apps/sim/lib/api/contracts/memory.ts",
+  "contracts": {
+    "createMemoryContract": {
+      "method": "POST",
+      "path": "/api/memory",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "data": {},
+          "workspaceId": {
+            "type": "string"
+          },
+          "__privateSecretProvenance": {
+            "type": "object",
+            "properties": {
+              "version": {
+                "type": "number",
+                "const": 1,
+                "description": "Private provenance bundle format version."
+              },
+              "complete": {
+                "type": "boolean",
+                "description": "Whether the private provenance bundle is complete."
+              },
+              "selections": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "key": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 4096,
+                      "description": "Selection key carrying provenance."
+                    },
+                    "provenance": {
+                      "type": "object",
+                      "properties": {
+                        "version": {
+                          "type": "number",
+                          "const": 1,
+                          "description": "Secret provenance format version."
+                        },
+                        "complete": {
+                          "type": "boolean",
+                          "description": "Whether the provenance trace is complete."
+                        },
+                        "entries": {
+                          "maxItems": 10000,
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "encryptedValue": {
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 8388608,
+                                "description": "Encrypted secret value carried across the trusted execution boundary."
+                              },
+                              "name": {
+                                "description": "Optional source secret name.",
+                                "type": "string",
+                                "minLength": 1,
+                                "maxLength": 1024
+                              }
+                            },
+                            "required": [
+                              "encryptedValue"
+                            ],
+                            "additionalProperties": false
+                          },
+                          "description": "Encrypted secret provenance entries."
+                        },
+                        "scope": {
+                          "description": "Authorization scope bound to the encrypted provenance.",
+                          "type": "object",
+                          "properties": {
+                            "userId": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024,
+                              "description": "User scope for the encrypted provenance."
+                            },
+                            "workspaceId": {
+                              "description": "Optional workspace scope for the encrypted provenance.",
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 1024
+                            }
+                          },
+                          "required": [
+                            "userId"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "required": [
+                        "version",
+                        "complete",
+                        "entries"
+                      ],
+                      "additionalProperties": false,
+                      "description": "Encrypted provenance for this selection."
+                    }
+                  },
+                  "required": [
+                    "key",
+                    "provenance"
+                  ],
+                  "additionalProperties": false
+                },
+                "description": "Selections and their encrypted provenance."
+              }
+            },
+            "required": [
+              "version",
+              "complete",
+              "selections"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "conversationId": {
+                  "type": "string"
+                },
+                "data": {}
+              },
+              "required": [
+                "conversationId",
+                "data"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "deleteMemoryByQueryContract": {
+      "method": "DELETE",
+      "path": "/api/memory",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string"
+          },
+          "conversationId": {
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "message": {
+                  "type": "string"
+                },
+                "deletedCount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "message",
+                "deletedCount"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getMemoryByIdContract": {
+      "method": "GET",
+      "path": "/api/memory/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^([0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[1-8][0-9a-fA-F]{3}-[89abAB][0-9a-fA-F]{3}-[0-9a-fA-F]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$"
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "conversationId": {
+                      "type": "string"
+                    },
+                    "data": {}
+                  },
+                  "required": [
+                    "conversationId",
+                    "data"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listMemoriesContract": {
+      "method": "GET",
+      "path": "/api/memory",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string"
+          },
+          "query": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 1000
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "data": {
+              "type": "object",
+              "properties": {
+                "memories": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "conversationId": {
+                        "type": "string"
+                      },
+                      "data": {}
+                    },
+                    "required": [
+                      "conversationId",
+                      "data"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "memories"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

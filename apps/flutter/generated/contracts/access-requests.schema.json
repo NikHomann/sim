@@ -1,0 +1,4372 @@
+{
+  "source": "apps/sim/lib/api/contracts/access-requests.ts",
+  "contracts": {
+    "cancelAccessRequestContract": {
+      "method": "POST",
+      "path": "/api/access-requests/[requestId]/cancel",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "requestId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Access request identifier."
+          }
+        },
+        "required": [
+          "requestId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "scope": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "workspace"
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "workspaceId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "organization"
+                  },
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "kind",
+                  "organizationId"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          }
+        },
+        "required": [
+          "scope"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Access request identifier."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Organization that owns the request."
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Unique workspace identifier."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Workspace where access was requested; null for an organization-level request."
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "feature",
+                          "description": "Kind of access being requested."
+                        },
+                        "configKey": {
+                          "type": "string",
+                          "enum": [
+                            "hideTraceSpans",
+                            "hideKnowledgeBaseTab",
+                            "hideTablesTab",
+                            "hideCopilot",
+                            "hideIntegrationsTab",
+                            "hideSecretsTab",
+                            "hideApiKeysTab",
+                            "hideInboxTab",
+                            "hideFilesTab",
+                            "disableMcpTools",
+                            "disableCustomTools",
+                            "disableSkills",
+                            "disableInvitations",
+                            "disablePublicApi",
+                            "disablePublicFileSharing",
+                            "hideDeployApi",
+                            "hideDeployMcp",
+                            "hideDeployChatbot",
+                            "disablePersonalApiKeys",
+                            "disableLogExport",
+                            "hideCostInfo",
+                            "disableKnowledgeBaseCreation",
+                            "disableKnowledgeBaseFileUpload",
+                            "disableTableCreation",
+                            "disableTableExport",
+                            "disableBulkFileDownload",
+                            "disablePersonalCredentials",
+                            "disableWorkspaceCreation",
+                            "hideOrgMemberDirectory",
+                            "disableCliAccess",
+                            "disableWebhookTriggers",
+                            "disableToolAutoApproval",
+                            "hideSandboxesTab",
+                            "disableOAuthAppAccess",
+                            "disableKnowledgeBaseExport"
+                          ],
+                          "description": "Feature restriction key returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "configKey"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "integration",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "provider",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "model",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "tool",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "knowledge_connector",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "file_share_auth",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "Authentication mode to request."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "chat_deploy_auth",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "Authentication mode to request."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "usage_limit",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "const": "member",
+                          "description": "Request an increase to the acting user’s member credit cap."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "The requested feature, integration, model, tool, authentication mode, or member credit cap."
+                },
+                "targetLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512,
+                  "description": "Human-readable name of the requested access."
+                },
+                "reason": {
+                  "type": "string",
+                  "maxLength": 1000,
+                  "description": "Reason supplied by the requester."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "fulfilled",
+                    "declined",
+                    "cancelled",
+                    "closed"
+                  ],
+                  "description": "Current request status."
+                },
+                "decisionReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Explanation for a declined or closed request; null when none was recorded."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the request was submitted."
+                },
+                "decidedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When the request was resolved; null while pending."
+                },
+                "groupName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Name of the governing group when the request was submitted; null for credit-cap requests."
+                },
+                "requester": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Requester user identifier."
+                    },
+                    "name": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Requester display name."
+                    },
+                    "email": {
+                      "type": "string",
+                      "maxLength": 320,
+                      "description": "Requester email address."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email"
+                  ],
+                  "additionalProperties": false,
+                  "description": "User who submitted the request."
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "workspaceId",
+                "target",
+                "targetLabel",
+                "reason",
+                "status",
+                "decisionReason",
+                "createdAt",
+                "decidedAt",
+                "groupName",
+                "requester"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "request"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "createAccessRequestContract": {
+      "method": "POST",
+      "path": "/api/access-requests",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "scope": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "workspace"
+                  },
+                  "workspaceId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Unique workspace identifier."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "workspaceId"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "organization"
+                  },
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "required": [
+                  "kind",
+                  "organizationId"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "feature",
+                    "description": "Kind of access being requested."
+                  },
+                  "configKey": {
+                    "type": "string",
+                    "enum": [
+                      "hideTraceSpans",
+                      "hideKnowledgeBaseTab",
+                      "hideTablesTab",
+                      "hideCopilot",
+                      "hideIntegrationsTab",
+                      "hideSecretsTab",
+                      "hideApiKeysTab",
+                      "hideInboxTab",
+                      "hideFilesTab",
+                      "disableMcpTools",
+                      "disableCustomTools",
+                      "disableSkills",
+                      "disableInvitations",
+                      "disablePublicApi",
+                      "disablePublicFileSharing",
+                      "hideDeployApi",
+                      "hideDeployMcp",
+                      "hideDeployChatbot",
+                      "disablePersonalApiKeys",
+                      "disableLogExport",
+                      "hideCostInfo",
+                      "disableKnowledgeBaseCreation",
+                      "disableKnowledgeBaseFileUpload",
+                      "disableTableCreation",
+                      "disableTableExport",
+                      "disableBulkFileDownload",
+                      "disablePersonalCredentials",
+                      "disableWorkspaceCreation",
+                      "hideOrgMemberDirectory",
+                      "disableCliAccess",
+                      "disableWebhookTriggers",
+                      "disableToolAutoApproval",
+                      "hideSandboxesTab",
+                      "disableOAuthAppAccess",
+                      "disableKnowledgeBaseExport"
+                    ],
+                    "description": "Feature restriction key returned by access discovery."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "configKey"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "integration",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Identifier returned by access discovery."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "provider",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Identifier returned by access discovery."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "model",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Identifier returned by access discovery."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "tool",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Identifier returned by access discovery."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "knowledge_connector",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Identifier returned by access discovery."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "file_share_auth",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "enum": [
+                      "public",
+                      "password",
+                      "email",
+                      "sso"
+                    ],
+                    "description": "Authentication mode to request."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "chat_deploy_auth",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "enum": [
+                      "public",
+                      "password",
+                      "email",
+                      "sso"
+                    ],
+                    "description": "Authentication mode to request."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "kind": {
+                    "type": "string",
+                    "const": "usage_limit",
+                    "description": "Kind of access being requested."
+                  },
+                  "id": {
+                    "type": "string",
+                    "const": "member",
+                    "description": "Request an increase to the acting user’s member credit cap."
+                  }
+                },
+                "required": [
+                  "kind",
+                  "id"
+                ],
+                "additionalProperties": false
+              }
+            ]
+          },
+          "reason": {
+            "default": "",
+            "type": "string",
+            "maxLength": 1000
+          }
+        },
+        "required": [
+          "scope",
+          "target"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Access request identifier."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Organization that owns the request."
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Unique workspace identifier."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Workspace where access was requested; null for an organization-level request."
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "feature",
+                          "description": "Kind of access being requested."
+                        },
+                        "configKey": {
+                          "type": "string",
+                          "enum": [
+                            "hideTraceSpans",
+                            "hideKnowledgeBaseTab",
+                            "hideTablesTab",
+                            "hideCopilot",
+                            "hideIntegrationsTab",
+                            "hideSecretsTab",
+                            "hideApiKeysTab",
+                            "hideInboxTab",
+                            "hideFilesTab",
+                            "disableMcpTools",
+                            "disableCustomTools",
+                            "disableSkills",
+                            "disableInvitations",
+                            "disablePublicApi",
+                            "disablePublicFileSharing",
+                            "hideDeployApi",
+                            "hideDeployMcp",
+                            "hideDeployChatbot",
+                            "disablePersonalApiKeys",
+                            "disableLogExport",
+                            "hideCostInfo",
+                            "disableKnowledgeBaseCreation",
+                            "disableKnowledgeBaseFileUpload",
+                            "disableTableCreation",
+                            "disableTableExport",
+                            "disableBulkFileDownload",
+                            "disablePersonalCredentials",
+                            "disableWorkspaceCreation",
+                            "hideOrgMemberDirectory",
+                            "disableCliAccess",
+                            "disableWebhookTriggers",
+                            "disableToolAutoApproval",
+                            "hideSandboxesTab",
+                            "disableOAuthAppAccess",
+                            "disableKnowledgeBaseExport"
+                          ],
+                          "description": "Feature restriction key returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "configKey"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "integration",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "provider",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "model",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "tool",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "knowledge_connector",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "file_share_auth",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "Authentication mode to request."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "chat_deploy_auth",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "Authentication mode to request."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "usage_limit",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "const": "member",
+                          "description": "Request an increase to the acting user’s member credit cap."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "The requested feature, integration, model, tool, authentication mode, or member credit cap."
+                },
+                "targetLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512,
+                  "description": "Human-readable name of the requested access."
+                },
+                "reason": {
+                  "type": "string",
+                  "maxLength": 1000,
+                  "description": "Reason supplied by the requester."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "fulfilled",
+                    "declined",
+                    "cancelled",
+                    "closed"
+                  ],
+                  "description": "Current request status."
+                },
+                "decisionReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Explanation for a declined or closed request; null when none was recorded."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the request was submitted."
+                },
+                "decidedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When the request was resolved; null while pending."
+                },
+                "groupName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Name of the governing group when the request was submitted; null for credit-cap requests."
+                },
+                "requester": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Requester user identifier."
+                    },
+                    "name": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Requester display name."
+                    },
+                    "email": {
+                      "type": "string",
+                      "maxLength": 320,
+                      "description": "Requester email address."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email"
+                  ],
+                  "additionalProperties": false,
+                  "description": "User who submitted the request."
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "workspaceId",
+                "target",
+                "targetLabel",
+                "reason",
+                "status",
+                "decisionReason",
+                "createdAt",
+                "decidedAt",
+                "groupName",
+                "requester"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "request"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "discoverAccessRequestsContract": {
+      "method": "GET",
+      "path": "/api/access-requests/discovery",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "workspace"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "limit": {
+                "default": 50,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "offset": {
+                "default": 0,
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "search": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "targetKind": {
+                "type": "string",
+                "enum": [
+                  "feature",
+                  "integration",
+                  "provider",
+                  "model",
+                  "tool",
+                  "knowledge_connector",
+                  "file_share_auth",
+                  "chat_deploy_auth",
+                  "usage_limit"
+                ]
+              },
+              "targetKey": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "allowed",
+                  "requestable",
+                  "unavailable"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "workspaceId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "organization"
+              },
+              "organizationId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "default": 50,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "offset": {
+                "default": 0,
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "search": {
+                "type": "string",
+                "maxLength": 200
+              },
+              "targetKind": {
+                "type": "string",
+                "enum": [
+                  "feature",
+                  "integration",
+                  "provider",
+                  "model",
+                  "tool",
+                  "knowledge_connector",
+                  "file_share_auth",
+                  "chat_deploy_auth",
+                  "usage_limit"
+                ]
+              },
+              "targetKey": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 2048
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "allowed",
+                  "requestable",
+                  "unavailable"
+                ]
+              }
+            },
+            "required": [
+              "kind",
+              "organizationId"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "enabled": {
+              "type": "boolean"
+            },
+            "organizationId": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "entries": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "target": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "feature",
+                            "description": "Kind of access being requested."
+                          },
+                          "configKey": {
+                            "type": "string",
+                            "enum": [
+                              "hideTraceSpans",
+                              "hideKnowledgeBaseTab",
+                              "hideTablesTab",
+                              "hideCopilot",
+                              "hideIntegrationsTab",
+                              "hideSecretsTab",
+                              "hideApiKeysTab",
+                              "hideInboxTab",
+                              "hideFilesTab",
+                              "disableMcpTools",
+                              "disableCustomTools",
+                              "disableSkills",
+                              "disableInvitations",
+                              "disablePublicApi",
+                              "disablePublicFileSharing",
+                              "hideDeployApi",
+                              "hideDeployMcp",
+                              "hideDeployChatbot",
+                              "disablePersonalApiKeys",
+                              "disableLogExport",
+                              "hideCostInfo",
+                              "disableKnowledgeBaseCreation",
+                              "disableKnowledgeBaseFileUpload",
+                              "disableTableCreation",
+                              "disableTableExport",
+                              "disableBulkFileDownload",
+                              "disablePersonalCredentials",
+                              "disableWorkspaceCreation",
+                              "hideOrgMemberDirectory",
+                              "disableCliAccess",
+                              "disableWebhookTriggers",
+                              "disableToolAutoApproval",
+                              "hideSandboxesTab",
+                              "disableOAuthAppAccess",
+                              "disableKnowledgeBaseExport"
+                            ],
+                            "description": "Feature restriction key returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "configKey"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "integration",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "provider",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "model",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "tool",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "knowledge_connector",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "file_share_auth",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ],
+                            "description": "Authentication mode to request."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "chat_deploy_auth",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ],
+                            "description": "Authentication mode to request."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "usage_limit",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "const": "member",
+                            "description": "Request an increase to the acting user’s member credit cap."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "description": "Pass this target unchanged to Create Access Request."
+                  },
+                  "label": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Human-readable access item name."
+                  },
+                  "state": {
+                    "type": "string",
+                    "enum": [
+                      "allowed",
+                      "requestable",
+                      "unavailable"
+                    ],
+                    "description": "Whether access is already allowed, can be requested, or is unavailable."
+                  },
+                  "reason": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 1000
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Why access is unavailable or restricted; null when no explanation is needed."
+                  },
+                  "pendingRequestId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Access request identifier."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Existing pending request for this item; null when none exists."
+                  }
+                },
+                "required": [
+                  "target",
+                  "label",
+                  "state",
+                  "reason",
+                  "pendingRequestId"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "hasMore": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "enabled",
+            "organizationId",
+            "entries",
+            "total",
+            "hasMore"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "getAccessRequestSettingsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/access-requests/settings",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "allowRequests": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "allowRequests"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listMyAccessRequestsContract": {
+      "method": "GET",
+      "path": "/api/access-requests",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "workspace"
+              },
+              "workspaceId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Unique workspace identifier."
+              },
+              "limit": {
+                "default": 50,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "offset": {
+                "default": 0,
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Access request identifier."
+              }
+            },
+            "required": [
+              "kind",
+              "workspaceId"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "kind": {
+                "type": "string",
+                "const": "organization"
+              },
+              "organizationId": {
+                "type": "string",
+                "minLength": 1
+              },
+              "limit": {
+                "default": 50,
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 100
+              },
+              "offset": {
+                "default": 0,
+                "type": "integer",
+                "minimum": 0,
+                "maximum": 1000000
+              },
+              "requestId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128,
+                "description": "Access request identifier."
+              }
+            },
+            "required": [
+              "kind",
+              "organizationId"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "requests": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Access request identifier."
+                  },
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Organization that owns the request."
+                  },
+                  "workspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Unique workspace identifier."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Workspace where access was requested; null for an organization-level request."
+                  },
+                  "target": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "feature",
+                            "description": "Kind of access being requested."
+                          },
+                          "configKey": {
+                            "type": "string",
+                            "enum": [
+                              "hideTraceSpans",
+                              "hideKnowledgeBaseTab",
+                              "hideTablesTab",
+                              "hideCopilot",
+                              "hideIntegrationsTab",
+                              "hideSecretsTab",
+                              "hideApiKeysTab",
+                              "hideInboxTab",
+                              "hideFilesTab",
+                              "disableMcpTools",
+                              "disableCustomTools",
+                              "disableSkills",
+                              "disableInvitations",
+                              "disablePublicApi",
+                              "disablePublicFileSharing",
+                              "hideDeployApi",
+                              "hideDeployMcp",
+                              "hideDeployChatbot",
+                              "disablePersonalApiKeys",
+                              "disableLogExport",
+                              "hideCostInfo",
+                              "disableKnowledgeBaseCreation",
+                              "disableKnowledgeBaseFileUpload",
+                              "disableTableCreation",
+                              "disableTableExport",
+                              "disableBulkFileDownload",
+                              "disablePersonalCredentials",
+                              "disableWorkspaceCreation",
+                              "hideOrgMemberDirectory",
+                              "disableCliAccess",
+                              "disableWebhookTriggers",
+                              "disableToolAutoApproval",
+                              "hideSandboxesTab",
+                              "disableOAuthAppAccess",
+                              "disableKnowledgeBaseExport"
+                            ],
+                            "description": "Feature restriction key returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "configKey"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "integration",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "provider",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "model",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "tool",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "knowledge_connector",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "file_share_auth",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ],
+                            "description": "Authentication mode to request."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "chat_deploy_auth",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ],
+                            "description": "Authentication mode to request."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "usage_limit",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "const": "member",
+                            "description": "Request an increase to the acting user’s member credit cap."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "description": "The requested feature, integration, model, tool, authentication mode, or member credit cap."
+                  },
+                  "targetLabel": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Human-readable name of the requested access."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "Reason supplied by the requester."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "fulfilled",
+                      "declined",
+                      "cancelled",
+                      "closed"
+                    ],
+                    "description": "Current request status."
+                  },
+                  "decisionReason": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 1000
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Explanation for a declined or closed request; null when none was recorded."
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "When the request was submitted."
+                  },
+                  "decidedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "When the request was resolved; null while pending."
+                  },
+                  "groupName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Name of the governing group when the request was submitted; null for credit-cap requests."
+                  },
+                  "requester": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Requester user identifier."
+                      },
+                      "name": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Requester display name."
+                      },
+                      "email": {
+                        "type": "string",
+                        "maxLength": 320,
+                        "description": "Requester email address."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "email"
+                    ],
+                    "additionalProperties": false,
+                    "description": "User who submitted the request."
+                  }
+                },
+                "required": [
+                  "id",
+                  "organizationId",
+                  "workspaceId",
+                  "target",
+                  "targetLabel",
+                  "reason",
+                  "status",
+                  "decisionReason",
+                  "createdAt",
+                  "decidedAt",
+                  "groupName",
+                  "requester"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "hasMore": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "requests",
+            "total",
+            "hasMore"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listOrganizationAccessRequestsContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/access-requests",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 1000000
+          },
+          "search": {
+            "type": "string",
+            "maxLength": 200
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "fulfilled",
+              "declined",
+              "cancelled",
+              "closed"
+            ]
+          }
+        },
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "requests": {
+              "maxItems": 100,
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "description": "Access request identifier."
+                  },
+                  "organizationId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Organization that owns the request."
+                  },
+                  "workspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Unique workspace identifier."
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Workspace where access was requested; null for an organization-level request."
+                  },
+                  "target": {
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "feature",
+                            "description": "Kind of access being requested."
+                          },
+                          "configKey": {
+                            "type": "string",
+                            "enum": [
+                              "hideTraceSpans",
+                              "hideKnowledgeBaseTab",
+                              "hideTablesTab",
+                              "hideCopilot",
+                              "hideIntegrationsTab",
+                              "hideSecretsTab",
+                              "hideApiKeysTab",
+                              "hideInboxTab",
+                              "hideFilesTab",
+                              "disableMcpTools",
+                              "disableCustomTools",
+                              "disableSkills",
+                              "disableInvitations",
+                              "disablePublicApi",
+                              "disablePublicFileSharing",
+                              "hideDeployApi",
+                              "hideDeployMcp",
+                              "hideDeployChatbot",
+                              "disablePersonalApiKeys",
+                              "disableLogExport",
+                              "hideCostInfo",
+                              "disableKnowledgeBaseCreation",
+                              "disableKnowledgeBaseFileUpload",
+                              "disableTableCreation",
+                              "disableTableExport",
+                              "disableBulkFileDownload",
+                              "disablePersonalCredentials",
+                              "disableWorkspaceCreation",
+                              "hideOrgMemberDirectory",
+                              "disableCliAccess",
+                              "disableWebhookTriggers",
+                              "disableToolAutoApproval",
+                              "hideSandboxesTab",
+                              "disableOAuthAppAccess",
+                              "disableKnowledgeBaseExport"
+                            ],
+                            "description": "Feature restriction key returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "configKey"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "integration",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "provider",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "model",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "tool",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "knowledge_connector",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "minLength": 1,
+                            "maxLength": 512,
+                            "description": "Identifier returned by access discovery."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "file_share_auth",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ],
+                            "description": "Authentication mode to request."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "chat_deploy_auth",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "enum": [
+                              "public",
+                              "password",
+                              "email",
+                              "sso"
+                            ],
+                            "description": "Authentication mode to request."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "kind": {
+                            "type": "string",
+                            "const": "usage_limit",
+                            "description": "Kind of access being requested."
+                          },
+                          "id": {
+                            "type": "string",
+                            "const": "member",
+                            "description": "Request an increase to the acting user’s member credit cap."
+                          }
+                        },
+                        "required": [
+                          "kind",
+                          "id"
+                        ],
+                        "additionalProperties": false
+                      }
+                    ],
+                    "description": "The requested feature, integration, model, tool, authentication mode, or member credit cap."
+                  },
+                  "targetLabel": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "description": "Human-readable name of the requested access."
+                  },
+                  "reason": {
+                    "type": "string",
+                    "maxLength": 1000,
+                    "description": "Reason supplied by the requester."
+                  },
+                  "status": {
+                    "type": "string",
+                    "enum": [
+                      "pending",
+                      "fulfilled",
+                      "declined",
+                      "cancelled",
+                      "closed"
+                    ],
+                    "description": "Current request status."
+                  },
+                  "decisionReason": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "maxLength": 1000
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Explanation for a declined or closed request; null when none was recorded."
+                  },
+                  "createdAt": {
+                    "type": "string",
+                    "format": "date-time",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                    "description": "When the request was submitted."
+                  },
+                  "decidedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string",
+                        "format": "date-time",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "When the request was resolved; null while pending."
+                  },
+                  "groupName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ],
+                    "description": "Name of the governing group when the request was submitted; null for credit-cap requests."
+                  },
+                  "requester": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 128,
+                        "description": "Requester user identifier."
+                      },
+                      "name": {
+                        "anyOf": [
+                          {
+                            "type": "string"
+                          },
+                          {
+                            "type": "null"
+                          }
+                        ],
+                        "description": "Requester display name."
+                      },
+                      "email": {
+                        "type": "string",
+                        "maxLength": 320,
+                        "description": "Requester email address."
+                      }
+                    },
+                    "required": [
+                      "id",
+                      "name",
+                      "email"
+                    ],
+                    "additionalProperties": false,
+                    "description": "User who submitted the request."
+                  }
+                },
+                "required": [
+                  "id",
+                  "organizationId",
+                  "workspaceId",
+                  "target",
+                  "targetLabel",
+                  "reason",
+                  "status",
+                  "decisionReason",
+                  "createdAt",
+                  "decidedAt",
+                  "groupName",
+                  "requester"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "total": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 9007199254740991
+            },
+            "hasMore": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "requests",
+            "total",
+            "hasMore"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "previewAccessRequestContract": {
+      "method": "GET",
+      "path": "/api/organizations/[id]/access-requests/[requestId]/preview",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requestId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Access request identifier."
+          }
+        },
+        "required": [
+          "id",
+          "requestId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "newLimitCredits": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Applied credit cap for a fulfilled request; null before approval or for permission changes."
+                },
+                "request": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Access request identifier."
+                    },
+                    "organizationId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Organization that owns the request."
+                    },
+                    "workspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Unique workspace identifier."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Workspace where access was requested; null for an organization-level request."
+                    },
+                    "target": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "feature",
+                              "description": "Kind of access being requested."
+                            },
+                            "configKey": {
+                              "type": "string",
+                              "enum": [
+                                "hideTraceSpans",
+                                "hideKnowledgeBaseTab",
+                                "hideTablesTab",
+                                "hideCopilot",
+                                "hideIntegrationsTab",
+                                "hideSecretsTab",
+                                "hideApiKeysTab",
+                                "hideInboxTab",
+                                "hideFilesTab",
+                                "disableMcpTools",
+                                "disableCustomTools",
+                                "disableSkills",
+                                "disableInvitations",
+                                "disablePublicApi",
+                                "disablePublicFileSharing",
+                                "hideDeployApi",
+                                "hideDeployMcp",
+                                "hideDeployChatbot",
+                                "disablePersonalApiKeys",
+                                "disableLogExport",
+                                "hideCostInfo",
+                                "disableKnowledgeBaseCreation",
+                                "disableKnowledgeBaseFileUpload",
+                                "disableTableCreation",
+                                "disableTableExport",
+                                "disableBulkFileDownload",
+                                "disablePersonalCredentials",
+                                "disableWorkspaceCreation",
+                                "hideOrgMemberDirectory",
+                                "disableCliAccess",
+                                "disableWebhookTriggers",
+                                "disableToolAutoApproval",
+                                "hideSandboxesTab",
+                                "disableOAuthAppAccess",
+                                "disableKnowledgeBaseExport"
+                              ],
+                              "description": "Feature restriction key returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "configKey"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "integration",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "provider",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "model",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "tool",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "knowledge_connector",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "file_share_auth",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "enum": [
+                                "public",
+                                "password",
+                                "email",
+                                "sso"
+                              ],
+                              "description": "Authentication mode to request."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "chat_deploy_auth",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "enum": [
+                                "public",
+                                "password",
+                                "email",
+                                "sso"
+                              ],
+                              "description": "Authentication mode to request."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "usage_limit",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "const": "member",
+                              "description": "Request an increase to the acting user’s member credit cap."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ],
+                      "description": "The requested feature, integration, model, tool, authentication mode, or member credit cap."
+                    },
+                    "targetLabel": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512,
+                      "description": "Human-readable name of the requested access."
+                    },
+                    "reason": {
+                      "type": "string",
+                      "maxLength": 1000,
+                      "description": "Reason supplied by the requester."
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "fulfilled",
+                        "declined",
+                        "cancelled",
+                        "closed"
+                      ],
+                      "description": "Current request status."
+                    },
+                    "decisionReason": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Explanation for a declined or closed request; null when none was recorded."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                      "description": "When the request was submitted."
+                    },
+                    "decidedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the request was resolved; null while pending."
+                    },
+                    "groupName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Name of the governing group when the request was submitted; null for credit-cap requests."
+                    },
+                    "requester": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Requester user identifier."
+                        },
+                        "name": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Requester display name."
+                        },
+                        "email": {
+                          "type": "string",
+                          "maxLength": 320,
+                          "description": "Requester email address."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "email"
+                      ],
+                      "additionalProperties": false,
+                      "description": "User who submitted the request."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "organizationId",
+                    "workspaceId",
+                    "target",
+                    "targetLabel",
+                    "reason",
+                    "status",
+                    "decisionReason",
+                    "createdAt",
+                    "decidedAt",
+                    "groupName",
+                    "requester"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Access request being reviewed."
+                },
+                "changes": {
+                  "maxItems": 43,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "configKey": {
+                        "type": "string",
+                        "enum": [
+                          "allowedIntegrations",
+                          "allowedModelProviders",
+                          "deniedModels",
+                          "deniedTools",
+                          "hideTraceSpans",
+                          "hideKnowledgeBaseTab",
+                          "hideTablesTab",
+                          "hideCopilot",
+                          "hideIntegrationsTab",
+                          "hideSecretsTab",
+                          "hideApiKeysTab",
+                          "hideInboxTab",
+                          "hideFilesTab",
+                          "disableMcpTools",
+                          "disableCustomTools",
+                          "disableSkills",
+                          "disableInvitations",
+                          "disablePublicApi",
+                          "disablePublicFileSharing",
+                          "allowedFileShareAuthTypes",
+                          "hideDeployApi",
+                          "hideDeployMcp",
+                          "hideDeployChatbot",
+                          "allowedChatDeployAuthTypes",
+                          "disablePersonalApiKeys",
+                          "disableLogExport",
+                          "hideCostInfo",
+                          "disableKnowledgeBaseCreation",
+                          "disableKnowledgeBaseFileUpload",
+                          "allowedKnowledgeConnectors",
+                          "disableTableCreation",
+                          "disableTableExport",
+                          "disableBulkFileDownload",
+                          "disablePersonalCredentials",
+                          "disableWorkspaceCreation",
+                          "hideOrgMemberDirectory",
+                          "disableCliAccess",
+                          "disableWebhookTriggers",
+                          "disableToolAutoApproval",
+                          "hideSandboxesTab",
+                          "disableOAuthAppAccess",
+                          "disableKnowledgeBaseExport",
+                          "deniedPartialAccessProjectIssues"
+                        ],
+                        "description": "Permission restriction changed by approval."
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 512,
+                        "description": "Human-readable permission name."
+                      },
+                      "before": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                          }
+                        ],
+                        "description": "Current value of the restriction."
+                      },
+                      "after": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                          }
+                        ],
+                        "description": "Value after applying the request."
+                      }
+                    },
+                    "required": [
+                      "configKey",
+                      "label",
+                      "before",
+                      "after"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Permission changes proposed for the whole governing group."
+                },
+                "impact": {
+                  "type": "object",
+                  "properties": {
+                    "memberCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of affected members."
+                    },
+                    "workspaceCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of affected workspaces."
+                    },
+                    "workspaceNames": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Names of affected workspaces, capped at 100."
+                    },
+                    "truncated": {
+                      "type": "boolean",
+                      "description": "Whether the workspace-name list is truncated; counts include the full impact."
+                    }
+                  },
+                  "required": [
+                    "memberCount",
+                    "workspaceCount",
+                    "workspaceNames",
+                    "truncated"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Members and workspaces affected by approval."
+                },
+                "fingerprint": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Pass to Resolve Organization Access Request after reviewing the changes and impact."
+                },
+                "canApply": {
+                  "type": "boolean",
+                  "description": "Whether this request can currently be approved."
+                },
+                "unavailableReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Why approval is unavailable; null when canApply is true."
+                },
+                "resolutionKind": {
+                  "type": "string",
+                  "const": "permission",
+                  "description": "Approval changes the governing permission group."
+                },
+                "group": {
+                  "anyOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Governing group identifier."
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Governing group name."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Group affected by a permission approval; null for credit-cap changes."
+                },
+                "currentLimitCredits": {
+                  "type": "null",
+                  "description": "Not applicable to permission changes."
+                }
+              },
+              "required": [
+                "newLimitCredits",
+                "request",
+                "changes",
+                "impact",
+                "fingerprint",
+                "canApply",
+                "unavailableReason",
+                "resolutionKind",
+                "group",
+                "currentLimitCredits"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "newLimitCredits": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Applied credit cap for a fulfilled request; null before approval or for permission changes."
+                },
+                "request": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Access request identifier."
+                    },
+                    "organizationId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Organization that owns the request."
+                    },
+                    "workspaceId": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Unique workspace identifier."
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Workspace where access was requested; null for an organization-level request."
+                    },
+                    "target": {
+                      "oneOf": [
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "feature",
+                              "description": "Kind of access being requested."
+                            },
+                            "configKey": {
+                              "type": "string",
+                              "enum": [
+                                "hideTraceSpans",
+                                "hideKnowledgeBaseTab",
+                                "hideTablesTab",
+                                "hideCopilot",
+                                "hideIntegrationsTab",
+                                "hideSecretsTab",
+                                "hideApiKeysTab",
+                                "hideInboxTab",
+                                "hideFilesTab",
+                                "disableMcpTools",
+                                "disableCustomTools",
+                                "disableSkills",
+                                "disableInvitations",
+                                "disablePublicApi",
+                                "disablePublicFileSharing",
+                                "hideDeployApi",
+                                "hideDeployMcp",
+                                "hideDeployChatbot",
+                                "disablePersonalApiKeys",
+                                "disableLogExport",
+                                "hideCostInfo",
+                                "disableKnowledgeBaseCreation",
+                                "disableKnowledgeBaseFileUpload",
+                                "disableTableCreation",
+                                "disableTableExport",
+                                "disableBulkFileDownload",
+                                "disablePersonalCredentials",
+                                "disableWorkspaceCreation",
+                                "hideOrgMemberDirectory",
+                                "disableCliAccess",
+                                "disableWebhookTriggers",
+                                "disableToolAutoApproval",
+                                "hideSandboxesTab",
+                                "disableOAuthAppAccess",
+                                "disableKnowledgeBaseExport"
+                              ],
+                              "description": "Feature restriction key returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "configKey"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "integration",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "provider",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "model",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "tool",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "knowledge_connector",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "minLength": 1,
+                              "maxLength": 512,
+                              "description": "Identifier returned by access discovery."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "file_share_auth",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "enum": [
+                                "public",
+                                "password",
+                                "email",
+                                "sso"
+                              ],
+                              "description": "Authentication mode to request."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "chat_deploy_auth",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "enum": [
+                                "public",
+                                "password",
+                                "email",
+                                "sso"
+                              ],
+                              "description": "Authentication mode to request."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        },
+                        {
+                          "type": "object",
+                          "properties": {
+                            "kind": {
+                              "type": "string",
+                              "const": "usage_limit",
+                              "description": "Kind of access being requested."
+                            },
+                            "id": {
+                              "type": "string",
+                              "const": "member",
+                              "description": "Request an increase to the acting user’s member credit cap."
+                            }
+                          },
+                          "required": [
+                            "kind",
+                            "id"
+                          ],
+                          "additionalProperties": false
+                        }
+                      ],
+                      "description": "The requested feature, integration, model, tool, authentication mode, or member credit cap."
+                    },
+                    "targetLabel": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 512,
+                      "description": "Human-readable name of the requested access."
+                    },
+                    "reason": {
+                      "type": "string",
+                      "maxLength": 1000,
+                      "description": "Reason supplied by the requester."
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "pending",
+                        "fulfilled",
+                        "declined",
+                        "cancelled",
+                        "closed"
+                      ],
+                      "description": "Current request status."
+                    },
+                    "decisionReason": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "maxLength": 1000
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Explanation for a declined or closed request; null when none was recorded."
+                    },
+                    "createdAt": {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                      "description": "When the request was submitted."
+                    },
+                    "decidedAt": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "format": "date-time",
+                          "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "When the request was resolved; null while pending."
+                    },
+                    "groupName": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Name of the governing group when the request was submitted; null for credit-cap requests."
+                    },
+                    "requester": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "description": "Requester user identifier."
+                        },
+                        "name": {
+                          "anyOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "null"
+                            }
+                          ],
+                          "description": "Requester display name."
+                        },
+                        "email": {
+                          "type": "string",
+                          "maxLength": 320,
+                          "description": "Requester email address."
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "email"
+                      ],
+                      "additionalProperties": false,
+                      "description": "User who submitted the request."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "organizationId",
+                    "workspaceId",
+                    "target",
+                    "targetLabel",
+                    "reason",
+                    "status",
+                    "decisionReason",
+                    "createdAt",
+                    "decidedAt",
+                    "groupName",
+                    "requester"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Access request being reviewed."
+                },
+                "changes": {
+                  "maxItems": 43,
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "configKey": {
+                        "type": "string",
+                        "enum": [
+                          "allowedIntegrations",
+                          "allowedModelProviders",
+                          "deniedModels",
+                          "deniedTools",
+                          "hideTraceSpans",
+                          "hideKnowledgeBaseTab",
+                          "hideTablesTab",
+                          "hideCopilot",
+                          "hideIntegrationsTab",
+                          "hideSecretsTab",
+                          "hideApiKeysTab",
+                          "hideInboxTab",
+                          "hideFilesTab",
+                          "disableMcpTools",
+                          "disableCustomTools",
+                          "disableSkills",
+                          "disableInvitations",
+                          "disablePublicApi",
+                          "disablePublicFileSharing",
+                          "allowedFileShareAuthTypes",
+                          "hideDeployApi",
+                          "hideDeployMcp",
+                          "hideDeployChatbot",
+                          "allowedChatDeployAuthTypes",
+                          "disablePersonalApiKeys",
+                          "disableLogExport",
+                          "hideCostInfo",
+                          "disableKnowledgeBaseCreation",
+                          "disableKnowledgeBaseFileUpload",
+                          "allowedKnowledgeConnectors",
+                          "disableTableCreation",
+                          "disableTableExport",
+                          "disableBulkFileDownload",
+                          "disablePersonalCredentials",
+                          "disableWorkspaceCreation",
+                          "hideOrgMemberDirectory",
+                          "disableCliAccess",
+                          "disableWebhookTriggers",
+                          "disableToolAutoApproval",
+                          "hideSandboxesTab",
+                          "disableOAuthAppAccess",
+                          "disableKnowledgeBaseExport",
+                          "deniedPartialAccessProjectIssues"
+                        ],
+                        "description": "Permission restriction changed by approval."
+                      },
+                      "label": {
+                        "type": "string",
+                        "minLength": 1,
+                        "maxLength": 512,
+                        "description": "Human-readable permission name."
+                      },
+                      "before": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                          }
+                        ],
+                        "description": "Current value of the restriction."
+                      },
+                      "after": {
+                        "anyOf": [
+                          {
+                            "type": "boolean"
+                          },
+                          {
+                            "anyOf": [
+                              {
+                                "type": "array",
+                                "items": {
+                                  "type": "string"
+                                }
+                              },
+                              {
+                                "type": "null"
+                              }
+                            ],
+                            "description": "Integrations and blocks are limited to this list. Null permits every value; an empty list permits none."
+                          }
+                        ],
+                        "description": "Value after applying the request."
+                      }
+                    },
+                    "required": [
+                      "configKey",
+                      "label",
+                      "before",
+                      "after"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "description": "Permission changes proposed for the whole governing group."
+                },
+                "impact": {
+                  "type": "object",
+                  "properties": {
+                    "memberCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of affected members."
+                    },
+                    "workspaceCount": {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991,
+                      "description": "Number of affected workspaces."
+                    },
+                    "workspaceNames": {
+                      "maxItems": 100,
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Names of affected workspaces, capped at 100."
+                    },
+                    "truncated": {
+                      "type": "boolean",
+                      "description": "Whether the workspace-name list is truncated; counts include the full impact."
+                    }
+                  },
+                  "required": [
+                    "memberCount",
+                    "workspaceCount",
+                    "workspaceNames",
+                    "truncated"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Members and workspaces affected by approval."
+                },
+                "fingerprint": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Pass to Resolve Organization Access Request after reviewing the changes and impact."
+                },
+                "canApply": {
+                  "type": "boolean",
+                  "description": "Whether this request can currently be approved."
+                },
+                "unavailableReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Why approval is unavailable; null when canApply is true."
+                },
+                "resolutionKind": {
+                  "type": "string",
+                  "const": "usage_limit",
+                  "description": "Approval raises the requester’s member credit cap."
+                },
+                "group": {
+                  "type": "null",
+                  "description": "Credit-cap requests do not change a permission group."
+                },
+                "currentLimitCredits": {
+                  "anyOf": [
+                    {
+                      "type": "number",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Current member credit cap. Approval requires a higher newLimitCredits."
+                }
+              },
+              "required": [
+                "newLimitCredits",
+                "request",
+                "changes",
+                "impact",
+                "fingerprint",
+                "canApply",
+                "unavailableReason",
+                "resolutionKind",
+                "group",
+                "currentLimitCredits"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "resolveAccessRequestContract": {
+      "method": "POST",
+      "path": "/api/organizations/[id]/access-requests/[requestId]/resolve",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          },
+          "requestId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Access request identifier."
+          }
+        },
+        "required": [
+          "id",
+          "requestId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "const": "apply"
+              },
+              "expectedFingerprint": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "newLimitCredits": {
+                "type": "integer",
+                "exclusiveMinimum": 0,
+                "maximum": 9007199254740991
+              }
+            },
+            "required": [
+              "action",
+              "expectedFingerprint"
+            ],
+            "additionalProperties": false
+          },
+          {
+            "type": "object",
+            "properties": {
+              "action": {
+                "type": "string",
+                "const": "decline"
+              },
+              "reason": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 1000
+              }
+            },
+            "required": [
+              "action",
+              "reason"
+            ],
+            "additionalProperties": false
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "request": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128,
+                  "description": "Access request identifier."
+                },
+                "organizationId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Organization that owns the request."
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Unique workspace identifier."
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Workspace where access was requested; null for an organization-level request."
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "feature",
+                          "description": "Kind of access being requested."
+                        },
+                        "configKey": {
+                          "type": "string",
+                          "enum": [
+                            "hideTraceSpans",
+                            "hideKnowledgeBaseTab",
+                            "hideTablesTab",
+                            "hideCopilot",
+                            "hideIntegrationsTab",
+                            "hideSecretsTab",
+                            "hideApiKeysTab",
+                            "hideInboxTab",
+                            "hideFilesTab",
+                            "disableMcpTools",
+                            "disableCustomTools",
+                            "disableSkills",
+                            "disableInvitations",
+                            "disablePublicApi",
+                            "disablePublicFileSharing",
+                            "hideDeployApi",
+                            "hideDeployMcp",
+                            "hideDeployChatbot",
+                            "disablePersonalApiKeys",
+                            "disableLogExport",
+                            "hideCostInfo",
+                            "disableKnowledgeBaseCreation",
+                            "disableKnowledgeBaseFileUpload",
+                            "disableTableCreation",
+                            "disableTableExport",
+                            "disableBulkFileDownload",
+                            "disablePersonalCredentials",
+                            "disableWorkspaceCreation",
+                            "hideOrgMemberDirectory",
+                            "disableCliAccess",
+                            "disableWebhookTriggers",
+                            "disableToolAutoApproval",
+                            "hideSandboxesTab",
+                            "disableOAuthAppAccess",
+                            "disableKnowledgeBaseExport"
+                          ],
+                          "description": "Feature restriction key returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "configKey"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "integration",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "provider",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "model",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "tool",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "knowledge_connector",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 512,
+                          "description": "Identifier returned by access discovery."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "file_share_auth",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "Authentication mode to request."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "chat_deploy_auth",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "enum": [
+                            "public",
+                            "password",
+                            "email",
+                            "sso"
+                          ],
+                          "description": "Authentication mode to request."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "kind": {
+                          "type": "string",
+                          "const": "usage_limit",
+                          "description": "Kind of access being requested."
+                        },
+                        "id": {
+                          "type": "string",
+                          "const": "member",
+                          "description": "Request an increase to the acting user’s member credit cap."
+                        }
+                      },
+                      "required": [
+                        "kind",
+                        "id"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "The requested feature, integration, model, tool, authentication mode, or member credit cap."
+                },
+                "targetLabel": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 512,
+                  "description": "Human-readable name of the requested access."
+                },
+                "reason": {
+                  "type": "string",
+                  "maxLength": 1000,
+                  "description": "Reason supplied by the requester."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "pending",
+                    "fulfilled",
+                    "declined",
+                    "cancelled",
+                    "closed"
+                  ],
+                  "description": "Current request status."
+                },
+                "decisionReason": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "maxLength": 1000
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Explanation for a declined or closed request; null when none was recorded."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "When the request was submitted."
+                },
+                "decidedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "When the request was resolved; null while pending."
+                },
+                "groupName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Name of the governing group when the request was submitted; null for credit-cap requests."
+                },
+                "requester": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 128,
+                      "description": "Requester user identifier."
+                    },
+                    "name": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ],
+                      "description": "Requester display name."
+                    },
+                    "email": {
+                      "type": "string",
+                      "maxLength": 320,
+                      "description": "Requester email address."
+                    }
+                  },
+                  "required": [
+                    "id",
+                    "name",
+                    "email"
+                  ],
+                  "additionalProperties": false,
+                  "description": "User who submitted the request."
+                }
+              },
+              "required": [
+                "id",
+                "organizationId",
+                "workspaceId",
+                "target",
+                "targetLabel",
+                "reason",
+                "status",
+                "decisionReason",
+                "createdAt",
+                "decidedAt",
+                "groupName",
+                "requester"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "request"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "updateAccessRequestSettingsContract": {
+      "method": "PATCH",
+      "path": "/api/organizations/[id]/access-requests/settings",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "allowRequests": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "allowRequests"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "allowRequests": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "allowRequests"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

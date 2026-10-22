@@ -1,0 +1,115 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/appconfig-get-environment.ts",
+  "contracts": {
+    "awsAppConfigGetEnvironmentContract": {
+      "method": "POST",
+      "path": "/api/tools/appconfig/get-environment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "applicationId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "environmentId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "applicationId",
+          "environmentId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "applicationId": {
+              "type": "string"
+            },
+            "id": {
+              "type": "string"
+            },
+            "name": {
+              "type": "string"
+            },
+            "description": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "state": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "monitors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "alarmArn": {
+                    "type": "string"
+                  },
+                  "alarmRoleArn": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "alarmArn",
+                  "alarmRoleArn"
+                ],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": [
+            "applicationId",
+            "id",
+            "name",
+            "description",
+            "state",
+            "monitors"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,78 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/s3-delete-object.ts",
+  "contracts": {
+    "awsS3DeleteObjectContract": {
+      "method": "POST",
+      "path": "/api/tools/s3/delete-object",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "bucketName": {
+            "type": "string",
+            "minLength": 1
+          },
+          "objectKey": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "accessKeyId",
+          "secretAccessKey",
+          "region",
+          "bucketName",
+          "objectKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "deleteMarker": {
+                  "type": "boolean"
+                },
+                "versionId": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "key"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

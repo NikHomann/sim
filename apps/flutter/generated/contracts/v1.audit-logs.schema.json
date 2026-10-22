@@ -1,0 +1,887 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/audit-logs.ts",
+  "contracts": {
+    "v1AdminGetAuditLogContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/audit-logs/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "actorId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "actorName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "actorEmail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "action": {
+                  "type": "string"
+                },
+                "resourceType": {
+                  "type": "string"
+                },
+                "resourceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "resourceName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "metadata": {},
+                "createdAt": {
+                  "type": "string"
+                },
+                "ipAddress": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "userAgent": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "actorId",
+                "actorName",
+                "actorEmail",
+                "action",
+                "resourceType",
+                "resourceId",
+                "resourceName",
+                "description",
+                "metadata",
+                "createdAt",
+                "ipAddress",
+                "userAgent"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v1AdminListAuditLogsContract": {
+      "method": "GET",
+      "path": "/api/v1/admin/audit-logs",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "resourceType": {
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "actorId": {
+            "type": "string"
+          },
+          "actorEmail": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "limit": {
+            "default": 50,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "offset": {
+            "default": 0,
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        },
+        "required": [
+          "action",
+          "resourceType",
+          "resourceId",
+          "workspaceId",
+          "actorId",
+          "actorEmail",
+          "startDate",
+          "endDate",
+          "limit",
+          "offset"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "workspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "actorId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "actorName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "actorEmail": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "type": "string"
+                  },
+                  "resourceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "resourceName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "metadata": {},
+                  "createdAt": {
+                    "type": "string"
+                  },
+                  "ipAddress": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "userAgent": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  }
+                },
+                "required": [
+                  "id",
+                  "workspaceId",
+                  "actorId",
+                  "actorName",
+                  "actorEmail",
+                  "action",
+                  "resourceType",
+                  "resourceId",
+                  "resourceName",
+                  "description",
+                  "metadata",
+                  "createdAt",
+                  "ipAddress",
+                  "userAgent"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "pagination": {
+              "type": "object",
+              "properties": {
+                "total": {
+                  "type": "number"
+                },
+                "limit": {
+                  "type": "number"
+                },
+                "offset": {
+                  "type": "number"
+                },
+                "hasMore": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "total",
+                "limit",
+                "offset",
+                "hasMore"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data",
+            "pagination"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v1GetAuditLogContract": {
+      "method": "GET",
+      "path": "/api/v1/audit-logs/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string"
+                },
+                "workspaceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "actorId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "actorName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "actorEmail": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "action": {
+                  "type": "string"
+                },
+                "resourceType": {
+                  "type": "string"
+                },
+                "resourceId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "resourceName": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "description": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "metadata": {},
+                "createdAt": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "actorId",
+                "actorName",
+                "actorEmail",
+                "action",
+                "resourceType",
+                "resourceId",
+                "resourceName",
+                "description",
+                "metadata",
+                "createdAt"
+              ],
+              "additionalProperties": false
+            },
+            "limits": {
+              "type": "object",
+              "properties": {
+                "workflowExecutionRateLimit": {
+                  "type": "object",
+                  "properties": {
+                    "sync": {
+                      "type": "object",
+                      "properties": {
+                        "requestsPerMinute": {
+                          "type": "number"
+                        },
+                        "maxBurst": {
+                          "type": "number"
+                        },
+                        "remaining": {
+                          "type": "number"
+                        },
+                        "resetAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "requestsPerMinute",
+                        "maxBurst",
+                        "remaining",
+                        "resetAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "async": {
+                      "type": "object",
+                      "properties": {
+                        "requestsPerMinute": {
+                          "type": "number"
+                        },
+                        "maxBurst": {
+                          "type": "number"
+                        },
+                        "remaining": {
+                          "type": "number"
+                        },
+                        "resetAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "requestsPerMinute",
+                        "maxBurst",
+                        "remaining",
+                        "resetAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "sync",
+                    "async"
+                  ],
+                  "additionalProperties": false
+                },
+                "usage": {
+                  "type": "object",
+                  "properties": {
+                    "currentPeriodCost": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "limit": {
+                      "type": "number"
+                    },
+                    "plan": {
+                      "type": "string"
+                    },
+                    "isExceeded": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "currentPeriodCost",
+                    "limit",
+                    "plan",
+                    "isExceeded"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "workflowExecutionRateLimit",
+                "usage"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data",
+            "limits"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "v1ListAuditLogsContract": {
+      "method": "GET",
+      "path": "/api/v1/audit-logs",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "action": {
+            "type": "string"
+          },
+          "resourceType": {
+            "type": "string"
+          },
+          "resourceId": {
+            "type": "string"
+          },
+          "workspaceId": {
+            "type": "string"
+          },
+          "actorId": {
+            "type": "string"
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "includeDeparted": {
+            "default": "false",
+            "type": "string",
+            "enum": [
+              "true",
+              "false"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "type": "number",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "workspaceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "actorId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "actorName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "actorEmail": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "action": {
+                    "type": "string"
+                  },
+                  "resourceType": {
+                    "type": "string"
+                  },
+                  "resourceId": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "resourceName": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "description": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {
+                        "type": "null"
+                      }
+                    ]
+                  },
+                  "metadata": {},
+                  "createdAt": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "id",
+                  "workspaceId",
+                  "actorId",
+                  "actorName",
+                  "actorEmail",
+                  "action",
+                  "resourceType",
+                  "resourceId",
+                  "resourceName",
+                  "description",
+                  "metadata",
+                  "createdAt"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "nextCursor": {
+              "type": "string"
+            },
+            "limits": {
+              "type": "object",
+              "properties": {
+                "workflowExecutionRateLimit": {
+                  "type": "object",
+                  "properties": {
+                    "sync": {
+                      "type": "object",
+                      "properties": {
+                        "requestsPerMinute": {
+                          "type": "number"
+                        },
+                        "maxBurst": {
+                          "type": "number"
+                        },
+                        "remaining": {
+                          "type": "number"
+                        },
+                        "resetAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "requestsPerMinute",
+                        "maxBurst",
+                        "remaining",
+                        "resetAt"
+                      ],
+                      "additionalProperties": false
+                    },
+                    "async": {
+                      "type": "object",
+                      "properties": {
+                        "requestsPerMinute": {
+                          "type": "number"
+                        },
+                        "maxBurst": {
+                          "type": "number"
+                        },
+                        "remaining": {
+                          "type": "number"
+                        },
+                        "resetAt": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "requestsPerMinute",
+                        "maxBurst",
+                        "remaining",
+                        "resetAt"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "required": [
+                    "sync",
+                    "async"
+                  ],
+                  "additionalProperties": false
+                },
+                "usage": {
+                  "type": "object",
+                  "properties": {
+                    "currentPeriodCost": {
+                      "anyOf": [
+                        {
+                          "type": "number"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "limit": {
+                      "type": "number"
+                    },
+                    "plan": {
+                      "type": "string"
+                    },
+                    "isExceeded": {
+                      "type": "boolean"
+                    }
+                  },
+                  "required": [
+                    "currentPeriodCost",
+                    "limit",
+                    "plan",
+                    "isExceeded"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "workflowExecutionRateLimit",
+                "usage"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "data",
+            "limits"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

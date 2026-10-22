@@ -1,0 +1,87 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/cloudformation-describe-stack-drift-detection-status.ts",
+  "contracts": {
+    "awsCloudformationDescribeStackDriftDetectionStatusContract": {
+      "method": "POST",
+      "path": "/api/tools/cloudformation/describe-stack-drift-detection-status",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "stackDriftDetectionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "stackDriftDetectionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "stackId": {
+                  "type": "string"
+                },
+                "stackDriftDetectionId": {
+                  "type": "string"
+                },
+                "stackDriftStatus": {
+                  "type": "string"
+                },
+                "detectionStatus": {
+                  "type": "string"
+                },
+                "detectionStatusReason": {
+                  "type": "string"
+                },
+                "driftedStackResourceCount": {
+                  "type": "number"
+                },
+                "timestamp": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "stackId",
+                "stackDriftDetectionId",
+                "detectionStatus"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,2553 @@
+{
+  "source": "apps/sim/lib/api/contracts/table-transfers.ts",
+  "contracts": {
+    "cancelTableExportResourceContract": {
+      "method": "DELETE",
+      "path": "/api/table/exports/[exportId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "exportId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table-export identifier."
+          }
+        },
+        "required": [
+          "exportId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the transfer resource."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2TableExport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableExport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-export identifier."
+                },
+                "tableId": {
+                  "type": "string",
+                  "description": "Exported table identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the export."
+                },
+                "format": {
+                  "type": "string",
+                  "enum": [
+                    "csv",
+                    "json"
+                  ],
+                  "description": "Export file format."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled"
+                  ],
+                  "description": "Current export lifecycle state."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows exported so far."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "tableId",
+                "workspaceId",
+                "format",
+                "status",
+                "rowsProcessed",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableExport",
+              "title": "Table export",
+              "description": "Durable asynchronous table-export lifecycle resource."
+            }
+          }
+        }
+      }
+    },
+    "cancelTableImportResourceContract": {
+      "method": "DELETE",
+      "path": "/api/table/imports/[importId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "importId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table-import identifier."
+          }
+        },
+        "required": [
+          "importId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the transfer resource."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upload-token": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2TableImport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableUploadImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "upload",
+                  "description": "Upload-backed import discriminator."
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV filename."
+                },
+                "contentType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV MIME type."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5368709120,
+                  "description": "Exact CSV file size in bytes."
+                }
+              },
+              "required": [
+                "type",
+                "name",
+                "contentType",
+                "size"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableUploadImportSource",
+              "title": "Upload table import source",
+              "description": "CSV file uploaded through signed transfer instructions."
+            },
+            "V2TableWorkspaceFileImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "workspace_file",
+                  "description": "Workspace-file source discriminator."
+                },
+                "fileId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Existing workspace file identifier."
+                }
+              },
+              "required": [
+                "type",
+                "fileId"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableWorkspaceFileImportSource",
+              "title": "Workspace file table import source",
+              "description": "Existing workspace file used as a CSV import source."
+            },
+            "FolderPathInput": {
+              "id": "FolderPathInput",
+              "title": "Folder path input",
+              "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "V2TableImportRejectedSample": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "CSV parser error code, e.g. CSV_QUOTE_NOT_CLOSED."
+                },
+                "line": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "1-based source line the parser had reached when it gave up, or null."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Parser message for the dropped record."
+                }
+              },
+              "required": [
+                "code",
+                "line",
+                "message"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableImportRejectedSample",
+              "title": "Rejected import record",
+              "description": "One source record a table import could not read."
+            },
+            "V2TableImport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-import identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the import."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "uploading",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled",
+                    "expired"
+                  ],
+                  "description": "Current import lifecycle state."
+                },
+                "source": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/V2TableUploadImportSource"
+                    },
+                    {
+                      "$ref": "#/$defs/V2TableWorkspaceFileImportSource"
+                    }
+                  ],
+                  "description": "CSV source for the import."
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "new",
+                          "description": "Create-new-table target discriminator."
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                          "description": "Name of the table to create."
+                        },
+                        "folderPath": {
+                          "$ref": "#/$defs/FolderPathInput"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "existing",
+                          "description": "Existing-table target discriminator."
+                        },
+                        "tableId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Existing target table identifier."
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "append",
+                            "replace"
+                          ],
+                          "description": "Whether to append rows or replace existing rows."
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "tableId",
+                        "mode"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "New or existing table import target."
+                },
+                "tableId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Resulting or target table identifier."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows processed so far."
+                },
+                "rowsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Minimum number of source records dropped by parser failures. One failure can discard multiple records, such as an unterminated quote consuming the rest of the file. A non-zero value means partial import even with `completed` status; zero does not guarantee no loss."
+                },
+                "cellsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Non-empty cell values the target column type could not represent. Their rows were imported with the cell left blank."
+                },
+                "rejectedSamples": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2TableImportRejectedSample"
+                  },
+                  "description": "Bounded sample of the dropped records, for locating them in the source file."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "status",
+                "source",
+                "target",
+                "tableId",
+                "rowsProcessed",
+                "rowsRejected",
+                "cellsRejected",
+                "rejectedSamples",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableImport",
+              "title": "Table import",
+              "description": "Durable CSV table-import lifecycle resource."
+            }
+          }
+        }
+      }
+    },
+    "completeTableImportResourceContract": {
+      "method": "POST",
+      "path": "/api/table/imports/[importId]/complete",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "importId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table-import identifier."
+          }
+        },
+        "required": [
+          "importId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the transfer resource."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upload-token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Signed upload control token returned when the upload session was created."
+          }
+        },
+        "required": [
+          "upload-token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2TableImport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableUploadImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "upload",
+                  "description": "Upload-backed import discriminator."
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV filename."
+                },
+                "contentType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV MIME type."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5368709120,
+                  "description": "Exact CSV file size in bytes."
+                }
+              },
+              "required": [
+                "type",
+                "name",
+                "contentType",
+                "size"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableUploadImportSource",
+              "title": "Upload table import source",
+              "description": "CSV file uploaded through signed transfer instructions."
+            },
+            "V2TableWorkspaceFileImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "workspace_file",
+                  "description": "Workspace-file source discriminator."
+                },
+                "fileId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Existing workspace file identifier."
+                }
+              },
+              "required": [
+                "type",
+                "fileId"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableWorkspaceFileImportSource",
+              "title": "Workspace file table import source",
+              "description": "Existing workspace file used as a CSV import source."
+            },
+            "FolderPathInput": {
+              "id": "FolderPathInput",
+              "title": "Folder path input",
+              "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "V2TableImportRejectedSample": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "CSV parser error code, e.g. CSV_QUOTE_NOT_CLOSED."
+                },
+                "line": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "1-based source line the parser had reached when it gave up, or null."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Parser message for the dropped record."
+                }
+              },
+              "required": [
+                "code",
+                "line",
+                "message"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableImportRejectedSample",
+              "title": "Rejected import record",
+              "description": "One source record a table import could not read."
+            },
+            "V2TableImport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-import identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the import."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "uploading",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled",
+                    "expired"
+                  ],
+                  "description": "Current import lifecycle state."
+                },
+                "source": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/V2TableUploadImportSource"
+                    },
+                    {
+                      "$ref": "#/$defs/V2TableWorkspaceFileImportSource"
+                    }
+                  ],
+                  "description": "CSV source for the import."
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "new",
+                          "description": "Create-new-table target discriminator."
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                          "description": "Name of the table to create."
+                        },
+                        "folderPath": {
+                          "$ref": "#/$defs/FolderPathInput"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "existing",
+                          "description": "Existing-table target discriminator."
+                        },
+                        "tableId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Existing target table identifier."
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "append",
+                            "replace"
+                          ],
+                          "description": "Whether to append rows or replace existing rows."
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "tableId",
+                        "mode"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "New or existing table import target."
+                },
+                "tableId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Resulting or target table identifier."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows processed so far."
+                },
+                "rowsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Minimum number of source records dropped by parser failures. One failure can discard multiple records, such as an unterminated quote consuming the rest of the file. A non-zero value means partial import even with `completed` status; zero does not guarantee no loss."
+                },
+                "cellsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Non-empty cell values the target column type could not represent. Their rows were imported with the cell left blank."
+                },
+                "rejectedSamples": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2TableImportRejectedSample"
+                  },
+                  "description": "Bounded sample of the dropped records, for locating them in the source file."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "status",
+                "source",
+                "target",
+                "tableId",
+                "rowsProcessed",
+                "rowsRejected",
+                "cellsRejected",
+                "rejectedSamples",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableImport",
+              "title": "Table import",
+              "description": "Durable CSV table-import lifecycle resource."
+            }
+          }
+        }
+      }
+    },
+    "createTableExportResourceContract": {
+      "method": "POST",
+      "path": "/api/table/[tableId]/exports",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "tableId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table identifier."
+          }
+        },
+        "required": [
+          "tableId"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "format": {
+            "default": "csv",
+            "description": "Export file format.",
+            "type": "string",
+            "enum": [
+              "csv",
+              "json"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2TableExport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableExport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-export identifier."
+                },
+                "tableId": {
+                  "type": "string",
+                  "description": "Exported table identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the export."
+                },
+                "format": {
+                  "type": "string",
+                  "enum": [
+                    "csv",
+                    "json"
+                  ],
+                  "description": "Export file format."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled"
+                  ],
+                  "description": "Current export lifecycle state."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows exported so far."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "tableId",
+                "workspaceId",
+                "format",
+                "status",
+                "rowsProcessed",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableExport",
+              "title": "Table export",
+              "description": "Durable asynchronous table-export lifecycle resource."
+            }
+          }
+        }
+      }
+    },
+    "createTableImportPartUrlsContract": {
+      "method": "POST",
+      "path": "/api/table/imports/[importId]/parts",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "importId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table-import identifier."
+          }
+        },
+        "required": [
+          "importId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the transfer resource."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "partNumbers": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 9007199254740991
+            },
+            "description": "Multipart part numbers for which signed URLs should be created."
+          }
+        },
+        "required": [
+          "partNumbers"
+        ],
+        "additionalProperties": false
+      },
+      "headers": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "upload-token": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Signed upload control token returned when the upload session was created."
+          }
+        },
+        "required": [
+          "upload-token"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2PartUrlsData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2UploadPartUrl": {
+              "type": "object",
+              "properties": {
+                "partNumber": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 9007199254740991,
+                  "description": "Multipart part number."
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Signed URL for this upload part. Upload bytes with `PUT` and exactly the supplied headers; never construct or modify the signed URL. Treat any `2xx` as success. Sim-hosted URLs return an empty `204` and v2 JSON errors. Object-storage URLs may return `200` or `201` and provider-specific errors, often XML. Do not retain part `ETag` values; after every part succeeds, call the completion endpoint without a request body."
+                },
+                "headers": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Headers that must be included with the part upload."
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 expiration time for the signed URL."
+                }
+              },
+              "required": [
+                "partNumber",
+                "url",
+                "headers",
+                "expiresAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2UploadPartUrl",
+              "title": "Upload part URL",
+              "description": "A signed URL and required headers for one multipart upload part."
+            },
+            "V2PartUrlsData": {
+              "type": "object",
+              "properties": {
+                "parts": {
+                  "maxItems": 100,
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2UploadPartUrl"
+                  },
+                  "description": "Signed URLs for requested parts."
+                }
+              },
+              "required": [
+                "parts"
+              ],
+              "additionalProperties": false,
+              "id": "V2PartUrlsData",
+              "title": "Upload part URLs",
+              "description": "Signed transfer URLs for the requested multipart upload parts."
+            }
+          }
+        }
+      }
+    },
+    "createTableImportResourceContract": {
+      "method": "POST",
+      "path": "/api/table/imports",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "source": {
+            "oneOf": [
+              {
+                "$ref": "#/$defs/V2TableUploadImportSource"
+              },
+              {
+                "$ref": "#/$defs/V2TableWorkspaceFileImportSource"
+              }
+            ],
+            "description": "CSV source for the import."
+          },
+          "target": {
+            "oneOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "new",
+                    "description": "Create-new-table target discriminator."
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 128,
+                    "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                    "description": "Name of the table to create."
+                  },
+                  "folderPath": {
+                    "$ref": "#/$defs/FolderPathInput"
+                  }
+                },
+                "required": [
+                  "type",
+                  "name"
+                ],
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "properties": {
+                  "type": {
+                    "type": "string",
+                    "const": "existing",
+                    "description": "Existing-table target discriminator."
+                  },
+                  "tableId": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Existing target table identifier."
+                  },
+                  "mode": {
+                    "type": "string",
+                    "enum": [
+                      "append",
+                      "replace"
+                    ],
+                    "description": "Whether to append rows or replace existing rows."
+                  }
+                },
+                "required": [
+                  "type",
+                  "tableId",
+                  "mode"
+                ],
+                "additionalProperties": false
+              }
+            ],
+            "description": "New or existing table import target."
+          },
+          "mapping": {
+            "description": "CSV headers mapped to existing table columns.",
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            },
+            "additionalProperties": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 50
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "createColumns": {
+            "description": "CSV headers for which new columns should be created.",
+            "maxItems": 1000,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 50
+            }
+          },
+          "timezone": {
+            "description": "IANA timezone used to interpret local date values.",
+            "type": "string"
+          }
+        },
+        "required": [
+          "workspaceId",
+          "source",
+          "target"
+        ],
+        "additionalProperties": false,
+        "$defs": {
+          "V2TableUploadImportSource": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "upload",
+                "description": "Upload-backed import discriminator."
+              },
+              "name": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255,
+                "description": "CSV filename."
+              },
+              "contentType": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 255,
+                "description": "CSV MIME type."
+              },
+              "size": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 5368709120,
+                "description": "Exact CSV file size in bytes."
+              }
+            },
+            "required": [
+              "type",
+              "name",
+              "contentType",
+              "size"
+            ],
+            "additionalProperties": false,
+            "id": "V2TableUploadImportSource",
+            "title": "Upload table import source",
+            "description": "CSV file uploaded through signed transfer instructions."
+          },
+          "V2TableWorkspaceFileImportSource": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "type": "string",
+                "const": "workspace_file",
+                "description": "Workspace-file source discriminator."
+              },
+              "fileId": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Existing workspace file identifier."
+              }
+            },
+            "required": [
+              "type",
+              "fileId"
+            ],
+            "additionalProperties": false,
+            "id": "V2TableWorkspaceFileImportSource",
+            "title": "Workspace file table import source",
+            "description": "Existing workspace file used as a CSV import source."
+          },
+          "FolderPathInput": {
+            "id": "FolderPathInput",
+            "title": "Folder path input",
+            "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+            "maxLength": 4096,
+            "type": "string"
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2CreateTableImportData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableUploadImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "upload",
+                  "description": "Upload-backed import discriminator."
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV filename."
+                },
+                "contentType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV MIME type."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5368709120,
+                  "description": "Exact CSV file size in bytes."
+                }
+              },
+              "required": [
+                "type",
+                "name",
+                "contentType",
+                "size"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableUploadImportSource",
+              "title": "Upload table import source",
+              "description": "CSV file uploaded through signed transfer instructions."
+            },
+            "FolderPathInput": {
+              "id": "FolderPathInput",
+              "title": "Folder path input",
+              "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "V2TableImportRejectedSample": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "CSV parser error code, e.g. CSV_QUOTE_NOT_CLOSED."
+                },
+                "line": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "1-based source line the parser had reached when it gave up, or null."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Parser message for the dropped record."
+                }
+              },
+              "required": [
+                "code",
+                "line",
+                "message"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableImportRejectedSample",
+              "title": "Rejected import record",
+              "description": "One source record a table import could not read."
+            },
+            "V2UploadBackedTableImport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-import identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the import."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "uploading",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled",
+                    "expired"
+                  ],
+                  "description": "Current import lifecycle state."
+                },
+                "source": {
+                  "description": "Uploaded CSV source for this import.",
+                  "$ref": "#/$defs/V2TableUploadImportSource"
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "new",
+                          "description": "Create-new-table target discriminator."
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                          "description": "Name of the table to create."
+                        },
+                        "folderPath": {
+                          "$ref": "#/$defs/FolderPathInput"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "existing",
+                          "description": "Existing-table target discriminator."
+                        },
+                        "tableId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Existing target table identifier."
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "append",
+                            "replace"
+                          ],
+                          "description": "Whether to append rows or replace existing rows."
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "tableId",
+                        "mode"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "New or existing table import target."
+                },
+                "tableId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Resulting or target table identifier."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows processed so far."
+                },
+                "rowsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Minimum number of source records dropped by parser failures. One failure can discard multiple records, such as an unterminated quote consuming the rest of the file. A non-zero value means partial import even with `completed` status; zero does not guarantee no loss."
+                },
+                "cellsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Non-empty cell values the target column type could not represent. Their rows were imported with the cell left blank."
+                },
+                "rejectedSamples": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2TableImportRejectedSample"
+                  },
+                  "description": "Bounded sample of the dropped records, for locating them in the source file."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "status",
+                "source",
+                "target",
+                "tableId",
+                "rowsProcessed",
+                "rowsRejected",
+                "cellsRejected",
+                "rejectedSamples",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2UploadBackedTableImport",
+              "title": "Upload-backed table import",
+              "description": "Table import whose CSV source is uploaded through signed transfer instructions."
+            },
+            "V2PutUploadTransfer": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "const": "put",
+                  "description": "Upload strategy discriminator."
+                },
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Signed URL to which the file bytes are uploaded. Upload bytes with `PUT` and exactly the supplied headers; never construct or modify the signed URL. Treat any `2xx` as success. Sim-hosted URLs return an empty `204` and v2 JSON errors. Object-storage URLs may return `200` or `201` and provider-specific errors, often XML."
+                },
+                "headers": {
+                  "type": "object",
+                  "propertyNames": {
+                    "type": "string"
+                  },
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "description": "Headers that must be included with the upload request."
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 expiration time for this signed URL. This is the URL's own expiry and is normally earlier than the upload session's expiresAt: the session stays open for later part, status, completion, and abort requests, but the bytes must be uploaded before this time. Once it passes, the storage provider rejects the upload and a new upload session must be created."
+                }
+              },
+              "required": [
+                "method",
+                "url",
+                "headers",
+                "expiresAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2PutUploadTransfer",
+              "title": "Direct upload transfer",
+              "description": "Instructions for uploading bytes to one signed URL."
+            },
+            "V2MultipartUploadTransfer": {
+              "type": "object",
+              "properties": {
+                "method": {
+                  "type": "string",
+                  "const": "multipart",
+                  "description": "Upload strategy discriminator."
+                },
+                "partSize": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Required size of each non-final part in bytes."
+                },
+                "partCount": {
+                  "type": "integer",
+                  "exclusiveMinimum": 0,
+                  "maximum": 640,
+                  "description": "Total number of upload parts."
+                }
+              },
+              "required": [
+                "method",
+                "partSize",
+                "partCount"
+              ],
+              "additionalProperties": false,
+              "id": "V2MultipartUploadTransfer",
+              "title": "Multipart upload transfer",
+              "description": "Instructions for splitting bytes into a multipart upload."
+            },
+            "V2TableWorkspaceFileImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "workspace_file",
+                  "description": "Workspace-file source discriminator."
+                },
+                "fileId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Existing workspace file identifier."
+                }
+              },
+              "required": [
+                "type",
+                "fileId"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableWorkspaceFileImportSource",
+              "title": "Workspace file table import source",
+              "description": "Existing workspace file used as a CSV import source."
+            },
+            "V2WorkspaceFileTableImport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-import identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the import."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "uploading",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled",
+                    "expired"
+                  ],
+                  "description": "Current import lifecycle state."
+                },
+                "source": {
+                  "description": "Workspace-file CSV source for this import.",
+                  "$ref": "#/$defs/V2TableWorkspaceFileImportSource"
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "new",
+                          "description": "Create-new-table target discriminator."
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                          "description": "Name of the table to create."
+                        },
+                        "folderPath": {
+                          "$ref": "#/$defs/FolderPathInput"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "existing",
+                          "description": "Existing-table target discriminator."
+                        },
+                        "tableId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Existing target table identifier."
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "append",
+                            "replace"
+                          ],
+                          "description": "Whether to append rows or replace existing rows."
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "tableId",
+                        "mode"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "New or existing table import target."
+                },
+                "tableId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Resulting or target table identifier."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows processed so far."
+                },
+                "rowsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Minimum number of source records dropped by parser failures. One failure can discard multiple records, such as an unterminated quote consuming the rest of the file. A non-zero value means partial import even with `completed` status; zero does not guarantee no loss."
+                },
+                "cellsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Non-empty cell values the target column type could not represent. Their rows were imported with the cell left blank."
+                },
+                "rejectedSamples": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2TableImportRejectedSample"
+                  },
+                  "description": "Bounded sample of the dropped records, for locating them in the source file."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "status",
+                "source",
+                "target",
+                "tableId",
+                "rowsProcessed",
+                "rowsRejected",
+                "cellsRejected",
+                "rejectedSamples",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2WorkspaceFileTableImport",
+              "title": "Workspace-file table import",
+              "description": "Table import whose CSV source is an existing workspace file."
+            },
+            "V2CreateTableImportData": {
+              "anyOf": [
+                {
+                  "type": "object",
+                  "properties": {
+                    "session": {
+                      "description": "Created upload-backed import session.",
+                      "$ref": "#/$defs/V2UploadBackedTableImport"
+                    },
+                    "uploadToken": {
+                      "type": "string",
+                      "minLength": 1,
+                      "description": "Signed token for upload control requests."
+                    },
+                    "transfer": {
+                      "oneOf": [
+                        {
+                          "$ref": "#/$defs/V2PutUploadTransfer"
+                        },
+                        {
+                          "$ref": "#/$defs/V2MultipartUploadTransfer"
+                        }
+                      ],
+                      "description": "Signed CSV upload instructions."
+                    }
+                  },
+                  "required": [
+                    "session",
+                    "uploadToken",
+                    "transfer"
+                  ],
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "properties": {
+                    "session": {
+                      "description": "Created workspace-file import session.",
+                      "$ref": "#/$defs/V2WorkspaceFileTableImport"
+                    },
+                    "uploadToken": {
+                      "type": "null",
+                      "description": "Always null; a workspace-file import has no upload to authorize."
+                    },
+                    "transfer": {
+                      "type": "null",
+                      "description": "Always null; a workspace-file import has no bytes to transfer."
+                    }
+                  },
+                  "required": [
+                    "session",
+                    "uploadToken",
+                    "transfer"
+                  ],
+                  "additionalProperties": false
+                }
+              ],
+              "id": "V2CreateTableImportData",
+              "title": "Create table import data",
+              "description": "Created import session and upload instructions when the source needs transfer."
+            }
+          }
+        }
+      }
+    },
+    "downloadTableExportResourceContract": {
+      "method": "GET",
+      "path": "/api/table/exports/[exportId]/download",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "exportId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table-export identifier."
+          }
+        },
+        "required": [
+          "exportId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the transfer resource."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2TableExportDownloadData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableExportDownloadData": {
+              "type": "object",
+              "properties": {
+                "url": {
+                  "type": "string",
+                  "format": "uri",
+                  "description": "Short-lived signed download URL."
+                },
+                "fileName": {
+                  "type": "string",
+                  "description": "Suggested export filename."
+                },
+                "expiresAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 URL expiration timestamp."
+                }
+              },
+              "required": [
+                "url",
+                "fileName",
+                "expiresAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableExportDownloadData",
+              "title": "Table export download data",
+              "description": "Signed URL and filename for a completed table export."
+            }
+          }
+        }
+      }
+    },
+    "getTableExportResourceContract": {
+      "method": "GET",
+      "path": "/api/table/exports/[exportId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "exportId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table-export identifier."
+          }
+        },
+        "required": [
+          "exportId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the transfer resource."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2TableExport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableExport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-export identifier."
+                },
+                "tableId": {
+                  "type": "string",
+                  "description": "Exported table identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the export."
+                },
+                "format": {
+                  "type": "string",
+                  "enum": [
+                    "csv",
+                    "json"
+                  ],
+                  "description": "Export file format."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "queued",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled"
+                  ],
+                  "description": "Current export lifecycle state."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows exported so far."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "tableId",
+                "workspaceId",
+                "format",
+                "status",
+                "rowsProcessed",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableExport",
+              "title": "Table export",
+              "description": "Durable asynchronous table-export lifecycle resource."
+            }
+          }
+        }
+      }
+    },
+    "getTableImportResourceContract": {
+      "method": "GET",
+      "path": "/api/table/imports/[importId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "importId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique table-import identifier."
+          }
+        },
+        "required": [
+          "importId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the transfer resource."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2TableImport"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2TableUploadImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "upload",
+                  "description": "Upload-backed import discriminator."
+                },
+                "name": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV filename."
+                },
+                "contentType": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 255,
+                  "description": "CSV MIME type."
+                },
+                "size": {
+                  "type": "integer",
+                  "minimum": 1,
+                  "maximum": 5368709120,
+                  "description": "Exact CSV file size in bytes."
+                }
+              },
+              "required": [
+                "type",
+                "name",
+                "contentType",
+                "size"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableUploadImportSource",
+              "title": "Upload table import source",
+              "description": "CSV file uploaded through signed transfer instructions."
+            },
+            "V2TableWorkspaceFileImportSource": {
+              "type": "object",
+              "properties": {
+                "type": {
+                  "type": "string",
+                  "const": "workspace_file",
+                  "description": "Workspace-file source discriminator."
+                },
+                "fileId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "description": "Existing workspace file identifier."
+                }
+              },
+              "required": [
+                "type",
+                "fileId"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableWorkspaceFileImportSource",
+              "title": "Workspace file table import source",
+              "description": "Existing workspace file used as a CSV import source."
+            },
+            "FolderPathInput": {
+              "id": "FolderPathInput",
+              "title": "Folder path input",
+              "description": "Folder path. A missing leading slash is normalized before validation. Segments are percent-encoded, so a folder shown as \"New folder\" is `/New%20folder`: everything outside `A-Z a-z 0-9 - _ . ~` is escaped as uppercase hex, and only that exact encoding is accepted. A trailing slash, an empty segment, and a literal `.` or `..` segment are rejected. At most 64 segments and 4096 encoded bytes.",
+              "maxLength": 4096,
+              "type": "string"
+            },
+            "V2TableImportRejectedSample": {
+              "type": "object",
+              "properties": {
+                "code": {
+                  "type": "string",
+                  "description": "CSV parser error code, e.g. CSV_QUOTE_NOT_CLOSED."
+                },
+                "line": {
+                  "anyOf": [
+                    {
+                      "type": "integer",
+                      "minimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "1-based source line the parser had reached when it gave up, or null."
+                },
+                "message": {
+                  "type": "string",
+                  "description": "Parser message for the dropped record."
+                }
+              },
+              "required": [
+                "code",
+                "line",
+                "message"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableImportRejectedSample",
+              "title": "Rejected import record",
+              "description": "One source record a table import could not read."
+            },
+            "V2TableImport": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique table-import identifier."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace that owns the import."
+                },
+                "status": {
+                  "type": "string",
+                  "enum": [
+                    "uploading",
+                    "processing",
+                    "completed",
+                    "failed",
+                    "canceled",
+                    "expired"
+                  ],
+                  "description": "Current import lifecycle state."
+                },
+                "source": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/$defs/V2TableUploadImportSource"
+                    },
+                    {
+                      "$ref": "#/$defs/V2TableWorkspaceFileImportSource"
+                    }
+                  ],
+                  "description": "CSV source for the import."
+                },
+                "target": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "new",
+                          "description": "Create-new-table target discriminator."
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1,
+                          "maxLength": 128,
+                          "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                          "description": "Name of the table to create."
+                        },
+                        "folderPath": {
+                          "$ref": "#/$defs/FolderPathInput"
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "name"
+                      ],
+                      "additionalProperties": false
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "const": "existing",
+                          "description": "Existing-table target discriminator."
+                        },
+                        "tableId": {
+                          "type": "string",
+                          "minLength": 1,
+                          "description": "Existing target table identifier."
+                        },
+                        "mode": {
+                          "type": "string",
+                          "enum": [
+                            "append",
+                            "replace"
+                          ],
+                          "description": "Whether to append rows or replace existing rows."
+                        }
+                      },
+                      "required": [
+                        "type",
+                        "tableId",
+                        "mode"
+                      ],
+                      "additionalProperties": false
+                    }
+                  ],
+                  "description": "New or existing table import target."
+                },
+                "tableId": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Resulting or target table identifier."
+                },
+                "rowsProcessed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Rows processed so far."
+                },
+                "rowsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Minimum number of source records dropped by parser failures. One failure can discard multiple records, such as an unterminated quote consuming the rest of the file. A non-zero value means partial import even with `completed` status; zero does not guarantee no loss."
+                },
+                "cellsRejected": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Non-empty cell values the target column type could not represent. Their rows were imported with the cell left blank."
+                },
+                "rejectedSamples": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/V2TableImportRejectedSample"
+                  },
+                  "description": "Bounded sample of the dropped records, for locating them in the source file."
+                },
+                "error": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Terminal failure reason, or null."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 creation timestamp."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 last-update timestamp."
+                },
+                "completedAt": {
+                  "anyOf": [
+                    {
+                      "type": "string",
+                      "format": "date-time",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "ISO 8601 completion timestamp, or null."
+                }
+              },
+              "required": [
+                "id",
+                "workspaceId",
+                "status",
+                "source",
+                "target",
+                "tableId",
+                "rowsProcessed",
+                "rowsRejected",
+                "cellsRejected",
+                "rejectedSamples",
+                "error",
+                "createdAt",
+                "updatedAt",
+                "completedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2TableImport",
+              "title": "Table import",
+              "description": "Durable CSV table-import lifecycle resource."
+            }
+          }
+        }
+      }
+    }
+  }
+}

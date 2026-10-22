@@ -1,0 +1,156 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/identity-center-create-account-assignment.ts",
+  "contracts": {
+    "awsIdentityCenterCreateAccountAssignmentContract": {
+      "method": "POST",
+      "path": "/api/tools/identity-center/create-account-assignment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "instanceArn": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1224,
+            "pattern": "^arn:aws(-[a-z]{1,5}){0,3}:sso:::instance\\/(sso)?ins-[a-zA-Z0-9-.]{16}$"
+          },
+          "accountId": {
+            "type": "string",
+            "pattern": "^\\d{12}$"
+          },
+          "permissionSetArn": {
+            "type": "string",
+            "minLength": 10,
+            "maxLength": 1224,
+            "pattern": "^arn:aws(-[a-z]{1,5}){0,3}:sso:::permissionSet\\/(sso)?ins-[a-zA-Z0-9-.]{16}\\/ps-[a-zA-Z0-9-./]{16}$"
+          },
+          "principalType": {
+            "type": "string",
+            "enum": [
+              "USER",
+              "GROUP"
+            ]
+          },
+          "principalId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 47,
+            "pattern": "^([0-9a-f]{10}-)?[A-Fa-f0-9]{8}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{4}-[A-Fa-f0-9]{12}$"
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "instanceArn",
+          "accountId",
+          "permissionSetArn",
+          "principalType",
+          "principalId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "message": {
+              "type": "string"
+            },
+            "status": {
+              "type": "string"
+            },
+            "requestId": {
+              "type": "string"
+            },
+            "accountId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "permissionSetArn": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "principalType": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "principalId": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "failureReason": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            },
+            "createdDate": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ]
+            }
+          },
+          "required": [
+            "message",
+            "status",
+            "requestId",
+            "accountId",
+            "permissionSetArn",
+            "principalType",
+            "principalId",
+            "failureReason",
+            "createdDate"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,1261 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/knowledge-chunks.ts",
+  "contracts": {
+    "v2BulkUpdateKnowledgeChunksContract": {
+      "method": "PATCH",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/documents/[documentId]/chunks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge document identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "documentId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "enable",
+              "disable",
+              "delete"
+            ],
+            "description": "What to do with the selected chunks."
+          },
+          "chunkIds": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            },
+            "description": "Chunks to operate on, by identifier. An id naming no chunk in the document is reported in errors and does not fail the request."
+          }
+        },
+        "required": [
+          "workspaceId",
+          "operation",
+          "chunkIds"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2BulkKnowledgeChunksData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2BulkKnowledgeChunksData": {
+              "type": "object",
+              "properties": {
+                "operation": {
+                  "type": "string",
+                  "enum": [
+                    "enable",
+                    "disable",
+                    "delete"
+                  ],
+                  "description": "Operation that was applied."
+                },
+                "processed": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Number of chunks in this document the operation matched. Chunks already in the requested state are counted too, so this is not a count of changes.",
+                  "examples": [
+                    12
+                  ]
+                },
+                "errors": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Per-chunk failures, including any identifier that named no chunk in the document. A populated array still answers 200."
+                }
+              },
+              "required": [
+                "operation",
+                "processed",
+                "errors"
+              ],
+              "additionalProperties": false,
+              "id": "V2BulkKnowledgeChunksData",
+              "title": "Bulk knowledge chunk update data",
+              "description": "Outcome of a bulk enable, disable, or delete across knowledge chunks."
+            }
+          }
+        }
+      }
+    },
+    "v2CreateKnowledgeChunkContract": {
+      "method": "POST",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/documents/[documentId]/chunks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge document identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "documentId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "content": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000,
+            "description": "Text embedded before the response. Search includes it when the chunk and document are enabled and the document has completed processing."
+          },
+          "enabled": {
+            "default": true,
+            "description": "Whether the new chunk participates in search.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "workspaceId",
+          "content"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2KnowledgeChunk"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeChunk": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique chunk identifier.",
+                  "examples": [
+                    "4c1f9e77-2b3a-4f8d-9e10-6a2c8d4b1e05"
+                  ]
+                },
+                "chunkIndex": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Zero-based position of the chunk within its document.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Text content of the chunk, exactly as it was embedded.",
+                  "examples": [
+                    "To reset your password, open Settings and choose Security."
+                  ]
+                },
+                "contentLength": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character count of `content`.",
+                  "examples": [
+                    58
+                  ]
+                },
+                "tokenCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Tokens the chunk consumed when embedded.",
+                  "examples": [
+                    14
+                  ]
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the chunk participates in search. A disabled chunk stays indexed."
+                },
+                "startOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset of the chunk within the extracted document text."
+                },
+                "endOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset just past the end of the chunk."
+                },
+                "tag1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag3": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag4": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag5": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag6": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag7": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was last modified."
+                }
+              },
+              "required": [
+                "id",
+                "chunkIndex",
+                "content",
+                "contentLength",
+                "tokenCount",
+                "enabled",
+                "startOffset",
+                "endOffset",
+                "tag1",
+                "tag2",
+                "tag3",
+                "tag4",
+                "tag5",
+                "tag6",
+                "tag7",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeChunk",
+              "title": "Knowledge chunk",
+              "description": "One embedded passage of a knowledge document."
+            }
+          }
+        }
+      }
+    },
+    "v2DeleteKnowledgeChunkContract": {
+      "method": "DELETE",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/documents/[documentId]/chunks/[chunkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge document identifier."
+          },
+          "chunkId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique chunk identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "documentId",
+          "chunkId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2KnowledgeDeleteData"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeDeleteData": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the deleted resource.",
+                  "examples": [
+                    "7c9e6679-7425-40de-944b-e07fc1f90ae7"
+                  ]
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Confirms that the resource was deleted."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeDeleteData",
+              "title": "Knowledge deletion data",
+              "description": "Acknowledgement for a deleted knowledge base or document."
+            }
+          }
+        }
+      }
+    },
+    "v2GetKnowledgeChunkContract": {
+      "method": "GET",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/documents/[documentId]/chunks/[chunkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge document identifier."
+          },
+          "chunkId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique chunk identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "documentId",
+          "chunkId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2KnowledgeChunk"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeChunk": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique chunk identifier.",
+                  "examples": [
+                    "4c1f9e77-2b3a-4f8d-9e10-6a2c8d4b1e05"
+                  ]
+                },
+                "chunkIndex": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Zero-based position of the chunk within its document.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Text content of the chunk, exactly as it was embedded.",
+                  "examples": [
+                    "To reset your password, open Settings and choose Security."
+                  ]
+                },
+                "contentLength": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character count of `content`.",
+                  "examples": [
+                    58
+                  ]
+                },
+                "tokenCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Tokens the chunk consumed when embedded.",
+                  "examples": [
+                    14
+                  ]
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the chunk participates in search. A disabled chunk stays indexed."
+                },
+                "startOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset of the chunk within the extracted document text."
+                },
+                "endOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset just past the end of the chunk."
+                },
+                "tag1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag3": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag4": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag5": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag6": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag7": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was last modified."
+                }
+              },
+              "required": [
+                "id",
+                "chunkIndex",
+                "content",
+                "contentLength",
+                "tokenCount",
+                "enabled",
+                "startOffset",
+                "endOffset",
+                "tag1",
+                "tag2",
+                "tag3",
+                "tag4",
+                "tag5",
+                "tag6",
+                "tag7",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeChunk",
+              "title": "Knowledge chunk",
+              "description": "One embedded passage of a knowledge document."
+            }
+          }
+        }
+      }
+    },
+    "v2ListKnowledgeChunksContract": {
+      "method": "GET",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/documents/[documentId]/chunks",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge document identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "documentId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "search": {
+            "description": "Case-insensitive substring match against chunk content.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "enabled": {
+            "default": "all",
+            "description": "Restrict to enabled or disabled chunks. `all` returns both.",
+            "type": "string",
+            "enum": [
+              "true",
+              "false",
+              "all"
+            ]
+          },
+          "sortBy": {
+            "default": "chunkIndex",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "chunkIndex",
+              "tokenCount",
+              "enabled"
+            ]
+          },
+          "sortOrder": {
+            "default": "asc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum chunks to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/V2KnowledgeChunk"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeChunk": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique chunk identifier.",
+                  "examples": [
+                    "4c1f9e77-2b3a-4f8d-9e10-6a2c8d4b1e05"
+                  ]
+                },
+                "chunkIndex": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Zero-based position of the chunk within its document.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Text content of the chunk, exactly as it was embedded.",
+                  "examples": [
+                    "To reset your password, open Settings and choose Security."
+                  ]
+                },
+                "contentLength": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character count of `content`.",
+                  "examples": [
+                    58
+                  ]
+                },
+                "tokenCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Tokens the chunk consumed when embedded.",
+                  "examples": [
+                    14
+                  ]
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the chunk participates in search. A disabled chunk stays indexed."
+                },
+                "startOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset of the chunk within the extracted document text."
+                },
+                "endOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset just past the end of the chunk."
+                },
+                "tag1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag3": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag4": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag5": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag6": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag7": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was last modified."
+                }
+              },
+              "required": [
+                "id",
+                "chunkIndex",
+                "content",
+                "contentLength",
+                "tokenCount",
+                "enabled",
+                "startOffset",
+                "endOffset",
+                "tag1",
+                "tag2",
+                "tag3",
+                "tag4",
+                "tag5",
+                "tag6",
+                "tag7",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeChunk",
+              "title": "Knowledge chunk",
+              "description": "One embedded passage of a knowledge document."
+            }
+          }
+        }
+      }
+    },
+    "v2UpdateKnowledgeChunkContract": {
+      "method": "PATCH",
+      "path": "/api/v2/knowledge/[knowledgeBaseId]/documents/[documentId]/chunks/[chunkId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "documentId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge document identifier."
+          },
+          "chunkId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique chunk identifier."
+          },
+          "knowledgeBaseId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique knowledge base identifier."
+          }
+        },
+        "required": [
+          "documentId",
+          "chunkId",
+          "knowledgeBaseId"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace that owns the knowledge base."
+          },
+          "content": {
+            "description": "Replacement text. Changing it re-embeds the chunk and re-derives its token and character counts.",
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 10000
+          },
+          "enabled": {
+            "description": "Whether the chunk participates in search. Disabling keeps it indexed.",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/V2KnowledgeChunk"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "V2KnowledgeChunk": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique chunk identifier.",
+                  "examples": [
+                    "4c1f9e77-2b3a-4f8d-9e10-6a2c8d4b1e05"
+                  ]
+                },
+                "chunkIndex": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Zero-based position of the chunk within its document.",
+                  "examples": [
+                    3
+                  ]
+                },
+                "content": {
+                  "type": "string",
+                  "description": "Text content of the chunk, exactly as it was embedded.",
+                  "examples": [
+                    "To reset your password, open Settings and choose Security."
+                  ]
+                },
+                "contentLength": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character count of `content`.",
+                  "examples": [
+                    58
+                  ]
+                },
+                "tokenCount": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Tokens the chunk consumed when embedded.",
+                  "examples": [
+                    14
+                  ]
+                },
+                "enabled": {
+                  "type": "boolean",
+                  "description": "Whether the chunk participates in search. A disabled chunk stays indexed."
+                },
+                "startOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset of the chunk within the extracted document text."
+                },
+                "endOffset": {
+                  "type": "integer",
+                  "minimum": 0,
+                  "maximum": 9007199254740991,
+                  "description": "Character offset just past the end of the chunk."
+                },
+                "tag1": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag2": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag3": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag4": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag5": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag6": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "tag7": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "description": "Text tag value inherited from the document, or null when the slot is unset."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was created."
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))T(?:(?:[01]\\d|2[0-3]):[0-5]\\d(?::[0-5]\\d(?:\\.\\d+)?)?(?:Z))$",
+                  "description": "ISO 8601 timestamp when the chunk was last modified."
+                }
+              },
+              "required": [
+                "id",
+                "chunkIndex",
+                "content",
+                "contentLength",
+                "tokenCount",
+                "enabled",
+                "startOffset",
+                "endOffset",
+                "tag1",
+                "tag2",
+                "tag3",
+                "tag4",
+                "tag5",
+                "tag6",
+                "tag7",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "V2KnowledgeChunk",
+              "title": "Knowledge chunk",
+              "description": "One embedded passage of a knowledge document."
+            }
+          }
+        }
+      }
+    }
+  }
+}

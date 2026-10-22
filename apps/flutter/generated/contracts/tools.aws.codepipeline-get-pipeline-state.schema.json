@@ -1,0 +1,151 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/codepipeline-get-pipeline-state.ts",
+  "contracts": {
+    "awsCodepipelineGetPipelineStateContract": {
+      "method": "POST",
+      "path": "/api/tools/codepipeline/get-pipeline-state",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          },
+          "pipelineName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 100
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey",
+          "pipelineName"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "pipelineName": {
+                  "type": "string"
+                },
+                "pipelineVersion": {
+                  "type": "number"
+                },
+                "created": {
+                  "type": "number"
+                },
+                "updated": {
+                  "type": "number"
+                },
+                "stageStates": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "stageName": {
+                        "type": "string"
+                      },
+                      "status": {
+                        "type": "string"
+                      },
+                      "pipelineExecutionId": {
+                        "type": "string"
+                      },
+                      "inboundTransitionEnabled": {
+                        "type": "boolean"
+                      },
+                      "actionStates": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "actionName": {
+                              "type": "string"
+                            },
+                            "status": {
+                              "type": "string"
+                            },
+                            "summary": {
+                              "type": "string"
+                            },
+                            "lastStatusChange": {
+                              "type": "number"
+                            },
+                            "externalExecutionId": {
+                              "type": "string"
+                            },
+                            "externalExecutionUrl": {
+                              "type": "string"
+                            },
+                            "errorCode": {
+                              "type": "string"
+                            },
+                            "errorMessage": {
+                              "type": "string"
+                            },
+                            "percentComplete": {
+                              "type": "number"
+                            },
+                            "token": {
+                              "type": "string"
+                            },
+                            "revisionId": {
+                              "type": "string"
+                            },
+                            "entityUrl": {
+                              "type": "string"
+                            }
+                          },
+                          "required": [
+                            "actionName"
+                          ],
+                          "additionalProperties": false
+                        }
+                      }
+                    },
+                    "required": [
+                      "stageName",
+                      "actionStates"
+                    ],
+                    "additionalProperties": false
+                  }
+                }
+              },
+              "required": [
+                "pipelineName",
+                "stageStates"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

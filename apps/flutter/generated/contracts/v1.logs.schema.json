@@ -1,0 +1,164 @@
+{
+  "source": "apps/sim/lib/api/contracts/v1/logs.ts",
+  "contracts": {
+    "v1GetExecutionContract": {
+      "method": "GET",
+      "path": "/api/v1/logs/executions/[executionId]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "executionId": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "executionId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "limits": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1GetLogContract": {
+      "method": "GET",
+      "path": "/api/v1/logs/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "limits": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    },
+    "v1ListLogsContract": {
+      "method": "GET",
+      "path": "/api/v1/logs",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Unique workspace identifier."
+          },
+          "workflowIds": {
+            "type": "string"
+          },
+          "folderIds": {
+            "type": "string"
+          },
+          "triggers": {
+            "type": "string"
+          },
+          "level": {
+            "type": "string",
+            "enum": [
+              "info",
+              "error"
+            ]
+          },
+          "startDate": {
+            "type": "string"
+          },
+          "endDate": {
+            "type": "string"
+          },
+          "executionId": {
+            "type": "string"
+          },
+          "minDurationMs": {
+            "type": "number"
+          },
+          "maxDurationMs": {
+            "type": "number"
+          },
+          "minCost": {
+            "type": "number"
+          },
+          "maxCost": {
+            "type": "number"
+          },
+          "model": {
+            "type": "string"
+          },
+          "details": {
+            "default": "basic",
+            "type": "string",
+            "enum": [
+              "basic",
+              "full"
+            ]
+          },
+          "includeTraceSpans": {
+            "type": "boolean"
+          },
+          "includeFinalOutput": {
+            "type": "boolean"
+          },
+          "limit": {
+            "default": 100,
+            "type": "number"
+          },
+          "cursor": {
+            "type": "string"
+          },
+          "order": {
+            "default": "desc",
+            "type": "string",
+            "enum": [
+              "desc",
+              "asc"
+            ]
+          }
+        },
+        "required": [
+          "workspaceId",
+          "minDurationMs",
+          "maxDurationMs",
+          "minCost",
+          "maxCost"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "limits": {}
+          },
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

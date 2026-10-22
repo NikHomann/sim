@@ -1,0 +1,2525 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/quickbooks.ts",
+  "contracts": {
+    "quickBooksAddAttachmentContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/add-attachment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "attachmentKind": {
+            "type": "string",
+            "enum": [
+              "file",
+              "note"
+            ]
+          },
+          "targetType": {
+            "type": "string",
+            "enum": [
+              "bill",
+              "bill_payment",
+              "credit_memo",
+              "deposit",
+              "estimate",
+              "invoice",
+              "item",
+              "journal_entry",
+              "payment",
+              "purchase",
+              "purchase_order",
+              "refund_receipt",
+              "sales_receipt",
+              "vendor_credit"
+            ]
+          },
+          "targetId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "file": {
+            "anyOf": [
+              {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "string"
+                  },
+                  "key": {
+                    "type": "string"
+                  },
+                  "path": {
+                    "type": "string"
+                  },
+                  "url": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  "size": {
+                    "type": "number",
+                    "minimum": 0
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "uploadedAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {}
+                    ]
+                  },
+                  "expiresAt": {
+                    "anyOf": [
+                      {
+                        "type": "string"
+                      },
+                      {}
+                    ]
+                  },
+                  "context": {
+                    "type": "string"
+                  },
+                  "base64": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "name",
+                  "size"
+                ],
+                "additionalProperties": {}
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "fileName": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "contentType": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "note": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2000
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "attachmentKind",
+          "targetType",
+          "targetId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "attachment": {
+                      "type": "object",
+                      "properties": {
+                        "Id": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "FileName": {
+                          "type": "string"
+                        },
+                        "ContentType": {
+                          "type": "string"
+                        },
+                        "Size": {
+                          "type": "number"
+                        },
+                        "Note": {
+                          "type": "string"
+                        }
+                      },
+                      "required": [
+                        "Id"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    "attachmentId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "attachmentKind": {
+                      "type": "string",
+                      "enum": [
+                        "file",
+                        "note"
+                      ]
+                    },
+                    "targetType": {
+                      "type": "string",
+                      "enum": [
+                        "bill",
+                        "bill_payment",
+                        "credit_memo",
+                        "deposit",
+                        "estimate",
+                        "invoice",
+                        "item",
+                        "journal_entry",
+                        "payment",
+                        "purchase",
+                        "purchase_order",
+                        "refund_receipt",
+                        "sales_receipt",
+                        "vendor_credit"
+                      ]
+                    },
+                    "targetId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "time": {
+                      "anyOf": [
+                        {
+                          "type": "string"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    }
+                  },
+                  "required": [
+                    "attachment",
+                    "attachmentId",
+                    "attachmentKind",
+                    "targetType",
+                    "targetId",
+                    "time"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "success",
+                "error"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "quickBooksCreateBillPaymentContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/create-bill-payment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "vendorId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "totalAmount": {
+            "type": "number"
+          },
+          "paymentType": {
+            "type": "string",
+            "enum": [
+              "check",
+              "credit_card"
+            ]
+          },
+          "paymentAccountId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "billAllocations": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "billId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "amount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "billId",
+                "amount"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "apAccountId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "currencyCode": {
+            "type": "string",
+            "maxLength": 8
+          },
+          "documentNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "requestId": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "vendorId",
+          "totalAmount",
+          "paymentType",
+          "paymentAccountId"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksDownloadDocumentContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/download-document",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8192
+              },
+              "realmId": {
+                "type": "string",
+                "maxLength": 64,
+                "pattern": "^[1-9]\\d*$"
+              },
+              "quickBooksEnvironment": {
+                "type": "string",
+                "enum": [
+                  "sandbox",
+                  "production"
+                ]
+              },
+              "documentKind": {
+                "type": "string",
+                "const": "attachment"
+              },
+              "attachmentId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "fileName": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "accessToken",
+              "realmId",
+              "quickBooksEnvironment",
+              "documentKind",
+              "attachmentId"
+            ]
+          },
+          {
+            "type": "object",
+            "properties": {
+              "accessToken": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 8192
+              },
+              "realmId": {
+                "type": "string",
+                "maxLength": 64,
+                "pattern": "^[1-9]\\d*$"
+              },
+              "quickBooksEnvironment": {
+                "type": "string",
+                "enum": [
+                  "sandbox",
+                  "production"
+                ]
+              },
+              "documentKind": {
+                "type": "string",
+                "const": "transaction_pdf"
+              },
+              "transactionType": {
+                "type": "string",
+                "enum": [
+                  "credit_memo",
+                  "estimate",
+                  "invoice",
+                  "payment",
+                  "purchase_order",
+                  "refund_receipt",
+                  "sales_receipt"
+                ]
+              },
+              "transactionId": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 256
+              },
+              "fileName": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 1000
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              }
+            },
+            "required": [
+              "accessToken",
+              "realmId",
+              "quickBooksEnvironment",
+              "documentKind",
+              "transactionType",
+              "transactionId"
+            ]
+          }
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "anyOf": [
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "default": "",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "url": {
+                          "default": "",
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "type": {
+                          "default": "application/octet-stream",
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "context": {
+                          "type": "string"
+                        },
+                        "base64": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "url",
+                        "size",
+                        "type",
+                        "key"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    "fileName": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1000
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "attachmentId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "mimeType": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 255
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "fileName",
+                    "size",
+                    "attachmentId",
+                    "mimeType"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": true
+                },
+                "output": {
+                  "type": "object",
+                  "properties": {
+                    "file": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "default": "",
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "url": {
+                          "default": "",
+                          "type": "string"
+                        },
+                        "size": {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        "type": {
+                          "default": "application/octet-stream",
+                          "type": "string"
+                        },
+                        "key": {
+                          "type": "string",
+                          "minLength": 1
+                        },
+                        "context": {
+                          "type": "string"
+                        },
+                        "base64": {
+                          "type": "string"
+                        },
+                        "version": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2147483647
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "url",
+                        "size",
+                        "type",
+                        "key"
+                      ],
+                      "additionalProperties": {}
+                    },
+                    "fileName": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 1000
+                    },
+                    "size": {
+                      "type": "integer",
+                      "exclusiveMinimum": 0,
+                      "maximum": 9007199254740991
+                    },
+                    "transactionType": {
+                      "type": "string",
+                      "enum": [
+                        "credit_memo",
+                        "estimate",
+                        "invoice",
+                        "payment",
+                        "purchase_order",
+                        "refund_receipt",
+                        "sales_receipt"
+                      ]
+                    },
+                    "transactionId": {
+                      "type": "string",
+                      "minLength": 1,
+                      "maxLength": 256
+                    },
+                    "mimeType": {
+                      "type": "string",
+                      "const": "application/pdf"
+                    }
+                  },
+                  "required": [
+                    "file",
+                    "fileName",
+                    "size",
+                    "transactionType",
+                    "transactionId",
+                    "mimeType"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "required": [
+                "success",
+                "output"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean",
+                  "const": false
+                },
+                "error": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "success",
+                "error"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      }
+    },
+    "quickBooksUpdateBillContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-bill",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "billId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "vendorId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "apAccountId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "dueDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "documentNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "billId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateBillPaymentContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-bill-payment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "billPaymentId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "vendorId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "billPaymentId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateCreditMemoContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-credit-memo",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "transactionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "customerId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "lines": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lineType": {
+                  "type": "string",
+                  "enum": [
+                    "item",
+                    "description"
+                  ]
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "itemId": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                "quantity": {
+                  "type": "number"
+                },
+                "unitPrice": {
+                  "type": "number"
+                },
+                "serviceDate": {
+                  "type": "string",
+                  "maxLength": 32
+                }
+              },
+              "required": [
+                "lineType"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "documentNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "customerMemo": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "dueDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "expirationDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "paymentMethodId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "paymentReferenceNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "depositAccountId": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "transactionId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateCustomerPaymentContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-customer-payment",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "paymentId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "customerId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "totalAmount": {
+            "type": "number"
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "paymentReferenceNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "paymentMethodId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "depositAccountId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "invoiceAllocations": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "invoiceId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "amount": {
+                  "type": "number"
+                }
+              },
+              "required": [
+                "invoiceId",
+                "amount"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "unapplyOmittedInvoices": {
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "paymentId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateEmployeeContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-employee",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "employeeId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "displayName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "givenName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "familyName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "primaryEmail": {
+            "type": "string",
+            "maxLength": 320
+          },
+          "primaryPhone": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "primaryAddress": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "printOnCheckName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "billableTime": {
+            "type": "boolean"
+          },
+          "activeStatus": {
+            "type": "string",
+            "enum": [
+              "unchanged",
+              "active",
+              "inactive"
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "employeeId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateItemContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-item",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "itemId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "incomeAccountId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "unitPrice": {
+            "type": "number"
+          },
+          "purchaseDescription": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "purchaseCost": {
+            "type": "number"
+          },
+          "expenseAccountId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "taxable": {
+            "type": "boolean"
+          },
+          "activeStatus": {
+            "type": "string",
+            "enum": [
+              "unchanged",
+              "active",
+              "inactive"
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "itemId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdatePurchaseContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-purchase",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "purchaseId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "vendorId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "paymentReference": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "purchaseId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdatePurchaseOrderContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-purchase-order",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "purchaseOrderId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "vendorId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "apAccountId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "dueDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "documentNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "purchaseOrderId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateRefundReceiptContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-refund-receipt",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "transactionId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "customerId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "lines": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "lineType": {
+                  "type": "string",
+                  "enum": [
+                    "item",
+                    "description"
+                  ]
+                },
+                "amount": {
+                  "type": "number"
+                },
+                "itemId": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "description": {
+                  "type": "string",
+                  "maxLength": 4000
+                },
+                "quantity": {
+                  "type": "number"
+                },
+                "unitPrice": {
+                  "type": "number"
+                },
+                "serviceDate": {
+                  "type": "string",
+                  "maxLength": 32
+                }
+              },
+              "required": [
+                "lineType"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "documentNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "customerMemo": {
+            "type": "string",
+            "maxLength": 4000
+          },
+          "dueDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "expirationDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "paymentMethodId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "paymentReferenceNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "depositAccountId": {
+            "type": "string",
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "transactionId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateVendorContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-vendor",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "vendorId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "displayName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "companyName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "givenName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "familyName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "primaryEmail": {
+            "type": "string",
+            "maxLength": 320
+          },
+          "primaryPhone": {
+            "type": "string",
+            "maxLength": 100
+          },
+          "billingAddress": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string"
+            },
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "printOnCheckName": {
+            "type": "string",
+            "maxLength": 1000
+          },
+          "accountNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "vendor1099": {
+            "type": "boolean"
+          },
+          "activeStatus": {
+            "type": "string",
+            "enum": [
+              "unchanged",
+              "active",
+              "inactive"
+            ]
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "vendorId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "quickBooksUpdateVendorCreditContract": {
+      "method": "POST",
+      "path": "/api/tools/quickbooks/update-vendor-credit",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "accessToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 8192
+          },
+          "realmId": {
+            "type": "string",
+            "maxLength": 64,
+            "pattern": "^[1-9]\\d*$"
+          },
+          "quickBooksEnvironment": {
+            "type": "string",
+            "enum": [
+              "sandbox",
+              "production"
+            ]
+          },
+          "vendorCreditId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "syncToken": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "vendorId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "apAccountId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "transactionDate": {
+            "type": "string",
+            "maxLength": 32
+          },
+          "documentNumber": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "privateNote": {
+            "type": "string",
+            "maxLength": 4000
+          }
+        },
+        "required": [
+          "accessToken",
+          "realmId",
+          "quickBooksEnvironment",
+          "vendorCreditId",
+          "syncToken"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "success": {
+              "type": "boolean",
+              "const": true
+            },
+            "output": {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "object",
+                  "properties": {
+                    "Id": {
+                      "type": "string",
+                      "minLength": 1
+                    },
+                    "SyncToken": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "Id"
+                  ],
+                  "additionalProperties": {}
+                },
+                "recordId": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "syncToken": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "recordVersion": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "time": {
+                  "anyOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                }
+              },
+              "required": [
+                "record",
+                "recordId",
+                "syncToken",
+                "recordVersion",
+                "time"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "success",
+            "output"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}

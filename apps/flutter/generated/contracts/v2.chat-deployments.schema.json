@@ -1,0 +1,849 @@
+{
+  "source": "apps/sim/lib/api/contracts/v2/chat-deployments.ts",
+  "contracts": {
+    "v2DeleteWorkflowChatDeploymentContract": {
+      "method": "DELETE",
+      "path": "/api/v2/workflows/[workflowId]/deployments/chat",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow identifier.",
+            "examples": [
+              "3b1f7c92-8d4e-4a6b-9c0d-5e2f8a714b36"
+            ]
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "id": "WorkflowIdParams",
+        "title": "Workflow path parameters",
+        "description": "Workflow selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/DeleteChatDeploymentResult"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "DeleteChatDeploymentResult": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Identifier of the removed chat deployment."
+                },
+                "deleted": {
+                  "type": "boolean",
+                  "const": true,
+                  "description": "Whether the deployment was removed."
+                }
+              },
+              "required": [
+                "id",
+                "deleted"
+              ],
+              "additionalProperties": false,
+              "id": "DeleteChatDeploymentResult",
+              "title": "Delete chat deployment result",
+              "description": "Chat deployment removal acknowledgement."
+            }
+          }
+        }
+      }
+    },
+    "v2GetWorkflowChatDeploymentContract": {
+      "method": "GET",
+      "path": "/api/v2/workflows/[workflowId]/deployments/chat",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow identifier.",
+            "examples": [
+              "3b1f7c92-8d4e-4a6b-9c0d-5e2f8a714b36"
+            ]
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "id": "WorkflowIdParams",
+        "title": "Workflow path parameters",
+        "description": "Workflow selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/ChatDeployment"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "StoredChatDeploymentCustomizations": {
+              "type": "object",
+              "properties": {
+                "primaryColor": {
+                  "description": "CSS color used for the chat accent.",
+                  "type": "string"
+                },
+                "welcomeMessage": {
+                  "description": "First message shown to a visitor.",
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "description": "Avatar image shown beside assistant messages.",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "id": "StoredChatDeploymentCustomizations",
+              "title": "Stored chat deployment customizations",
+              "description": "Presentation overrides currently stored on the deployed chat."
+            },
+            "StoredChatDeploymentOutputConfig": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "description": "Child workflow containing the selected block. Omitted for the deployed workflow.",
+                  "type": "string"
+                },
+                "blockId": {
+                  "type": "string",
+                  "description": "Block whose output the chat streams."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path within that block output. Empty means the whole output."
+                }
+              },
+              "required": [
+                "blockId",
+                "path"
+              ],
+              "additionalProperties": false,
+              "id": "StoredChatDeploymentOutputConfig",
+              "title": "Stored chat deployment output config",
+              "description": "One block output currently surfaced to chat visitors."
+            },
+            "ChatDeployment": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique chat deployment identifier."
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "Workflow this deployment publishes."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace the deployment belongs to, derived from its workflow."
+                },
+                "identifier": {
+                  "type": "string",
+                  "description": "URL slug the deployed chat answers on. Unique across live deployments."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Public URL of the deployed chat. There is no chat subdomain — the identifier is a path segment.",
+                  "examples": [
+                    "https://sim.ai/chat/support"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Title shown to visitors."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description shown to visitors. Empty when unset."
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "description": "Whether the deployment answers requests."
+                },
+                "authType": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "password",
+                    "email",
+                    "sso"
+                  ],
+                  "description": "How visitors are gated: `public` (no gate), `password`, `email`, or `sso`."
+                },
+                "hasPassword": {
+                  "type": "boolean",
+                  "description": "Whether a password is stored. The password itself is never readable."
+                },
+                "allowedEmails": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Email addresses or domains admitted under `email` and `sso` gating. Empty otherwise."
+                },
+                "customizations": {
+                  "description": "Presentation overrides. Unset fields fall back to platform defaults.",
+                  "$ref": "#/$defs/StoredChatDeploymentCustomizations"
+                },
+                "outputConfigs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/StoredChatDeploymentOutputConfig"
+                  },
+                  "description": "Block outputs surfaced to visitors."
+                },
+                "includeThinking": {
+                  "type": "boolean",
+                  "description": "Whether visitors may receive provider thinking events. They must also opt into the streaming protocol."
+                },
+                "includeToolCalls": {
+                  "type": "boolean",
+                  "description": "Whether visitors may receive tool lifecycle events. They must also opt into the streaming protocol."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment was last modified.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "workflowId",
+                "workspaceId",
+                "identifier",
+                "url",
+                "title",
+                "description",
+                "isActive",
+                "authType",
+                "hasPassword",
+                "allowedEmails",
+                "customizations",
+                "outputConfigs",
+                "includeThinking",
+                "includeToolCalls",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ChatDeployment",
+              "title": "Chat deployment",
+              "description": "A workflow published as a hosted chat."
+            }
+          }
+        }
+      }
+    },
+    "v2ListChatDeploymentsContract": {
+      "method": "GET",
+      "path": "/api/v2/chat-deployments",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workspaceId": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "description": "Workspace whose chat deployments to list."
+          },
+          "workflowId": {
+            "description": "Restrict to deployments of one workflow.",
+            "type": "string",
+            "minLength": 1
+          },
+          "isActive": {
+            "description": "Restrict to active or inactive deployments.",
+            "type": "boolean"
+          },
+          "sortBy": {
+            "default": "createdAt",
+            "description": "Field used to sort the result.",
+            "type": "string",
+            "enum": [
+              "identifier",
+              "createdAt",
+              "updatedAt"
+            ]
+          },
+          "sortOrder": {
+            "default": "desc",
+            "description": "Sort direction.",
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "limit": {
+            "default": 50,
+            "description": "Maximum chat deployments to return per page. Must be a whole number from 1 to 100. Defaults to 50.",
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100
+          },
+          "cursor": {
+            "description": "Opaque cursor from the previous page. Send it back with the same sort and filters; only `limit` may change. Change anything else and pagination must restart without a cursor.",
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "workspaceId"
+        ],
+        "additionalProperties": false,
+        "id": "ListChatDeploymentsQuery",
+        "title": "List chat deployments query",
+        "description": "Workspace scope, filters, ordering, and pagination for chat deployments."
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "type": "array",
+              "items": {
+                "$ref": "#/$defs/ChatDeploymentListItem"
+              },
+              "description": "Items in the current page."
+            },
+            "nextCursor": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Opaque cursor for the next page. Send it back as `cursor`; `null` means there are no more pages. Do not construct a cursor yourself."
+            }
+          },
+          "required": [
+            "data",
+            "nextCursor"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "ChatDeploymentListItem": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique chat deployment identifier."
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "Workflow this deployment publishes."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace the deployment belongs to, derived from its workflow."
+                },
+                "identifier": {
+                  "type": "string",
+                  "description": "URL slug the deployed chat answers on. Unique across live deployments."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Public URL of the deployed chat. There is no chat subdomain — the identifier is a path segment.",
+                  "examples": [
+                    "https://sim.ai/chat/support"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Title shown to visitors."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description shown to visitors. Empty when unset."
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "description": "Whether the deployment answers requests."
+                },
+                "authType": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "password",
+                    "email",
+                    "sso"
+                  ],
+                  "description": "How visitors are gated: `public` (no gate), `password`, `email`, or `sso`."
+                },
+                "outputConfigs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/StoredChatDeploymentOutputConfig"
+                  },
+                  "description": "Block outputs surfaced to visitors."
+                },
+                "includeThinking": {
+                  "type": "boolean",
+                  "description": "Whether visitors may receive provider thinking events. They must also opt into the streaming protocol."
+                },
+                "includeToolCalls": {
+                  "type": "boolean",
+                  "description": "Whether visitors may receive tool lifecycle events. They must also opt into the streaming protocol."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment was last modified.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "workflowId",
+                "workspaceId",
+                "identifier",
+                "url",
+                "title",
+                "description",
+                "isActive",
+                "authType",
+                "outputConfigs",
+                "includeThinking",
+                "includeToolCalls",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ChatDeploymentListItem",
+              "title": "Chat deployment list entry",
+              "description": "A workflow published as a hosted chat, without the fields the detail read gates."
+            },
+            "StoredChatDeploymentOutputConfig": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "description": "Child workflow containing the selected block. Omitted for the deployed workflow.",
+                  "type": "string"
+                },
+                "blockId": {
+                  "type": "string",
+                  "description": "Block whose output the chat streams."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path within that block output. Empty means the whole output."
+                }
+              },
+              "required": [
+                "blockId",
+                "path"
+              ],
+              "additionalProperties": false,
+              "id": "StoredChatDeploymentOutputConfig",
+              "title": "Stored chat deployment output config",
+              "description": "One block output currently surfaced to chat visitors."
+            }
+          }
+        }
+      }
+    },
+    "v2ReplaceWorkflowChatDeploymentContract": {
+      "method": "PUT",
+      "path": "/api/v2/workflows/[workflowId]/deployments/chat",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "workflowId": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Unique workflow identifier.",
+            "examples": [
+              "3b1f7c92-8d4e-4a6b-9c0d-5e2f8a714b36"
+            ]
+          }
+        },
+        "required": [
+          "workflowId"
+        ],
+        "id": "WorkflowIdParams",
+        "title": "Workflow path parameters",
+        "description": "Workflow selected by the request path."
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {},
+        "additionalProperties": false
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "identifier": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 128,
+            "pattern": "^[a-z0-9-]+$",
+            "description": "URL slug the deployed chat answers on. Must be free across live deployments."
+          },
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200,
+            "description": "Title shown to visitors."
+          },
+          "description": {
+            "description": "Description shown to visitors. Omitted clears it.",
+            "type": "string",
+            "maxLength": 2000
+          },
+          "customizations": {
+            "description": "Presentation overrides. Omitted `primaryColor` and `welcomeMessage` use platform defaults; an omitted or empty `imageUrl` keeps the existing avatar. An empty `welcomeMessage` keeps the existing message.",
+            "$ref": "#/$defs/ChatDeploymentCustomizations"
+          },
+          "authType": {
+            "description": "How visitors are gated. `public` leaves the chat open to anyone holding the URL.",
+            "default": "public",
+            "type": "string",
+            "enum": [
+              "public",
+              "password",
+              "email",
+              "sso"
+            ]
+          },
+          "password": {
+            "description": "Write-only password of 15 to 1024 characters, not only whitespace. Required whenever `authType` is `password`, and rejected otherwise. Never readable back. Taken literally, except that a request from the Sim agent resolves a whole-value `{{ENV_VAR}}` reference to that variable before the rules apply.",
+            "type": "string",
+            "maxLength": 1024
+          },
+          "allowedEmails": {
+            "description": "Email addresses or domains admitted under `email` and `sso` gating. At least one is required for those modes.",
+            "maxItems": 500,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "outputConfigs": {
+            "description": "Block outputs to surface to visitors. Omitted surfaces none.",
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "$ref": "#/$defs/ChatDeploymentOutputConfig"
+            }
+          },
+          "includeThinking": {
+            "description": "Allow visitors to receive provider thinking events.",
+            "default": false,
+            "type": "boolean"
+          },
+          "includeToolCalls": {
+            "description": "Allow visitors to receive tool lifecycle events.",
+            "default": false,
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "identifier",
+          "title"
+        ],
+        "additionalProperties": false,
+        "id": "ReplaceChatDeploymentRequest",
+        "title": "Replace chat deployment request",
+        "description": "The complete desired state of a workflow's chat.",
+        "examples": [
+          {
+            "identifier": "support",
+            "title": "Support chat"
+          }
+        ],
+        "$defs": {
+          "ChatDeploymentCustomizations": {
+            "type": "object",
+            "properties": {
+              "primaryColor": {
+                "description": "CSS color used for the chat accent.",
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 64
+              },
+              "welcomeMessage": {
+                "description": "First message shown to a visitor. On replace, omission uses the platform default; an empty string keeps the existing message.",
+                "type": "string",
+                "maxLength": 2000
+              },
+              "imageUrl": {
+                "description": "Avatar image shown beside assistant messages. On replace, omission or an empty string keeps the existing avatar.",
+                "type": "string",
+                "maxLength": 2048
+              }
+            },
+            "additionalProperties": false,
+            "id": "ChatDeploymentCustomizations",
+            "title": "Chat deployment customizations",
+            "description": "Presentation overrides for the deployed chat."
+          },
+          "ChatDeploymentOutputConfig": {
+            "type": "object",
+            "properties": {
+              "workflowId": {
+                "description": "Child workflow containing the selected block. Omit for the deployed workflow.",
+                "type": "string",
+                "minLength": 1
+              },
+              "blockId": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Block whose output the chat streams."
+              },
+              "path": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Path within that block output."
+              }
+            },
+            "required": [
+              "blockId",
+              "path"
+            ],
+            "additionalProperties": false,
+            "id": "ChatDeploymentOutputConfig",
+            "title": "Chat deployment output config",
+            "description": "One block output surfaced to chat visitors."
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "data": {
+              "description": "Response data.",
+              "$ref": "#/$defs/ChatDeployment"
+            }
+          },
+          "required": [
+            "data"
+          ],
+          "additionalProperties": false,
+          "$defs": {
+            "StoredChatDeploymentCustomizations": {
+              "type": "object",
+              "properties": {
+                "primaryColor": {
+                  "description": "CSS color used for the chat accent.",
+                  "type": "string"
+                },
+                "welcomeMessage": {
+                  "description": "First message shown to a visitor.",
+                  "type": "string"
+                },
+                "imageUrl": {
+                  "description": "Avatar image shown beside assistant messages.",
+                  "type": "string"
+                }
+              },
+              "additionalProperties": false,
+              "id": "StoredChatDeploymentCustomizations",
+              "title": "Stored chat deployment customizations",
+              "description": "Presentation overrides currently stored on the deployed chat."
+            },
+            "StoredChatDeploymentOutputConfig": {
+              "type": "object",
+              "properties": {
+                "workflowId": {
+                  "description": "Child workflow containing the selected block. Omitted for the deployed workflow.",
+                  "type": "string"
+                },
+                "blockId": {
+                  "type": "string",
+                  "description": "Block whose output the chat streams."
+                },
+                "path": {
+                  "type": "string",
+                  "description": "Path within that block output. Empty means the whole output."
+                }
+              },
+              "required": [
+                "blockId",
+                "path"
+              ],
+              "additionalProperties": false,
+              "id": "StoredChatDeploymentOutputConfig",
+              "title": "Stored chat deployment output config",
+              "description": "One block output currently surfaced to chat visitors."
+            },
+            "ChatDeployment": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "description": "Unique chat deployment identifier."
+                },
+                "workflowId": {
+                  "type": "string",
+                  "description": "Workflow this deployment publishes."
+                },
+                "workspaceId": {
+                  "type": "string",
+                  "description": "Workspace the deployment belongs to, derived from its workflow."
+                },
+                "identifier": {
+                  "type": "string",
+                  "description": "URL slug the deployed chat answers on. Unique across live deployments."
+                },
+                "url": {
+                  "type": "string",
+                  "description": "Public URL of the deployed chat. There is no chat subdomain — the identifier is a path segment.",
+                  "examples": [
+                    "https://sim.ai/chat/support"
+                  ]
+                },
+                "title": {
+                  "type": "string",
+                  "description": "Title shown to visitors."
+                },
+                "description": {
+                  "type": "string",
+                  "description": "Description shown to visitors. Empty when unset."
+                },
+                "isActive": {
+                  "type": "boolean",
+                  "description": "Whether the deployment answers requests."
+                },
+                "authType": {
+                  "type": "string",
+                  "enum": [
+                    "public",
+                    "password",
+                    "email",
+                    "sso"
+                  ],
+                  "description": "How visitors are gated: `public` (no gate), `password`, `email`, or `sso`."
+                },
+                "hasPassword": {
+                  "type": "boolean",
+                  "description": "Whether a password is stored. The password itself is never readable."
+                },
+                "allowedEmails": {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  },
+                  "description": "Email addresses or domains admitted under `email` and `sso` gating. Empty otherwise."
+                },
+                "customizations": {
+                  "description": "Presentation overrides. Unset fields fall back to platform defaults.",
+                  "$ref": "#/$defs/StoredChatDeploymentCustomizations"
+                },
+                "outputConfigs": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/$defs/StoredChatDeploymentOutputConfig"
+                  },
+                  "description": "Block outputs surfaced to visitors."
+                },
+                "includeThinking": {
+                  "type": "boolean",
+                  "description": "Whether visitors may receive provider thinking events. They must also opt into the streaming protocol."
+                },
+                "includeToolCalls": {
+                  "type": "boolean",
+                  "description": "Whether visitors may receive tool lifecycle events. They must also opt into the streaming protocol."
+                },
+                "createdAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment was created.",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "description": "ISO 8601 timestamp when the deployment was last modified.",
+                  "format": "date-time"
+                }
+              },
+              "required": [
+                "id",
+                "workflowId",
+                "workspaceId",
+                "identifier",
+                "url",
+                "title",
+                "description",
+                "isActive",
+                "authType",
+                "hasPassword",
+                "allowedEmails",
+                "customizations",
+                "outputConfigs",
+                "includeThinking",
+                "includeToolCalls",
+                "createdAt",
+                "updatedAt"
+              ],
+              "additionalProperties": false,
+              "id": "ChatDeployment",
+              "title": "Chat deployment",
+              "description": "A workflow published as a hosted chat."
+            }
+          }
+        }
+      }
+    }
+  }
+}

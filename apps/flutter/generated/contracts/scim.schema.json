@@ -1,0 +1,1710 @@
+{
+  "source": "apps/sim/lib/api/contracts/scim.ts",
+  "contracts": {
+    "createScimGroupContract": {
+      "method": "POST",
+      "path": "/api/scim/v2/Groups",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "schemas": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "externalId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "members": {
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "display": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "type": {
+                  "type": "string",
+                  "maxLength": 64
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "schemas",
+          "displayName"
+        ],
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "$ref": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "User"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "User",
+                    "Group"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                },
+                "lastModified": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceType",
+                "created",
+                "lastModified",
+                "location",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemas",
+            "id",
+            "meta"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "createScimUserContract": {
+      "method": "POST",
+      "path": "/api/scim/v2/Users",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "schemas": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "userName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 320
+          },
+          "externalId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "displayName": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "name": {
+            "type": "object",
+            "properties": {
+              "formatted": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "givenName": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "familyName": {
+                "type": "string",
+                "maxLength": 128
+              }
+            },
+            "additionalProperties": {}
+          },
+          "emails": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 320
+                },
+                "type": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "primary": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+            "type": "object",
+            "properties": {
+              "department": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "employeeNumber": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "costCenter": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "division": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "organization": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "manager": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "displayName": {
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "schemas",
+          "userName"
+        ],
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "status": 201,
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "userName": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "formatted": {
+                  "type": "string"
+                },
+                "givenName": {
+                  "type": "string"
+                },
+                "familyName": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "emails": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "primary": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "$ref": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "User",
+                    "Group"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                },
+                "lastModified": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceType",
+                "created",
+                "lastModified",
+                "location",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemas",
+            "id",
+            "meta"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "deleteScimGroupContract": {
+      "method": "DELETE",
+      "path": "/api/scim/v2/Groups/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "empty",
+        "status": 204
+      }
+    },
+    "deleteScimUserContract": {
+      "method": "DELETE",
+      "path": "/api/scim/v2/Users/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "response": {
+        "mode": "empty",
+        "status": 204
+      }
+    },
+    "getScimGroupContract": {
+      "method": "GET",
+      "path": "/api/scim/v2/Groups/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "excludedAttributes": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "$ref": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "User"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "User",
+                    "Group"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                },
+                "lastModified": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceType",
+                "created",
+                "lastModified",
+                "location",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemas",
+            "id",
+            "meta"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "getScimUserContract": {
+      "method": "GET",
+      "path": "/api/scim/v2/Users/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "excludedAttributes": {
+            "type": "string",
+            "maxLength": 1024
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "userName": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "formatted": {
+                  "type": "string"
+                },
+                "givenName": {
+                  "type": "string"
+                },
+                "familyName": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "emails": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "primary": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "$ref": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "User",
+                    "Group"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                },
+                "lastModified": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceType",
+                "created",
+                "lastModified",
+                "location",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemas",
+            "id",
+            "meta"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "listScimGroupsContract": {
+      "method": "GET",
+      "path": "/api/scim/v2/Groups",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "excludedAttributes": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "filter": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "startIndex": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+                }
+              ]
+            },
+            "totalResults": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "startIndex": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "itemsPerPage": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "Resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "externalId": {
+                    "type": "string"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "members": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "display": {
+                          "type": "string"
+                        },
+                        "$ref": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "const": "User"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "resourceType": {
+                        "type": "string",
+                        "enum": [
+                          "User",
+                          "Group"
+                        ]
+                      },
+                      "created": {
+                        "type": "string"
+                      },
+                      "lastModified": {
+                        "type": "string"
+                      },
+                      "location": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "resourceType",
+                      "created",
+                      "lastModified",
+                      "location",
+                      "version"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "schemas",
+                  "id",
+                  "meta"
+                ],
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "schemas",
+            "totalResults",
+            "startIndex",
+            "itemsPerPage",
+            "Resources"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "listScimUsersContract": {
+      "method": "GET",
+      "path": "/api/scim/v2/Users",
+      "query": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "excludedAttributes": {
+            "type": "string",
+            "maxLength": 1024
+          },
+          "filter": {
+            "type": "string",
+            "maxLength": 2048
+          },
+          "startIndex": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          },
+          "count": {
+            "type": "integer",
+            "minimum": -9007199254740991,
+            "maximum": 9007199254740991
+          }
+        }
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "const": "urn:ietf:params:scim:api:messages:2.0:ListResponse"
+                }
+              ]
+            },
+            "totalResults": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "startIndex": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "itemsPerPage": {
+              "type": "integer",
+              "minimum": -9007199254740991,
+              "maximum": 9007199254740991
+            },
+            "Resources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "schemas": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    }
+                  },
+                  "id": {
+                    "type": "string"
+                  },
+                  "externalId": {
+                    "type": "string"
+                  },
+                  "userName": {
+                    "type": "string"
+                  },
+                  "active": {
+                    "type": "boolean"
+                  },
+                  "displayName": {
+                    "type": "string"
+                  },
+                  "name": {
+                    "type": "object",
+                    "properties": {
+                      "formatted": {
+                        "type": "string"
+                      },
+                      "givenName": {
+                        "type": "string"
+                      },
+                      "familyName": {
+                        "type": "string"
+                      }
+                    },
+                    "additionalProperties": {}
+                  },
+                  "emails": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string"
+                        },
+                        "primary": {
+                          "type": "boolean"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "groups": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "value": {
+                          "type": "string"
+                        },
+                        "display": {
+                          "type": "string"
+                        },
+                        "$ref": {
+                          "type": "string"
+                        }
+                      },
+                      "additionalProperties": false
+                    }
+                  },
+                  "meta": {
+                    "type": "object",
+                    "properties": {
+                      "resourceType": {
+                        "type": "string",
+                        "enum": [
+                          "User",
+                          "Group"
+                        ]
+                      },
+                      "created": {
+                        "type": "string"
+                      },
+                      "lastModified": {
+                        "type": "string"
+                      },
+                      "location": {
+                        "type": "string"
+                      },
+                      "version": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "resourceType",
+                      "created",
+                      "lastModified",
+                      "location",
+                      "version"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "schemas",
+                  "id",
+                  "meta"
+                ],
+                "additionalProperties": {}
+              }
+            }
+          },
+          "required": [
+            "schemas",
+            "totalResults",
+            "startIndex",
+            "itemsPerPage",
+            "Resources"
+          ],
+          "additionalProperties": false
+        }
+      }
+    },
+    "patchScimGroupContract": {
+      "method": "PATCH",
+      "path": "/api/scim/v2/Groups/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "schemas": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "Operations": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "default": "replace",
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "maxLength": 512
+                },
+                "value": {}
+              }
+            }
+          }
+        },
+        "required": [
+          "schemas",
+          "Operations"
+        ]
+      },
+      "response": {
+        "mode": "empty",
+        "status": 204
+      }
+    },
+    "patchScimUserContract": {
+      "method": "PATCH",
+      "path": "/api/scim/v2/Users/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "schemas": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "Operations": {
+            "minItems": 1,
+            "maxItems": 100,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "op": {
+                  "default": "replace",
+                  "type": "string"
+                },
+                "path": {
+                  "type": "string",
+                  "maxLength": 512
+                },
+                "value": {}
+              }
+            }
+          }
+        },
+        "required": [
+          "schemas",
+          "Operations"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "userName": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "formatted": {
+                  "type": "string"
+                },
+                "givenName": {
+                  "type": "string"
+                },
+                "familyName": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "emails": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "primary": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "$ref": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "User",
+                    "Group"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                },
+                "lastModified": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceType",
+                "created",
+                "lastModified",
+                "location",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemas",
+            "id",
+            "meta"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "replaceScimGroupContract": {
+      "method": "PUT",
+      "path": "/api/scim/v2/Groups/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "schemas": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "displayName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          },
+          "externalId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "members": {
+            "maxItems": 5000,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 256
+                },
+                "display": {
+                  "type": "string",
+                  "maxLength": 256
+                },
+                "type": {
+                  "type": "string",
+                  "maxLength": 64
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "additionalProperties": {}
+            }
+          }
+        },
+        "required": [
+          "schemas",
+          "displayName"
+        ],
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "members": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "$ref": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "const": "User"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "User",
+                    "Group"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                },
+                "lastModified": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceType",
+                "created",
+                "lastModified",
+                "location",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemas",
+            "id",
+            "meta"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    },
+    "replaceScimUserContract": {
+      "method": "PUT",
+      "path": "/api/scim/v2/Users/[id]",
+      "params": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 256
+          }
+        },
+        "required": [
+          "id"
+        ]
+      },
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "schemas": {
+            "minItems": 1,
+            "maxItems": 10,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "maxLength": 256
+            }
+          },
+          "userName": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 320
+          },
+          "externalId": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "active": {
+            "type": "boolean"
+          },
+          "displayName": {
+            "type": "string",
+            "maxLength": 256
+          },
+          "name": {
+            "type": "object",
+            "properties": {
+              "formatted": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "givenName": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "familyName": {
+                "type": "string",
+                "maxLength": 128
+              }
+            },
+            "additionalProperties": {}
+          },
+          "emails": {
+            "maxItems": 20,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "value": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 320
+                },
+                "type": {
+                  "type": "string",
+                  "maxLength": 64
+                },
+                "primary": {
+                  "type": "boolean"
+                }
+              },
+              "required": [
+                "value"
+              ],
+              "additionalProperties": {}
+            }
+          },
+          "urn:ietf:params:scim:schemas:extension:enterprise:2.0:User": {
+            "type": "object",
+            "properties": {
+              "department": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "employeeNumber": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "costCenter": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "division": {
+                "type": "string",
+                "maxLength": 128
+              },
+              "organization": {
+                "type": "string",
+                "maxLength": 256
+              },
+              "manager": {
+                "anyOf": [
+                  {
+                    "type": "string",
+                    "maxLength": 256
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "maxLength": 256
+                      },
+                      "displayName": {
+                        "type": "string",
+                        "maxLength": 256
+                      }
+                    },
+                    "additionalProperties": {}
+                  }
+                ]
+              }
+            },
+            "additionalProperties": {}
+          }
+        },
+        "required": [
+          "schemas",
+          "userName"
+        ],
+        "additionalProperties": {}
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "schemas": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "id": {
+              "type": "string"
+            },
+            "externalId": {
+              "type": "string"
+            },
+            "userName": {
+              "type": "string"
+            },
+            "active": {
+              "type": "boolean"
+            },
+            "displayName": {
+              "type": "string"
+            },
+            "name": {
+              "type": "object",
+              "properties": {
+                "formatted": {
+                  "type": "string"
+                },
+                "givenName": {
+                  "type": "string"
+                },
+                "familyName": {
+                  "type": "string"
+                }
+              },
+              "additionalProperties": {}
+            },
+            "emails": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string"
+                  },
+                  "primary": {
+                    "type": "boolean"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "groups": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string"
+                  },
+                  "display": {
+                    "type": "string"
+                  },
+                  "$ref": {
+                    "type": "string"
+                  }
+                },
+                "additionalProperties": false
+              }
+            },
+            "meta": {
+              "type": "object",
+              "properties": {
+                "resourceType": {
+                  "type": "string",
+                  "enum": [
+                    "User",
+                    "Group"
+                  ]
+                },
+                "created": {
+                  "type": "string"
+                },
+                "lastModified": {
+                  "type": "string"
+                },
+                "location": {
+                  "type": "string"
+                },
+                "version": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "resourceType",
+                "created",
+                "lastModified",
+                "location",
+                "version"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "required": [
+            "schemas",
+            "id",
+            "meta"
+          ],
+          "additionalProperties": {}
+        }
+      }
+    }
+  }
+}

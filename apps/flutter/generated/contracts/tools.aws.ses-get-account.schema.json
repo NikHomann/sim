@@ -1,0 +1,60 @@
+{
+  "source": "apps/sim/lib/api/contracts/tools/aws/ses-get-account.ts",
+  "contracts": {
+    "awsSesGetAccountContract": {
+      "method": "POST",
+      "path": "/api/tools/ses/get-account",
+      "body": {
+        "$schema": "https://json-schema.org/draft/2020-12/schema",
+        "type": "object",
+        "properties": {
+          "region": {
+            "type": "string",
+            "minLength": 1
+          },
+          "accessKeyId": {
+            "type": "string",
+            "minLength": 1
+          },
+          "secretAccessKey": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "required": [
+          "region",
+          "accessKeyId",
+          "secretAccessKey"
+        ]
+      },
+      "response": {
+        "mode": "json",
+        "schema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {
+            "sendingEnabled": {
+              "type": "boolean"
+            },
+            "max24HourSend": {
+              "type": "number"
+            },
+            "maxSendRate": {
+              "type": "number"
+            },
+            "sentLast24Hours": {
+              "type": "number"
+            }
+          },
+          "required": [
+            "sendingEnabled",
+            "max24HourSend",
+            "maxSendRate",
+            "sentLast24Hours"
+          ],
+          "additionalProperties": false
+        }
+      }
+    }
+  }
+}
