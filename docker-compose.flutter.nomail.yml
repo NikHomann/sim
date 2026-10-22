@@ -1,0 +1,16 @@
+# No-mail profile for the Flutter test stack: stack it after docker-compose.flutter.yml.
+#
+#   docker compose -f docker-compose.local.yml -f docker-compose.flutter.yml -f docker-compose.flutter.nomail.yml up -d
+#
+# Compose 2.15 cannot remove a key an earlier file set, so SMTP_HOST/SMTP_PORT are blanked instead:
+# the app's env loader skips validation (`skipValidation: true` in lib/core/config/env.ts) and
+# providers/smtp.ts returns no provider for an empty host, so `hasEmailService()` is false and
+# `isEmailVerificationEffectivelyEnabled()` turns off even though EMAIL_VERIFICATION_ENABLED stays
+# true. That is the branch this profile proves (signup lands directly in the workspace, OTP is
+# logged, never mailed). Mailpit keeps running; nothing is sent to it.
+
+services:
+  simstudio:
+    environment:
+      - SMTP_HOST=
+      - SMTP_PORT=

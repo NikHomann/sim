@@ -1,0 +1,92 @@
+# Test-stack overlay for the Flutter port (apps/flutter/docs/port/04-test-plan.md section 2).
+#
+#   docker compose -f docker-compose.local.yml -f docker-compose.flutter.yml up -d --build --wait
+#
+# apps/flutter/tools/stack/up.ps1 wraps this (and rewrites the base file's `env_file` mapping into
+# the string form for Compose < 2.24). Adds:
+#   caddy    http://localhost:3001  /app/* -> Flutter bundle, /socket.io/* -> realtime, /* -> simstudio
+#   mailpit  SMTP mailpit:1025, UI/API http://localhost:8025 (OTP e-mails are read from its API)
+# and points every service at the `simstudio_test` database (the seed refuses a DB whose name does
+# not contain `test`). The base file derives DATABASE_URL from POSTGRES_DB at interpolation time, so
+# the URL is restated here per service rather than overriding POSTGRES_DB alone. The database gets
+# its own volume: Postgres only creates POSTGRES_DB on first init, so reusing `postgres_data` from a
+# previous base-stack run would leave `simstudio_test` missing.
+#
+# docker-compose.flutter.nomail.yml, stacked after this file, unsets SMTP for the no-verification
+# profile.
+
+services:
+  simstudio:
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${SIM_TEST_DB:-simstudio_test}
+      - TRUSTED_ORIGINS=${TRUSTED_ORIGINS:-http://localhost:3001}
+      - TZ=UTC
+      # providers/smtp.ts: unauthenticated relay, plain on port 1025 (SMTP_SECURE defaults to port == 465).
+      - SMTP_HOST=mailpit
+      - SMTP_PORT=1025
+      - FROM_EMAIL_ADDRESS=${FROM_EMAIL_ADDRESS:-Sim E2E <noreply@sim.localhost>}
+      # Enforced only together with a configured mail provider (lib/messaging/email/verification.ts).
+      - EMAIL_VERIFICATION_ENABLED=true
+      # lib/core/security/encryption.ts requires 64 hex chars; the base default is not hex, which
+      # breaks the environment-variable settings. The seed encrypts with this same key.
+      - ENCRYPTION_KEY=${ENCRYPTION_KEY:-6c1e4d4b2f9a4c3e8d7b6a5f4e3d2c1b0a9f8e7d6c5b4a392817161514131211}
+    depends_on:
+      mailpit:
+        condition: service_healthy
+
+  realtime:
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${SIM_TEST_DB:-simstudio_test}
+      - TZ=UTC
+
+  migrations:
+    environment:
+      - DATABASE_URL=postgresql://${POSTGRES_USER:-postgres}:${POSTGRES_PASSWORD:-postgres}@db:5432/${SIM_TEST_DB:-simstudio_test}
+
+  db:
+    environment:
+      - POSTGRES_DB=${SIM_TEST_DB:-simstudio_test}
+      - TZ=UTC
+    volumes:
+      - postgres_test_data:/var/lib/postgresql/data
+
+  mailpit:
+    image: axllent/mailpit:v1.31.6
+    restart: unless-stopped
+    environment:
+      - TZ=UTC
+      - MP_SMTP_AUTH_ACCEPT_ANY=1
+      - MP_SMTP_AUTH_ALLOW_INSECURE=1
+    ports:
+      - '8025:8025'
+    healthcheck:
+      test: ['CMD', '/mailpit', 'readyz']
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  caddy:
+    build:
+      context: .
+      dockerfile: docker/flutter.Dockerfile
+    image: sim-flutter-web:local
+    restart: unless-stopped
+    ports:
+      - '3001:3001'
+    environment:
+      - SIM_APP_UPSTREAM=simstudio:3000
+      - SIM_REALTIME_UPSTREAM=realtime:3002
+    depends_on:
+      simstudio:
+        condition: service_healthy
+      realtime:
+        condition: service_healthy
+    healthcheck:
+      test: ['CMD', 'wget', '-q', '-O', '/dev/null', 'http://127.0.0.1:3001/app/']
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 5s
+
+volumes:
+  postgres_test_data:

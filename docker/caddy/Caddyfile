@@ -1,0 +1,57 @@
+# Same-origin front door for the Flutter port (apps/flutter/docs/port/00-plan.md section 3).
+# Mirrors apps/flutter/tools/dev_proxy.mjs: /app/* is the Flutter web bundle, /socket.io/* is the
+# realtime server, everything else is the Next app. Each upstream is an env placeholder so the same
+# file serves docker-compose.flutter.yml and a host-run Caddy pointed at localhost ports.
+#
+#   SIM_FLUTTER_ROOT       directory holding the `flutter build web --base-href /app/` output
+#   SIM_APP_UPSTREAM       Next app host:port
+#   SIM_REALTIME_UPSTREAM  realtime (Socket.IO) host:port
+#   SIM_FLUTTER_CSP        Content-Security-Policy for the Flutter page (overrides the default below)
+
+{
+	admin off
+	auto_https off
+}
+
+:3001 {
+	# `/app` without the trailing slash would make <base href="/app/"> resolve against the origin.
+	redir /app /app/ 308
+
+	handle_path /app/* {
+		root * {$SIM_FLUTTER_ROOT:/srv/app}
+
+		header {
+			# CanvasKit needs 'wasm-unsafe-eval'; Flutter injects <style> elements at runtime
+			# ('unsafe-inline' for styles only); workers and images are created from blobs.
+			# connect-src 'self' covers /api and /socket.io on this origin; the explicit ws: entries
+			# are for browsers that do not treat 'self' as matching the WebSocket scheme.
+			# No COOP/COEP: the renderer is CanvasKit, which does not need cross-origin isolation.
+			Content-Security-Policy "{$SIM_FLUTTER_CSP:default-src 'self'; script-src 'self' 'wasm-unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self' data:; connect-src 'self' ws://localhost:3001 ws://127.0.0.1:3001 http://localhost:3002 ws://localhost:3002; worker-src 'self' blob:; frame-ancestors 'self'; base-uri 'self'; object-src 'none'}"
+			# Test runs must never see a stale bundle; the build is small enough to revalidate.
+			Cache-Control "no-cache"
+			-Server
+		}
+
+		# Deep links (/app/workspace/...) fall back to index.html; its <base href="/app/"> resolves
+		# the bundle paths.
+		try_files {path} /index.html
+		file_server
+	}
+
+	handle /socket.io/* {
+		reverse_proxy {$SIM_REALTIME_UPSTREAM:realtime:3002} {
+			# dev_proxy.mjs rewrites Host to the target and forwards the public host separately.
+			header_up Host {upstream_hostport}
+			header_up X-Forwarded-Host {host}
+		}
+	}
+
+	handle {
+		reverse_proxy {$SIM_APP_UPSTREAM:simstudio:3000} {
+			header_up Host {upstream_hostport}
+			header_up X-Forwarded-Host {host}
+			# SSE (execution streams, table events) must not be buffered.
+			flush_interval -1
+		}
+	}
+}
