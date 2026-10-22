@@ -8,11 +8,26 @@ export const ssoProvidersQuerySchema = z.object({
   organizationId: z.string().min(1).optional(),
 })
 
+/**
+ * The auth pages' server-resolved inputs. The React pages receive the optional
+ * fields as server props; a client that cannot render them server-side reads
+ * them here.
+ */
 export const authProviderStatusResponseSchema = z.object({
   githubAvailable: z.boolean(),
   googleAvailable: z.boolean(),
   microsoftAvailable: z.boolean(),
   registrationDisabled: z.boolean(),
+  /** Email/password sign-up is offered (`DISABLE_EMAIL_SIGNUP` unset). */
+  emailSignupEnabled: z.boolean().optional(),
+  /** Email verification is enforced: enabled and a mail provider is configured. */
+  emailVerificationEnabled: z.boolean().optional(),
+  /** At least one mail provider is configured. */
+  emailServiceConfigured: z.boolean().optional(),
+  /** Enterprise SSO sign-in is offered. */
+  ssoEnabled: z.boolean().optional(),
+  /** The server runs with `NODE_ENV=production`; decides the verify page's no-mail-service copy. */
+  isProd: z.boolean().optional(),
 })
 
 export const ssoRegistrationBodySchema = z.discriminatedUnion('providerType', [

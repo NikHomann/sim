@@ -4,7 +4,7 @@ import { PUBLIC_ENV_ATTRIBUTE } from '@/lib/core/config/env'
 /**
  * Every `NEXT_PUBLIC_*` value currently in `process.env`.
  */
-function readPublicEnv(): Record<string, string | undefined> {
+export function readPublicEnv(): Record<string, string | undefined> {
   return Object.fromEntries(
     Object.entries(process.env).filter(([key]) => /^NEXT_PUBLIC_/i.test(key))
   )

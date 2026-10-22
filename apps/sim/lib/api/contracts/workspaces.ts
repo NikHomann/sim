@@ -3,6 +3,7 @@ import { nonEmptyIdSchema, organizationRoleSchema } from '@/lib/api/contracts/pr
 import { type ContractJsonResponse, defineRouteContract } from '@/lib/api/contracts/types'
 import { createWorkspaceInputSchema } from '@/lib/workspaces/create-input'
 import { workspacePermissionUpdatesSchema } from '@/lib/workspaces/permissions/input'
+import type { WorkspaceFeatureFlags } from '@/app/workspace/[workspaceId]/providers/feature-flags-provider'
 
 export const workspaceScopeSchema = z.enum(['active', 'archived', 'all'])
 export const workspaceModeSchema = z.enum(['personal', 'organization', 'grandfathered_shared'])
@@ -303,6 +304,34 @@ export const getWorkspaceHostContextContract = defineRouteContract({
   response: {
     mode: 'json',
     schema: workspaceHostContextSchema,
+  },
+})
+
+/** The runtime flags the workspace shell resolves server-side and hands to `FeatureFlagsProvider`. */
+export const workspaceFeatureFlagsSchema = z.object({
+  dashboards: z.boolean(),
+  'workflow-tests': z.boolean(),
+  changelog: z.boolean(),
+  'mothership-model-selector': z.boolean(),
+  'mothership-computer-use': z.boolean(),
+  'mothership-plan-mode': z.boolean(),
+  projects: z.boolean(),
+}) satisfies z.ZodType<WorkspaceFeatureFlags>
+
+export const getWorkspaceFeatureFlagsContract = defineRouteContract({
+  method: 'GET',
+  path: '/api/workspaces/[id]/feature-flags',
+  params: workspaceParamsSchema,
+  response: {
+    mode: 'json',
+    schema: z.object({
+      flags: workspaceFeatureFlagsSchema,
+      /** What the sidebar's desktop-executor entry reads: the deployment offers one, and this user has signed into a desktop. */
+      desktopExecutor: z.object({
+        available: z.boolean(),
+        registered: z.boolean(),
+      }),
+    }),
   },
 })
 

@@ -8,6 +8,7 @@ import {
 } from '@/lib/api/contracts/primitives'
 import { organizationBillingDataSchema } from '@/lib/api/contracts/subscription'
 import { defineRouteContract } from '@/lib/api/contracts/types'
+import { deploymentShapeSchema, workspaceFeatureFlagsSchema } from '@/lib/api/contracts/workspaces'
 import { memberCreditLimitUpdateSchema } from '@/lib/billing/application/usage-limit-validation'
 import { HEX_COLOR_REGEX } from '@/lib/branding'
 import {
@@ -17,6 +18,7 @@ import {
   rosterWorkspaceAccessSchema as domainRosterWorkspaceAccessSchema,
 } from '@/lib/organizations/application/member-roster-schema'
 import { addOrganizationDomainBodySchema } from '@/lib/organizations/domain-validation'
+import type { OrganizationSurfaceContext } from '@/lib/organizations/surface'
 
 const numericResponseSchema = z.preprocess((value) => {
   if (typeof value !== 'string') return value
@@ -485,7 +487,9 @@ export const organizationSeatInfoSchema = z.object({
   subscriptionPlan: z.string(),
   canAddSeats: z.boolean(),
 })
-export const getOrganizationQuerySchema = z.object({ include: z.string().max(100).optional() })
+export const getOrganizationQuerySchema = z.object({
+  include: z.string().max(100).optional(),
+})
 export type GetOrganizationQuery = z.input<typeof getOrganizationQuerySchema>
 export const getOrganizationResponseSchema = z.object({
   success: z.literal(true),
@@ -799,6 +803,57 @@ export const updateOrganizationUsageLimitContract = defineRouteContract({
         data: organizationBillingDataSchema.nullable(),
       })
       .passthrough(),
+  },
+})
+
+/** `OrganizationSurfaceContext` on the wire; `satisfies` keeps the two from drifting apart. */
+const organizationSurfaceContextSchema = z.object({
+  organization: z.object({
+    id: z.string().min(1),
+    name: z.string(),
+    slug: z.string(),
+    logo: z.string().nullable(),
+    memberCount: z.number().int().nonnegative(),
+  }),
+  viewer: z.object({
+    role: organizationRoleSchema,
+    isAdmin: z.boolean(),
+    canInviteMembers: z.boolean(),
+    canConnectSearchIntegrations: z.boolean(),
+    canUsePersonalApiKeys: z.boolean(),
+    canUseSearchMcp: z.boolean(),
+  }),
+  connectedAccountsAvailable: z.boolean(),
+  mothershipAvailable: z.boolean(),
+  canBuild: z.boolean(),
+  searchAccess: z.object({
+    sourceMirrored: z.boolean(),
+    memberScoped: z.boolean(),
+  }),
+  settingsFeatures: z.object({
+    billingEnabled: z.boolean(),
+    hasEnterprisePlan: z.boolean(),
+    governanceActive: z.boolean(),
+    hosted: z.boolean(),
+    selfHosted: z.record(z.string(), z.boolean()),
+  }),
+  deployment: deploymentShapeSchema,
+}) satisfies z.ZodType<OrganizationSurfaceContext>
+
+export const getOrganizationSurfaceContextContract = defineRouteContract({
+  method: 'GET',
+  path: '/api/organizations/[id]/surface-context',
+  params: organizationParamsSchema,
+  response: {
+    mode: 'json',
+    schema: z.object({
+      context: organizationSurfaceContextSchema,
+      flags: workspaceFeatureFlagsSchema.extend({
+        'mothership-memory-spaces': z.boolean(),
+      }),
+      /** The sidebar's benchmark entry; the organization shell gates Plan and memory spaces on the same answer. */
+      benchmarkEnabled: z.boolean(),
+    }),
   },
 })
 
