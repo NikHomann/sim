@@ -64,6 +64,77 @@ class SseDecoder {
   }
 }
 
+/// The stream delivered no bytes for the idle window: port of
+/// `SSEIdleTimeoutError` (`apps/sim/lib/core/utils/sse.ts:137-195`).
+class SseIdleTimeoutError implements Exception {
+  const SseIdleTimeoutError(this.timeout);
+
+  final Duration timeout;
+
+  @override
+  String toString() =>
+      'SseIdleTimeoutError: no data for ${timeout.inMilliseconds} ms';
+}
+
+/// Fails [bytes] with [SseIdleTimeoutError] and cancels the source when no
+/// raw chunk arrives for [timeout]. Every chunk resets the window, comments
+/// (`: keepalive`) included, because the timer runs on bytes, before the
+/// decoder drops comments (React's `readSSELines` idle timeout, which the
+/// chat sets to 45 s).
+Stream<List<int>> withSseIdleTimeout(
+  Stream<List<int>> bytes,
+  Duration timeout,
+) {
+  late StreamController<List<int>> controller;
+  // Cancelled on timeout and in onCancel.
+  // ignore: cancel_subscriptions
+  StreamSubscription<List<int>>? source;
+  Timer? timer;
+
+  void arm() {
+    timer?.cancel();
+    timer = Timer(timeout, () {
+      final subscription = source;
+      source = null;
+      unawaited(subscription?.cancel());
+      if (!controller.isClosed) {
+        controller.addError(SseIdleTimeoutError(timeout));
+        unawaited(controller.close());
+      }
+    });
+  }
+
+  controller = StreamController<List<int>>(
+    onListen: () {
+      arm();
+      source = bytes.listen(
+        (chunk) {
+          arm();
+          controller.add(chunk);
+        },
+        onError: controller.addError,
+        onDone: () {
+          timer?.cancel();
+          // The source is finished: nothing is left to cancel.
+          source = null;
+          if (!controller.isClosed) unawaited(controller.close());
+        },
+      );
+    },
+    onPause: () => source?.pause(),
+    onResume: () => source?.resume(),
+    // Returns the source's own cancel future (not an `async` wrapper), so a
+    // `cancelOnError` listener gets the error without an extra hop.
+    onCancel: () {
+      timer?.cancel();
+      final subscription = source;
+      source = null;
+      return subscription?.cancel();
+    },
+  );
+  return controller.stream;
+}
+
 /// Folds lines into frames per the SSE specification: `data:` lines are
 /// accumulated (joined with `\n`), `event:` and `id:` set the frame fields,
 /// a blank line dispatches, a `:` line is a comment. Unlike `EventSource`,

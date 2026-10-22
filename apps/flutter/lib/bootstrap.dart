@@ -9,6 +9,7 @@ import 'package:sim_api/sim_api.dart';
 import 'package:sim_app/app/config.dart';
 import 'package:sim_app/app/locator.dart';
 import 'package:sim_app/app/platform/key_value_shared_state.dart';
+import 'package:sim_app/features/chat/integration/chat_integration.dart';
 
 /// Logs every bloc transition and error in debug builds, mirroring the
 /// BlocObserver pattern of the sibling OttoFrontend app.
@@ -64,6 +65,8 @@ Future<void> bootstrap(
   // the key-value store: load them before anything reads them.
   final shared = locator<SharedWebState>();
   if (shared is KeyValueSharedWebState) await shared.load();
+  // The chat stores read their key-value cache synchronously too.
+  await loadChatStorage(locator);
 
   runApp(await builder());
 }

@@ -5,7 +5,11 @@
 //    running stream = active, unread only when idle and updated after the
 //    last visit);
 // 2. a fresh list is not refetched within 60 s; a stale one is;
-// 3. a failed load settles on an empty list instead of loading forever.
+// 3. a failed load settles on an empty list instead of loading forever;
+// 4. a chat-status event (`ChatEventsState.listGeneration`) refetches the
+//    list at once, even within the 60 s staleness;
+// 5. `runningChatIds` shows the running dot before the refetch lands and
+//    drops it when the chat completes.
 
 import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
@@ -115,5 +119,33 @@ void main() {
     final list = HttpChatsSource(http, now: () => now).chats('ws');
     await pumpEventQueue();
     expect(list.value, isEmpty);
+  });
+
+  test('4. invalidate refetches a fresh list now', () async {
+    stubList(() async => _body);
+    final source = HttpChatsSource(http, now: () => now)..chats('ws');
+    await pumpEventQueue();
+    expect(queries, hasLength(1));
+    source.invalidate('ws');
+    await pumpEventQueue();
+    expect(queries, hasLength(2));
+    source.invalidate('other');
+    await pumpEventQueue();
+    expect(queries, hasLength(2), reason: 'an unread list waits for a read');
+  });
+
+  test('5. running ids overlay the dot until the chat completes', () async {
+    stubList(() async => _body);
+    final source = HttpChatsSource(http, now: () => now);
+    final list = source.chats('ws');
+    await pumpEventQueue();
+    SidebarChat row(String id) => list.value!.firstWhere((c) => c.id == id);
+    expect(row('c1').isActive, isFalse);
+    source.setRunning('ws', {'c1'});
+    expect(row('c1').isActive, isTrue);
+    expect(row('c1').isUnread, isFalse);
+    expect(row('c3').isActive, isTrue, reason: 'the server says running');
+    source.setRunning('ws', <String>{});
+    expect(row('c1').isActive, isFalse);
   });
 }

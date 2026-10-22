@@ -1,0 +1,6 @@
+{"$meta":{"scenario":"tool_error","description":"a tool result that failed; the turn still completes","streamId":"u-1","chatId":"chat-1"}}
+{"v":1,"type":"session","seq":1,"ts":"2026-10-22T10:00:01.000Z","stream":{"streamId":"u-1","chatId":"chat-1","cursor":"1"},"trace":{"requestId":"req-1"},"payload":{"kind":"chat","chatId":"chat-1"}}
+{"v":1,"type":"tool","seq":2,"ts":"2026-10-22T10:00:02.000Z","stream":{"streamId":"u-1","chatId":"chat-1","cursor":"2"},"trace":{"requestId":"req-1"},"payload":{"phase":"call","toolCallId":"t-1","toolName":"query_logs","executor":"go","mode":"sync","arguments":{"limit":10}}}
+{"v":1,"type":"tool","seq":3,"ts":"2026-10-22T10:00:03.000Z","stream":{"streamId":"u-1","chatId":"chat-1","cursor":"3"},"trace":{"requestId":"req-1"},"payload":{"phase":"result","toolCallId":"t-1","toolName":"query_logs","executor":"go","mode":"sync","success":false,"status":"failed","error":"Logs unavailable"}}
+{"v":1,"type":"text","seq":4,"ts":"2026-10-22T10:00:04.000Z","stream":{"streamId":"u-1","chatId":"chat-1","cursor":"4"},"trace":{"requestId":"req-1"},"payload":{"channel":"assistant","text":"I could not read the logs."}}
+{"v":1,"type":"complete","seq":5,"ts":"2026-10-22T10:00:05.000Z","stream":{"streamId":"u-1","chatId":"chat-1","cursor":"5"},"trace":{"requestId":"req-1"},"payload":{"status":"complete"}}

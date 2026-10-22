@@ -7,6 +7,10 @@
 /// * the manifest counts disagree with the files and registries on disk;
 /// * `tools/gen/main.dart` is not deterministic (two runs differ) or the
 ///   committed `generated/dart` is stale (differs from a fresh run);
+/// * the committed `lib/features/home/hero/suggestion_catalog.g.dart` differs
+///   from `tools/gen/main.dart --catalog-only` (which also reads
+///   `packages/deployment-config` and `apps/sim/lib/oauth/oauth.ts` from the
+///   surrounding upstream checkout);
 /// * an extracted SVG has neither a `.vec` nor a recorded compile failure.
 ///
 ///   dart run tools/check_generated.dart   (from apps/flutter)
@@ -94,6 +98,43 @@ Future<Directory> _runGenerator(
     _fail('generator run $label failed:\n${result.stdout}${result.stderr}');
   }
   return out;
+}
+
+Future<void> _checkCatalog(Directory appRoot, Directory generated) async {
+  const relative = 'lib/features/home/hero/suggestion_catalog.g.dart';
+  final tmp = Directory.systemTemp.createTempSync('sim-catalog-');
+  final fresh = File('${tmp.path}/suggestion_catalog.g.dart');
+  final result = await Process.run(
+    Platform.resolvedExecutable,
+    [
+      'run',
+      'tools/gen/main.dart',
+      '--catalog-only',
+      '--generated',
+      generated.path,
+      '--catalog-out',
+      fresh.path,
+    ],
+    workingDirectory: appRoot.path,
+  );
+  if (result.exitCode != 0) {
+    _fail('suggestion catalog run failed:\n${result.stdout}${result.stderr}');
+  } else {
+    final committed = File('${appRoot.path}/$relative');
+    if (!committed.existsSync()) {
+      _fail(
+        '$relative is missing; run dart run tools/gen/main.dart --catalog-only',
+      );
+    } else if (!_sameBytes(
+      committed.readAsBytesSync(),
+      fresh.readAsBytesSync(),
+    )) {
+      _fail(
+        '$relative is stale; run dart run tools/gen/main.dart --catalog-only',
+      );
+    }
+  }
+  tmp.deleteSync(recursive: true);
 }
 
 Future<void> main() async {
@@ -219,6 +260,8 @@ Future<void> main() async {
   );
   runA.deleteSync(recursive: true);
   runB.deleteSync(recursive: true);
+
+  await _checkCatalog(appRoot, generated);
 
   if (_failures.isNotEmpty) {
     stderr.writeln('check_generated: ${_failures.length} problem(s)');

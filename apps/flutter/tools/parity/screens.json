@@ -1098,6 +1098,148 @@
         "workspace.switcher.menu",
         "shell.sidebar.header"
       ]
+    },
+    {
+      "name": "home-hero",
+      "auth": true,
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "react": "/workspace/{workspaceId}/home",
+      "flutter": "/workspace/{workspaceId}/home",
+      "ready": {
+        "react": "h1",
+        "flutter": "home.hero.heading"
+      },
+      "include": [
+        "sidebarExpanded"
+      ],
+      "ids": {
+        "home.page": {
+          "react": "div.overflow-hidden:has(> div > div[data-mothership-panel])"
+        },
+        "home.row": {
+          "react": "div:has(> div[data-mothership-panel])"
+        },
+        "home.chat-column": {
+          "react": "div:has(> div[data-mothership-panel]) > div.contents > div"
+        },
+        "home.empty": {
+          "react": "div:has(> div[data-mothership-panel]) > div.contents > div"
+        },
+        "home.empty.scroll": {
+          "react": "div.overflow-y-auto:has(> div > h1)"
+        },
+        "home.hero.heading": {
+          "react": "h1",
+          "text": true
+        },
+        "home.suggested": {
+          "react": "div.group\\/suggested"
+        },
+        "home.suggested.toggle": {
+          "react": "div.group\\/suggested > button"
+        },
+        "home.suggested.row": {
+          "react": "div.group\\/suggested button >> nth=1"
+        },
+        "home.panel": {
+          "react": "div[data-mothership-panel]"
+        },
+        "home.panel.toggle": {
+          "react": "div:has(> div[data-mothership-panel]) > div.z-30 button"
+        }
+      },
+      "anchors": [
+        {
+          "id": "H1 hero background",
+          "point": [
+            300,
+            120
+          ],
+          "expect": {
+            "light": "#fefefe",
+            "dark": "#1b1b1b"
+          }
+        },
+        {
+          "id": "H2 composer fill",
+          "point": [
+            1100,
+            365
+          ],
+          "expect": {
+            "light": "#ffffff",
+            "dark": "#292929"
+          }
+        }
+      ]
+    },
+    {
+      "name": "home-chat-seeded",
+      "auth": true,
+      "themes": [
+        "light",
+        "dark"
+      ],
+      "react": "/workspace/{workspaceId}/chat/b65b240b-1fbe-5ea9-bd3c-16a12311cbf6",
+      "flutter": "/workspace/{workspaceId}/chat/b65b240b-1fbe-5ea9-bd3c-16a12311cbf6",
+      "ready": {
+        "react": "div[data-mothership-panel] [data-tab-strip]",
+        "flutter": "home.panel.tabs"
+      },
+      "include": [
+        "sidebarExpanded"
+      ],
+      "ids": {
+        "home.page": {
+          "react": "div.overflow-hidden:has(> div > div[data-mothership-panel])"
+        },
+        "home.row": {
+          "react": "div:has(> div[data-mothership-panel])"
+        },
+        "home.chat-column": {
+          "react": "div:has(> div[data-mothership-panel]) > div.contents > div"
+        },
+        "home.chat.footer": {
+          "react": "div.shrink-0:has(> div.mx-auto.max-w-chat)"
+        },
+        "home.panel": {
+          "react": "div[data-mothership-panel]"
+        },
+        "home.panel.resize-handle": {
+          "react": "[role=separator][aria-label=\"Resize resource view\"]"
+        },
+        "home.panel.toggle": {
+          "react": "div:has(> div[data-mothership-panel]) > div.z-30 button"
+        },
+        "home.panel.tabs": {
+          "react": "div[data-mothership-panel] [data-tab-strip]"
+        },
+        "home.panel.tabs.add": {
+          "react": "button[aria-label=\"Add resource tab\"]"
+        }
+      },
+      "anchors": [
+        {
+          "id": "H6 panel left border",
+          "point": [
+            832,
+            450
+          ],
+          "expect": {
+            "light": "#d8d8d8",
+            "dark": "#444444"
+          }
+        }
+      ],
+      "ssim": [
+        "shell.sidebar",
+        "home.chat-column",
+        "home.panel.tabs"
+      ],
+      "ssimNote": "The panel body is left out: the seeded table resource renders a placeholder until Phase 4 (known-gaps)."
     }
   ]
 }

@@ -2,7 +2,7 @@
 # make another flaky (docs/port/04-test-plan.md §5):
 #   1. L0 gate (tools/ci.ps1)
 #   2. profile web build + structural parity capture/compare (tools/parity)
-#   3. L5 e2e smoke flow via flutter drive (UI sign-in)
+#   3. L5 e2e flows via flutter drive (UI sign-in), one run per -E2eTargets
 # Prerequisites: the reference stack on :3000/:3002 with seeded data, the dev
 # proxy on :3005 forwarding /app/* to :8088 (FLUTTER_PORT=8088, no prefix
 # strip), chromedriver on :4444, and $env:SIM_SEED_PATH pointing at seed.json.
@@ -10,7 +10,10 @@
 param(
   [string]$Phase = 'phase-1',
   [string]$Email = 'flutter-e2e@example.com',
-  [string]$Password = 'Flutter-e2e-Passw0rd!'
+  [string]$Password = 'Flutter-e2e-Passw0rd!',
+  # phase15_chat_test needs the stack's agent service pointed at
+  # tools/mock_copilot (see its README).
+  [string[]]$E2eTargets = @('phase1_smoke_test', 'phase15_chat_test')
 )
 $ErrorActionPreference = 'Continue'
 Set-Location (Join-Path $PSScriptRoot '..')
@@ -44,9 +47,11 @@ Remove-Item screens.verify.json
 Pop-Location
 Stop-Process -Id $static.Id, $proxy.Id -ErrorAction SilentlyContinue
 
-$env:E2E_REPORT_PATH = 'build/verify/e2e-smoke.json'
-flutter drive --driver=test_driver/integration_test.dart --target=integration_test/phase1_smoke_test.dart -d web-server --profile --web-port 8088 --web-launch-url http://localhost:3005/app/login --browser-dimension 1440x900@1 --chrome-binary "C:\Program Files\Google\Chrome\Application\chrome.exe" --driver-port 4444 --dart-define=SIM_E2E=true --dart-define=SIM_E2E_SIGN_IN=ui "--dart-define=SIM_E2E_EMAIL=$Email" "--dart-define=SIM_E2E_PASSWORD=$Password" *> build/verify/e2e.log
-$summary += "e2e: exit $LASTEXITCODE (build/verify/e2e-smoke.json)"
+foreach ($target in $E2eTargets) {
+  $env:E2E_REPORT_PATH = "build/verify/e2e-$target.json"
+  flutter drive --driver=test_driver/integration_test.dart --target=integration_test/$target.dart -d web-server --profile --web-port 8088 --web-launch-url http://localhost:3005/app/login --browser-dimension 1440x900@1 --chrome-binary "C:\Program Files\Google\Chrome\Application\chrome.exe" --driver-port 4444 --dart-define=SIM_E2E=true --dart-define=SIM_E2E_SIGN_IN=ui "--dart-define=SIM_E2E_EMAIL=$Email" "--dart-define=SIM_E2E_PASSWORD=$Password" *> "build/verify/e2e-$target.log"
+  $summary += "e2e ${target}: exit $LASTEXITCODE (build/verify/e2e-$target.log)"
+}
 
 $summary | Set-Content -Encoding utf8 build/verify/summary.txt
 $summary

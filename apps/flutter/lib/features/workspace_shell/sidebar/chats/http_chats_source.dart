@@ -52,6 +52,64 @@ class HttpChatsSource extends SidebarChatsSource {
   final Map<String, DateTime> _fetchedAt = <String, DateTime>{};
   final Map<String, Future<void>> _inFlight = <String, Future<void>>{};
   final Map<String, String> _workspaceOf = <String, String>{};
+  final Map<String, Set<String>> _running = <String, Set<String>>{};
+
+  /// The owner-list invalidation (`invalidateQueries(workspaceLists)`):
+  /// a mounted list refetches now, a fetch in flight is followed by one
+  /// more (its answer may predate the change); an unmounted list refetches
+  /// on its next read.
+  void invalidate(String workspaceId) {
+    _fetchedAt.remove(workspaceId);
+    if (!_lists.containsKey(workspaceId)) return;
+    final inFlight = _inFlight[workspaceId];
+    if (inFlight == null) {
+      unawaited(_load(workspaceId));
+    } else {
+      unawaited(inFlight.whenComplete(() => _load(workspaceId)));
+    }
+  }
+
+  /// The chats a `task_status` event reported `started` and no later event
+  /// `completed` (`ChatEventsState.runningChatIds`): they show the running
+  /// dot before the refetch lands, as React's optimistic list update does.
+  void setRunning(String workspaceId, Set<String> chatIds) {
+    final previous = _running[workspaceId] ?? const <String>{};
+    if (setEquals(previous, chatIds)) return;
+    _running[workspaceId] = Set<String>.of(chatIds);
+    final list = _lists[workspaceId];
+    final rows = list?.value;
+    if (list == null || rows == null) return;
+    list.value = <SidebarChat>[
+      for (final row in rows)
+        _withRunning(
+          row,
+          running: chatIds.contains(row.id),
+          wasRunning: previous.contains(row.id),
+        ),
+    ];
+  }
+
+  /// A row's dot with the event overlay: a started chat is active; a chat
+  /// whose overlay ended falls back to the last fetched state (the
+  /// refetch the same event triggered settles it).
+  SidebarChat _withRunning(
+    SidebarChat row, {
+    required bool running,
+    bool wasRunning = false,
+  }) {
+    final serverActive = _serverActive[row.id] ?? row.isActive;
+    final active = running || (serverActive && !wasRunning);
+    if (active == row.isActive) return row;
+    return SidebarChat(
+      id: row.id,
+      name: row.name,
+      isActive: active,
+      isUnread: !active && row.isUnread,
+      isPinned: row.isPinned,
+    );
+  }
+
+  final Map<String, bool> _serverActive = <String, bool>{};
 
   @override
   ValueListenable<List<SidebarChat>?> chats(String workspaceId) {
@@ -86,10 +144,15 @@ class HttpChatsSource extends SidebarChatsSource {
         },
       );
       _fetchedAt[workspaceId] = _now();
+      final running = _running[workspaceId] ?? const <String>{};
       for (final chat in rows) {
         _workspaceOf[chat.id] = workspaceId;
+        _serverActive[chat.id] = chat.isActive;
       }
-      _lists[workspaceId]?.value = rows;
+      _lists[workspaceId]?.value = <SidebarChat>[
+        for (final chat in rows)
+          _withRunning(chat, running: running.contains(chat.id)),
+      ];
     } on Object catch (error) {
       developer.log('chat list', name: 'sim_app.sidebar', error: error);
       final list = _lists[workspaceId];

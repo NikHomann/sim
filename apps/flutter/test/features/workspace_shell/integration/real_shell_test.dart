@@ -7,7 +7,7 @@
 //   over the reassigned `shell` local and returning itself (the stub-sidebar
 //   chrome tests never register BrandingCubit, so they could not see it)
 // - the real sidebar does not show the seeded root folders and workflows,
-//   or the home placeholder is missing
+//   or the Home page is missing
 // - navigating /home -> /w -> /home inside the shell crashes, or /w does
 //   not open the first workflow (w/page.tsx)
 // - (live web run 2026-10-22: Ctrl+K, "empty", Enter stayed on /home) the
@@ -221,7 +221,7 @@ void main() {
       dumpErrors();
       expect(errors, isEmpty, reason: 'the shell threw while rendering /home');
 
-      expect(placeholder('Home'), findsOneWidget);
+      expect(byParity('home.page'), findsOneWidget);
       expect(byParity('shell.sidebar'), findsOneWidget);
       for (final row in <String>[
         'E2E folder',
@@ -247,7 +247,7 @@ void main() {
       await go(home);
       dumpErrors();
       expect(errors, isEmpty, reason: 'navigating back to /home crashed');
-      expect(placeholder('Home'), findsOneWidget);
+      expect(byParity('home.page'), findsOneWidget);
       expect(inSidebar('E2E folder'), findsOneWidget);
     },
   );
@@ -266,7 +266,7 @@ void _paletteTests() {
     await _settle(tester);
     await _settle(tester);
     expect(location(tester), home);
-    expect(placeholder('Home'), findsOneWidget);
+    expect(byParity('home.page'), findsOneWidget);
     return semantics;
   }
 

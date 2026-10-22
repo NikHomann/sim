@@ -9,10 +9,17 @@
 ///   `vector_graphics_compiler`; failures are recorded under `vec` in
 ///   `generated/icons/report.json` with a PNG-fallback note
 ///
-///   dart run tools/gen/main.dart [--generated <dir>] [--out <dir>] [--dart-only]
+/// * `lib/features/home/hero/suggestion_catalog.g.dart` — the home hero
+///   suggestion catalog, also reading `packages/deployment-config` and
+///   `apps/sim/lib/oauth/oauth.ts` from the upstream checkout
 ///
-/// `--dart-only` skips the `.vec` compile (used by `tools/check_generated.dart`
-/// for its determinism run). Only `dart:` libraries are used here; the
+///   dart run tools/gen/main.dart [--generated <dir>] [--out <dir>] [--dart-only]
+///   dart run tools/gen/main.dart --catalog-only [--catalog-out <file>]
+///       [--upstream <dir>] [--generated <dir>]
+///
+/// `--dart-only` skips the `.vec` compile and the catalog (used by
+/// `tools/check_generated.dart` for its determinism run). `--catalog-only`
+/// writes just the catalog (to `--catalog-out`, default its `lib/` path). Only `dart:` libraries are used here; the
 /// compiler runs as a child process resolved from `tools/gen/pubspec.yaml`.
 library;
 
@@ -22,6 +29,7 @@ import 'dart:io';
 import 'src/blocks.dart';
 import 'src/icons.dart';
 import 'src/subblock_types.dart';
+import 'src/suggestion_catalog.dart';
 import 'src/tables.dart';
 import 'src/tokens.dart';
 
@@ -129,6 +137,42 @@ Set<String> _recordedVecFailures(Map<String, Object?> iconReport) {
   return failures is Map ? failures.keys.cast<String>().toSet() : {};
 }
 
+void _writeCatalog(Directory appRoot, Directory generated, List<String> args) {
+  final upstream = Directory(
+    _arg(args, '--upstream') ?? appRoot.parent.parent.path,
+  );
+  String readUpstream(String relative) {
+    final file = File('${upstream.path}/$relative');
+    if (!file.existsSync()) {
+      throw StateError('missing ${file.path}; pass --upstream <repo root>');
+    }
+    return file.readAsStringSync();
+  }
+
+  final source = generateSuggestionCatalog(
+    blocks: _readJson(generated, 'blocks.json'),
+    integrationMetadataTs: readUpstream(
+      'packages/deployment-config/src/integration-metadata.ts',
+    ),
+    oauthTs: readUpstream('apps/sim/lib/oauth/oauth.ts'),
+    log: (line) => stdout.writeln('suggestion catalog: $line'),
+  );
+  final out = File(
+    _arg(args, '--catalog-out') ?? '${appRoot.path}/$suggestionCatalogPath',
+  );
+  out.parent.createSync(recursive: true);
+  out.writeAsStringSync(source);
+  // The file lives under lib/, which CI checks with `dart format`.
+  final format = Process.runSync(Platform.resolvedExecutable, [
+    'format',
+    out.path,
+  ]);
+  if (format.exitCode != 0) {
+    throw StateError('dart format ${out.path} failed:\n${format.stderr}');
+  }
+  stdout.writeln('wrote ${out.path}');
+}
+
 Future<void> main(List<String> args) async {
   final genDir = File.fromUri(Platform.script).parent;
   final appRoot = genDir.parent.parent;
@@ -137,6 +181,12 @@ Future<void> main(List<String> args) async {
   );
   final out = Directory(_arg(args, '--out') ?? generated.path);
   final dartOnly = args.contains('--dart-only');
+  final catalogOnly = args.contains('--catalog-only');
+
+  if (catalogOnly || !dartOnly) {
+    _writeCatalog(appRoot, generated, args);
+    if (catalogOnly) return;
+  }
 
   final manifest = _readJson(generated, 'manifest.json');
   final commit = manifest['upstreamCommit']! as String;

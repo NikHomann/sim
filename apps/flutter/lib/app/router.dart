@@ -3,6 +3,7 @@ import 'package:sim_app/app/locator.dart';
 import 'package:sim_app/data/data.dart';
 import 'package:sim_app/features/auth/routes.dart';
 import 'package:sim_app/features/entry/entry_routes.dart';
+import 'package:sim_app/features/home/home_routes.dart';
 import 'package:sim_app/features/workspace_shell/routes.dart';
 
 /// Route paths mirror the React app 1:1 (docs/port/00-plan.md section 3).
@@ -26,8 +27,9 @@ GoRouter buildRouter() {
       // `/`, `/home`, `/o`, `/workspace` and `/workspace/:id`
       // (features/entry/entry_routes.dart).
       ...entryRoutes(),
-      // `/workspace/:workspaceId/...` inside the workspace chrome.
-      ...workspaceShellRoutes(),
+      // `/workspace/:workspaceId/...` inside the workspace chrome, with the
+      // Home page on `home` and `chat/:chatId` (features/home).
+      ...withHomeRoutes(workspaceShellRoutes()),
       // Auth pages (features/auth/routes.dart): /login, /signup, /verify,
       // /reset-password, /sso, /oauth/*, /oauth-error, /invite/:id.
       ...authRoutes(),

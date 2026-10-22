@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:sim_app/app/locator.dart';
 import 'package:sim_app/data/data.dart';
 import 'package:sim_app/features/auth/shared/platform/browser.dart';
+import 'package:sim_app/features/chat/integration/chat_events_host.dart';
 import 'package:sim_app/features/workspace_shell/chrome/application_loading.dart';
 import 'package:sim_app/features/workspace_shell/chrome/fullscreen_origin.dart';
 import 'package:sim_app/features/workspace_shell/chrome/permission_toasts.dart';
@@ -280,35 +281,40 @@ class _WorkspaceChromeState extends State<WorkspaceChrome> {
         },
       );
     }
-    return GlobalCommandsScope(
-      registry: _commands,
-      child: RegisterGlobalCommands(
-        commands: _chromeCommands,
-        child: PermissionToastsListener(
-          permissions: _permissions,
-          toasts: _toasts,
-          onRefresh: _refresh,
-          child: ListenableBuilder(
-            listenable: _sidebar,
-            child: shell,
-            builder: (context, shell) => SearchPaletteLayer(
-              controller: _palette,
-              workspaceId: widget.workspaceId,
-              pathname: widget.location,
-              currentWorkflowId: _workflowPath
-                  .firstMatch(widget.location)
-                  ?.group(1),
-              sidebarWidth: fullscreen
-                  ? 0
-                  : _sidebar.renderedWidth(MediaQuery.sizeOf(context).width),
-              onInvokeCommand: _commands.invoke,
-              // The sidebar registers `add-workflow` with its own create
-              // flow (name, optimistic row, navigation).
-              onCreateWorkflow: () =>
-                  _commands.invoke(CommandId.addWorkflow.wireName),
-              onOpenHelp: SidebarEvents.openHelpModal,
-              onRevealWorkflow: SidebarEvents.scrollToItem,
+    // The workspace chat-status events (sidebar chat list, running dots,
+    // stream recovery on resume) live as long as the workspace shell.
+    return ChatEventsHost(
+      workspaceId: widget.workspaceId,
+      child: GlobalCommandsScope(
+        registry: _commands,
+        child: RegisterGlobalCommands(
+          commands: _chromeCommands,
+          child: PermissionToastsListener(
+            permissions: _permissions,
+            toasts: _toasts,
+            onRefresh: _refresh,
+            child: ListenableBuilder(
+              listenable: _sidebar,
               child: shell,
+              builder: (context, shell) => SearchPaletteLayer(
+                controller: _palette,
+                workspaceId: widget.workspaceId,
+                pathname: widget.location,
+                currentWorkflowId: _workflowPath
+                    .firstMatch(widget.location)
+                    ?.group(1),
+                sidebarWidth: fullscreen
+                    ? 0
+                    : _sidebar.renderedWidth(MediaQuery.sizeOf(context).width),
+                onInvokeCommand: _commands.invoke,
+                // The sidebar registers `add-workflow` with its own create
+                // flow (name, optimistic row, navigation).
+                onCreateWorkflow: () =>
+                    _commands.invoke(CommandId.addWorkflow.wireName),
+                onOpenHelp: SidebarEvents.openHelpModal,
+                onRevealWorkflow: SidebarEvents.scrollToItem,
+                child: shell,
+              ),
             ),
           ),
         ),

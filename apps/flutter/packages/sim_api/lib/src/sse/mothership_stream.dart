@@ -1,3 +1,5 @@
+import 'package:sim_api/src/mothership/envelope_contract.dart';
+
 /// Envelope kinds of mothership stream v1
 /// (`apps/sim/lib/mothership/generated/mothership-stream-v1.ts`).
 enum MothershipStreamType {
@@ -67,7 +69,24 @@ class MothershipStreamEnvelope {
 
   /// Decodes one frame; throws [FormatException] for anything that is not a
   /// v1 envelope (wrong `v`, missing `type`/`seq`/`stream`).
-  factory MothershipStreamEnvelope.fromJson(Object? json) {
+  ///
+  /// With [strict] the React client validation runs first (spec chat-engine
+  /// §2.2: `ts` string, payload object, known type, per-type payload checks)
+  /// and a failure throws [MothershipStreamSchemaError]; [context] names the
+  /// source in its message (`Live SSE event.`, `Reconnect batch event 3.`).
+  factory MothershipStreamEnvelope.fromJson(
+    Object? json, {
+    bool strict = false,
+    String? context,
+  }) {
+    if (strict) {
+      if (!isValidMothershipEnvelope(json)) {
+        throw MothershipStreamSchemaError.forFailure(
+          mothershipEnvelopeProblems(json),
+          context: context,
+        );
+      }
+    }
     if (json is! Map) throw const FormatException('envelope: not an object');
     if (json['v'] != 1) {
       throw FormatException('envelope: unsupported version ${json['v']}');
@@ -112,8 +131,9 @@ class MothershipStreamEnvelope {
       value is Map ? Map<String, Object?>.from(value) : null;
 }
 
-/// Tracks the `seq` of decoded envelopes and reports gaps, which the chat
-/// engine turns into a reconnect from the last cursor.
+/// Tracks the `seq` of decoded envelopes and reports gaps. The chat engine
+/// does not act on gaps (React never compares `seq` to `last + 1`; the server
+/// serves the ring or re-syncs from its log, spec chat-engine §2.4).
 class MothershipSeqTracker {
   int? _last;
 

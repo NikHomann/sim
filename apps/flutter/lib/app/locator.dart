@@ -6,6 +6,7 @@ import 'package:sim_app/app/platform/key_value_shared_state.dart';
 import 'package:sim_app/app/platform/session_storage.dart';
 import 'package:sim_app/app/platform/storage_path.dart';
 import 'package:sim_app/data/data.dart';
+import 'package:sim_app/features/chat/integration/chat_integration.dart';
 import 'package:sim_app/features/entry/entry_support.dart';
 
 /// GetIt service locator (OttoFrontend convention). Feature packages register
@@ -40,6 +41,9 @@ Future<void> configureLocator(AppConfig config) async {
     );
   _registerRepositories();
   _registerDataCubits();
+  // Phase 1.5: the chat engine's stores and client and the real Home slots
+  // (features/chat/integration).
+  registerChatIntegration(locator);
 }
 
 /// The Phase 1 repositories (`packages/sim_api/lib/src/repositories`).
