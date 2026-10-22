@@ -210,6 +210,12 @@ abstract final class ChatText {
     leadingDistribution: TextLeadingDistribution.even,
     letterSpacing: 0,
     fontWeight: FontWeight.w400,
+    // JetBrains Mono draws `++`, `=>`, `!=` as ligatures; Consolas and the
+    // Liberation/Courier faces React renders with have none.
+    fontFeatures: const [
+      FontFeature.disable('calt'),
+      FontFeature.disable('liga'),
+    ],
     color: color,
   );
 }
